@@ -1,0 +1,20 @@
+# Cloudflare Pages — redirect rules
+# Format: <pattern> <destination> <status>
+# Docs: https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Apex / www unification: both kriseva.in AND www.kriseva.in serve the same site
+# from Cloudflare Pages. We do NOT redirect between them at this layer; let
+# Cloudflare's custom-domain provisioning handle which one is canonical.
+# (If you later want to force one canonical domain, uncomment ONE of the rules
+# below and redeploy.)
+
+# Force apex → www:
+# https://kriseva.in/* https://www.kriseva.in/:splat 301
+
+# Force www → apex (recommended for procurement-grade URLs):
+# https://www.kriseva.in/* https://kriseva.in/:splat 301
+
+# ─── Future redirects (none now) ──────────────────────────────────────
+# If pages get renamed in the future, add 301s here so old links keep working.
+# Example:
+# /old-tas-page /tas 301

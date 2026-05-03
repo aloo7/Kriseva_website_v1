@@ -1,0 +1,40 @@
+# Cloudflare Pages — HTTP response headers
+#
+# Order matters: Cloudflare applies all matching patterns; specific rules
+# below override the global ones above on conflicting headers.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+# ─────────────── Global security + privacy ───────────────
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), accelerometer=(), gyroscope=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; base-uri 'self'; form-action 'self' mailto:; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests
+  X-DNS-Prefetch-Control: on
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+
+# ─────────────── Aggressive caching for hashed Astro assets ───────────────
+# Files under /_astro/ have content-hashed names, safe to cache for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ─────────────── Moderate caching for brand + motif + screenshot files ───────────────
+# These names don't change between deploys; one-day cache is fine.
+/assets/*
+  Cache-Control: public, max-age=86400, must-revalidate
+
+# ─────────────── HTML pages — short cache, must revalidate ───────────────
+# Astro emits *.html with route-stable URLs; let CDN cache short, browser revalidate.
+/
+  Cache-Control: public, max-age=300, must-revalidate
+/*.html
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Sitemap + robots — light cache
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+/robots.txt
+  Cache-Control: public, max-age=3600
