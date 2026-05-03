@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Compliance matrix mini</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">COMPLIANCE MATRIX</text>
+  <g transform="translate(84 130)" font-family="ui-monospace, monospace" font-size="13">
+    <rect width="790" height="300" rx="6" fill="#f2ead9" stroke="#b78a45"></rect>
+    <g fill="#15253b"><text x="28" y="38">CRITERION</text><text x="310" y="38">EVIDENCE</text><text x="590" y="38">STATE</text></g>
+    <g stroke="#b8aa90"><line x1="0" y1="62" x2="790" y2="62"></line><line x1="0" y1="122" x2="790" y2="122"></line><line x1="0" y1="182" x2="790" y2="182"></line><line x1="0" y1="242" x2="790" y2="242"></line><line x1="280" y1="0" x2="280" y2="300"></line><line x1="560" y1="0" x2="560" y2="300"></line></g>
+    <g fill="#1f2e42"><text x="28" y="98">Eligibility</text><text x="310" y="98">Clause 4.1</text><text x="590" y="98">Review</text><text x="28" y="158">EMD/ePBG</text><text x="310" y="158">Page 17</text><text x="590" y="158">Bid</text><text x="28" y="218">Delivery</text><text x="310" y="218">ATC 6</text><text x="590" y="218">Risk</text></g>
+  </g>
+
+</svg>

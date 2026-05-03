@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Founder field notes card</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">FOUNDER FIELD NOTES</text>
+  <rect x="170" y="125" width="620" height="310" rx="8" fill="#f2ead9" stroke="#b78a45"></rect>
+  <g font-family="Georgia, serif" fill="#17263b"><text x="215" y="190" font-size="32">Procurement bottlenecks are document bottlenecks.</text></g>
+  <g font-family="ui-monospace, monospace" font-size="13" fill="#514d42">
+    <text x="215" y="245">field note 01: bundle review is manual</text>
+    <text x="215" y="285">field note 02: compliance is hidden in clauses</text>
+    <text x="215" y="325">field note 03: decisions need source trails</text>
+    <text x="215" y="365">public wording: stakeholder discovery, not endorsement</text>
+  </g>
+
+</svg>

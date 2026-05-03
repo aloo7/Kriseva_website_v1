@@ -1,0 +1,120 @@
+---
+interface Props {
+  label?: string;
+  title: string;
+  meta?: string;
+  surface?: 'navy' | 'paper';
+}
+const { label, title, meta, surface = 'navy' } = Astro.props;
+---
+<article class:list={['dossier-card', `dossier-card--${surface}`]}>
+  {label && <p class="dossier-card__label">{label}</p>}
+  <h3 class="dossier-card__title">{title}</h3>
+  <div class="dossier-card__body">
+    <slot />
+  </div>
+  {meta && <p class="dossier-card__meta">{meta}</p>}
+</article>
+
+<style>
+  .dossier-card {
+    position: relative;
+    padding: 28px 26px 26px;
+    border-radius: var(--radius-panel);
+    border: 1px solid rgba(193, 138, 62, 0.18);
+    transition:
+      border-color var(--motion-precise),
+      transform var(--motion-precise),
+      box-shadow var(--motion-precise);
+    will-change: transform;
+  }
+  /* Subtle top-edge brass tab on hover — picks up the dossier-tab idiom from
+     the founder identity card without stamping it on every card. */
+  .dossier-card::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 18px;
+    width: 0;
+    height: 2px;
+    background: var(--accent-primary);
+    border-radius: 0 0 1px 1px;
+    transition: width var(--motion-precise);
+  }
+  .dossier-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+  }
+  .dossier-card:hover::before { width: 36px; }
+  .dossier-card:focus-within {
+    border-color: var(--accent-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dossier-card,
+    .dossier-card:hover { transform: none; transition: none; box-shadow: none; }
+    .dossier-card::before { display: none; }
+  }
+
+  .dossier-card--navy {
+    background: rgba(10, 31, 68, 0.55);
+    color: var(--text-primary);
+  }
+  .dossier-card--paper {
+    background: var(--surface-paper-rise);
+    color: var(--ink-primary);
+    border-color: rgba(16, 35, 59, 0.18);
+  }
+  .dossier-card--paper:hover {
+    border-color: var(--accent-soft);
+    box-shadow: 0 18px 44px rgba(16, 35, 59, 0.14);
+  }
+  .dossier-card__label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  /* Brass orb leading the label — the decision dot. */
+  .dossier-card__label::before {
+    content: "";
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+  .dossier-card--paper .dossier-card__label { color: var(--accent-soft); }
+  .dossier-card__title {
+    font-family: var(--font-serif);
+    font-size: 1.18rem;
+    margin-bottom: 10px;
+    line-height: 1.3;
+    letter-spacing: var(--tracking-subhead);
+  }
+  .dossier-card--navy .dossier-card__title { color: var(--text-primary); }
+  .dossier-card__body {
+    font-size: 0.92rem;
+    color: var(--text-quiet);
+    line-height: var(--leading-prose);
+  }
+  .dossier-card--paper .dossier-card__body { color: var(--ink-secondary); }
+  .dossier-card__meta {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+  }
+  .dossier-card--paper .dossier-card__meta {
+    color: var(--accent-soft);
+    border-top-color: rgba(16, 35, 59, 0.12);
+  }
+</style>

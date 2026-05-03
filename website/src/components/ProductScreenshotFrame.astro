@@ -1,0 +1,222 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  disclosure?: string;
+  loading?: 'eager' | 'lazy';
+  width?: number;
+  height?: number;
+  /** When true (default), render the corner SEEDED DEMO badge. */
+  seeded?: boolean;
+  /** When true, enable the pointer-aware tilt enhancement. */
+  tilt?: boolean;
+  /**
+   * When true, render `<picture>` with a WebP source colocated next to the
+   * PNG (e.g. `01_home_dashboard.png` → `01_home_dashboard.webp`). Only flip
+   * this on after the WebP variants have been generated (post Stage 6 H1
+   * sensitive-data review + `npm run optimize:screenshots`). When false, the
+   * `<img src={src}>` markup is unchanged and the PNG ships as-is.
+   */
+  webp?: boolean;
+}
+const {
+  src,
+  alt,
+  caption,
+  disclosure,
+  loading = 'lazy',
+  width = 1280,
+  height = 800,
+  seeded = true,
+  tilt = true,
+  webp = false,
+} = Astro.props;
+
+const webpSrc = webp ? src.replace(/\.png(\?.*)?$/i, '.webp$1') : null;
+---
+<figure class:list={['screenshot-frame', tilt && 'screenshot-frame--tilt']} data-tilt={tilt ? '' : undefined}>
+  <div class="screenshot-frame__bar" aria-hidden="true">
+    <span class="screenshot-frame__dot" />
+    <span class="screenshot-frame__dot" />
+    <span class="screenshot-frame__dot" />
+    <span class="screenshot-frame__bar-label">REPO-OWNED · KRISEVA TAS · LOCAL</span>
+  </div>
+  <div class="screenshot-frame__plate">
+    {webpSrc ? (
+      <picture>
+        <source srcset={webpSrc} type="image/webp" />
+        <img src={src} alt={alt} loading={loading} width={width} height={height} decoding="async" />
+      </picture>
+    ) : (
+      <img src={src} alt={alt} loading={loading} width={width} height={height} decoding="async" />
+    )}
+    {seeded && (
+      <span class="screenshot-frame__badge" aria-hidden="true">SEEDED DEMO</span>
+    )}
+  </div>
+  {(caption || disclosure) && (
+    <figcaption>
+      {caption && <span class="screenshot-frame__caption">{caption}</span>}
+      {disclosure && <span class="screenshot-frame__disclosure">{disclosure}</span>}
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  .screenshot-frame {
+    --tilt-x: 0deg;
+    --tilt-y: 0deg;
+    border-radius: var(--radius-frame);
+    overflow: hidden;
+    border: 1px solid rgba(193, 138, 62, 0.28);
+    box-shadow: var(--shadow-depth);
+    background: var(--surface-edge);
+    margin: 0;
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    transition: transform var(--motion-precise), box-shadow var(--motion-precise);
+    will-change: transform;
+  }
+  .screenshot-frame--tilt {
+    transform: rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
+  }
+  .screenshot-frame:hover {
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+  }
+
+  .screenshot-frame__bar {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 14px;
+    background: linear-gradient(180deg, var(--surface-rise) 0%, var(--surface-edge) 100%);
+    border-bottom: 1px solid rgba(193, 138, 62, 0.18);
+  }
+  .screenshot-frame__dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(193, 138, 62, 0.32);
+    border: 1px solid rgba(193, 138, 62, 0.18);
+  }
+  .screenshot-frame__bar-label {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  .screenshot-frame__plate {
+    position: relative;
+    background: var(--surface-base);
+  }
+  .screenshot-frame img {
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+
+  /* SEEDED DEMO badge — paper tab on top-right, picks up the dossier idiom. */
+  .screenshot-frame__badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    background: rgba(6, 16, 31, 0.86);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 6px 10px;
+    border-radius: var(--radius-badge);
+    border: 1px solid var(--accent-line);
+    box-shadow: 0 4px 12px rgba(3, 10, 20, 0.32);
+    pointer-events: none;
+  }
+
+  .screenshot-frame figcaption {
+    padding: 14px 18px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.86rem;
+    background: var(--surface-edge);
+  }
+  .screenshot-frame__caption {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .screenshot-frame__disclosure {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+
+  /* Pointer-aware tilt is opt-out for coarse pointers (touch devices) and
+     reduced-motion users. CSS handles both via the listener-not-installed
+     path; the JS below also gates on the same media queries. */
+  @media (pointer: coarse) {
+    .screenshot-frame--tilt { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .screenshot-frame,
+    .screenshot-frame--tilt { transform: none; transition: none; }
+    .screenshot-frame:hover { box-shadow: var(--shadow-depth); }
+  }
+</style>
+
+<script>
+  // Pointer-aware tilt — capped at 1.2°. rAF-coalesced. Listener is installed
+  // only when (1) pointer is fine, (2) user has not requested reduced motion,
+  // and (3) the frame is in the viewport.
+  const fineMq = window.matchMedia('(pointer: fine)');
+  const motionMq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (fineMq.matches && !motionMq.matches) {
+    const MAX_DEG = 1.2;
+    const frames = document.querySelectorAll<HTMLElement>('[data-tilt]');
+    frames.forEach((frame) => {
+      let active = false;
+      let raf = 0;
+      let nextX = 0;
+      let nextY = 0;
+      const apply = () => {
+        frame.style.setProperty('--tilt-x', `${nextX}deg`);
+        frame.style.setProperty('--tilt-y', `${nextY}deg`);
+        raf = 0;
+      };
+      const onMove = (e: PointerEvent) => {
+        const r = frame.getBoundingClientRect();
+        const cx = (e.clientX - r.left) / r.width;
+        const cy = (e.clientY - r.top) / r.height;
+        // x-tilt rotates the right edge towards/away; y-tilt rotates the top.
+        nextX = (cx - 0.5) * 2 * MAX_DEG;
+        nextY = (0.5 - cy) * 2 * MAX_DEG;
+        if (!raf) raf = requestAnimationFrame(apply);
+      };
+      const onLeave = () => {
+        nextX = 0; nextY = 0;
+        if (!raf) raf = requestAnimationFrame(apply);
+        if (active) {
+          frame.removeEventListener('pointermove', onMove);
+          frame.removeEventListener('pointerleave', onLeave);
+          active = false;
+        }
+      };
+      const onEnter = () => {
+        if (active) return;
+        frame.addEventListener('pointermove', onMove);
+        frame.addEventListener('pointerleave', onLeave);
+        active = true;
+      };
+      frame.addEventListener('pointerenter', onEnter);
+    });
+  }
+</script>

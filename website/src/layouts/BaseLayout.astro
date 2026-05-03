@@ -1,0 +1,119 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  ogImage?: string;
+  bodyClass?: string;
+}
+
+const {
+  title = site.defaults.title,
+  description = site.defaults.description,
+  canonical,
+  ogImage = site.defaults.ogImage,
+  bodyClass = '',
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const normalizedPath = path === '/' ? '/' : path.replace(/\/$/, '');
+const canonicalUrl = canonical ?? new URL(normalizedPath, site.url).toString();
+const fullTitle = title === site.defaults.title ? title : `${title} — ${site.name}`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content={site.defaults.themeColor} />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="icon" href={site.defaults.favicon} type="image/svg+xml" />
+
+    {/* Open Graph */}
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={site.defaults.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL(ogImage, site.url).toString()} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${site.shortPositioning}`} />
+
+    {/* Twitter card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, site.url).toString()} />
+    <meta name="twitter:image:alt" content={`${site.name} — ${site.shortPositioning}`} />
+
+    {/* Fonts — Google Fonts via link, system fallbacks in tokens.css ensure
+        the page renders cleanly even if these fail to load. */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class={bodyClass}>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <Header />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script>
+      // Scroll reveal — single IntersectionObserver, reduced-motion safe.
+      // Containers tagged [data-stagger] cascade their direct .reveal children
+      // by setting a CSS custom property --reveal-index on each child, which
+      // global.css turns into a transition-delay.
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = document.querySelectorAll<HTMLElement>('.reveal');
+
+      // Pre-stagger: set --reveal-index on .reveal children of any
+      // [data-stagger] container before observation begins.
+      document.querySelectorAll<HTMLElement>('[data-stagger]').forEach((container) => {
+        const children = container.querySelectorAll<HTMLElement>(':scope > .reveal, :scope > * > .reveal');
+        children.forEach((child, i) => {
+          child.style.setProperty('--reveal-index', String(i));
+        });
+      });
+
+      if (prefersReduced) {
+        els.forEach((el) => el.classList.add('is-visible'));
+      } else if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                obs.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        );
+        els.forEach((el) => obs.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-visible'));
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+---
+import PrimaryButton from './PrimaryButton.astro';
+import SecondaryButton from './SecondaryButton.astro';
+import { routes } from '../data/routes';
+import { site } from '../data/site';
+
+interface Props {
+  surface?: 'paper' | 'navy';
+  heading?: string;
+  body?: string;
+}
+
+const {
+  surface = 'paper',
+  heading = 'Speak directly with the founder.',
+  body = 'If you run a tender workflow on the bidder side, sit on the procurement side, or are evaluating KRISEVA seriously, the conversation is direct. No SDR, no funnel. Anonymization holds where the conversation requires it.',
+} = Astro.props;
+---
+<section class:list={['section', `section--${surface}`, 'founder-cta']}>
+  <div class="container founder-cta__inner">
+    <div class="founder-cta__copy reveal">
+      <h2>{heading}</h2>
+      <p>{body}</p>
+      <div class="founder-cta__buttons">
+        <PrimaryButton href={routes.contact}>Contact Founder</PrimaryButton>
+        <SecondaryButton
+          href={routes.contactWithIntent('demo')}
+          variant={surface === 'paper' ? 'ghost-paper' : 'outline'}
+        >
+          Book Demo
+        </SecondaryButton>
+        <SecondaryButton
+          href={routes.contactWithIntent('pilot')}
+          variant={surface === 'paper' ? 'ghost-paper' : 'outline'}
+        >
+          Join Pilot
+        </SecondaryButton>
+      </div>
+      <p class="founder-cta__direct">
+        Direct: <a href={`mailto:${site.email}`}>{site.email}</a> · {site.domain}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .founder-cta { padding: var(--space-section-tight) 0 var(--space-section); }
+  .founder-cta__inner { max-width: 880px; }
+  .founder-cta__copy {
+    text-align: center;
+    position: relative;
+    padding-top: 28px;
+  }
+  /* Brass dossier-tab on top of the closing block — dossier-grade signal that
+     this is the page's final official entry. */
+  .founder-cta__copy::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 2px;
+    background: var(--accent-primary);
+    opacity: 0.7;
+  }
+  .founder-cta__copy h2 {
+    margin-bottom: 18px;
+    letter-spacing: var(--tracking-headline);
+  }
+  .founder-cta__copy p {
+    color: var(--ink-quiet);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    line-height: var(--leading-prose);
+  }
+  .section--navy .founder-cta__copy p,
+  .section--dark .founder-cta__copy p { color: var(--text-secondary); }
+  .founder-cta__buttons {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .founder-cta__direct {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-quiet);
+  }
+  .section--navy .founder-cta__direct,
+  .section--dark .founder-cta__direct { color: var(--text-quiet); }
+  .founder-cta__direct a { font-weight: 500; }
+</style>

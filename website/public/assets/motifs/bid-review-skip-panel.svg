@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Bid review skip panel</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">DECISION PANEL</text>
+  <g transform="translate(90 150)" font-family="ui-monospace, monospace">
+    <rect x="0" y="0" width="230" height="220" rx="8" fill="#f2ead9" stroke="#b78a45"></rect><text x="34" y="70" font-size="34" fill="#123225">BID</text><text x="34" y="112" font-size="13" fill="#314334">fit signals strong</text>
+    <rect x="280" y="0" width="230" height="220" rx="8" fill="#f2ead9" stroke="#b78a45"></rect><text x="314" y="70" font-size="34" fill="#6b4a12">REVIEW</text><text x="314" y="112" font-size="13" fill="#5a4c32">operator judgment needed</text>
+    <rect x="560" y="0" width="230" height="220" rx="8" fill="#f2ead9" stroke="#b78a45"></rect><text x="594" y="70" font-size="34" fill="#6a1d1b">SKIP</text><text x="594" y="112" font-size="13" fill="#55332f">gap exceeds threshold</text>
+  </g>
+
+</svg>

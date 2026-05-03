@@ -1,0 +1,104 @@
+---
+/**
+ * MotifFrame
+ * ------------------------------------------------------------------------
+ * Consistent paper / navy frame for the design-system motif SVGs.
+ * Replaces inline `<figure style="border-radius: …; overflow: hidden; …">`
+ * patterns scattered across `/workflow`, `/validation`, `/issuer-roadmap`.
+ *
+ * Surface options:
+ *   - `paper`  — paper-rise background, inked border (default for paper sections)
+ *   - `navy`   — navy-deep background, brass border (for navy sections)
+ *   - `auto`   — auto-detect by checking if the parent has `.section--paper`;
+ *                NOT implemented because Astro can't read parent context.
+ *                Caller passes the surface explicitly.
+ *
+ * Lazy-loaded by default. Width / height required for CLS prevention.
+ *
+ * Disclosure: `caption` shows under the SVG in a mono caption strip — used
+ * for "Bundle anatomy · …" style labels that mirror the SVG's own internal
+ * label.
+ */
+
+interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+  surface?: 'paper' | 'navy';
+  /** Top-edge mono label (e.g. "EVIDENCE TRAIL · CLAUSE → DECISION"). */
+  topLabel?: string;
+}
+
+const {
+  src,
+  alt,
+  width = 800,
+  height = 500,
+  caption,
+  surface = 'paper',
+  topLabel,
+} = Astro.props;
+---
+<figure class:list={['motif-frame', `motif-frame--${surface}`]}>
+  {topLabel && <span class="motif-frame__label" aria-hidden="true">{topLabel}</span>}
+  <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+  {caption && <figcaption class="motif-frame__caption">{caption}</figcaption>}
+</figure>
+
+<style>
+  .motif-frame {
+    position: relative;
+    margin: 0;
+    border-radius: var(--radius-frame);
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+    transition: box-shadow var(--motion-precise);
+  }
+  .motif-frame:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .motif-frame--paper {
+    background: var(--surface-paper-rise);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+  }
+  .motif-frame--navy {
+    background: var(--surface-deep);
+    border: 1px solid rgba(193, 138, 62, 0.32);
+  }
+  .motif-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .motif-frame__label {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .motif-frame__caption {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(193, 138, 62, 0.16);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-quiet);
+  }
+  .motif-frame--paper .motif-frame__caption {
+    color: var(--ink-quiet);
+    border-top-color: rgba(16, 35, 59, 0.12);
+    background: var(--surface-paper);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .motif-frame,
+    .motif-frame:hover { transition: none; }
+  }
+</style>

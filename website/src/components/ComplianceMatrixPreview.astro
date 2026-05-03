@@ -1,0 +1,122 @@
+---
+import DecisionPill from './DecisionPill.astro';
+
+type Row = {
+  requirement: string;
+  source: string;
+  status: 'met' | 'review' | 'gap';
+};
+
+const rows: Row[] = [
+  { requirement: 'Bidder eligibility — turnover threshold', source: 'RFP §3.2 / page 6', status: 'met' },
+  { requirement: 'EMD / ePBG quantum + format', source: 'RFP §5.1 / page 11', status: 'met' },
+  { requirement: 'Make-in-India vendor declaration', source: 'ATC §A.4 / page 23', status: 'review' },
+  { requirement: 'Past performance — same category', source: 'BOQ Annex II / page 29', status: 'review' },
+  { requirement: 'Quality certification — IS / MIL spec', source: 'Spec Annex / page 41', status: 'gap' },
+];
+
+const statusLabel: Record<Row['status'], string> = {
+  met: 'MET',
+  review: 'REVIEW',
+  gap: 'GAP',
+};
+---
+<div class="matrix">
+  <div class="matrix__head">
+    <span class="matrix__heading">Compliance matrix · preview</span>
+    <span class="matrix__source">Source-linked · operator-reviewed</span>
+  </div>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th scope="col">Requirement</th>
+        <th scope="col">Source</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td>{r.requirement}</td>
+          <td><span class="matrix__source-cell">{r.source}</span></td>
+          <td>
+            <DecisionPill state={r.status === 'met' ? 'bid' : r.status === 'review' ? 'review' : 'skip'}>
+              {statusLabel[r.status]}
+            </DecisionPill>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="matrix__caveat">
+    Demonstrative preview. Real matrices are operator-reviewed against bundle clauses.
+  </p>
+</div>
+
+<style>
+  .matrix {
+    border: var(--rule-edge);
+    border-radius: var(--radius-frame);
+    background: rgba(10, 31, 68, 0.4);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-lift);
+  }
+  .section--paper .matrix {
+    background: var(--surface-paper-rise);
+    border-color: rgba(16, 35, 59, 0.18);
+    box-shadow: 0 8px 24px rgba(3, 10, 20, 0.06);
+  }
+  .matrix__head {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: var(--rule-soft);
+  }
+  .section--paper .matrix__head { border-bottom-color: rgba(16, 35, 59, 0.12); }
+  .matrix__heading {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .matrix__heading::before {
+    content: "";
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .matrix__source {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    color: var(--text-quiet);
+  }
+  .section--paper .matrix__source { color: var(--ink-quiet); }
+  .matrix__source-cell {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-quiet);
+  }
+  .section--paper .matrix__source-cell { color: var(--ink-quiet); }
+  .matrix__caveat {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(193, 138, 62, 0.25);
+  }
+  .section--paper .matrix__caveat {
+    color: var(--ink-quiet);
+    border-top-color: rgba(16, 35, 59, 0.18);
+  }
+</style>

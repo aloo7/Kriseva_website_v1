@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Founder | KRISEVA AI</title>
+  <meta name="description" content="Ayush — IIT Gandhinagar, defense marketing and operations background. Building KRISEVA from direct procurement field discovery." />
+  <meta name="theme-color" content="#06111f" />
+  <link rel="icon" href="assets/brand/kriseva-favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy-800: #10233b;
+      --navy-900: #0a182b;
+      --navy-950: #06111f;
+      --ink-900: #10131a;
+      --brass-500: #c0934d;
+      --brass-600: #a9742a;
+      --paper-100: #f3eddf;
+      --paper-200: #e5dcc9;
+      --slate-500: #7a8594;
+      --slate-600: #5f6a78;
+      --success: #2f6b4f;
+      --review: #9a6a20;
+      --risk: #9a352c;
+
+      --font-serif: 'Libre Baskerville', Georgia, serif;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+      --hairline: 1px solid rgba(192, 147, 77, 0.34);
+      --border-panel: 1px solid rgba(16, 35, 59, 0.22);
+      --shadow-depth: 0 24px 80px rgba(0, 0, 0, 0.35);
+      --shadow-lift: 0 18px 50px rgba(3, 10, 20, 0.22);
+
+      --radius-badge: 4px;
+      --radius-control: 6px;
+      --radius-panel: 8px;
+
+      --gutter: 32px;
+      --section-y: 96px;
+      --max-w: 1200px;
+      --micro: 140ms ease-out;
+      --section-ease: 420ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --gutter: 18px;
+        --section-y: 56px;
+      }
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      padding: 8px 16px;
+      background: var(--brass-500);
+      color: var(--navy-950);
+      z-index: 10000;
+      font-size: 0.8rem;
+      transition: top 0.2s;
+      text-decoration: none;
+    }
+    .skip-link:focus { top: 0; }
+
+    :focus-visible { outline: 2px solid var(--brass-500); outline-offset: 2px; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--brass-500); outline-offset: 2px; border-radius: 4px; }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--paper-100);
+      background: var(--navy-950);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 700; line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+    h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
+
+    a { color: var(--brass-500); text-decoration: none; transition: color var(--micro); }
+    a:hover { color: var(--paper-100); }
+
+    img { max-width: 100%; height: auto; display: block; }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+
+    .brass { color: var(--brass-500); }
+
+    /* Section base */
+    .section {
+      padding: var(--section-y) 0;
+      position: relative;
+    }
+    .section--navy { background: var(--navy-900); }
+    .section--dark { background: var(--navy-950); }
+    .section--paper {
+      background: var(--paper-100);
+      color: var(--ink-900);
+    }
+    .section--paper h2, .section--paper h3 { color: var(--navy-900); }
+    .section--paper a { color: var(--brass-600); }
+    .section--paper a:hover { color: var(--navy-900); }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--brass-500);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .section--paper .section-label { color: var(--brass-600); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 14px 28px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--brass-500);
+      color: var(--paper-100);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--micro);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn:hover { background: var(--brass-500); color: var(--navy-950); }
+    .btn--primary {
+      background: var(--brass-500);
+      color: var(--navy-950);
+      border-color: var(--brass-500);
+    }
+    .btn--primary:hover {
+      background: var(--brass-600);
+      border-color: var(--brass-600);
+      color: var(--paper-100);
+    }
+    .btn--dark {
+      border-color: var(--navy-800);
+      color: var(--navy-900);
+    }
+    .btn--dark:hover {
+      background: var(--navy-900);
+      color: var(--paper-100);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s var(--section-ease), transform 0.5s var(--section-ease);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Nav */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(6,17,31,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(192,147,77,0.12);
+      transition: background 0.3s;
+    }
+    .nav__inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .nav__logo { height: 38px; }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav__links a {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--paper-200);
+      letter-spacing: 0.01em;
+    }
+    .nav__links a:hover { color: var(--brass-500); }
+    .nav__mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--paper-100);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+    }
+    @media (max-width: 900px) {
+      .nav__mobile-toggle { display: block; }
+      .nav__links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        background: rgba(6,17,31,0.97);
+        flex-direction: column;
+        padding: 24px var(--gutter);
+        gap: 16px;
+        border-bottom: var(--hairline);
+      }
+      .nav__links.open { display: flex; }
+    }
+
+    /* Founder Hero */
+    .founder-hero { padding-top: 130px; padding-bottom: 64px; }
+    .founder-hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 56px;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .founder-hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    .founder-id-card {
+      background: var(--paper-100);
+      border: 1px solid rgba(192, 147, 77, 0.45);
+      border-radius: var(--radius-panel);
+      box-shadow: var(--shadow-lift);
+      position: relative;
+    }
+    .founder-id-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--brass-500) 0%, var(--brass-500) 24%, transparent 24%, transparent 28%, var(--brass-500) 28%, var(--brass-500) 100%);
+      opacity: 0.55;
+      border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    }
+    .founder-id-card__inner {
+      padding: 26px 28px 22px;
+    }
+    .founder-id-card__photo {
+      border-radius: var(--radius-panel);
+      overflow: hidden;
+      margin-bottom: 18px;
+      border: 1px solid rgba(169,116,42,0.35);
+      box-shadow: 0 8px 32px rgba(3,10,20,0.12);
+    }
+    .founder-id-card__photo img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      object-position: center 15%;
+      display: block;
+    }
+    .founder-id-card__dl {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      row-gap: 10px;
+      column-gap: 14px;
+    }
+    .founder-id-card__dt {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: var(--brass-600);
+      text-transform: uppercase;
+      align-self: center;
+    }
+    .founder-id-card__dd {
+      font-size: 0.86rem;
+      color: var(--ink-900);
+      line-height: 1.45;
+    }
+
+    /* Founder Note */
+    .founder-note-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 64px;
+      align-items: flex-start;
+    }
+    @media (max-width: 880px) {
+      .founder-note-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    .obs-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(16,35,59,0.12);
+    }
+    .obs-row--first { border-top: 1px solid rgba(16,35,59,0.18); }
+
+    /* Why KRISEVA */
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 56px;
+      align-items: flex-start;
+      margin-top: 8px;
+    }
+    @media (max-width: 880px) {
+      .why-grid { grid-template-columns: 1fr; gap: 36px; }
+    }
+    .not-is-card {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: var(--radius-control);
+    }
+    .not-is-card--not {
+      border: 1px solid rgba(154,53,44,0.28);
+      background: rgba(154,53,44,0.04);
+    }
+    .not-is-card--is {
+      border: 1px solid rgba(192,147,77,0.5);
+      background: rgba(192,147,77,0.06);
+    }
+
+    /* Timeline */
+    .timeline-track {
+      display: grid;
+      gap: 0;
+      border-radius: var(--radius-panel);
+      border: var(--hairline);
+      background: rgba(16,35,59,0.4);
+      padding: 8px 28px;
+    }
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 32px 110px 1fr;
+      gap: 22px;
+      padding: 26px 0;
+      border-bottom: 1px solid rgba(192,147,77,0.1);
+      position: relative;
+    }
+    .timeline-row:last-child { border-bottom: none; }
+    .timeline-row__rail {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .timeline-row__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--navy-950);
+      border: 2px solid var(--brass-500);
+      margin-top: 6px;
+      flex-shrink: 0;
+      z-index: 2;
+      box-shadow: 0 0 0 4px var(--navy-950);
+    }
+    .timeline-row__line {
+      position: absolute;
+      top: 18px;
+      bottom: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background: rgba(192,147,77,0.28);
+    }
+    .timeline-row__num {
+      display: flex;
+      flex-direction: column;
+      padding-top: 4px;
+    }
+    .timeline-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      padding: 3px 9px;
+      border-radius: var(--radius-badge);
+      background: rgba(255,255,255,0.02);
+      text-transform: uppercase;
+    }
+    .timeline-status-badge__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    @media (max-width: 720px) {
+      .timeline-track { padding: 4px 18px; }
+      .timeline-row { grid-template-columns: 28px 1fr; }
+      .timeline-row__num {
+        grid-column: 2;
+        flex-direction: row;
+        gap: 12px;
+        align-items: baseline;
+        padding-bottom: 6px;
+      }
+    }
+
+    /* Field notes */
+    .fn-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 56px;
+      align-items: center;
+    }
+    @media (max-width: 880px) {
+      .fn-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+    .motif-frame {
+      border-radius: var(--radius-panel);
+      overflow: hidden;
+      border: 1px solid rgba(192,147,77,0.32);
+      background: var(--navy-950);
+      box-shadow: var(--shadow-lift);
+    }
+    .motif-frame img { width: 100%; height: auto; display: block; }
+
+    /* Operating Principles */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 980px) {
+      .principles-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .principles-grid { grid-template-columns: 1fr; }
+    }
+    .principle-card {
+      padding: 24px 22px;
+      border-radius: var(--radius-panel);
+      border: 1px solid rgba(192,147,77,0.18);
+      background: rgba(16,35,59,0.55);
+      transition: border-color var(--micro), transform var(--micro);
+    }
+    .principle-card:hover {
+      border-color: rgba(192,147,77,0.45);
+      transform: translateY(-2px);
+    }
+
+    /* CTA info block */
+    .cta-info-block {
+      padding: 24px 28px;
+      border-radius: var(--radius-panel);
+      border: 1px solid rgba(16,35,59,0.18);
+      background: rgba(16,35,59,0.04);
+    }
+    .cta-info-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px 28px;
+    }
+    .cta-info-list li {
+      display: grid;
+      grid-template-columns: 14px 1fr;
+      gap: 10px;
+      font-size: 0.86rem;
+      color: var(--ink-900);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--ink-900);
+      border-top: var(--hairline);
+    }
+    .footer__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      padding: 48px 0 32px;
+      border-top: var(--hairline);
+    }
+    .footer__bottom {
+      padding-top: 20px;
+      padding-bottom: 24px;
+      border-top: 1px solid rgba(192,147,77,0.12);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Skip to content</a>
+
+  <!-- Nav -->
+  <nav class="nav" aria-label="Site navigation">
+    <div class="nav__inner">
+      <a href="KRISEVA Homepage.html">
+        <img src="assets/brand/kriseva-lockup-horizontal-light.svg" alt="KRISEVA AI" class="nav__logo" fetchpriority="high" />
+      </a>
+      <button class="nav__mobile-toggle" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="#founder-hero">About</a></li>
+        <li><a href="#founder-note">Note</a></li>
+        <li><a href="#founder-timeline">Timeline</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="KRISEVA Homepage.html">&#8592; Home</a></li>
+        <li><a href="mailto:ayush@kriseva.in?subject=KRISEVA%20Inquiry" class="btn btn--primary" style="padding:8px 18px;font-size:0.72rem;">Contact Founder</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- Founder Hero -->
+    <section id="founder-hero" class="section section--dark founder-hero">
+      <div class="container">
+
+        <!-- Dossier ribbon -->
+        <div class="reveal" style="display:flex;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap;">
+          <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.22em;color:var(--brass-500);text-transform:uppercase;">DOSSIER &middot; KRISEVA-FNDR-01</span>
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--brass-500);flex-shrink:0;"></span>
+          <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--slate-600);text-transform:uppercase;">Founder-market fit</span>
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--slate-600);flex-shrink:0;"></span>
+          <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--slate-600);text-transform:uppercase;">Last revised May 01, 2026</span>
+        </div>
+
+        <div class="founder-hero-grid">
+
+          <!-- Left: copy -->
+          <div class="reveal">
+            <span class="section-label">About / Founder</span>
+            <h1 style="margin-bottom:24px;line-height:1.08;">
+              Built from inside the tender pain,<br>
+              <span class="brass">not outside it.</span>
+            </h1>
+            <p style="font-size:1.08rem;color:var(--paper-200);margin-bottom:14px;line-height:1.7;max-width:640px;">
+              KRISEVA exists because procurement decisions in Indian defense are still hidden inside document bundles, and the people running those bundles are short on time, not on capability.
+            </p>
+            <p style="font-size:0.95rem;color:var(--slate-600);line-height:1.7;max-width:640px;">
+              This page is the founder-fit case: where the problem was first observed, what was learned in discovery, and the operating principles the product is being built under.
+            </p>
+          </div>
+
+          <!-- Right: identity card -->
+          <aside class="reveal founder-id-card" aria-label="Founder identification">
+            <div class="founder-id-card__inner">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--brass-600);text-transform:uppercase;">Identification</span>
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;">FNDR &middot; 001</span>
+              </div>
+
+              <div class="founder-id-card__photo">
+                <img src="assets/photos/founder-ayush.png" alt="Ayush, Founder, KRISEVA AI" width="400" height="420" />
+              </div>
+
+              <div style="margin-bottom:20px;">
+                <h3 style="font-family:var(--font-serif);font-size:1.45rem;color:var(--ink-900);margin-bottom:4px;line-height:1.15;">Ayush</h3>
+                <p style="font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.06em;color:var(--brass-600);margin-bottom:4px;">Founder &middot; KRISEVA AI</p>
+                <p style="font-family:var(--font-mono);font-size:0.64rem;letter-spacing:0.08em;color:var(--slate-600);text-transform:uppercase;">Procurement intelligence &middot; Bidder-side workflows</p>
+                <p style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.04em;color:var(--ink-900);margin-top:8px;">
+                  <a href="mailto:ayush@kriseva.in" style="color:var(--brass-600);">ayush@kriseva.in</a>
+                </p>
+              </div>
+
+              <div style="border-top:1px solid rgba(16,35,59,0.18);padding-top:14px;">
+                <dl class="founder-id-card__dl">
+                  <dt class="founder-id-card__dt">Prior work</dt>
+                  <dd class="founder-id-card__dd">Defense marketing &amp; operations exposure (electronic warfare / anti-drone domain)</dd>
+
+                  <dt class="founder-id-card__dt">Education</dt>
+                  <dd class="founder-id-card__dd">IIT Gandhinagar &middot; AI/ML &amp; agentic AI context</dd>
+
+                  <dt class="founder-id-card__dt">Building</dt>
+                  <dd class="founder-id-card__dd">TAS: Tender Analysis System (bidder-side, in pilot discovery)</dd>
+                </dl>
+              </div>
+
+              <p style="font-family:var(--font-mono);font-size:0.6rem;color:var(--slate-600);letter-spacing:0.12em;text-transform:uppercase;margin-top:16px;padding-top:12px;border-top:1px dashed rgba(16,35,59,0.18);">
+                No military or government endorsement claimed or implied
+              </p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder Note -->
+    <section id="founder-note" class="section section--paper" style="padding-top:88px;padding-bottom:88px;">
+      <div class="container">
+        <div class="founder-note-grid">
+
+          <!-- Left -->
+          <div class="reveal">
+            <span class="section-label">Founder Note</span>
+            <h2 style="margin-bottom:20px;">Where the problem was first observed.</h2>
+            <p style="font-size:0.95rem;color:var(--slate-600);line-height:1.7;">
+              Before IIT Gandhinagar, time spent in defense marketing and operations, electronic warfare, anti-drone, radar adjacent products, surfaced a pattern that did not look like a tooling gap on the surface, but underneath it was.
+            </p>
+          </div>
+
+          <!-- Right -->
+          <div class="reveal">
+            <!-- Pull quote -->
+            <figure style="margin:0 0 36px;padding:32px 36px;background:#fff;border:1px solid rgba(16,35,59,0.16);border-left:3px solid var(--brass-500);border-radius:var(--radius-panel);box-shadow:0 8px 24px rgba(3,10,20,0.06);">
+              <blockquote style="font-family:var(--font-serif);font-size:1.35rem;line-height:1.45;color:var(--navy-900);font-style:italic;margin-bottom:14px;">
+                "The procurement process had a lot of bottlenecks. People were missing tenders. Documentation had become hectic. The pain was not abstract, it was on the calendar, every cycle."
+              </blockquote>
+              <figcaption style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.14em;color:var(--brass-600);text-transform:uppercase;">
+                Founder note &middot; Origin observation
+              </figcaption>
+            </figure>
+
+            <!-- Observation ledger -->
+            <div>
+              <div class="obs-row obs-row--first">
+                <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.18em;color:var(--brass-600);text-transform:uppercase;">OBSERVED</span>
+                <span style="font-size:0.92rem;color:var(--ink-900);line-height:1.6;">Procurement bottlenecks were not a side-issue, they were a daily, structural problem. Manual discovery across portals, missed tenders, and documentation cycles that consumed disproportionate operator time.</span>
+              </div>
+              <div class="obs-row">
+                <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.18em;color:var(--brass-600);text-transform:uppercase;">OBSERVED</span>
+                <span style="font-size:0.92rem;color:var(--ink-900);line-height:1.6;">Tenders were missed not because tools did not exist, but because the work between an alert and a defensible BID / REVIEW / SKIP decision was still being done by a person, in a hurry, against a deadline.</span>
+              </div>
+              <div class="obs-row">
+                <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.18em;color:var(--brass-600);text-transform:uppercase;">OBSERVED</span>
+                <span style="font-size:0.92rem;color:var(--ink-900);line-height:1.6;">Technical review was scattered: an analyst would forward a bundle, a reviewer would read it on their own time, compliance would be reconstructed from memory and a tab-switching pass through the document.</span>
+              </div>
+              <div class="obs-row">
+                <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.18em;color:var(--review);text-transform:uppercase;">INFERRED</span>
+                <span style="font-size:0.92rem;color:var(--ink-900);line-height:1.6;">The shared primitive across these workflows is structured tender intelligence, source-linked, evidence-backed, operator-reviewed, not another notification feed.</span>
+              </div>
+            </div>
+
+            <p style="font-family:var(--font-mono);font-size:0.66rem;color:var(--slate-600);letter-spacing:0.1em;margin-top:20px;text-transform:uppercase;">
+              Source: founder origin notes &middot; Prior employer details kept to safe published wording
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Why KRISEVA -->
+    <section id="why" class="section section--navy" style="border-top:var(--hairline);">
+      <div class="container">
+        <span class="section-label">Why KRISEVA</span>
+        <div class="why-grid">
+
+          <!-- Left -->
+          <div class="reveal">
+            <h2 style="margin-bottom:24px;line-height:1.18;">
+              The problem is not that companies lack another alert tool.<br>
+              <span class="brass">The problem is that tender decisions are hidden inside document bundles.</span>
+            </h2>
+            <p style="font-size:1rem;color:var(--paper-200);line-height:1.7;margin-bottom:16px;max-width:660px;">
+              Across the workflows surveyed, listings and notifications are not the bottleneck, extraction, eligibility cross-check, compliance reconstruction, and bid-readiness review are. KRISEVA is being built as procurement intelligence for that work, specifically.
+            </p>
+            <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.7;max-width:660px;">
+              TAS: the Tender Analysis System, begins on the bidder side because that pain is immediate, validated, and operator-shaped. Issuer-side workflows are on the roadmap, not in the product.
+            </p>
+          </div>
+
+          <!-- Right: NOT/IS cards -->
+          <div class="reveal" style="display:grid;gap:14px;">
+            <div class="not-is-card not-is-card--not">
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--risk);padding-top:2px;">NOT</span>
+              <span style="font-size:0.9rem;color:var(--paper-100);line-height:1.55;">A generic AI assistant for tenders.</span>
+            </div>
+            <div class="not-is-card not-is-card--not">
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--risk);padding-top:2px;">NOT</span>
+              <span style="font-size:0.9rem;color:var(--paper-100);line-height:1.55;">A notification feed that summarizes listings.</span>
+            </div>
+            <div class="not-is-card not-is-card--not">
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--risk);padding-top:2px;">NOT</span>
+              <span style="font-size:0.9rem;color:var(--paper-100);line-height:1.55;">An autonomous bid-submission system.</span>
+            </div>
+            <div class="not-is-card not-is-card--is">
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--brass-500);padding-top:2px;">IS</span>
+              <span style="font-size:0.9rem;color:var(--paper-100);line-height:1.55;">Procurement intelligence, defense-procurement specific, evidence-linked, operator-reviewed.</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder Timeline -->
+    <section id="founder-timeline" class="section section--dark">
+      <div class="container">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:12px;">
+          <span class="section-label" style="margin-bottom:0;">Founder-Market Fit Timeline</span>
+          <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;">05 entries &middot; sober &amp; status-labeled</span>
+        </div>
+        <h2 class="reveal" style="margin-bottom:14px;">From inside the workflow, to a product worth building.</h2>
+        <p class="reveal" style="color:var(--paper-200);max-width:720px;margin-bottom:40px;line-height:1.7;">
+          A timeline of exposure, context, and discovery, not a hagiography. Each entry carries a status so the reader can see what is published, what is validated, what is in pilot, and what is roadmap.
+        </p>
+
+        <div class="reveal timeline-track">
+
+          <!-- 01 Exposure -->
+          <div class="timeline-row">
+            <div class="timeline-row__rail">
+              <div class="timeline-row__dot" style="border-color:var(--brass-500);"></div>
+              <div class="timeline-row__line"></div>
+            </div>
+            <div class="timeline-row__num">
+              <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--brass-500);letter-spacing:0.1em;">01</span>
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;margin-top:4px;">2024 &ndash; 2025</span>
+            </div>
+            <div class="timeline-row__body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-500);text-transform:uppercase;">EXPOSURE</span>
+                <span class="timeline-status-badge" style="color:var(--brass-500);border:1px solid rgba(192,147,77,0.33);">
+                  <span class="timeline-status-badge__dot" style="background:var(--brass-500);"></span>
+                  Safe published
+                </span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.18rem;color:var(--paper-100);margin-bottom:8px;line-height:1.3;">Defense operations exposure</h3>
+              <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.65;">Marketing and operations work at a defense electronics company (electronic warfare / anti-drone / radar adjacent). First-hand contact with the procurement workflow problems that motivated KRISEVA.</p>
+            </div>
+          </div>
+
+          <!-- 02 Context -->
+          <div class="timeline-row">
+            <div class="timeline-row__rail">
+              <div class="timeline-row__dot" style="border-color:var(--brass-500);"></div>
+              <div class="timeline-row__line"></div>
+            </div>
+            <div class="timeline-row__num">
+              <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--brass-500);letter-spacing:0.1em;">02</span>
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;margin-top:4px;">2025</span>
+            </div>
+            <div class="timeline-row__body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-500);text-transform:uppercase;">CONTEXT</span>
+                <span class="timeline-status-badge" style="color:var(--brass-500);border:1px solid rgba(192,147,77,0.33);">
+                  <span class="timeline-status-badge__dot" style="background:var(--brass-500);"></span>
+                  Safe published
+                </span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.18rem;color:var(--paper-100);margin-bottom:8px;line-height:1.3;">IIT Gandhinagar &middot; AI/ML and agentic AI context</h3>
+              <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.65;">Formal AI/ML and agentic-AI grounding. The technical foundation for designing source-linked extraction, structured tender intelligence, and reviewable agent flows.</p>
+            </div>
+          </div>
+
+          <!-- 03 Discovery -->
+          <div class="timeline-row">
+            <div class="timeline-row__rail">
+              <div class="timeline-row__dot" style="border-color:var(--success);"></div>
+              <div class="timeline-row__line"></div>
+            </div>
+            <div class="timeline-row__num">
+              <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--brass-500);letter-spacing:0.1em;">03</span>
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;margin-top:4px;">2025 &ndash; 2026</span>
+            </div>
+            <div class="timeline-row__body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-500);text-transform:uppercase;">DISCOVERY</span>
+                <span class="timeline-status-badge" style="color:var(--success);border:1px solid rgba(47,107,79,0.33);">
+                  <span class="timeline-status-badge__dot" style="background:var(--success);"></span>
+                  Validated
+                </span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.18rem;color:var(--paper-100);margin-bottom:8px;line-height:1.3;">Stakeholder discovery, bidder and issuer side</h3>
+              <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.65;">Long-form conversations with defense MSMEs, defense-tech operators, and senior procurement-side stakeholders. Findings published in the Validation dossier; identities anonymized unless permission is on record.</p>
+            </div>
+          </div>
+
+          <!-- 04 Product -->
+          <div class="timeline-row">
+            <div class="timeline-row__rail">
+              <div class="timeline-row__dot" style="border-color:var(--brass-500);"></div>
+              <div class="timeline-row__line"></div>
+            </div>
+            <div class="timeline-row__num">
+              <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--brass-500);letter-spacing:0.1em;">04</span>
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;margin-top:4px;">2026</span>
+            </div>
+            <div class="timeline-row__body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-500);text-transform:uppercase;">PRODUCT</span>
+                <span class="timeline-status-badge" style="color:var(--brass-500);border:1px solid rgba(192,147,77,0.33);">
+                  <span class="timeline-status-badge__dot" style="background:var(--brass-500);"></span>
+                  In pilot
+                </span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.18rem;color:var(--paper-100);margin-bottom:8px;line-height:1.3;">TAS: Tender Analysis System (pilot)</h3>
+              <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.65;">Bidder-side pilot product: discover, parse, score, and review tender opportunities with source-linked briefs and a defensible BID / REVIEW / SKIP decision.</p>
+            </div>
+          </div>
+
+          <!-- 05 Exploration (last, no line) -->
+          <div class="timeline-row">
+            <div class="timeline-row__rail">
+              <div class="timeline-row__dot" style="border-color:var(--review);"></div>
+            </div>
+            <div class="timeline-row__num">
+              <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--brass-500);letter-spacing:0.1em;">05</span>
+              <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;margin-top:4px;">2026 &rarr;</span>
+            </div>
+            <div class="timeline-row__body">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;">
+                <span style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-500);text-transform:uppercase;">EXPLORATION</span>
+                <span class="timeline-status-badge" style="color:var(--review);border:1px solid rgba(154,106,32,0.33);">
+                  <span class="timeline-status-badge__dot" style="background:var(--review);"></span>
+                  Roadmap
+                </span>
+              </div>
+              <h3 style="font-family:var(--font-serif);font-size:1.18rem;color:var(--paper-100);margin-bottom:8px;line-height:1.3;">Issuer-side roadmap exploration</h3>
+              <p style="font-size:0.92rem;color:var(--slate-600);line-height:1.65;">Procurement-side intelligence, operator-assisted DefProc flows, evaluation tooling, under exploration with senior issuer-side stakeholders. Roadmap, not product.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="reveal" style="font-family:var(--font-mono);font-size:0.66rem;color:var(--slate-600);letter-spacing:0.1em;margin-top:24px;text-transform:uppercase;">
+          No claim of military or government affiliation beyond actual prior employment and education
+        </p>
+      </div>
+    </section>
+
+    <!-- Field Notes Visual -->
+    <section id="field-notes" class="section section--paper" style="padding-top:80px;padding-bottom:88px;">
+      <div class="container">
+        <div class="fn-grid">
+
+          <!-- Left -->
+          <div class="reveal">
+            <span class="section-label">Field Notes</span>
+            <h2 style="margin-bottom:18px;">Procurement bottlenecks are document bottlenecks.</h2>
+            <p style="font-size:0.96rem;color:var(--slate-600);line-height:1.7;margin-bottom:14px;">
+              The original founder field-notes card, the one-line thesis the rest of the product is downstream of. Bundle review is manual. Compliance is hidden in clauses. Decisions need source trails.
+            </p>
+            <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--brass-600);letter-spacing:0.1em;text-transform:uppercase;">
+              Public wording: stakeholder discovery, not endorsement
+            </p>
+          </div>
+
+          <!-- Right: motif -->
+          <div class="reveal motif-frame">
+            <img src="assets/motifs/founder-field-notes-card.svg" alt="KRISEVA founder field notes card, procurement bottlenecks are document bottlenecks" loading="lazy" />
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Operating Principles -->
+    <section id="principles" class="section section--navy" style="border-top:var(--hairline);">
+      <div class="container">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:12px;">
+          <span class="section-label" style="margin-bottom:0;">Operating Principles</span>
+          <span style="font-family:var(--font-mono);font-size:0.66rem;letter-spacing:0.16em;color:var(--slate-600);text-transform:uppercase;">05 principles &middot; enforced in product &amp; copy</span>
+        </div>
+        <h2 class="reveal" style="margin-bottom:14px;">How the work gets made, and what it refuses to be.</h2>
+        <p class="reveal" style="color:var(--paper-200);max-width:720px;margin-bottom:40px;line-height:1.7;">
+          These are not aspirational values. They are operating constraints, applied to the product surface, the marketing surface, and stakeholder conversations alike.
+        </p>
+
+        <div class="reveal principles-grid">
+
+          <article class="principle-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;color:var(--brass-500);">01</span>
+              <span style="width:20px;height:1px;background:rgba(192,147,77,0.4);"></span>
+            </div>
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--paper-100);margin-bottom:10px;line-height:1.3;">Evidence over hype</h3>
+            <p style="font-size:0.88rem;color:var(--slate-600);line-height:1.6;margin-bottom:14px;">Every claim in a brief must point back to a clause and a page. Marketing claims on this site are status-labeled. We publish what is observed, what is validated, and what is roadmap, separately.</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--brass-500);text-transform:uppercase;">Claim discipline &middot; Source trails</p>
+          </article>
+
+          <article class="principle-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;color:var(--brass-500);">02</span>
+              <span style="width:20px;height:1px;background:rgba(192,147,77,0.4);"></span>
+            </div>
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--paper-100);margin-bottom:10px;line-height:1.3;">Local-first where appropriate</h3>
+            <p style="font-size:0.88rem;color:var(--slate-600);line-height:1.6;margin-bottom:14px;">Tender bundles and operator data stay on local storage and local model routes where configured. Cloud routes are explicit, not default. The boundary is documented, not assumed.</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--brass-500);text-transform:uppercase;">Local storage &middot; Local model routes</p>
+          </article>
+
+          <article class="principle-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;color:var(--brass-500);">03</span>
+              <span style="width:20px;height:1px;background:rgba(192,147,77,0.4);"></span>
+            </div>
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--paper-100);margin-bottom:10px;line-height:1.3;">Human-reviewed recommendations</h3>
+            <p style="font-size:0.88rem;color:var(--slate-600);line-height:1.6;margin-bottom:14px;">KRISEVA recommends; the operator decides. BID / REVIEW / SKIP is a defensible recommendation with a source trail, not an autonomous action against a portal.</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--brass-500);text-transform:uppercase;">Operator authority &middot; No autonomous bid</p>
+          </article>
+
+          <article class="principle-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;color:var(--brass-500);">04</span>
+              <span style="width:20px;height:1px;background:rgba(192,147,77,0.4);"></span>
+            </div>
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--paper-100);margin-bottom:10px;line-height:1.3;">Claim discipline</h3>
+            <p style="font-size:0.88rem;color:var(--slate-600);line-height:1.6;margin-bottom:14px;">No government-approved, DRDO-approved, CRPF-approved, Indian-Army-validated language. No fake metrics, no fake logos, no testimonial carousel. Anonymized stakeholders stay anonymized.</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--brass-500);text-transform:uppercase;">No endorsement claimed or implied</p>
+          </article>
+
+          <article class="principle-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;color:var(--brass-500);">05</span>
+              <span style="width:20px;height:1px;background:rgba(192,147,77,0.4);"></span>
+            </div>
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--paper-100);margin-bottom:10px;line-height:1.3;">Defense procurement specificity</h3>
+            <p style="font-size:0.88rem;color:var(--slate-600);line-height:1.6;margin-bottom:14px;">The product is built for defense procurement workflows, bundle anatomy, eligibility logic, compliance tables, not for generic tender automation. Specificity is the moat, not the limitation.</p>
+            <p style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.1em;color:var(--brass-500);text-transform:uppercase;">Bidder-side first &middot; Issuer-side roadmap</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder CTA -->
+    <section id="contact" class="section section--paper" style="padding-top:80px;padding-bottom:88px;">
+      <div class="container" style="max-width:900px;">
+        <div style="text-align:center;">
+          <span class="section-label" style="display:block;">Speak Directly</span>
+          <h2 class="reveal" style="margin-bottom:16px;">Speak directly with the founder.</h2>
+          <p class="reveal" style="color:var(--slate-600);margin-bottom:32px;line-height:1.7;max-width:640px;margin-left:auto;margin-right:auto;">
+            If you run a tender workflow on the bidder side, sit on the procurement side, or are evaluating KRISEVA seriously, the conversation is direct. No SDR, no funnel, no logo wall. Anonymization holds where the conversation requires it.
+          </p>
+          <div class="reveal" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;">
+            <a href="mailto:ayush@kriseva.in?subject=Founder%20Conversation" class="btn btn--primary">Contact Founder</a>
+            <a href="mailto:ayush@kriseva.in?subject=Book%20Demo" class="btn btn--dark">Book Demo</a>
+          </div>
+        </div>
+
+        <div class="reveal cta-info-block">
+          <div style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.18em;color:var(--brass-600);margin-bottom:14px;text-transform:uppercase;">What this conversation is</div>
+          <ul class="cta-info-list">
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>Walk-through, not a sales call</span></li>
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>Confidential by default</span></li>
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>No commitment implied on either side</span></li>
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>Direct line to the founder</span></li>
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>Findings feed product spec, not marketing</span></li>
+            <li><span style="color:var(--brass-600);font-family:var(--font-mono);font-size:0.7rem;">&middot;</span><span>No public attribution unless authorized</span></li>
+          </ul>
+        </div>
+
+        <p style="font-family:var(--font-mono);font-size:0.72rem;color:var(--slate-600);text-align:center;margin-top:24px;">
+          <a href="mailto:ayush@kriseva.in" style="color:var(--brass-600);">ayush@kriseva.in</a> &middot; <a href="https://kriseva.in" style="color:var(--brass-600);">kriseva.in</a>
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <img src="assets/brand/kriseva-lockup-horizontal-light.svg" alt="KRISEVA AI" style="height:24px;margin-bottom:12px;" loading="lazy" />
+          <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--slate-600);line-height:1.6;">
+            Tender intelligence for<br>defense procurement.
+          </p>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--brass-500);margin-bottom:12px;text-transform:uppercase;">Pages</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <a href="KRISEVA Homepage.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Home</a>
+            <a href="KRISEVA TAS.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">TAS Product</a>
+            <a href="KRISEVA Workflow.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Workflow</a>
+            <a href="KRISEVA Security.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Security</a>
+            <a href="KRISEVA Issuer.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Issuer Roadmap</a>
+            <a href="KRISEVA Validation.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Validation</a>
+            <a href="KRISEVA Founder.html" style="font-size:0.82rem;color:var(--paper-200);text-decoration:none;">Founder</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.16em;color:var(--brass-500);margin-bottom:12px;text-transform:uppercase;">Contact</div>
+          <p style="font-size:0.82rem;color:var(--paper-200);line-height:1.8;">
+            <a href="mailto:ayush@kriseva.in" style="color:var(--brass-500);">ayush@kriseva.in</a><br>
+            <a href="https://kriseva.in" style="color:var(--paper-200);">kriseva.in</a>
+          </p>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p style="font-size:0.72rem;color:var(--slate-600);">&copy; 2026 KRISEVA AI Private Limited</p>
+        <p style="font-family:var(--font-mono);font-size:0.62rem;color:var(--slate-600);letter-spacing:0.06em;">
+          Claims reflect verified product capabilities &middot; No government endorsement claimed or implied
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav__mobile-toggle');
+    const navLinks = document.getElementById('nav-links');
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen);
+      toggle.innerHTML = isOpen ? '&#10005;' : '&#9776;';
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.innerHTML = '&#9776;';
+      });
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>

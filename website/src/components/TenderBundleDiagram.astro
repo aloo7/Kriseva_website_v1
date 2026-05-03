@@ -1,0 +1,64 @@
+---
+interface Props {
+  caption?: string;
+  surface?: 'navy' | 'paper';
+}
+const { caption, surface = 'navy' } = Astro.props;
+---
+<figure class:list={['bundle-diagram', `bundle-diagram--${surface}`]}>
+  <img
+    src="/assets/motifs/tender-bundle-stack.svg"
+    alt="Tender bundle stack — RFP, BOQ, ATC, corrigenda, annexures"
+    loading="lazy"
+    width="800"
+    height="540"
+  />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .bundle-diagram {
+    position: relative;
+    border-radius: var(--radius-frame);
+    overflow: hidden;
+    border: 1px solid rgba(193, 138, 62, 0.32);
+    box-shadow: var(--shadow-lift);
+    margin: 0;
+    transition: box-shadow var(--motion-precise);
+  }
+  .bundle-diagram::before {
+    content: "BUNDLE / GEM-REF";
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .bundle-diagram:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+  .bundle-diagram--navy { background: var(--surface-base); }
+  .bundle-diagram--paper { background: var(--surface-paper-rise); border-color: rgba(16, 35, 59, 0.18); }
+  .bundle-diagram img { width: 100%; height: auto; display: block; }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-quiet);
+    letter-spacing: 0.08em;
+    padding: 14px 18px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+    background: var(--surface-edge);
+  }
+  .bundle-diagram--paper figcaption {
+    background: var(--surface-paper);
+    color: var(--ink-quiet);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bundle-diagram,
+    .bundle-diagram:hover { transition: none; }
+  }
+</style>

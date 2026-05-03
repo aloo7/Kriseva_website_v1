@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+<defs></defs>
+<rect width="1200" height="630" fill="#04112A"></rect>
+<line x1="0" y1="315" x2="1200" y2="315" stroke="#1C3D5A" stroke-width="1" opacity="0.3"></line>
+<rect x="0" y="0" width="1200" height="3" fill="#C18A3E" opacity="0.6"></rect>
+
+  <rect x="118.6" y="232.2" width="140.8" height="8.8" rx="4.4" fill="#F4EFE1"></rect>
+  <circle cx="189" cy="214.6" r="6.050000000000001" fill="#C18A3E"></circle>
+  <path d="M 142.8,241 L 160.4,241 L 160.4,342.20000000000005 Q 160.4,347.70000000000005 154.9,347.70000000000005 L 148.3,347.70000000000005 Q 142.8,347.70000000000005 142.8,342.20000000000005 Z" fill="#F4EFE1"></path>
+  <path d="M 160.4,293.8 L 160.4,278.4 Q 160.4,275.1 163.7,274 L 224.20000000000002,243.2 Q 230.8,239.9 234.10000000000002,245.4 L 239.60000000000002,254.2 Q 242.9,259.7 236.3,263 L 179.10000000000002,293.8 Z" fill="#F4EFE1"></path>
+  <path d="M 160.4,282.8 L 160.4,298.2 Q 160.4,301.5 163.7,302.6 L 224.20000000000002,333.4 Q 230.8,336.70000000000005 234.10000000000002,331.20000000000005 L 239.60000000000002,322.4 Q 242.9,316.9 236.3,313.6 L 179.10000000000002,282.8 Z" fill="#F4EFE1"></path>
+<rect x="390" y="120" width="1" height="390" fill="#C18A3E" opacity="0.3"></rect>
+<text x="440" y="310" font-family="Instrument Serif,serif" font-size="110" letter-spacing="0.06em" fill="#F4EFE1">KRISEVA</text>
+<text x="443" y="348" font-family="IBM Plex Mono,monospace" font-size="16" letter-spacing="0.35em" fill="#C18A3E">PROCUREMENT INTELLIGENCE</text>
+<text x="443" y="410" font-family="IBM Plex Mono,monospace" font-size="14" letter-spacing="0.08em" fill="#F4EFE1" opacity="0.4">Source-linked · Operator-reviewed · Local-first</text>
+<rect x="0" y="600" width="1200" height="1" fill="#C18A3E" opacity="0.25"></rect>
+<text x="443" y="622" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="0.2em" fill="#F4EFE1" opacity="0.3">kriseva.in</text>
+</svg>

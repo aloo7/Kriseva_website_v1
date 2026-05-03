@@ -1,0 +1,74 @@
+---
+type Item = {
+  label: string;
+  body: string;
+  meta?: string;
+};
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+<div class="proof-strip">
+  {items.map((it) => (
+    <div class="proof-strip__item">
+      <p class="proof-strip__label">{it.label}</p>
+      <p class="proof-strip__body">{it.body}</p>
+      {it.meta && <p class="proof-strip__meta">{it.meta}</p>}
+    </div>
+  ))}
+</div>
+
+<style>
+  .proof-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0;
+    border: var(--hairline);
+    border-radius: var(--radius-panel);
+    background: rgba(10, 31, 68, 0.4);
+    overflow: hidden;
+  }
+  .section--paper .proof-strip {
+    background: var(--paper-light);
+    border-color: rgba(16, 35, 59, 0.18);
+  }
+  .proof-strip__item {
+    padding: 22px 24px;
+    border-right: 1px solid rgba(193, 138, 62, 0.14);
+  }
+  .proof-strip__item:last-child { border-right: none; }
+  .section--paper .proof-strip__item { border-right-color: rgba(16, 35, 59, 0.1); }
+  @media (max-width: 720px) {
+    .proof-strip { grid-template-columns: 1fr; }
+    .proof-strip__item {
+      border-right: none;
+      border-bottom: 1px solid rgba(193, 138, 62, 0.14);
+    }
+    .proof-strip__item:last-child { border-bottom: none; }
+  }
+  .proof-strip__label {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.16em;
+    color: var(--brass);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section--paper .proof-strip__label { color: var(--brass-soft); }
+  .proof-strip__body {
+    font-size: 0.92rem;
+    color: var(--paper-mute);
+    line-height: 1.55;
+  }
+  .section--paper .proof-strip__body { color: var(--ink-soft); }
+  .proof-strip__meta {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--slate-500);
+    margin-top: 8px;
+  }
+</style>

@@ -1,0 +1,197 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import ContactIntentPanel from '../components/ContactIntentPanel.astro';
+import { site } from '../data/site';
+
+const title = 'Contact Founder';
+const description = 'Direct line to the founder. Contact Founder, Book Demo, or Join Pilot. Confidential by default. No SDR funnel.';
+
+const visitors = [
+  { label: 'Defense MSME', body: 'Bidder-side · GeM/DefProc workflows · MII/DPSU/ATC compliance' },
+  { label: 'Defense-tech company', body: 'Bid teams running discovery, extraction, and bid-readiness review' },
+  { label: 'OEM / system integrator', body: 'Multi-tender orchestration · subcontractor compliance · audit trail' },
+  { label: 'Issuer-side / procurement', body: 'Senior reviewer load · evaluation traceability · roadmap conversation' },
+  { label: 'Institutional observer', body: 'Partnership · ecosystem · advisory · evaluation context' },
+];
+---
+<BaseLayout title={title} description={description}>
+  <RouteHero
+    eyebrow="Speak Directly"
+    title="Contact the founder.<br /><span class='brass'>No SDR funnel.</span>"
+    subtitle="If you run a tender workflow on the bidder side, sit on the procurement side, or are evaluating KRISEVA seriously, the conversation is direct. Anonymization holds where the conversation requires it."
+    meta={`Direct: ${site.email} · ${site.domain}`}
+  />
+
+  {/* Visitor framing strip */}
+  <section class="section section--paper" style="padding-top:24px;padding-bottom:48px;">
+    <div class="container">
+      <div class="reveal">
+        <SectionLabel>Who this is for</SectionLabel>
+        <h2 style="margin-bottom: 14px;">Five reader profiles.</h2>
+        <p style="color: var(--ink-soft); max-width: 720px; margin-bottom: 28px;">
+          The form below is built for serious procurement-adjacent conversations. Pick the closest profile in the form's stakeholder field; a mismatched intent is fine — the founder reads each note directly.
+        </p>
+      </div>
+      <ul class="contact-visitors" data-stagger>
+        {visitors.map((v, i) => (
+          <li class="reveal contact-visitors__item">
+            <span class="contact-visitors__num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="contact-visitors__label">{v.label}</span>
+            <span class="contact-visitors__body">{v.body}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* Compose email */}
+  <section class="section section--paper" style="padding-top:0;padding-bottom:88px;">
+    <div class="container contact-grid">
+      <div class="reveal">
+        <SectionLabel>Compose Email</SectionLabel>
+        <h2 style="margin-bottom:14px;">Tell me what you’re working on.</h2>
+        <p style="color:var(--ink-soft);max-width:520px;margin-bottom:18px;">
+          Submitting opens your mail app with a draft to <strong>{site.email}</strong>. Nothing is sent until you press send in your mail client.
+        </p>
+
+        <ul class="contact-meta">
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>Walk-through, not a sales call</span></li>
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>Confidential by default</span></li>
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>No commitment implied on either side</span></li>
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>Direct line to the founder</span></li>
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>Findings feed product spec, not marketing</span></li>
+          <li><span class="contact-meta__bullet" aria-hidden="true"></span><span>No public attribution unless authorized</span></li>
+        </ul>
+
+        <div class="contact-direct">
+          <p class="contact-direct__label">If your mail client doesn't open</p>
+          <p>Email directly: <a href={`mailto:${site.email}?subject=KRISEVA%20Inquiry`}>{site.email}</a></p>
+          <p class="contact-direct__note">No backend stores anything until you press send. The form is a transparent mail-client compose helper.</p>
+        </div>
+      </div>
+      <div class="reveal">
+        <ContactIntentPanel />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─────────────── Visitor strip ─────────────── */
+  .contact-visitors {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid rgba(16, 35, 59, 0.18);
+  }
+  .contact-visitors__item {
+    display: grid;
+    grid-template-columns: 60px 1fr 1.4fr;
+    column-gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(16, 35, 59, 0.08);
+    align-items: baseline;
+  }
+  .contact-visitors__num {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+  }
+  .contact-visitors__label {
+    font-family: var(--font-serif);
+    font-size: 1.02rem;
+    color: var(--surface-deep);
+    line-height: 1.3;
+  }
+  .contact-visitors__body {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-quiet);
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+  @media (max-width: 720px) {
+    .contact-visitors__item {
+      grid-template-columns: 56px 1fr;
+      gap: 4px 14px;
+    }
+    .contact-visitors__num { grid-row: 1 / 3; align-self: center; }
+    .contact-visitors__body { grid-column: 2; }
+  }
+
+  /* ─────────────── Compose grid ─────────────── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 920px) { .contact-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+  .contact-meta {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 24px;
+    padding: 18px 20px;
+    background: rgba(193, 138, 62, 0.04);
+    border: 1px solid rgba(193, 138, 62, 0.22);
+    border-radius: var(--radius-control);
+  }
+  .contact-meta li {
+    display: grid;
+    grid-template-columns: 8px 1fr;
+    gap: 14px;
+    align-items: center;
+    list-style: none;
+    font-size: 0.88rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .contact-meta__bullet {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    margin-left: 2px;
+  }
+
+  /* Direct-mailto fallback panel — visible "if your client doesn't open"
+     instruction with a transparent-no-backend disclaimer. */
+  .contact-direct {
+    border-top: 1px dashed rgba(16, 35, 59, 0.20);
+    padding-top: 16px;
+    color: var(--ink-secondary);
+  }
+  .contact-direct p {
+    margin: 0 0 6px;
+    font-size: 0.88rem;
+  }
+  .contact-direct__label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+    margin-bottom: 8px !important;
+  }
+  .contact-direct a {
+    color: var(--accent-soft);
+    font-weight: 500;
+    word-break: break-all;
+  }
+  .contact-direct__note {
+    font-family: var(--font-mono);
+    font-size: 0.62rem !important;
+    letter-spacing: 0.06em;
+    color: var(--ink-quiet);
+    line-height: 1.5;
+    margin-top: 10px !important;
+  }
+</style>

@@ -1,0 +1,328 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import SecurityBoundaryDiagram from '../components/SecurityBoundaryDiagram.astro';
+import FounderCTA from '../components/FounderCTA.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import { routes } from '../data/routes';
+import { claims } from '../data/claims';
+
+const title = 'Security & Local-First Posture';
+const description = 'KRISEVA TAS is designed for local-first tender processing with local database, local file storage, local document processing, and local model routes where configured. External connectors are explicit, not default.';
+
+const localTable = [
+  { left: 'Tender bundle storage', right: 'Local file storage on the operator’s machine / deployment node.' },
+  { left: 'Tender database', right: 'Local database. Tender records do not leave the deployment by default.' },
+  { left: 'Document processing', right: 'Local parsing for PDF, DOCX, XLSX, TXT, CSV.' },
+  { left: 'OCR (where supported)', right: 'Local OCR for scanned / low-text PDFs. OCR quality under active evaluation.' },
+  { left: 'Model routes', right: 'Local model routes available where configured for active pilot workflows.' },
+];
+
+const boundary = [
+  { left: 'Portal access (e.g., GeM)', right: 'Network call to the configured portal. Behavior depends on portal session and availability.' },
+  { left: 'Hosted model routes', right: 'Used only when explicitly configured. Cloud model routes are not the default.' },
+  { left: 'Calendar / email integrations', right: 'Optional, deployment-specific. Off by default.' },
+  { left: 'Deployment-specific connectors', right: 'Reviewed per deployment boundary; not assumed.' },
+];
+---
+<BaseLayout title={title} description={description}>
+  <RouteHero
+    eyebrow="Security · Boundaries"
+    title="Designed for<br /><span class='brass'>local-first tender processing.</span>"
+    subtitle={claims.localFirst}
+    meta="Explicit boundaries · documented per deployment · no absolute-security claims"
+  >
+    <Fragment slot="cta">
+      <SecondaryButton href={routes.workflow}>How it integrates</SecondaryButton>
+      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
+    </Fragment>
+  </RouteHero>
+
+  {/* Principles */}
+  <section class="section section--paper">
+    <div class="container">
+      <SectionLabel>Principles</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">What local-first actually means here.</h2>
+      <p class="reveal" style="color:var(--ink-soft);max-width:740px;margin-bottom:32px;">
+        TAS is designed around local database, local file storage, local document processing, and local model routes where configured. External portal access, model integrations, calendar/email integrations, and deployment-specific connectors should be reviewed per deployment boundary.
+      </p>
+
+      <div class="sec-cards" data-stagger>
+        <div class="reveal"><DossierCard surface="paper" label="01" title="Operator-controlled storage" meta="Inside the boundary · default">
+          Tender bundles and operator data live on local storage by default. The deployment owner controls retention.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="02" title="Local model routes where configured" meta="Inside the boundary · configured">
+          Local model routes are available where configured for active pilot workflows. Cloud routes are explicit, not default.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="03" title="Explicit external boundary" meta="Across the boundary · documented">
+          Portal calls, hosted model routes, and integrations cross the boundary only when configured, and they are documented.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="04" title="Operator authority" meta="Operator decides · no autonomous action">
+          KRISEVA recommends; the operator decides. There is no autonomous action against any portal.
+        </DossierCard></div>
+      </div>
+    </div>
+  </section>
+
+  {/* Boundary diagram */}
+  <section class="section section--dark">
+    <div class="container sec-diagram">
+      <div class="reveal">
+        <SectionLabel>Boundary</SectionLabel>
+        <h2>The boundary is documented, not assumed.</h2>
+        <p style="color:var(--paper-mute);max-width:520px;">
+          Treat the diagram as the operating contract. Anything inside the local boundary stays local by default. Anything outside it is explicit, configured, and reviewed.
+        </p>
+      </div>
+      <div class="reveal">
+        <SecurityBoundaryDiagram caption="Local boundary · explicit external connectors · per-deployment review" />
+      </div>
+    </div>
+  </section>
+
+  {/* Inside / Across boundary table */}
+  <section class="section section--paper">
+    <div class="container">
+      <div class="sec-tables">
+        <div class="reveal sec-table sec-table--inside">
+          <header class="sec-table__head">
+            <SectionLabel>Inside the boundary</SectionLabel>
+            <span class="sec-table__chip sec-table__chip--solid">SOLID · DEFAULT LOCAL</span>
+          </header>
+          <h3 class="sec-table__title">By default, local.</h3>
+          <ul class="sec-rowlist">
+            {localTable.map((r) => (
+              <li>
+                <span class="sec-rowlist__label">{r.left}</span>
+                <span class="sec-rowlist__value">{r.right}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="reveal sec-table sec-table--across">
+          <header class="sec-table__head">
+            <SectionLabel>Across the boundary</SectionLabel>
+            <span class="sec-table__chip sec-table__chip--dashed">DASHED · DOCUMENTED &amp; CROSSABLE</span>
+          </header>
+          <h3 class="sec-table__title">Explicit, configured, reviewed.</h3>
+          <ul class="sec-rowlist sec-rowlist--dashed">
+            {boundary.map((r) => (
+              <li>
+                <span class="sec-rowlist__label">{r.left}</span>
+                <span class="sec-rowlist__value">{r.right}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Avoid wall */}
+  <section class="section section--navy">
+    <div class="container">
+      <SectionLabel>Boundaries on Claims</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">What we will not call this.</h2>
+      <p class="reveal" style="color:var(--paper-mute);max-width:680px;margin-bottom:24px;">
+        Local-first is a design posture, not a security guarantee. Defense procurement deserves precise wording, not marketing claims.
+      </p>
+      <ul class="sec-not" data-stagger>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> A no-egress data guarantee.</li>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> An isolated-network deployment posture.</li>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> An absolute-security claim.</li>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> Encryption marketed with grade-style adjectives.</li>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> A risk-free deployment promise.</li>
+        <li class="reveal"><span class="sec-not__tag">NOT</span> Any agency endorsement or defense-side validation.</li>
+      </ul>
+    </div>
+  </section>
+
+  {/* Operator screenshot */}
+  <section class="section section--dark">
+    <div class="container sec-shot">
+      <div class="reveal">
+        <SectionLabel>Operator Surface</SectionLabel>
+        <h2>The boundary is visible from the settings surface.</h2>
+        <p style="color:var(--paper-mute);max-width:520px;">
+          Where the deployment crosses the boundary, the surface that controls it is operator-visible. No silent network calls.
+        </p>
+      </div>
+      <div class="reveal">
+        <figure class="screenshot-frame">
+          <div class="screenshot-frame__bar" aria-hidden="true">
+            <span class="screenshot-frame__dot" />
+            <span class="screenshot-frame__dot" />
+            <span class="screenshot-frame__dot" />
+          </div>
+          <img
+            src="/assets/screenshots/06_settings_local_first_boundary.png"
+            alt="TAS settings surface — local-first boundary controls"
+            loading="lazy"
+            width="1280" height="800"
+            decoding="async"
+          />
+          <figcaption>
+            <span class="screenshot-frame__caption">Settings · local-first boundary</span>
+            <span class="screenshot-frame__disclosure">Repo-owned capture · seeded demo data · deployment-specific</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <FounderCTA
+    heading="Talk through the boundary for your deployment."
+    body="Every deployment has its own posture. The most useful conversation is a walk-through of your tender flow against the local-first surface."
+  />
+</BaseLayout>
+
+<style>
+  .sec-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .sec-cards { grid-template-columns: 1fr; } }
+
+  .sec-diagram {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .sec-diagram { grid-template-columns: 1fr; gap: 32px; } }
+
+  .sec-tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 920px) { .sec-tables { grid-template-columns: 1fr; gap: 28px; } }
+
+  /* Two-table side-by-side: solid for "inside" (committed), dashed for
+     "across" (documented + crossable). Matches the design-system rule
+     discipline. */
+  .sec-table {
+    padding: 24px 26px;
+    border-radius: var(--radius-frame);
+    background: var(--surface-paper-rise);
+  }
+  .sec-table--inside {
+    border: 1px solid rgba(16, 35, 59, 0.18);
+  }
+  .sec-table--across {
+    border: 1px dashed rgba(193, 138, 62, 0.55);
+    background:
+      linear-gradient(180deg, rgba(193, 138, 62, 0.05) 0%, var(--surface-paper-rise) 100%);
+  }
+  .sec-table__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .sec-table__chip {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.16em;
+    padding: 4px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  .sec-table__chip--solid {
+    color: var(--ink-quiet);
+    background: rgba(16, 35, 59, 0.06);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+  }
+  .sec-table__chip--dashed {
+    color: var(--accent-soft);
+    background: rgba(193, 138, 62, 0.06);
+    border: 1px dashed rgba(193, 138, 62, 0.55);
+  }
+  .sec-table__title {
+    margin-bottom: 14px;
+    color: var(--surface-deep);
+  }
+
+  .sec-rowlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+  }
+  .sec-rowlist li {
+    display: grid;
+    grid-template-columns: 38% 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid rgba(16, 35, 59, 0.08);
+    align-items: baseline;
+  }
+  .sec-rowlist li:first-child { border-top: none; }
+  .sec-rowlist--dashed li {
+    border-top-style: dashed;
+    border-top-color: rgba(193, 138, 62, 0.28);
+  }
+  .sec-rowlist__label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+  .sec-rowlist__value {
+    font-size: 0.93rem;
+    color: var(--ink-secondary);
+    line-height: 1.55;
+  }
+  @media (max-width: 600px) {
+    .sec-rowlist li { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+    .sec-rowlist__label { font-size: 0.66rem; }
+  }
+
+  .sec-not { display: grid; gap: 10px; max-width: 760px; }
+  .sec-not li {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(154, 53, 44, 0.32);
+    /* Dashed left rule = "we will not call this" — picks up the rule
+       discipline from across-the-boundary table above. */
+    border-left: 2px dashed rgba(154, 53, 44, 0.55);
+    background: rgba(154, 53, 44, 0.06);
+    border-radius: var(--radius-control);
+    color: var(--paper);
+    list-style: none;
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+  .sec-not__tag {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    color: var(--decision-skip);
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  @media (max-width: 420px) {
+    .sec-not li { grid-template-columns: 44px 1fr; gap: 10px; padding: 12px 14px; }
+    .sec-not__tag { font-size: 0.62rem; letter-spacing: 0.14em; }
+  }
+
+  .sec-shot {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 920px) { .sec-shot { grid-template-columns: 1fr; gap: 32px; } }
+  .sec-shot .screenshot-frame { margin: 0; }
+</style>

@@ -1,0 +1,371 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import ProductScreenshotFrame from '../components/ProductScreenshotFrame.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import FounderCTA from '../components/FounderCTA.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import MotifFrame from '../components/MotifFrame.astro';
+import { routes } from '../data/routes';
+import { claims } from '../data/claims';
+
+const title = 'Validation — Proof Without Hype';
+const description = 'Validation dossier: repo-grounded TAS captures, local-first architecture proof at high level, anonymized stakeholder discovery summary, and carefully worded test status.';
+---
+<BaseLayout title={title} description={description}>
+  <RouteHero
+    eyebrow="Validation · Field Findings"
+    title="Proof,<br /><span class='brass'>without hype.</span>"
+    subtitle="A working dossier of what is observed, what is validated, what is in pilot, and what is roadmap. No fake metrics, no fake logos, no testimonial carousel."
+    meta="Repo-grounded · Anonymized stakeholder findings · Status-labeled"
+  >
+    <Fragment slot="cta">
+      <SecondaryButton href={routes.tas}>See TAS in detail</SecondaryButton>
+      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
+    </Fragment>
+  </RouteHero>
+
+  {/* Evidence Index — audit-room chapter list */}
+  <section class="section section--paper val-index-section">
+    <div class="container">
+      <div class="reveal">
+        <SectionLabel>Evidence Index</SectionLabel>
+        <h2 style="margin-bottom: 14px;">What's in this dossier.</h2>
+        <p style="color: var(--ink-soft); max-width: 740px; margin-bottom: 28px;">
+          Four chapters, in order. Each is evidence-backed where the underlying material exists, and explicitly caveat-wrapped where it doesn't.
+        </p>
+      </div>
+      <ol class="val-index reveal" data-stagger>
+        <li class="reveal">
+          <span class="val-index__num">§ 01</span>
+          <a href="#repo-grounded" class="val-index__link">Repo-grounded product proof</a>
+          <span class="val-index__meta">5 repo-owned TAS captures</span>
+        </li>
+        <li class="reveal">
+          <span class="val-index__num">§ 02</span>
+          <a href="#architecture" class="val-index__link">Local-first architecture proof</a>
+          <span class="val-index__meta">High-level boundary motif</span>
+        </li>
+        <li class="reveal">
+          <span class="val-index__num">§ 03</span>
+          <a href="#test-status" class="val-index__link">Test status</a>
+          <span class="val-index__meta">Repo-inspection telemetry · careful wording</span>
+        </li>
+        <li class="reveal">
+          <span class="val-index__num">§ 04</span>
+          <a href="#stakeholder" class="val-index__link">Stakeholder discovery</a>
+          <span class="val-index__meta">Anonymized findings · bidder-side &amp; issuer-side</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  {/* Repo-grounded proof */}
+  <section id="repo-grounded" class="section section--paper" style="padding-top: 0;">
+    <div class="container">
+      <SectionLabel>Repo-Grounded Product Proof</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">What can be shown, shown directly.</h2>
+      <p class="reveal" style="color:var(--ink-soft);max-width:740px;margin-bottom:32px;">
+        TAS captures below are taken from a repo-owned local instance running on the developer’s machine. Tender data is seeded demo content; reviewers should treat the captures as product proof, not deal proof.
+      </p>
+
+      <ProofStrip items={[
+        { label: 'Source', body: 'Local TAS app, repo-owned, on the developer’s machine.', meta: 'Reviewed before publication' },
+        { label: 'Tender data', body: 'Synthetic / demo bundles. No real tender content exposed.', meta: 'Synthetic disclosure on every capture' },
+        { label: 'Captures', body: 'Five repo-owned screenshots covering home, queue, briefing, bundle, and sources.', meta: 'See product surfaces below' },
+      ]} />
+    </div>
+  </section>
+
+  {/* Screenshots */}
+  <section class="section section--dark">
+    <div class="container">
+      <SectionLabel>Public-Safe TAS Screenshots</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">Captures from the local TAS instance.</h2>
+      <p class="reveal" style="color:var(--paper-mute);max-width:720px;margin-bottom:32px;">
+        Each capture carries an explicit synthetic / demo disclosure. The captures are illustrative; they are not evidence of any deployment with a named agency.
+      </p>
+
+      <div class="val-shots" data-stagger>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/01_home_dashboard.png"
+            alt="TAS home / dashboard"
+            caption="Home / dashboard"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/02_queue_tender_list.png"
+            alt="TAS tender queue"
+            caption="Tender queue / list"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/03_tender_briefing_recommendation.png"
+            alt="TAS tender briefing with recommendation"
+            caption="Tender briefing / recommendation"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/04_bundle_source_evidence.png"
+            alt="TAS bundle / source evidence"
+            caption="Bundle / source-evidence view"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal val-shots__wide">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/05_sources_import_status.png"
+            alt="TAS sources / import status"
+            caption="Sources / import status"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Local-first architecture (high level) */}
+  <section id="architecture" class="section section--paper">
+    <div class="container val-arch">
+      <div class="reveal">
+        <SectionLabel>Architecture Proof</SectionLabel>
+        <h2>Local-first, at a high level.</h2>
+        <p style="color:var(--ink-soft);max-width:540px;">
+          The architecture proof is intentionally high-level. It shows that local storage, local document processing, and local model routes (where configured) are the design defaults, and that external connectors are explicit.
+        </p>
+        <ul class="val-arch__list">
+          <li>Local file storage and local database for tender bundles.</li>
+          <li>Local document parsing for PDF, DOCX, XLSX, TXT, CSV.</li>
+          <li>Local OCR routing for scanned / low-text PDFs.</li>
+          <li>Local model routes available where configured.</li>
+          <li>Explicit external boundary; no silent network calls.</li>
+        </ul>
+        <p style="margin-top:18px;font-family:var(--font-mono);font-size:0.7rem;color:var(--slate-600);letter-spacing:0.08em;text-transform:uppercase;">
+          See the security page for boundary detail.
+        </p>
+      </div>
+      <div class="reveal">
+        <MotifFrame
+          src="/assets/motifs/local-first-boundary.svg"
+          alt="Local-first architecture · high-level"
+          width={800}
+          height={500}
+          surface="paper"
+          topLabel="ARCHITECTURE · LOCAL-FIRST"
+          caption="Solid line: inside the boundary · Dashed bridge: explicit egress"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* Test status — careful */}
+  <section id="test-status" class="section section--navy">
+    <div class="container">
+      <SectionLabel>Test Status</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">Careful test wording, intentionally.</h2>
+      <div class="val-test reveal">
+        <header class="val-test__head">
+          <span class="val-test__label">CAREFUL WORDING · NOT A MARKETING HEADLINE</span>
+          <span class="val-test__id">§ 03 / VALIDATION</span>
+        </header>
+        <p>{claims.recentTestNote}</p>
+        <p class="val-test__caveat">
+          The number above is repo-inspection telemetry, not a marketing headline. It does not appear on the homepage. Public production-readiness claims require auth, tenant isolation, security hardening, and a deployment audit that have not been completed.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* Stakeholder discovery */}
+  <section id="stakeholder" class="section section--paper">
+    <div class="container">
+      <SectionLabel>Stakeholder Discovery</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">Long-form conversations, anonymized by default.</h2>
+      <p class="reveal" style="color:var(--ink-soft);max-width:720px;margin-bottom:24px;">
+        Findings on this page are summaries of conversations with defense MSMEs, defense-tech operators, and senior procurement-side stakeholders. Identities are anonymized unless explicit permission is on record.
+      </p>
+
+      <div class="val-grid" data-stagger>
+        <div class="reveal"><DossierCard surface="paper" label="Bidder-side" title="The decision is the bottleneck" meta="Anonymized · Tier 2">
+          Operators can find tenders. The hard work is between alert and a defensible BID / REVIEW / SKIP decision — extraction, eligibility cross-check, compliance reconstruction, and a brief that survives audit.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="Bidder-side" title="Evidence trail beats summary" meta="Anonymized · Tier 2">
+          Every operator interviewed asked for clause + page back-pointers, not a summary paragraph. Decisions need to be reviewable a quarter from now.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="Issuer-side" title="Reviewer load is real" meta="Anonymized · senior procurement-side">
+          Issuer-side reviewers carry a non-trivial workload through the evaluation cycle. Compliance reconstruction and ambiguity surfacing are the candidate areas.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard surface="paper" label="Issuer-side" title="Audit posture matters" meta="Anonymized · senior procurement-side">
+          Decision artifacts that survive an audit are the constraint. Anything that hides reasoning behind a model is a non-starter.
+        </DossierCard></div>
+      </div>
+
+      <p class="reveal" style="margin-top:28px;padding:16px 18px;border:1px dashed rgba(193,138,62,0.45);border-radius:var(--radius-control);font-family:var(--font-mono);font-size:0.7rem;color:var(--ink-quiet);letter-spacing:0.1em;text-transform:uppercase;background:rgba(193,138,62,0.04);">
+        No public attribution unless authorized · No agency endorsement claimed · Names withheld where confidentiality applies
+      </p>
+    </div>
+  </section>
+
+  <FounderCTA
+    heading="Want to walk the dossier in person?"
+    body="If you’re evaluating KRISEVA seriously, the most useful conversation is direct. Anonymization holds where the conversation requires it."
+  />
+</BaseLayout>
+
+<style>
+  /* ─────────────── Evidence Index (audit-room chapter list) ─────────────── */
+  .val-index-section {
+    padding-bottom: 24px;
+  }
+  .val-index {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid rgba(16, 35, 59, 0.18);
+  }
+  .val-index li {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 18px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(16, 35, 59, 0.10);
+    transition: background var(--micro), padding-left var(--micro);
+  }
+  .val-index li:hover {
+    background: rgba(193, 138, 62, 0.04);
+    padding-left: 8px;
+  }
+  .val-index__num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+  }
+  .val-index__link {
+    font-family: var(--font-serif);
+    font-size: 1.08rem;
+    color: var(--surface-deep);
+    text-decoration: none;
+    transition: color var(--micro);
+  }
+  .val-index__link:hover { color: var(--accent-soft); }
+  .val-index__meta {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    color: var(--ink-quiet);
+    text-transform: uppercase;
+  }
+  @media (max-width: 600px) {
+    .val-index li {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 14px 0;
+    }
+    .val-index li:hover { padding-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .val-index li,
+    .val-index li:hover { transition: none; padding-left: 0; }
+  }
+
+  /* ─────────────── Screenshots ─────────────── */
+  .val-shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 880px) { .val-shots { grid-template-columns: 1fr; } }
+  .val-shots__wide { grid-column: 1 / -1; }
+
+  /* ─────────────── Architecture ─────────────── */
+  .val-arch {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .val-arch { grid-template-columns: 1fr; gap: 32px; } }
+  .val-arch__list {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .val-arch__list li {
+    list-style: none;
+    padding: 10px 0;
+    border-top: 1px solid rgba(16, 35, 59, 0.1);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  .val-arch__list li:last-child { border-bottom: 1px solid rgba(16, 35, 59, 0.1); }
+
+  /* ─────────────── Test status ─────────────── */
+  .val-test {
+    border: 1px solid rgba(193, 138, 62, 0.32);
+    /* Dashed left rule = "carefully worded; not the marketing line". */
+    border-left: 3px dashed rgba(193, 138, 62, 0.55);
+    background: rgba(193, 138, 62, 0.04);
+    padding: 24px 28px;
+    border-radius: var(--radius-frame);
+    max-width: 820px;
+    box-shadow: var(--shadow-lift);
+  }
+  .val-test__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed rgba(193, 138, 62, 0.32);
+  }
+  .val-test__label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+  }
+  .val-test__id {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  .val-test p { color: var(--paper); line-height: 1.65; }
+  .val-test__caveat {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(193, 138, 62, 0.22);
+    font-family: var(--font-mono);
+    font-size: 0.72rem !important;
+    letter-spacing: 0.06em;
+    color: var(--paper-mute) !important;
+    line-height: 1.55;
+  }
+
+  /* ─────────────── Stakeholder grid ─────────────── */
+  .val-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .val-grid { grid-template-columns: 1fr; } }
+</style>

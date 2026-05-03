@@ -1,0 +1,15 @@
+---
+interface Props {
+  href: string;
+  size?: 'sm' | 'md';
+  variant?: 'outline' | 'ghost-paper';
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { href, size = 'md', variant = 'outline', class: className = '', ariaLabel } = Astro.props;
+const variantClass = variant === 'ghost-paper' ? 'btn--ghost-paper' : '';
+---
+<a href={href} class:list={['btn', variantClass, size === 'sm' && 'btn--sm', className]} aria-label={ariaLabel}>
+  <slot />
+</a>

@@ -1,0 +1,85 @@
+---
+import SectionLabel from './SectionLabel.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  meta?: string;
+  surface?: 'navy' | 'dark' | 'deep';
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  meta,
+  surface = 'dark',
+} = Astro.props;
+---
+<section class:list={['route-hero', 'section', `section--${surface}`]}>
+  <div class="container">
+    <div class="reveal">
+      <SectionLabel>{eyebrow}</SectionLabel>
+      <h1 class="route-hero__title" set:html={title} />
+      {subtitle && <p class="route-hero__subtitle">{subtitle}</p>}
+      {meta && <p class="route-hero__meta">{meta}</p>}
+      {Astro.slots.has('cta') && (
+        <div class="route-hero__cta">
+          <slot name="cta" />
+        </div>
+      )}
+    </div>
+    {Astro.slots.has('aside') && (
+      <aside class="route-hero__aside reveal">
+        <slot name="aside" />
+      </aside>
+    )}
+  </div>
+</section>
+
+<style>
+  .route-hero {
+    padding-top: 120px;
+    padding-bottom: 64px;
+  }
+  .route-hero .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .route-hero .container:has(.route-hero__aside) {
+    grid-template-columns: 1.4fr 1fr;
+    align-items: flex-start;
+  }
+  .route-hero__title {
+    line-height: 1.08;
+    margin-bottom: 22px;
+    max-width: 920px;
+  }
+  .route-hero__subtitle {
+    font-size: 1.06rem;
+    color: var(--paper-mute);
+    line-height: 1.7;
+    max-width: 720px;
+  }
+  .route-hero__meta {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--slate-600);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .route-hero__cta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  @media (max-width: 880px) {
+    .route-hero .container:has(.route-hero__aside) {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

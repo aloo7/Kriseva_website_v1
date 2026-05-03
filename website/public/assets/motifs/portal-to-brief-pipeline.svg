@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Portal to brief pipeline</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">PORTAL TO BRIEF PIPELINE</text>
+  <g font-family="ui-monospace, monospace" font-size="13" fill="#d8cfbd">
+    <circle cx="140" cy="260" r="54" fill="#102039" stroke="#b78a45"></circle><text x="110" y="265">PORTAL</text>
+    <circle cx="315" cy="260" r="54" fill="#102039" stroke="#b78a45"></circle><text x="284" y="265">BUNDLE</text>
+    <circle cx="490" cy="260" r="54" fill="#102039" stroke="#b78a45"></circle><text x="456" y="265">EXTRACT</text>
+    <circle cx="665" cy="260" r="54" fill="#102039" stroke="#b78a45"></circle><text x="640" y="265">SCORE</text>
+    <circle cx="820" cy="260" r="54" fill="#f2ead9" stroke="#b78a45"></circle><text x="794" y="265" fill="#16243a">BRIEF</text>
+  </g>
+  <path d="M195 260 H260 M370 260 H435 M545 260 H610 M720 260 H765" stroke="#b78a45" stroke-width="2"></path>
+
+</svg>

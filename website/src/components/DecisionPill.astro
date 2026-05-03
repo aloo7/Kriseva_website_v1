@@ -1,0 +1,36 @@
+---
+interface Props {
+  state: 'bid' | 'review' | 'skip';
+  size?: 'sm' | 'md';
+}
+const { state, size = 'sm' } = Astro.props;
+---
+<span class:list={['decision-pill', `decision-pill--${state}`, `decision-pill--${size}`]}>
+  <span class="decision-pill__dot" aria-hidden="true" />
+  <slot />
+</span>
+
+<style>
+  .decision-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--radius-badge);
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    background: rgba(255, 255, 255, 0.02);
+    line-height: 1;
+  }
+  .decision-pill--sm { font-size: 0.66rem; padding: 4px 9px; }
+  .decision-pill--md { font-size: 0.74rem; padding: 6px 12px; }
+  .decision-pill__dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+  .decision-pill--bid { color: var(--decision-bid); }
+  .decision-pill--review { color: var(--decision-review); }
+  .decision-pill--skip { color: var(--decision-skip); }
+</style>

@@ -1,0 +1,93 @@
+---
+interface Props {
+  href: string;
+  size?: 'sm' | 'md';
+  class?: string;
+  ariaLabel?: string;
+}
+
+const { href, size = 'md', class: className = '', ariaLabel } = Astro.props;
+---
+<a href={href} class:list={['btn btn--primary', size === 'sm' && 'btn--sm', className]} aria-label={ariaLabel}>
+  <slot />
+</a>
+
+<style is:global>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--accent-primary);
+    color: var(--text-primary);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      background var(--micro),
+      color var(--micro),
+      border-color var(--micro),
+      transform var(--micro),
+      box-shadow var(--micro);
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    will-change: transform;
+  }
+  .btn:hover {
+    background: var(--accent-primary);
+    color: var(--surface-base);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-quiet);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  .btn--sm { padding: 9px 18px; font-size: 0.7rem; gap: 8px; }
+
+  .btn--primary {
+    background: var(--accent-primary);
+    color: var(--surface-base);
+    border-color: var(--accent-primary);
+  }
+  .btn--primary:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent-soft);
+    color: var(--text-primary);
+    box-shadow: 0 10px 22px rgba(193, 138, 62, 0.22);
+  }
+
+  .btn--ghost-paper {
+    border-color: rgba(16, 35, 59, 0.32);
+    color: var(--surface-deep);
+  }
+  .btn--ghost-paper:hover {
+    background: var(--surface-deep);
+    color: var(--text-primary);
+    border-color: var(--surface-deep);
+    box-shadow: 0 10px 22px rgba(16, 35, 59, 0.18);
+  }
+
+  /* Optional trailing arrow used by the contact "Compose Email" button.
+     Pure CSS; lifts on hover, hidden on reduced-motion. */
+  .btn[data-arrow]::after {
+    content: "→";
+    display: inline-block;
+    margin-left: 2px;
+    transition: transform var(--motion-precise);
+  }
+  .btn[data-arrow]:hover::after { transform: translateX(4px); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn:hover,
+    .btn:active { transform: none; transition: none; }
+    .btn[data-arrow]::after,
+    .btn[data-arrow]:hover::after { transform: none; transition: none; }
+  }
+</style>

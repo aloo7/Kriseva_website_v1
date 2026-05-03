@@ -1,0 +1,418 @@
+@import "./tokens.css";
+
+/* ─────────────── Reset ─────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: var(--leading-body);
+  color: var(--text-primary);
+  background: var(--surface-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt", "ss01";
+  font-variant-ligatures: common-ligatures contextual;
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─────────────── Typography ─────────────── */
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: var(--leading-headline);
+  text-wrap: balance;
+}
+h1 {
+  font-size: var(--text-display);
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-tight);
+}
+h2 {
+  font-size: var(--text-headline);
+  letter-spacing: var(--tracking-headline);
+}
+h3 {
+  font-size: var(--text-subhead);
+  letter-spacing: var(--tracking-subhead);
+  line-height: var(--leading-subhead);
+}
+h4 {
+  font-size: var(--text-field-label);
+}
+
+p {
+  line-height: var(--leading-prose);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  transition: color var(--micro);
+}
+a:hover {
+  color: var(--text-primary);
+}
+
+ul {
+  list-style: none;
+}
+
+::selection {
+  background: rgba(193, 138, 62, 0.32);
+  color: var(--text-primary);
+}
+
+/* ─────────────── Focus / skip link ─────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: 10px 18px;
+  background: var(--accent-primary);
+  color: var(--surface-base);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  z-index: 10000;
+  transition: top 200ms var(--ease-out);
+  border-radius: 0 0 var(--radius-control) 0;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--ring-brass);
+  border-radius: var(--radius-control);
+}
+
+/* ─────────────── Container + section ─────────────── */
+
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: var(--space-section) 0;
+  position: relative;
+}
+.section--tight {
+  padding: var(--space-section-tight) 0;
+}
+.section--loose {
+  padding: var(--space-section-loose) 0;
+}
+
+.section--navy {
+  background: var(--surface-rise);
+}
+.section--dark {
+  background: var(--surface-base);
+}
+.section--deep {
+  background: var(--surface-deep);
+}
+.section--paper {
+  background: var(--surface-paper);
+  color: var(--ink-primary);
+  /* Paper grain — very subtle, CSS-only, performance-safe.
+     Two faint warming radials at section corners; never animated. */
+  background-image:
+    radial-gradient(120% 60% at 0% 0%, rgba(193, 138, 62, 0.025) 0%, transparent 50%),
+    radial-gradient(100% 60% at 100% 100%, rgba(16, 35, 59, 0.02) 0%, transparent 50%);
+}
+.section--paper h2,
+.section--paper h3,
+.section--paper h4 {
+  color: var(--surface-deep);
+}
+.section--paper a {
+  color: var(--accent-soft);
+}
+.section--paper a:hover {
+  color: var(--surface-deep);
+}
+
+/* Hairline divider */
+.hairline {
+  border: none;
+  border-top: var(--rule-edge);
+  margin: 48px 0;
+}
+
+.brass {
+  color: var(--accent-primary);
+}
+
+/* ─────────────── Mono utilities (consolidates Stage 4 inline patterns) ─────────────── */
+
+/* Eyebrow — appears above headlines */
+.mono-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  letter-spacing: var(--tracking-eyebrow);
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: var(--gap-section-bar);
+}
+.section--paper .mono-eyebrow {
+  color: var(--accent-soft);
+}
+
+/* Section bar — flex header used on /workflow, /founder, /tas, etc. */
+.section-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--gap-section-bar);
+}
+
+/* Meta line — short caption / label */
+.mono-meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: var(--tracking-meta);
+  color: var(--text-quiet);
+  text-transform: uppercase;
+}
+.section--paper .mono-meta {
+  color: var(--ink-quiet);
+}
+
+/* Discipline line — small print, footer-style */
+.mono-discipline {
+  font-family: var(--font-mono);
+  font-size: var(--text-discipline);
+  letter-spacing: var(--tracking-discipline);
+  color: var(--text-quiet);
+  line-height: var(--leading-mono);
+}
+
+/* The decision dot — brand-mark callback. Use as a leading accent. */
+.dot-brass {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  flex-shrink: 0;
+  vertical-align: 2px;
+}
+
+/* ─────────────── Scroll reveal + stagger ─────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.5s var(--section-ease),
+    transform 0.5s var(--section-ease);
+  transition-delay: calc(var(--reveal-index, 0) * var(--motion-stagger));
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ─────────────── Anchor-target arrival ring ─────────────── */
+
+[id]:target {
+  animation: anchor-target 1.2s var(--ease-out) 1;
+  scroll-margin-top: 88px;
+}
+@keyframes anchor-target {
+  0% {
+    box-shadow: -3px 0 0 var(--accent-primary), 0 0 0 0 rgba(193, 138, 62, 0);
+  }
+  40% {
+    box-shadow: -3px 0 0 var(--accent-primary), 0 0 0 6px rgba(193, 138, 62, 0.18);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent, 0 0 0 0 rgba(193, 138, 62, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [id]:target {
+    animation: none;
+  }
+}
+
+/* ─────────────── Generic card ─────────────── */
+
+.card {
+  background: var(--surface-edge);
+  border: var(--rule-edge);
+  border-radius: var(--radius-panel);
+  padding: 28px;
+}
+
+/* ─────────────── Matrix table ─────────────── */
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.matrix-table th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: var(--rule-edge);
+}
+.matrix-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(193, 138, 62, 0.12);
+  color: var(--text-secondary);
+  transition: background var(--micro);
+}
+.matrix-table tbody tr:hover td {
+  background: rgba(193, 138, 62, 0.04);
+}
+.section--paper .matrix-table td {
+  color: var(--ink-primary);
+  border-bottom-color: rgba(16, 35, 59, 0.08);
+}
+.section--paper .matrix-table th {
+  color: var(--accent-soft);
+}
+.section--paper .matrix-table tbody tr:hover td {
+  background: rgba(193, 138, 62, 0.05);
+}
+
+/* ─────────────── Print baseline ─────────────── */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+    font-size: 11pt;
+  }
+  .section,
+  .section--navy,
+  .section--dark,
+  .section--deep,
+  .section--paper {
+    background: white !important;
+    color: black !important;
+    padding: 12pt 0;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: black !important;
+    break-after: avoid;
+  }
+  .skip-link,
+  nav.nav,
+  .footer__rule,
+  .nav__toggle,
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Suppress the floating header on print so heroes don't get hidden. */
+  nav.nav {
+    position: static;
+    background: white !important;
+    border-bottom: 1px solid #999999;
+  }
+  main {
+    padding-top: 0 !important;
+  }
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+  /* Show URLs after links, where useful for an audit print. */
+  a[href^="http"]::after,
+  a[href^="mailto"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    font-weight: normal;
+    color: #555555;
+  }
+  img {
+    max-width: 100% !important;
+    break-inside: avoid;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

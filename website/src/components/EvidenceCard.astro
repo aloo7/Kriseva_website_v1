@@ -1,0 +1,91 @@
+---
+interface Props {
+  step: string;
+  title: string;
+  source: string;
+}
+const { step, title, source } = Astro.props;
+---
+<div class="evidence-card">
+  <div class="evidence-card__rail">
+    <span class="evidence-card__step">{step}</span>
+    <span class="evidence-card__dot" />
+  </div>
+  <div class="evidence-card__body">
+    <h4>{title}</h4>
+    <p class="evidence-card__source">{source}</p>
+    <div class="evidence-card__detail">
+      <slot />
+    </div>
+  </div>
+</div>
+
+<style>
+  .evidence-card {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 18px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgba(193, 138, 62, 0.14);
+    transition: padding-left var(--motion-precise);
+  }
+  .evidence-card:last-of-type { border-bottom: none; }
+  .evidence-card:hover {
+    padding-left: 6px;
+  }
+  .evidence-card:hover .evidence-card__dot {
+    background: var(--accent-primary);
+    box-shadow: 0 0 0 4px rgba(193, 138, 62, 0.18);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .evidence-card,
+    .evidence-card:hover { padding-left: 0; transition: none; }
+    .evidence-card:hover .evidence-card__dot { box-shadow: none; }
+  }
+
+  .evidence-card__rail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 4px;
+  }
+  .evidence-card__step {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+  }
+  .evidence-card__dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-primary);
+    background: transparent;
+    transition:
+      background var(--motion-precise),
+      box-shadow var(--motion-precise);
+  }
+  .evidence-card__body h4 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-size: 1.02rem;
+  }
+  .evidence-card__source {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .evidence-card__detail {
+    font-size: 0.94rem;
+    color: var(--text-quiet);
+    line-height: var(--leading-prose);
+  }
+  .section--paper .evidence-card__body h4 { color: var(--surface-deep); }
+  .section--paper .evidence-card__detail { color: var(--ink-secondary); }
+  .section--paper .evidence-card { border-bottom-color: rgba(16, 35, 59, 0.12); }
+</style>

@@ -1,0 +1,288 @@
+---
+/**
+ * CapabilityPipeline
+ * ------------------------------------------------------------------------
+ * The "operator workflow" pipeline used on /tas: a 7-stage map from
+ * Discovery → Operator Review. Each stage is a paper-on-navy pill with a
+ * stage number, short label, and longer description. Brass connectors
+ * separate stages. Pure HTML + CSS; no canvas, no library.
+ *
+ * Mobile: collapses to a vertical list with vertical brass connectors.
+ *
+ * Reduced-motion safe: hover state is the only optional motion; reduced
+ * motion users get the static brass border + colour shift only.
+ *
+ * Claim safety: stage labels and descriptions are composed from already
+ * approved phrases in `claims.ts` / the public-claims register. No new
+ * claim wording is introduced here — see PUBLIC_CLAIMS_REGISTER.md.
+ */
+
+const stages = [
+  {
+    n: '01',
+    label: 'Discovery',
+    sub: 'GeM · DefProc public · upload',
+  },
+  {
+    n: '02',
+    label: 'Bundle',
+    sub: 'RFP · BOQ · ATC · corrigenda',
+  },
+  {
+    n: '03',
+    label: 'Extract',
+    sub: 'metadata · dates · values · eligibility',
+  },
+  {
+    n: '04',
+    label: 'Relevance',
+    sub: 'capability context · operator override',
+  },
+  {
+    n: '05',
+    label: 'Compliance',
+    sub: 'clause-anchored evidence',
+  },
+  {
+    n: '06',
+    label: 'Brief',
+    sub: 'BID / REVIEW / SKIP recommendation',
+  },
+  {
+    n: '07',
+    label: 'Operator',
+    sub: 'records the decision',
+  },
+];
+---
+<figure class="cap-pipeline" aria-label="TAS operator pipeline — seven stages from discovery to operator decision. Decorative.">
+  <header class="cap-pipeline__head">
+    <span class="cap-pipeline__caption">CAPABILITY MAP · OPERATOR PIPELINE</span>
+    <span class="cap-pipeline__count">07 stages · operator-shaped, not autonomous</span>
+  </header>
+
+  <ol class="cap-pipeline__track" aria-hidden="true">
+    {stages.map((s, i) => (
+      <li class="cap-pipeline__stage" style={`--idx: ${i};`}>
+        <div class="cap-pipeline__node">
+          <span class="cap-pipeline__num">{s.n}</span>
+          <span class="cap-pipeline__label">{s.label}</span>
+        </div>
+        <p class="cap-pipeline__sub">{s.sub}</p>
+        {i < stages.length - 1 && <span class="cap-pipeline__edge" aria-hidden="true"></span>}
+      </li>
+    ))}
+  </ol>
+
+  <p class="cap-pipeline__caveat">
+    Recommendations are advisory. Operator confirms or overrides every brief and records the decision against the bundle.
+  </p>
+</figure>
+
+<style>
+  .cap-pipeline {
+    margin: 0;
+    padding: 22px 22px 18px;
+    border: 1px solid rgba(193, 138, 62, 0.32);
+    border-radius: var(--radius-frame);
+    background:
+      radial-gradient(80% 40% at 0% 0%, rgba(193, 138, 62, 0.05) 0%, transparent 60%),
+      var(--surface-paper-rise);
+    box-shadow: 0 10px 28px rgba(3, 10, 20, 0.08);
+    position: relative;
+  }
+  .cap-pipeline::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 22px; right: 22px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--accent-primary) 18%,
+      var(--accent-primary) 22%,
+      transparent 22%,
+      transparent 28%,
+      var(--accent-primary) 28%,
+      var(--accent-primary) 100%
+    );
+    opacity: 0.55;
+  }
+
+  .cap-pipeline__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 6px;
+    margin-bottom: 18px;
+  }
+  .cap-pipeline__caption {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+  }
+  .cap-pipeline__count {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-quiet);
+    text-transform: uppercase;
+  }
+
+  /* ─────────────── Track ─────────────── */
+
+  .cap-pipeline__track {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0;
+    margin: 0 0 14px;
+    padding: 0;
+  }
+  .cap-pipeline__stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    padding: 0 4px;
+  }
+
+  .cap-pipeline__node {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 10px 12px;
+    background: var(--surface-paper);
+    border: 1px solid rgba(193, 138, 62, 0.34);
+    border-radius: var(--radius-panel);
+    color: var(--ink-primary);
+    transition:
+      background var(--motion-precise),
+      border-color var(--motion-precise),
+      box-shadow var(--motion-precise);
+    box-shadow: 0 4px 10px rgba(3, 10, 20, 0.06);
+  }
+  .cap-pipeline__stage:hover .cap-pipeline__node,
+  .cap-pipeline__stage:focus-within .cap-pipeline__node {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 12px 30px rgba(193, 138, 62, 0.25);
+  }
+  .cap-pipeline__stage:hover .cap-pipeline__node *,
+  .cap-pipeline__stage:focus-within .cap-pipeline__node * {
+    color: var(--surface-base) !important;
+  }
+
+  .cap-pipeline__num {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-soft);
+    transition: color var(--motion-precise);
+  }
+  .cap-pipeline__label {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--surface-deep);
+    line-height: 1.1;
+    transition: color var(--motion-precise);
+  }
+  .cap-pipeline__sub {
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-quiet);
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  /* Brass connector edge between stages — solid for committed steps. */
+  .cap-pipeline__edge {
+    position: absolute;
+    z-index: 1;
+    top: 28px;       /* aligned to the centre of the node title row */
+    right: -4px;
+    width: 8px;
+    height: 1px;
+    background: var(--accent-primary);
+    opacity: 0.55;
+  }
+  /* Tiny connector dot at midpoint — picks up the decision-dot motif. */
+  .cap-pipeline__edge::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+  }
+
+  /* ─────────────── Caveat ─────────────── */
+
+  .cap-pipeline__caveat {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-quiet);
+    line-height: 1.5;
+    text-align: center;
+    border-top: 1px dashed rgba(16, 35, 59, 0.16);
+    padding-top: 12px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  /* ─────────────── Responsive ─────────────── */
+
+  /* Tablet: 4 + 3 split. Stage 4 wraps to row 2; reset connector visibility. */
+  @media (max-width: 1024px) {
+    .cap-pipeline__track {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .cap-pipeline__edge { display: none; }
+  }
+  @media (max-width: 720px) {
+    .cap-pipeline__track {
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .cap-pipeline__sub { font-size: 0.54rem; }
+  }
+  @media (max-width: 480px) {
+    .cap-pipeline__track { grid-template-columns: 1fr; gap: 6px; }
+    .cap-pipeline__node {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      text-align: left;
+    }
+    .cap-pipeline__num { width: 36px; flex-shrink: 0; }
+    .cap-pipeline__label { font-size: 0.95rem; flex: 1; text-align: left; }
+    .cap-pipeline__sub {
+      text-align: left;
+      padding: 0 14px 6px 60px;
+      margin-top: -2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cap-pipeline__node,
+    .cap-pipeline__num,
+    .cap-pipeline__label { transition: none; }
+  }
+</style>

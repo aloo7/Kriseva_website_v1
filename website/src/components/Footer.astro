@@ -1,0 +1,154 @@
+---
+import { footerSitemap } from '../data/navigation';
+import { site } from '../data/site';
+import { routes } from '../data/routes';
+
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__cols">
+      <div>
+        <img
+          src="/assets/brand/kriseva-lockup-horizontal-light.svg"
+          alt={site.name}
+          height="24"
+          width="148"
+          loading="lazy"
+        />
+        <p class="footer__tag">{site.shortPositioning}</p>
+        <p class="footer__legal">{site.legalName}</p>
+      </div>
+
+      <div>
+        <p class="footer__heading">Pages</p>
+        <ul class="footer__list">
+          {footerSitemap.map(({ href, label }) => (
+            <li><a href={href}>{label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <p class="footer__heading">Contact</p>
+        <ul class="footer__list">
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={routes.contact}>Contact Founder</a></li>
+          <li><a href={routes.contactWithIntent('demo')}>Book Demo</a></li>
+          <li><a href={routes.contactWithIntent('pilot')}>Join Pilot</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__rule" />
+
+    <div class="footer__bottom">
+      <p>© {year} {site.legalName}</p>
+      <p class="footer__discipline">
+        Claims reflect verified product capabilities · No government endorsement claimed or implied
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--surface-deep);
+    color: var(--text-secondary);
+    border-top: var(--rule-edge);
+    position: relative;
+  }
+  /* Faint brass top stripe — picks up the dossier-tab idiom from the
+     identity card without making it loud. */
+  .footer::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--accent-primary) 24%,
+      var(--accent-primary) 76%,
+      transparent 100%
+    );
+    opacity: 0.32;
+  }
+  .footer__inner { padding: 64px 0 32px; }
+  .footer__cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .footer__cols { grid-template-columns: 1fr 1fr; gap: 36px; }
+  }
+  @media (max-width: 480px) {
+    .footer__cols { grid-template-columns: 1fr; }
+  }
+  .footer__tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-quiet);
+    line-height: 1.6;
+    margin: 14px 0 8px;
+  }
+  .footer__legal {
+    font-size: 0.78rem;
+    color: var(--text-quiet);
+  }
+  .footer__heading {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* The decision dot — brand-mark callback applied to footer headings. */
+  .footer__heading::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    flex-shrink: 0;
+  }
+  .footer__list { display: flex; flex-direction: column; gap: 10px; }
+  .footer__list a {
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    transition: color var(--micro), padding-left var(--micro);
+  }
+  .footer__list a:hover {
+    color: var(--accent-primary);
+    padding-left: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer__list a:hover { padding-left: 0; }
+  }
+
+  .footer__rule {
+    border-top: 1px solid rgba(193, 138, 62, 0.12);
+    margin: 32px 0 20px;
+  }
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.74rem;
+    color: var(--text-quiet);
+  }
+  .footer__discipline {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+  }
+</style>

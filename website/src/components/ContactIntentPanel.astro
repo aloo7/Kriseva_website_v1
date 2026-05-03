@@ -1,0 +1,300 @@
+---
+import { site } from '../data/site';
+
+const intents: { value: string; label: string; meta: string }[] = [
+  { value: 'demo', label: 'Book Demo', meta: 'Walk through TAS with the founder.' },
+  { value: 'pilot', label: 'Join Pilot', meta: 'Explore a pilot deployment.' },
+  { value: 'issuer', label: 'Issuer-side discussion', meta: 'Procurement-side roadmap conversation.' },
+  { value: 'partnership', label: 'Partnership', meta: 'Strategic / channel introduction.' },
+  { value: 'other', label: 'Other', meta: 'Anything else worth a conversation.' },
+];
+---
+<form class="contact-form" data-contact-form aria-describedby="contact-disclosure">
+  <p id="contact-disclosure" class="contact-form__disclosure">
+    Submitting opens your mail app with a draft to <strong>{site.email}</strong>. Nothing is sent until you press send in your mail client.
+  </p>
+
+  <div class="contact-form__intent" role="radiogroup" aria-label="Conversation intent">
+    {intents.map((it, i) => (
+      <label class="contact-form__intent-row">
+        <input type="radio" name="intent" value={it.value} checked={i === 0} />
+        <span class="contact-form__intent-label">{it.label}</span>
+        <span class="contact-form__intent-meta">{it.meta}</span>
+      </label>
+    ))}
+  </div>
+
+  <div class="contact-form__grid">
+    <label>
+      <span>Name <em>required</em></span>
+      <input type="text" name="name" required autocomplete="name" />
+    </label>
+    <label>
+      <span>Organization <em>required</em></span>
+      <input type="text" name="organization" required autocomplete="organization" />
+    </label>
+    <label>
+      <span>Role</span>
+      <input type="text" name="role" autocomplete="organization-title" />
+    </label>
+    <label>
+      <span>Email <em>required</em></span>
+      <input type="email" name="email" required autocomplete="email" />
+    </label>
+    <label>
+      <span>Phone (optional)</span>
+      <input type="tel" name="phone" autocomplete="tel" />
+    </label>
+    <label>
+      <span>Stakeholder type</span>
+      <select name="stakeholder">
+        <option value="defense-msme">Defense MSME / bidder-side</option>
+        <option value="defense-tech">Defense-tech company</option>
+        <option value="oem-si">OEM / system integrator</option>
+        <option value="issuer">Issuer-side / procurement</option>
+        <option value="institutional">Partnership / institutional observer</option>
+        <option value="other">Other</option>
+      </select>
+    </label>
+  </div>
+
+  <label class="contact-form__textarea">
+    <span>Message</span>
+    <textarea name="message" rows="6" placeholder="A few lines of context — what you do, what you’re evaluating, what would make a useful first conversation."></textarea>
+  </label>
+
+  <div class="contact-form__actions">
+    <button type="submit" class="btn btn--primary" data-arrow>Compose Email</button>
+    <a class="contact-form__mailto" href={`mailto:${site.email}`}>Or email directly: {site.email}</a>
+  </div>
+</form>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: 22px;
+    background: var(--paper-light);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+    border-radius: var(--radius-panel);
+    padding: 28px;
+    color: var(--ink);
+  }
+  .section--navy .contact-form,
+  .section--dark .contact-form {
+    background: rgba(10, 31, 68, 0.5);
+    color: var(--paper);
+    border-color: rgba(193, 138, 62, 0.22);
+  }
+  .contact-form__disclosure {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--slate-600);
+    background: rgba(16, 35, 59, 0.04);
+    padding: 12px 14px;
+    border-radius: var(--radius-control);
+  }
+  .section--navy .contact-form__disclosure,
+  .section--dark .contact-form__disclosure {
+    background: rgba(193, 138, 62, 0.06);
+    color: var(--paper-mute);
+  }
+
+  .contact-form__intent {
+    display: grid;
+    gap: 10px;
+  }
+  .contact-form__intent-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: baseline;
+    gap: 14px;
+    padding: 12px 16px;
+    border: 1px solid rgba(16, 35, 59, 0.12);
+    border-left-width: 3px;
+    border-left-color: transparent;
+    border-radius: var(--radius-control);
+    cursor: pointer;
+    transition:
+      border-color var(--motion-precise),
+      background var(--motion-precise),
+      box-shadow var(--motion-precise);
+  }
+  .contact-form__intent-row:hover {
+    border-color: var(--accent-primary);
+    background: rgba(193, 138, 62, 0.04);
+  }
+  /* :has(:checked) — the chosen row gets a strong brass left rule. CSS-only
+     so the URL-deep-link state paints correctly on first render. */
+  .contact-form__intent-row:has(input:checked) {
+    border-left-color: var(--accent-primary);
+    background: rgba(193, 138, 62, 0.06);
+  }
+  .contact-form__intent-row:focus-within {
+    box-shadow: var(--ring-brass);
+    outline: none;
+  }
+  .contact-form__intent-row input { accent-color: var(--accent-soft); }
+  .contact-form__intent-label {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    color: var(--accent-soft);
+    text-transform: uppercase;
+  }
+  .contact-form__intent-meta {
+    font-size: 0.88rem;
+    color: var(--ink-secondary);
+    line-height: 1.45;
+  }
+  .section--navy .contact-form__intent-row,
+  .section--dark .contact-form__intent-row { border-color: rgba(193, 138, 62, 0.18); }
+  .section--navy .contact-form__intent-meta,
+  .section--dark .contact-form__intent-meta { color: var(--text-secondary); }
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form__intent-row { transition: none; }
+  }
+  /* Narrow viewports: intent row stacks the meta below the label so the
+     longer meta lines ("Procurement-side roadmap conversation.") never
+     squeeze into a 1-word column. Radio + label stay on the same line. */
+  @media (max-width: 480px) {
+    .contact-form__intent-row {
+      grid-template-columns: auto 1fr;
+      gap: 6px 14px;
+    }
+    .contact-form__intent-label {
+      font-size: 0.72rem;
+    }
+    .contact-form__intent-meta {
+      grid-column: 2;
+      font-size: 0.84rem;
+    }
+  }
+
+  .contact-form__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .contact-form__grid { grid-template-columns: 1fr; } }
+
+  .contact-form label { display: block; }
+  .contact-form label > span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--brass-soft);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .contact-form label em {
+    font-style: normal;
+    color: var(--decision-skip);
+    margin-left: 6px;
+    font-size: 0.62rem;
+  }
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: var(--radius-control);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+    background: var(--paper);
+    color: var(--ink);
+    font: inherit;
+  }
+  .section--navy .contact-form input,
+  .section--navy .contact-form select,
+  .section--navy .contact-form textarea,
+  .section--dark .contact-form input,
+  .section--dark .contact-form select,
+  .section--dark .contact-form textarea {
+    background: rgba(6, 16, 31, 0.6);
+    color: var(--paper);
+    border-color: rgba(193, 138, 62, 0.24);
+  }
+  .contact-form input:focus,
+  .contact-form select:focus,
+  .contact-form textarea:focus {
+    outline: 2px solid var(--brass);
+    outline-offset: 1px;
+  }
+
+  .contact-form__textarea textarea { min-height: 140px; resize: vertical; }
+
+  .contact-form__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .contact-form__actions button {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: 1px solid var(--brass);
+    background: var(--brass);
+    color: var(--navy-dark);
+    border-radius: var(--radius-control);
+    cursor: pointer;
+    transition: background var(--micro), color var(--micro);
+  }
+  .contact-form__actions button:hover {
+    background: var(--brass-soft);
+    color: var(--paper);
+  }
+  .contact-form__mailto {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--brass-soft);
+  }
+</style>
+
+<script>
+  // Pre-select intent from ?intent=... and compose a mailto: draft on submit.
+  // No fake "submitted" state — the form transparently opens the user's mail
+  // client; nothing is sent unless the user presses send there.
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const params = new URLSearchParams(window.location.search);
+    const intent = params.get('intent');
+    if (intent) {
+      const radio = form.querySelector<HTMLInputElement>(`input[name="intent"][value="${CSS.escape(intent)}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const intentValue = String(data.get('intent') || 'demo');
+      const intentSubjectMap: Record<string, string> = {
+        demo: 'Book Demo',
+        pilot: 'Join Pilot',
+        issuer: 'Issuer-side discussion',
+        partnership: 'Partnership',
+        other: 'KRISEVA inquiry',
+      };
+      const subject = `KRISEVA — ${intentSubjectMap[intentValue] ?? 'Inquiry'}`;
+      const lines: string[] = [];
+      const fields = ['name', 'organization', 'role', 'email', 'phone', 'stakeholder', 'intent'];
+      for (const f of fields) {
+        const v = data.get(f);
+        if (v) lines.push(`${f.toUpperCase()}: ${v}`);
+      }
+      const message = data.get('message');
+      if (message) {
+        lines.push('');
+        lines.push('MESSAGE:');
+        lines.push(String(message));
+      }
+      const body = lines.join('\n');
+      const url = `mailto:ayush@kriseva.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = url;
+    });
+  }
+</script>

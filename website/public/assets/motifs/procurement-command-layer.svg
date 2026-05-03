@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Procurement command layer</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">PROCUREMENT COMMAND LAYER</text>
+  <rect x="80" y="130" width="800" height="310" rx="8" fill="#08182c" stroke="#b78a45"></rect>
+  <g font-family="ui-monospace, monospace" font-size="12" fill="#d8cfbd">
+    <rect x="110" y="165" width="220" height="230" rx="6" fill="#102039" stroke="#2f415a"></rect><text x="132" y="200">QUEUE</text><text x="132" y="238">Action: 04</text><text x="132" y="272">Ready: 08</text><text x="132" y="306">Blocked: 02</text>
+    <rect x="370" y="165" width="220" height="230" rx="6" fill="#102039" stroke="#2f415a"></rect><text x="392" y="200">BRIEF</text><text x="392" y="238">score: 78</text><text x="392" y="272">verdict: BID</text><text x="392" y="306">evidence: 12 refs</text>
+    <rect x="630" y="165" width="220" height="230" rx="6" fill="#102039" stroke="#2f415a"></rect><text x="652" y="200">BOUNDARY</text><text x="652" y="238">GeM: live</text><text x="652" y="272">DefProc: manual</text><text x="652" y="306">egress: audited</text>
+  </g>
+
+</svg>

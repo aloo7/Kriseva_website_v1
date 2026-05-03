@@ -1,0 +1,33 @@
+# Build output
+website/dist/
+website/.astro/
+
+# Dependencies
+website/node_modules/
+node_modules/
+
+# Playwright artifacts (snapshots are committed; runtime outputs are not)
+website/tests/.output/
+website/test-results/
+website/playwright-report/
+website/playwright/.cache/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor cruft
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Local download artifacts (regenerable; not committed)
+*.tar.gz
+*.bundle

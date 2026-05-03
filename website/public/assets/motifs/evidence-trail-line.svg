@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Evidence trail line</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="88" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">SOURCE TRACE</text>
+  <path d="M120 270 H320 C390 270 390 190 460 190 H665 C735 190 735 320 810 320" fill="none" stroke="#b78a45" stroke-width="3"></path>
+  <g fill="#f2ead9" stroke="#b78a45"><circle cx="120" cy="270" r="20"></circle><circle cx="320" cy="270" r="20"></circle><circle cx="460" cy="190" r="20"></circle><circle cx="665" cy="190" r="20"></circle><circle cx="810" cy="320" r="20"></circle></g>
+  <g font-family="ui-monospace, monospace" font-size="13" fill="#d8cfbd"><text x="82" y="330">DOC</text><text x="282" y="330">PAGE</text><text x="420" y="160">CLAUSE</text><text x="628" y="160">FIELD</text><text x="760" y="370">BRIEF</text></g>
+
+</svg>

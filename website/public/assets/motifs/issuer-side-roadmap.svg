@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Issuer side roadmap</title>
+  <desc id="desc">Original KRISEVA procurement-intelligence motif generated for website design research.</desc>
+  <rect width="960" height="540" fill="#071426"></rect>
+  <rect x="34" y="34" width="892" height="472" rx="8" fill="#0c1b30" stroke="#b78a45" stroke-width="1"></rect>
+  
+  <text x="70" y="86" font-family="ui-monospace, monospace" font-size="14" fill="#b78a45">ISSUER-SIDE ROADMAP // NOT LAUNCHED</text>
+  <g font-family="ui-monospace, monospace" font-size="13">
+    <rect x="90" y="190" width="170" height="120" rx="6" fill="#f2ead9" stroke="#b78a45"></rect><text x="120" y="242" fill="#17263b">criteria intake</text>
+    <rect x="300" y="190" width="170" height="120" rx="6" fill="#f2ead9" stroke="#b78a45"></rect><text x="332" y="242" fill="#17263b">bid comparison</text>
+    <rect x="510" y="190" width="170" height="120" rx="6" fill="#f2ead9" stroke="#b78a45"></rect><text x="542" y="242" fill="#17263b">evidence packet</text>
+    <rect x="720" y="190" width="150" height="120" rx="6" fill="#102039" stroke="#b78a45"></rect><text x="742" y="242" fill="#d8cfbd">committee review</text>
+    <path d="M260 250 H300 M470 250 H510 M680 250 H720" stroke="#b78a45" stroke-width="2"></path>
+  </g>
+
+</svg>

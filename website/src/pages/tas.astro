@@ -1,0 +1,347 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import ProductScreenshotFrame from '../components/ProductScreenshotFrame.astro';
+import ComplianceMatrixPreview from '../components/ComplianceMatrixPreview.astro';
+import DecisionPill from '../components/DecisionPill.astro';
+import FounderCTA from '../components/FounderCTA.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import CapabilityPipeline from '../components/CapabilityPipeline.astro';
+import { routes } from '../data/routes';
+import { claims } from '../data/claims';
+
+const title = 'TAS — Tender Automation System';
+const description = 'KRISEVA TAS is the bidder-side tender automation and procurement intelligence product for defense MSMEs. Discover, parse, score, and review tender opportunities with source-linked evidence and operator-reviewed BID / REVIEW / SKIP recommendations.';
+---
+<BaseLayout title={title} description={description}>
+  <RouteHero
+    eyebrow="Product · KRISEVA TAS"
+    title="The bidder-side<br /><span class='brass'>Tender Automation System.</span>"
+    subtitle={claims.productLongLine}
+    meta="Status · in pilot / demo evaluation · not production SaaS"
+  >
+    <Fragment slot="cta">
+      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
+      <SecondaryButton href={routes.contactWithIntent('pilot')}>Join Pilot</SecondaryButton>
+    </Fragment>
+  </RouteHero>
+
+  {/* Operator capability map */}
+  <section class="section section--paper tas-pipeline-section">
+    <div class="container">
+      <div class="reveal">
+        <SectionLabel>Operator Pipeline</SectionLabel>
+        <h2 style="margin-bottom: 14px;">From discovery to operator decision, one map.</h2>
+        <p style="color: var(--ink-soft); max-width: 720px; margin-bottom: 28px;">
+          The full operator workflow at a glance. Each stage is observable, reviewable, and recorded against the bundle. Hover or focus a stage to highlight it.
+        </p>
+      </div>
+      <div class="reveal">
+        <CapabilityPipeline />
+      </div>
+    </div>
+  </section>
+
+  {/* Capabilities */}
+  <section class="section section--dark">
+    <div class="container">
+      <SectionLabel>Capabilities</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">What each station does, in plain terms.</h2>
+      <p class="reveal" style="color:var(--paper-mute);max-width:760px;margin-bottom:32px;">
+        Capability statements below mirror the public claim register. Anything that needs careful wording is wrapped in caveats; anything not yet validated is excluded.
+      </p>
+
+      <div class="tas-caps" data-stagger>
+        <div class="reveal"><DossierCard label="01" title="Tender discovery & ingestion" meta="Status · operational">
+          {claims.gem} {claims.defproc} Operator-pasted bundles and uploads are first-class citizens.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="02" title="Bundle organization" meta="Status · operational">
+          {claims.bundleThesis}
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="03" title="Document parsing" meta="Status · operational">
+          {claims.parsing}
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="04" title="OCR routing" meta="Status · under active evaluation">
+          {claims.ocr}
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="05" title="Relevance scoring" meta="Status · in pilot">
+          Relevance scoring against company capability context. Operator overrides are first-class.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="06" title="Compliance extraction" meta="Status · operator-reviewed">
+          {claims.compliance}
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="07" title="Source-linked evidence" meta="Status · clause + page citations">
+          Every extracted fact carries a clause + page citation. Reviewers can step from the brief into the underlying clause.
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="08" title="BID / REVIEW / SKIP recommendation" meta="Recommends · not autonomous">
+          {claims.recommendation}
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="09" title="Operator review workflow" meta="Operator-recorded · reviewable in audit">
+          The operator records the decision, the rationale, and the corrigenda watch. The brief is reviewable in audit.
+        </DossierCard></div>
+      </div>
+    </div>
+  </section>
+
+  {/* Source-linked extraction */}
+  <section class="section section--dark">
+    <div class="container tas-extraction">
+      <div class="reveal">
+        <SectionLabel>Source-Linked Extraction</SectionLabel>
+        <h2>Extraction that survives the audit.</h2>
+        <p style="color:var(--paper-mute);max-width:540px;margin-bottom:22px;">
+          {claims.metadata} Each value carries a back-pointer to the bundle clause that produced it.
+        </p>
+        <ul class="tas-extraction__list">
+          <li><strong>Buyer / agency fields</strong> — issuing entity, contracting officer, location, mode.</li>
+          <li><strong>Dates</strong> — publication, pre-bid, submission, opening, validity, EMD release.</li>
+          <li><strong>Values</strong> — estimated cost, EMD, ePBG, performance security, payment terms.</li>
+          <li><strong>Eligibility signals</strong> — turnover, past performance, MSE/MII declarations, certifications.</li>
+          <li><strong>Document requirements</strong> — what the bidder must furnish, by clause and annex.</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <ProductScreenshotFrame
+          src="/assets/screenshots/04_bundle_source_evidence.png"
+          alt="KRISEVA TAS — bundle and source-evidence view"
+          caption="Bundle / source-evidence view"
+          disclosure="Repo-owned capture · seeded demo data"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* Compliance matrix */}
+  <section class="section section--paper">
+    <div class="container tas-matrix">
+      <div class="reveal">
+        <SectionLabel>Compliance Matrix</SectionLabel>
+        <h2>Compliance, structured for human review.</h2>
+        <p style="color:var(--ink-soft);max-width:520px;">
+          {claims.compliance} The matrix is a starting point for a human reviewer, not a substitute for one. Gaps are flagged with the source clause that triggered them.
+        </p>
+      </div>
+      <div class="reveal">
+        <ComplianceMatrixPreview />
+      </div>
+    </div>
+  </section>
+
+  {/* Decision panel */}
+  <section class="section section--navy">
+    <div class="container tas-decision">
+      <div class="reveal">
+        <SectionLabel>Decision Brief</SectionLabel>
+        <h2>BID / REVIEW / SKIP — recommendations the operator reviews.</h2>
+        <p style="color:var(--paper-mute);max-width:680px;margin-bottom:26px;">
+          The brief is a recommendation, not an action. The operator reviews the rationale, accepts or overrides, and records the decision against the bundle.
+        </p>
+      </div>
+      <div class="tas-decision__grid" data-stagger>
+        <div class="reveal tas-decision__cell tas-decision__cell--bid">
+          <DecisionPill state="bid" size="md">BID</DecisionPill>
+          <p>Eligibility clear, compliance signals favorable, fit aligned with company capability context.</p>
+          <p class="tas-decision__meta">Recommended · operator confirms</p>
+        </div>
+        <div class="reveal tas-decision__cell tas-decision__cell--review">
+          <DecisionPill state="review" size="md">REVIEW</DecisionPill>
+          <p>Material ambiguity, partial compliance gap, or missing certifications. Operator review required before submission.</p>
+          <p class="tas-decision__meta">Held · operator reviews evidence</p>
+        </div>
+        <div class="reveal tas-decision__cell tas-decision__cell--skip">
+          <DecisionPill state="skip" size="md">SKIP</DecisionPill>
+          <p>Eligibility miss, capacity gap, or risk threshold breached. Skip with a documented rationale.</p>
+          <p class="tas-decision__meta">Skipped · rationale recorded</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Screenshots */}
+  <section class="section section--dark">
+    <div class="container">
+      <SectionLabel>Product Surfaces</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:32px;">Repo-grounded TAS captures.</h2>
+      <div class="tas-shots" data-stagger>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/01_home_dashboard.png"
+            alt="TAS home dashboard"
+            caption="Home / dashboard"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/02_queue_tender_list.png"
+            alt="TAS tender queue"
+            caption="Tender queue / list"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/05_sources_import_status.png"
+            alt="TAS sources / import status"
+            caption="Sources / import status"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+        <div class="reveal">
+          <ProductScreenshotFrame
+            src="/assets/screenshots/03_tender_briefing_recommendation.png"
+            alt="TAS tender briefing with recommendation"
+            caption="Tender briefing / recommendation"
+            disclosure="Repo-owned · seeded demo data"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* What TAS is not */}
+  <section class="section section--paper">
+    <div class="container">
+      <SectionLabel>Boundaries</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:14px;">What TAS does not claim.</h2>
+      <p class="reveal" style="color:var(--ink-soft);max-width:680px;margin-bottom:24px;">
+        Listing the things TAS will not pretend to do is part of the product. Pretending otherwise breaks the trust this category needs.
+      </p>
+      <ul class="tas-not" data-stagger>
+        {claims.notClaimed.map((item) => (
+          <li class="reveal">
+            <span class="tas-not__tag">NOT</span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <FounderCTA
+    heading="Walk through TAS with the founder."
+    body="The most useful first conversation is a screen-share through the actual product, against a tender bundle from your domain. Direct line, confidential by default."
+  />
+</BaseLayout>
+
+<style>
+  .tas-pipeline-section {
+    padding-bottom: 72px;
+  }
+
+  .tas-caps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 980px) { .tas-caps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .tas-caps { grid-template-columns: 1fr; } }
+
+  .tas-extraction {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 920px) { .tas-extraction { grid-template-columns: 1fr; gap: 36px; } }
+  .tas-extraction__list {
+    display: grid;
+    gap: 12px;
+  }
+  .tas-extraction__list li {
+    font-size: 0.94rem;
+    color: var(--paper-mute);
+    padding: 10px 0;
+    border-top: 1px solid rgba(193, 138, 62, 0.14);
+    line-height: 1.55;
+  }
+  .tas-extraction__list strong { color: var(--brass); font-weight: 600; }
+
+  .tas-matrix {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 920px) { .tas-matrix { grid-template-columns: 1fr; gap: 32px; } }
+
+  .tas-decision__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 880px) { .tas-decision__grid { grid-template-columns: 1fr; } }
+  .tas-decision__cell {
+    padding: 26px;
+    border: var(--rule-edge);
+    border-radius: var(--radius-panel);
+    background: rgba(10, 31, 68, 0.5);
+    border-top: 3px solid var(--accent-primary);
+    position: relative;
+  }
+  .tas-decision__cell--bid    { border-top-color: var(--decision-bid); }
+  .tas-decision__cell--review { border-top-color: var(--decision-review); }
+  .tas-decision__cell--skip   { border-top-color: var(--decision-skip); }
+  .tas-decision__cell p {
+    color: var(--paper-mute);
+    margin-top: 14px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+  }
+  .tas-decision__meta {
+    margin-top: 14px !important;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(193, 138, 62, 0.22);
+    font-family: var(--font-mono);
+    font-size: 0.64rem !important;
+    letter-spacing: 0.12em;
+    color: var(--text-faint) !important;
+    text-transform: uppercase;
+  }
+
+  .tas-shots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 880px) { .tas-shots { grid-template-columns: 1fr; } }
+
+  .tas-not {
+    display: grid;
+    gap: 12px;
+    max-width: 760px;
+  }
+  .tas-not li {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(154, 53, 44, 0.32);
+    /* Dashed left rule = "boundary documented and crossable / not committed" — */
+    /* matches the design-system rule discipline on /security. */
+    border-left: 2px dashed rgba(154, 53, 44, 0.55);
+    background: rgba(154, 53, 44, 0.04);
+    border-radius: var(--radius-control);
+    color: var(--ink);
+    font-size: 0.94rem;
+    line-height: 1.5;
+    list-style: none;
+  }
+  .tas-not__tag {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    color: var(--decision-skip);
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  /* Narrow viewports: tighten the tag column so the body text gets
+     breathing room at 320–390 px content widths. */
+  @media (max-width: 420px) {
+    .tas-not li { grid-template-columns: 44px 1fr; gap: 10px; padding: 12px 14px; }
+    .tas-not__tag { font-size: 0.62rem; letter-spacing: 0.14em; }
+  }
+</style>

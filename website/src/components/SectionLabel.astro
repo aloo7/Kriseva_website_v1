@@ -1,0 +1,26 @@
+---
+export interface Props {
+  as?: 'span' | 'p';
+  tone?: 'brass' | 'muted';
+  class?: string;
+}
+const { as = 'span', tone = 'brass', class: className = '' } = Astro.props;
+const Tag = as;
+---
+<Tag class:list={['section-label', `section-label--${tone}`, className]}>
+  <slot />
+</Tag>
+
+<style is:global>
+  .section-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-label--brass { color: var(--brass); }
+  .section-label--muted { color: var(--slate-600); }
+  .section--paper .section-label--brass { color: var(--brass-soft); }
+</style>

@@ -1,0 +1,57 @@
+---
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+<figure class="security-boundary">
+  <img
+    src="/assets/motifs/local-first-boundary.svg"
+    alt="Local-first boundary diagram showing local storage, local model routes, and explicit external connectors"
+    loading="lazy"
+    width="800"
+    height="500"
+  />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .security-boundary {
+    position: relative;
+    border-radius: var(--radius-frame);
+    overflow: hidden;
+    border: 1px solid rgba(193, 138, 62, 0.32);
+    box-shadow: var(--shadow-lift);
+    background: var(--surface-base);
+    margin: 0;
+    transition: box-shadow var(--motion-precise);
+  }
+  .security-boundary::before {
+    content: "LOCAL-FIRST BOUNDARY";
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .security-boundary:hover { box-shadow: var(--shadow-card-hover); }
+  .security-boundary img { width: 100%; display: block; }
+  figcaption {
+    padding: 14px 18px;
+    border-top: 1px solid rgba(193, 138, 62, 0.16);
+    border-left: 2px dashed rgba(193, 138, 62, 0.55);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-quiet);
+    background: var(--surface-edge);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .security-boundary,
+    .security-boundary:hover { transition: none; }
+  }
+</style>

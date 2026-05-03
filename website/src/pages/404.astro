@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import { routes } from '../data/routes';
+import { site } from '../data/site';
+
+const title = '404 — Not Found';
+const description = 'The page you were looking for does not exist on the KRISEVA AI website.';
+
+// Server-rendered reference line. On a 404 the actual URL is not always
+// available (depends on the host's 404 handling), so we keep the reference
+// generic. If the host serves dist/404.html with the original path preserved,
+// the path will appear; otherwise the line reads as a generic dossier marker.
+const path = Astro.url.pathname;
+const referenceTag = path && path !== '/404' && path !== '/404/'
+  ? `Reference · ${path}`
+  : 'Reference · unfiled';
+---
+<BaseLayout title={title} description={description}>
+  <section class="section section--dark not-found">
+    <div class="container">
+      <div class="reveal">
+        <div class="not-found__head">
+          <SectionLabel>404 · Not Found</SectionLabel>
+          <span class="not-found__id">DOSSIER · MISSING ENTRY</span>
+        </div>
+        <h1>This dossier number is not on file.</h1>
+        <p class="not-found__lede">
+          The page you were looking for does not exist. Try one of the working routes below, or send a direct note to the founder.
+        </p>
+        <p class="not-found__reference">{referenceTag}</p>
+
+        <div class="not-found__cta">
+          <PrimaryButton href={routes.contact}>Contact Founder</PrimaryButton>
+          <SecondaryButton href={routes.home}>Back to Home</SecondaryButton>
+          <SecondaryButton href={routes.tas}>Open the TAS page</SecondaryButton>
+          <SecondaryButton href={routes.founder}>Founder</SecondaryButton>
+        </div>
+
+        <ul class="not-found__index">
+          <li><a href={routes.tas}>§ TAS</a></li>
+          <li><a href={routes.workflow}>§ Workflow</a></li>
+          <li><a href={routes.security}>§ Security</a></li>
+          <li><a href={routes.issuerRoadmap}>§ Issuer Roadmap</a></li>
+          <li><a href={routes.validation}>§ Validation</a></li>
+          <li><a href={routes.founder}>§ Founder</a></li>
+          <li><a href={routes.contact}>§ Contact</a></li>
+        </ul>
+
+        <p class="not-found__direct">
+          Direct: <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-top: 140px;
+    padding-bottom: 120px;
+    /* Quiet brass corner-wash matches the hero's depth treatment without */
+    /* drawing attention. */
+    background:
+      radial-gradient(60% 50% at 78% 12%, rgba(193, 138, 62, 0.06) 0%, transparent 60%),
+      var(--surface-base);
+  }
+  .not-found__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .not-found__id {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+  }
+  .not-found h1 {
+    margin-bottom: 16px;
+    max-width: 720px;
+    letter-spacing: var(--tracking-display);
+  }
+  .not-found__lede {
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 14px;
+  }
+  .not-found__reference {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    padding: 8px 14px;
+    background: rgba(193, 138, 62, 0.04);
+    border-left: 2px dashed rgba(193, 138, 62, 0.55);
+    display: inline-block;
+    border-radius: 0 3px 3px 0;
+    word-break: break-all;
+  }
+  .not-found__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .not-found__index {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
+    border-top: 1px solid rgba(193, 138, 62, 0.14);
+    padding-top: 18px;
+  }
+  .not-found__index li {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+  .not-found__index a {
+    color: var(--text-secondary);
+    transition: color var(--micro);
+  }
+  .not-found__index a:hover { color: var(--accent-primary); }
+  .not-found__direct {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--text-quiet);
+  }
+  .not-found__direct a { color: var(--accent-primary); }
+
+  @media (max-width: 600px) {
+    .not-found__cta { flex-direction: column; align-items: stretch; }
+    .not-found__cta :global(.btn) { width: 100%; justify-content: center; }
+    .not-found__index { gap: 4px 18px; }
+  }
+</style>

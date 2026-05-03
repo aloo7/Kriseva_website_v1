@@ -1,0 +1,212 @@
+---
+import { headerLinks } from '../data/navigation';
+import { routes } from '../data/routes';
+import { site } from '../data/site';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+<header class="nav" data-nav>
+  <div class="nav__inner container">
+    <a href={routes.home} class="nav__brand" aria-label={`${site.name} home`}>
+      <img
+        src="/assets/brand/kriseva-lockup-horizontal-light.svg"
+        alt={site.name}
+        height="38"
+        width="180"
+        fetchpriority="high"
+      />
+    </a>
+
+    <button
+      type="button"
+      class="nav__toggle"
+      aria-label="Toggle menu"
+      aria-controls="nav-links"
+      aria-expanded="false"
+      data-nav-toggle
+    >
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <ul id="nav-links" class="nav__links" data-nav-links>
+      {headerLinks.map(({ href, label }) => {
+        const active = current === href || (href !== '/' && current.startsWith(href));
+        return (
+          <li>
+            <a href={href} aria-current={active ? 'page' : undefined} class:list={[active && 'is-active']}>
+              {label}
+            </a>
+          </li>
+        );
+      })}
+      <li class="nav__cta">
+        <a href={routes.contact} class="btn btn--primary btn--sm">Contact Founder</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(6, 16, 31, 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid rgba(193, 138, 62, 0.14);
+    transition:
+      background 240ms var(--ease-out),
+      border-color 240ms var(--ease-out),
+      box-shadow 240ms var(--ease-out);
+  }
+  /* Settled appearance once the user has scrolled past the hero. */
+  .nav.is-scrolled {
+    background: rgba(6, 16, 31, 0.94);
+    border-bottom-color: rgba(193, 138, 62, 0.24);
+    box-shadow: 0 8px 24px rgba(3, 10, 20, 0.28);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-control);
+  }
+  .nav__brand img { display: block; }
+  .nav__toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--paper);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 8px 10px;
+    line-height: 1;
+    border-radius: var(--radius-control);
+    transition: background var(--micro);
+  }
+  .nav__toggle:hover { background: rgba(193, 138, 62, 0.08); }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav__links li { display: inline-flex; align-items: center; }
+  .nav__links a:not(.btn) {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.01em;
+    padding: 6px 0;
+    transition: color var(--micro);
+  }
+  /* Brass underline-on-hover/active. Grows from the left, 220ms. */
+  .nav__links a:not(.btn)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: var(--accent-primary);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--motion-precise);
+  }
+  .nav__links a:not(.btn):hover { color: var(--accent-primary); }
+  .nav__links a:not(.btn):hover::after,
+  .nav__links a.is-active::after { transform: scaleX(1); }
+  .nav__links a.is-active { color: var(--accent-primary); }
+  .nav__cta a { padding: 9px 18px; font-size: 0.72rem; }
+
+  @media (max-width: 920px) {
+    .nav__toggle { display: inline-flex; }
+    .nav__links {
+      display: none;
+      position: absolute;
+      top: 64px; left: 0; right: 0;
+      flex-direction: column;
+      gap: 14px;
+      padding: 22px var(--gutter) 26px;
+      background: rgba(6, 16, 31, 0.97);
+      border-bottom: var(--rule-edge);
+    }
+    .nav__links.is-open { display: flex; }
+    .nav__cta a { width: 100%; justify-content: center; }
+    /* Mobile drawer: drop the underline-from-left treatment so the row taps
+       feel like buttons, not editorial links. */
+    .nav__links a:not(.btn)::after { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav,
+    .nav__toggle,
+    .nav__links a:not(.btn)::after { transition: none; }
+  }
+
+  /* Spacer below the fixed header so page content starts cleanly. */
+  :global(main) {
+    padding-top: 64px;
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const links = document.querySelector<HTMLElement>('[data-nav-links]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+
+  if (toggle && links) {
+    const close = (returnFocus: boolean) => {
+      links.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.querySelector('span')!.textContent = '☰';
+      if (returnFocus) toggle.focus();
+    };
+
+    toggle.addEventListener('click', () => {
+      const open = links.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.querySelector('span')!.textContent = open ? '✕' : '☰';
+    });
+
+    links.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => close(false)),
+    );
+
+    // ESC closes the drawer and returns focus to the toggle. Reduced-motion
+    // safe (no transition involved); only fires when the drawer is open.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && links.classList.contains('is-open')) {
+        close(true);
+      }
+    });
+  }
+
+  // Settle the nav into its "scrolled" state past 16 px. Single rAF-coalesced
+  // listener; no continuous reads. Reduced-motion is honoured via the CSS
+  // transition override in tokens / global.css.
+  if (nav) {
+    let ticking = false;
+    const apply = () => {
+      const scrolled = window.scrollY > 16;
+      nav.classList.toggle('is-scrolled', scrolled);
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(apply);
+    };
+    apply();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>

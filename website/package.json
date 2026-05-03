@@ -1,0 +1,37 @@
+{
+  "name": "kriseva-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "KRISEVA AI public website — procurement intelligence for India's defense ecosystem.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint:copy": "node scripts/check-public-copy.mjs",
+    "lint:public-output": "node scripts/check-public-output.mjs",
+    "lint:css": "stylelint \"src/styles/**/*.css\"",
+    "qa": "npm run lint:copy && npm run build && npm run lint:public-output",
+    "qa:visual": "playwright test tests/visual.spec.ts",
+    "qa:a11y": "playwright test tests/a11y.spec.ts",
+    "qa:responsive": "playwright test tests/responsive.spec.ts",
+    "qa:motion": "playwright test tests/motion.spec.ts",
+    "qa:stage7": "npm run lint:css && npm run qa && npm run qa:a11y && npm run qa:visual && npm run qa:responsive && npm run qa:motion",
+    "optimize:screenshots": "node scripts/optimize-screenshots.mjs",
+    "optimize:screenshots:revert": "node scripts/optimize-screenshots.mjs --revert"
+  },
+  "dependencies": {
+    "astro": "^4.16.18"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@axe-core/playwright": "^4.11.3",
+    "playwright": "^1.59.1",
+    "sharp": "^0.34.5",
+    "stylelint": "^17.9.1",
+    "stylelint-config-standard": "^40.0.0",
+    "svgo": "^4.0.1",
+    "typescript": "^5.6.3"
+  }
+}
