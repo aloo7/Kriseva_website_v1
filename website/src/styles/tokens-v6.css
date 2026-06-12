@@ -20,6 +20,9 @@
   --rule:#C7BDA3;
   --navy:#0A1F44;
   --brass:#A87229; --brass-lt:#C89A4C;
+  /* AA siblings (Convention #11): brass fails 4.5:1 as small text / fill on
+     paper surfaces; these darker cuts pass while keeping the brass voice */
+  --brass-deep:#8A5C16; --brass-text:#91601C;
   /* verdict palette - exact, used ONLY on verdicts */
   --v-verified:#3A7A5B; --v-qualified:#9A7322; --v-insufficient:#5F6A79;
   --v-missing:#9C4F43; --v-demo:#41618C; --v-failed:#83332D;
@@ -73,11 +76,11 @@ h1.display{font-size:clamp(2.4rem,5vw,4.8rem);line-height:1.05}
 h2.display{font-size:clamp(2.1rem,4.4vw,4.2rem)}
 h3{font-family:var(--sans);font-weight:600;font-size:1.06rem}
 .it{font-style:italic}
-.em-brass{font-style:italic;color:var(--brass)}
+.em-brass{font-style:italic;color:var(--brass-text)}
 .sec-navy .em-brass,.sec-dark .em-brass{color:var(--brass-lt)}
 .eyebrow{font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.22em;
   text-transform:uppercase;color:var(--ink-sec)}
-.folio{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.22em;color:var(--ink-quiet)}
+.folio{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.22em;color:var(--ink-sec)}
 .dek{font-size:clamp(1.02rem,1.4vw,1.22rem);line-height:1.6;color:var(--ink-sec);max-width:58ch;text-wrap:pretty}
 .src-note{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec)}
 
@@ -128,7 +131,7 @@ header.v6.stuck .nav{padding-block:12px}
   border:1px solid var(--ink);border-radius:2px;transition:background .25s,color .25s}
 .btn .arr{transition:transform .25s}
 .btn:hover .arr{transform:translateX(4px)}
-.btn-fill{background:var(--brass);border-color:var(--brass);color:#FFF8EC}
+.btn-fill{background:var(--brass-deep);border-color:var(--brass-deep);color:#FFF8EC}
 .btn-fill:hover{background:var(--ink);border-color:var(--ink)}
 .btn-line:hover{background:var(--ink);color:var(--paper-raised)}
 .btn-sm{padding:10px 16px;font-size:.62rem}
@@ -153,7 +156,7 @@ section{position:relative}
 .sechead .dek{margin-top:18px}
 .sec-navy{background:var(--navy);color:var(--on-navy)}
 .sec-navy .eyebrow{color:var(--brass-lt)}
-.sec-navy .folio{color:rgba(233,226,210,.45)}
+.sec-navy .folio{color:rgba(233,226,210,.62)}
 .sec-navy .dek{color:var(--on-navy-dim)}
 .sec-navy .sechead .row{border-top-color:rgba(233,226,210,.22)}
 .sec-sunk{background:var(--paper-sunk)}

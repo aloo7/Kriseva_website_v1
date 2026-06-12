@@ -8,7 +8,8 @@
 <meta name="theme-color" content="#DED6C9">
 <!-- TODO(founder): apex DNS dead (audit 2026-06-12); flip host here when fixed -->
 <link rel="canonical" href="https://www.kriseva.in/">
-<link rel="preload" as="image" href="/assets/v6/console_briefing.jpg">
+<!-- note: no image preload here; the console plate is below the fold and a
+     high-priority image fetch starves the font preloads on slow links (CLS) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KRISEVA AI">
 <meta property="og:title" content="KRISEVA: A tender is not a PDF. It is a decision system.">
@@ -43,12 +44,28 @@
 }
 </script>
 <!-- Fonts: self-hosted, three faces (Instrument Serif / IBM Plex Sans /
-     IBM Plex Mono), woff2 latin. Zero third-party font hosts. -->
+     IBM Plex Mono), woff2 latin. Zero third-party font hosts. @font-face is
+     inlined (no render-blocking stylesheet request) and every above-the-fold
+     cut is preloaded so first paint lands directly in the webfont (LCP/CLS). -->
 <link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-serif-latin-400-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-serif-latin-400-italic.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" crossorigin>
-<link rel="stylesheet" href="/fonts/fonts.css">
-<script is:inline>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');try{history.scrollRestoration='manual'}catch(e){}</script>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-mono-latin-500-normal.woff2" crossorigin>
+<style is:inline>
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/instrument-serif-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/instrument-serif-latin-400-italic.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2')}
+</style>
+<script is:inline>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');try{history.scrollRestoration='manual'}catch(e){}
+/* decide the hero path before first paint: devices that can never take the
+   WebGL route get the static plate immediately (no late layout shift) */
+try{var mm=window.matchMedia;if(mm('(prefers-reduced-motion: reduce)').matches||!mm('(min-width: 761px)').matches||!mm('(pointer: fine)').matches){document.documentElement.classList.add('hero-fallback')}}catch(e){}</script>
 <style is:inline>
 /* ============================================================
    KRISEVA v6 - "Evidential Cartography - the dossier, alive"
@@ -60,6 +77,8 @@
   --rule:#C7BDA3;
   --navy:#0A1F44;
   --brass:#A87229; --brass-lt:#C89A4C;
+  /* AA siblings (Convention #11): brass fails 4.5:1 as small text / fill on paper */
+  --brass-deep:#8A5C16; --brass-text:#91601C;
   /* verdict palette - exact, used ONLY on verdicts */
   --v-verified:#3A7A5B; --v-qualified:#9A7322; --v-insufficient:#5F6A79;
   --v-missing:#9C4F43; --v-demo:#41618C; --v-failed:#83332D;
@@ -109,11 +128,11 @@ h1.display{font-size:clamp(2.5rem,5.4vw,5.6rem);line-height:1.05}
 h2.display{font-size:clamp(2.1rem,4.4vw,4.2rem)}
 h3{font-family:var(--sans);font-weight:600;font-size:1.06rem}
 .it{font-style:italic}
-.em-brass{font-style:italic;color:var(--brass)}
+.em-brass{font-style:italic;color:var(--brass-text)}
 .sec-navy .em-brass{color:var(--brass-lt)}
 .eyebrow{font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.22em;
   text-transform:uppercase;color:var(--ink-sec)}
-.folio{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.22em;color:var(--ink-quiet)}
+.folio{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.22em;color:var(--ink-sec)}
 .dek{font-size:clamp(1.02rem,1.4vw,1.22rem);line-height:1.6;color:var(--ink-sec);max-width:58ch;text-wrap:pretty}
 .src-note{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec)}
 /* masked line reveal (enabled only when anim libs are live) */
@@ -141,7 +160,7 @@ header.stuck .nav{padding-block:12px}
   border:1px solid var(--ink);border-radius:2px;transition:background .25s,color .25s;will-change:transform}
 .btn .arr{transition:transform .25s}
 .btn:hover .arr{transform:translateX(4px)}
-.btn-fill{background:var(--brass);border-color:var(--brass);color:#FFF8EC}
+.btn-fill{background:var(--brass-deep);border-color:var(--brass-deep);color:#FFF8EC}
 .btn-fill:hover{background:var(--ink);border-color:var(--ink)}
 .btn-line:hover{background:var(--ink);color:var(--paper-raised)}
 .btn-sm{padding:10px 16px;font-size:.62rem}
@@ -164,7 +183,7 @@ section{position:relative}
 .sechead .dek{margin-top:18px}
 .sec-navy{background:var(--navy);color:var(--on-navy)}
 .sec-navy .eyebrow{color:var(--brass-lt)}
-.sec-navy .folio{color:rgba(233,226,210,.45)}
+.sec-navy .folio{color:rgba(233,226,210,.62)}
 .sec-navy .dek{color:var(--on-navy-dim)}
 .sec-navy .sechead .row{border-top-color:rgba(233,226,210,.22)}
 .sec-sunk{background:var(--paper-sunk)}
@@ -179,7 +198,8 @@ section{position:relative}
 html.hero-fallback .hero-static{display:flex}
 html.hero-fallback #webgl{display:none}
 .hero-static svg{width:min(54vw,760px);height:auto;opacity:.96}
-.hero-labels{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.hero-labels{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;display:none}
+.hero-labels.live{display:block}
 .node-label{position:absolute;top:0;left:0;will-change:transform;white-space:nowrap;
   font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--ink-sec)}
 .node-label .clause{display:block;padding:3px 7px;background:rgba(243,237,224,.85);
@@ -254,14 +274,15 @@ html.hero-fallback #webgl{display:none}
 .tquote{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,4vw,3.9rem);
   line-height:1.16;letter-spacing:-0.015em;text-wrap:balance;max-width:21ch}
 .tmargin{border-left:1px solid var(--rule);padding-left:clamp(16px,2vw,28px);display:flex;flex-direction:column;gap:26px;align-self:center}
-.tnote .tn-k{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:block;margin-bottom:6px}
+.tnote .tn-k{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-text);display:block;margin-bottom:6px}
 .tnote p{font-size:.82rem;line-height:1.55;color:var(--ink-sec)}
 /* ============================================================
    MATRIX
    ============================================================ */
 .mxwrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(280px,5fr);gap:clamp(20px,3vw,44px);align-items:start}
+.mxwrap>*{min-width:0}
 .mxpanel{background:var(--paper-raised);border:1px solid var(--rule);border-radius:2px}
-.mxh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--rule)}
+.mxh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 12px;padding:12px 16px;border-bottom:1px solid var(--rule)}
 .mxh span{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-sec)}
 .mxh .live{display:inline-flex;align-items:center;gap:7px;color:var(--vt-verified)}
 .mxh .live i{width:7px;height:7px;border-radius:50%;background:var(--v-verified);animation:pulse 2.2s ease-in-out infinite}
@@ -435,6 +456,10 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 }
 @media (max-width:760px){
   .nlinks{display:none}
+  /* CWV: above-the-fold hero content paints immediately on mobile; the
+     masked-line choreography stays desktop-only (LCP, redteam D1) */
+  .js-anim .hero-content .ln-in{transform:none}
+  .js-anim .hero-content .rv{opacity:1;transform:none}
   .hero{height:auto;min-height:100svh;padding-bottom:46px}
   .hero-content{padding-top:110px;justify-content:flex-start}
   .hero-static{position:relative;inset:auto;justify-content:center;padding:28px 0 0;margin-top:8px}
@@ -624,7 +649,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   <figure class="plate console-plate bleed regmark" data-cursor="inspect" style="border-inline:none">
     <div class="ph"><span><b>TAS</b> · 02 · Briefing · GEM/2026/B/7281746</span><span>On-premise · Local LLM · Demo fixture</span></div>
     <div class="pimg">
-      <img class="pan" src="/assets/v6/console_briefing.jpg" width="2360" height="1392" alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous" fetchpriority="high">
+      <img class="pan" src="/assets/v6/console_briefing.jpg" width="2360" height="1392" alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous" loading="lazy">
       <div class="ann ann1" data-cursor="inspect">Recommended: <b>REVIEW</b> · never an auto-bid</div>
       <div class="ann ann2" data-cursor="inspect">2 verified · 1 partial · 7 missing · 2 ambiguous</div>
     </div>
@@ -728,7 +753,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
     <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:880px;margin-inline:auto">
       <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
       <div class="pimg">
-        <img src="/assets/v6/console_bundle.jpg" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
+        <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
         <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect id="bboxRect" x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" pathLength="100" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg>
         <span class="bbox-label" id="bboxLabel">bid-details table · p.1 · traced</span>
       </div>
@@ -929,11 +954,17 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 </footer>
 
 <!-- Libraries - pinned versions, vendored locally under /vendor (zero
-     third-party requests at runtime); every consumer is existence-guarded -->
+     third-party requests at runtime); every consumer is existence-guarded.
+     three.js loads only on devices that can take the WebGL hero path
+     (desktop + fine pointer + motion allowed); phones never pay for it. -->
 <script is:inline defer src="/vendor/gsap-3.12.5.min.js"></script>
 <script is:inline defer src="/vendor/ScrollTrigger-3.12.5.min.js"></script>
 <script is:inline defer src="/vendor/lenis-1.1.14.min.js"></script>
-<script is:inline defer src="/vendor/three-r128.min.js"></script>
+<script is:inline>
+(function(){try{var mm=window.matchMedia;
+if(mm('(min-width: 761px)').matches&&mm('(pointer: fine)').matches&&!mm('(prefers-reduced-motion: reduce)').matches){
+var s=document.createElement('script');s.id='threeLoader';s.src='/vendor/three-r128.min.js';s.defer=true;document.head.appendChild(s);}}catch(e){}})();
+</script>
 
 <script is:inline>
 window.addEventListener('DOMContentLoaded', function () {
@@ -993,14 +1024,20 @@ window.addEventListener('scroll', onScrollHdr, { passive: true });
 
 /* ---------- masked reveals ---------- */
 if (ANIM && hasST) {
-  document.querySelectorAll('h1 .ln-in').forEach(function (el, i) {
-    gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
-  });
+  /* hero text is exempt on mobile: it is visible at first paint (CSS) and
+     GSAP must not restyle it, or the repaint re-anchors LCP to JS load */
+  if (DESKTOP) {
+    document.querySelectorAll('h1 .ln-in').forEach(function (el, i) {
+      gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
+    });
+  }
   document.querySelectorAll('h2 .ln-in, .contact .ln-in').forEach(function (el) {
     gsap.to(el, { y: 0, duration: 1, ease: 'power4.out',
       scrollTrigger: { trigger: el.closest('h2') || el, start: 'top 86%' } });
   });
-  gsap.utils.toArray('.rv').forEach(function (el) {
+  gsap.utils.toArray('.rv').filter(function (el) {
+    return DESKTOP || !el.closest('.hero-content');
+  }).forEach(function (el) {
     gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 88%' } });
   });
@@ -1355,15 +1392,27 @@ if (ANIM && hasST && DESKTOP) {
       canvas = document.getElementById('webgl'),
       labelBox = document.getElementById('heroLabels'),
       cue = document.getElementById('scrollCue');
-  var useGL = hasThree && hasGSAP && hasST && !REDUCE && DESKTOP && FINE;
+  /* three.js is injected only for desktop + fine pointer + motion allowed
+     (loader in <head>); boot waits for it, so phones never parse it */
+  var deviceGL = hasGSAP && hasST && !REDUCE && DESKTOP && FINE;
 
   function fallback() { document.documentElement.classList.add('hero-fallback'); }
-  if (!useGL) { fallback(); return; }
+  if (!deviceGL) { fallback(); return; }
+  if (typeof window.THREE !== 'undefined') { boot(); }
+  else {
+    var ldr = document.getElementById('threeLoader');
+    if (!ldr) { fallback(); return; }
+    ldr.addEventListener('load', boot);
+    ldr.addEventListener('error', fallback);
+  }
+  function boot() {
+  if (typeof window.THREE === 'undefined') { fallback(); return; }
 
   var renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
   } catch (e) { fallback(); return; }
+  labelBox.classList.add('live');   /* labels overlay only exists on the GL path */
 
   var W = stage.clientWidth, H = stage.clientHeight;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
@@ -1547,6 +1596,7 @@ if (ANIM && hasST && DESKTOP) {
     if (cue) cue.style.opacity = P > 0.04 ? 0 : 1;
   }
   requestAnimationFrame(frame);
+  }   /* end boot() */
 })();
 
 /* ============================================================

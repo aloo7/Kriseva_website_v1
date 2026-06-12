@@ -20,9 +20,11 @@ for (const { path, label } of routes) {
     await page.goto(path);
     await page.waitForLoadState('networkidle');
 
-    // 1. Every .reveal element renders at opacity:1, transform:none.
+    // 1. Every reveal element renders at opacity:1, transform:none.
+    //    Covers both the v1 class (.reveal, archived pages) and the v6
+    //    class (.rv, current pages + homepage).
     const allRevealsVisible = await page.evaluate(() => {
-      const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+      const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal, .rv'));
       if (els.length === 0) return true;
       return els.every((el) => {
         const cs = getComputedStyle(el);
