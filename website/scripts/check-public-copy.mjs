@@ -57,6 +57,21 @@ const EXCLUDE_PATHS = [
 // RegExp entries: treated as case-insensitive regex (do not include /g).
 // ─────────────────────────────────────────────────────────────────────────
 const HARD_FORBIDDEN = [
+  // IP disclosure gate (v7 Phase A): patent not filed; the site is prior
+  // art. No scoring weights or splits, no deterministic factor names, no
+  // model names or sizes, no runtime file paths, anywhere in source.
+  '60 . 30',
+  '60.30.10',
+  '60/30/10',
+  'nic_category',
+  'keyword_hits',
+  'value_band',
+  'geography_fit',
+  /\bqwen\b/i,
+  /\bgemma\b/i,
+  /\bBGE\b/,
+  'bge-m3',
+  'runtime/',
   // Claude Design bundler / runtime artifacts
   'Unpacking',
   '__bundler',
