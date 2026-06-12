@@ -207,25 +207,103 @@ const security: PublicClaim[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
-// Issuer-side
+// Kriseva Evaluator (issuer-side product)
+//
+// Promoted from "roadmap" to shipped, co-equal product by founder ruling
+// 2026-06-09 (two co-equal products: TAS bidder-side, Kriseva Evaluator
+// issuer-side). Wording below matches the founder-signed v6 homepage.
+// Display name: KRISEVA EVALUATOR. The string "KCVI" never appears on any
+// public surface.
+// ─────────────────────────────────────────────────────────────────────────
+const evaluator: PublicClaim[] = [
+  {
+    id: 'evaluator.one-liner',
+    wording:
+      'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defence procurement organisations.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro, index.astro (vol II)',
+    caveat:
+      'Committee-assist framing only; never name the evaluating agency; no order, contract, or deployment-win claims.',
+  },
+  {
+    id: 'evaluator.positioning',
+    wording:
+      'For evaluation committees. Committee-assist bid evaluation that shows its reasoning, routes uncertainty to humans, and leaves a record that cannot be quietly edited.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro hero, index.astro (vol II)',
+    caveat: 'Never name the evaluating agency; no order claims.',
+  },
+  {
+    id: 'evaluator.three-path',
+    wording: 'Three-path convergence reasoning on every criterion.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro, index.astro (vol II caps)',
+    caveat: 'Describe as system architecture; no accuracy percentage without measurement evidence.',
+  },
+  {
+    id: 'evaluator.six-state',
+    wording:
+      'A six-state verdict model. The two uncertain states auto-route to a human; nothing is disqualified silently.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro, index.astro (vol II caps, matrix)',
+    caveat: 'States: Verified · Qualified · Insufficient · Missing · Requires demonstration · Failed.',
+  },
+  {
+    id: 'evaluator.audit-chain',
+    wording:
+      'A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro, index.astro (audit section)',
+    caveat: 'Interactive demos must carry the "simulated for demonstration" disclosure.',
+  },
+  {
+    id: 'evaluator.sovereign',
+    wording:
+      'On-premise, local LLM, zero egress, built for networks that do not leave the building.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    surface: 'evaluator.astro, index.astro (vol II caps)',
+    caveat:
+      'Deployment posture of the Evaluator product, not a website claim; never extend it to the absolute-security phrases banned by the lint (see PUBLIC_CLAIMS_REGISTER.md §security).',
+  },
+  {
+    id: 'evaluator.eval-status',
+    wording: 'In active evaluation with a central armed police force.',
+    category: 'safe-with-care',
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'notes/founder-log/FOUNDER_LOG.md'],
+    surface: 'evaluator.astro, index.astro (cred band, field record), validation.astro',
+    caveat:
+      'Agency stays unnamed until explicit written consent is on record; no order claimed, no endorsement implied, no unit or bid specifics.',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────
+// Issuer-side (legacy roadmap framing - superseded)
 // ─────────────────────────────────────────────────────────────────────────
 const issuer: PublicClaim[] = [
   {
     id: 'issuer.status',
     wording: 'Issuer-side procurement intelligence is under validation and pilot exploration.',
-    category: 'safe-with-care',
-    evidence: ['project/uploads/CLAIM_REGISTER.md (row 12)', 'Stage 6 brief — issuer copy rules'],
-    surface: 'index.astro, issuer-roadmap.astro, claims.issuerRoadmap',
-    caveat: 'Only describe as roadmap, in-development, validation, or pilot exploration.',
+    category: 'do-not-publish',
+    evidence: ['Superseded by founder ruling 2026-06-09 (two co-equal products)'],
+    surface: '— never appears on any public page — (was issuer-roadmap.astro; use evaluator.* claims)',
+    caveat:
+      'STALE: framed the Evaluator as a roadmap direction. Superseded 2026-06-09; publish evaluator.* wording instead.',
   },
   {
     id: 'issuer.studying',
     wording:
       'KRISEVA is studying AI-assisted technical and financial bid evaluation workflows for government and defense procurement organizations.',
-    category: 'safe-with-care',
-    evidence: ['Stage 6 brief — issuer copy rules'],
-    surface: 'issuer-roadmap.astro',
-    caveat: 'Use "studying" / "exploring", never "building" or "deployed".',
+    category: 'do-not-publish',
+    evidence: ['Superseded by founder ruling 2026-06-09 (two co-equal products)'],
+    surface: '— never appears on any public page — (was issuer-roadmap.astro; use evaluator.* claims)',
+    caveat:
+      'STALE: "studying / exploring" framing superseded 2026-06-09; the Evaluator is a shipped, co-equal product.',
   },
   {
     id: 'issuer.discovery',
@@ -308,6 +386,42 @@ const validation: PublicClaim[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
+// Field record (public, verifiable recognitions; wording matches the
+// founder-signed v6 homepage field-record section)
+// ─────────────────────────────────────────────────────────────────────────
+const fieldRecord: PublicClaim[] = [
+  {
+    id: 'record.pan-iit',
+    wording: 'Pan IIT "AI for Bharat" Grand Finalist, from 13,500+ teams.',
+    category: 'verified-and-safe',
+    evidence: ['Founder-signed v6 homepage (df836d4)', 'public Pan IIT result'],
+    surface: 'index.astro (cred band, field record), validation.astro',
+  },
+  {
+    id: 'record.udyam',
+    wording: 'Udyam-registered MSME, on government record.',
+    category: 'verified-and-safe',
+    evidence: ['Founder-signed v6 homepage (df836d4)', 'Udyam registration record'],
+    surface: 'index.astro (field record), validation.astro',
+  },
+  {
+    id: 'record.dpiit',
+    wording: 'DPIIT Startup-India recognition, in process.',
+    category: 'safe-with-care',
+    evidence: ['Founder-signed v6 homepage (df836d4)'],
+    surface: 'index.astro (field record), validation.astro',
+    caveat: 'Always labelled "in process" until the certificate is on record.',
+  },
+  {
+    id: 'record.iiec',
+    wording: 'Incubated at IIT Gandhinagar · IIEC.',
+    category: 'verified-and-safe',
+    evidence: ['Founder-signed v6 homepage (df836d4)', 'IIEC incubation record'],
+    surface: 'index.astro (cred band, field record), validation.astro, founder.astro',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────
 // Founder-market fit
 // ─────────────────────────────────────────────────────────────────────────
 const founder: PublicClaim[] = [
@@ -380,9 +494,11 @@ export const publicClaims: PublicClaim[] = [
   ...positioning,
   ...product,
   ...security,
+  ...evaluator,
   ...issuer,
   ...stakeholder,
   ...validation,
+  ...fieldRecord,
   ...founder,
   ...boundaries,
 ];
