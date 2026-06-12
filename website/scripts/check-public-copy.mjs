@@ -27,6 +27,18 @@ const INCLUDE_DIRS = ['src/pages', 'src/components', 'src/data'];
 // Plus public/, but with strong excludes (see EXCLUDE_PATHS below).
 const INCLUDE_PUBLIC = 'public';
 
+// Font-drift scan: CSS-scoped dirs (layouts/styles) must not reintroduce a
+// Google Fonts CDN reference or a non-canonical font family (Brand System v1:
+// Instrument Serif + IBM Plex Sans/Mono/Serif, self-hosted, no CDN).
+const FONT_SCAN_DIRS = ['src/layouts', 'src/styles'];
+const FONT_FORBIDDEN = [
+  /fonts\.googleapis\.com/i,
+  /fonts\.gstatic\.com/i,
+  /["']Libre Baskerville["']/i,
+  /["']Inter["']/i,
+  /["']JetBrains Mono["']/i,
+];
+
 // Hard exclusions — these never get scanned.
 const EXCLUDE_PATHS = [
   'node_modules',
@@ -190,6 +202,29 @@ async function main() {
     const soft = findAllHits(content, FLAGGED);
     if (hard.length) hardFailures.push({ file: relative(ROOT, f), hits: hard });
     if (soft.length) flagged.push({ file: relative(ROOT, f), hits: soft });
+  }
+
+  // Font-drift scan (Brand System v1): layouts/styles must not reintroduce a
+  // Google Fonts CDN reference or a non-canonical font family.
+  for (const dir of FONT_SCAN_DIRS) {
+    const abs = join(ROOT, dir);
+    try { await stat(abs); } catch { continue; }
+    for await (const f of walk(abs)) {
+      scanned++;
+      const content = await readFile(f, 'utf8');
+      const hits = findAllHits(content, FONT_FORBIDDEN);
+      if (hits.length) hardFailures.push({ file: relative(ROOT, f), hits });
+    }
+  }
+
+  // The Cloudflare _headers CSP must also not allow Google Fonts origins.
+  for (const extra of ['public/_headers']) {
+    const abs = join(ROOT, extra);
+    try { await stat(abs); } catch { continue; }
+    scanned++;
+    const content = await readFile(abs, 'utf8');
+    const hits = findAllHits(content, FONT_FORBIDDEN);
+    if (hits.length) hardFailures.push({ file: extra, hits });
   }
 
   // Always emit flagged warnings (informational; do not affect exit code).

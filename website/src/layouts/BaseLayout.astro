@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/fonts.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
@@ -59,14 +60,7 @@ const fullTitle = title === site.defaults.title ? title : `${title} — ${site.n
     <meta name="twitter:image" content={new URL(ogImage, site.url).toString()} />
     <meta name="twitter:image:alt" content={`${site.name} — ${site.shortPositioning}`} />
 
-    {/* Fonts — Google Fonts via link, system fallbacks in tokens.css ensure
-        the page renders cleanly even if these fail to load. */}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
+    {/* Fonts: self-hosted (Instrument Serif + IBM Plex Sans/Mono/Serif) via src/styles/fonts.css; no CDN (Brand System v1, sovereignty). */}
   </head>
   <body class={bodyClass}>
     <a href="#main" class="skip-link">Skip to content</a>
