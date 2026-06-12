@@ -62,6 +62,26 @@ const caps = [
     </div>
   </section>
 
+  <!-- ============ BUNDLE ANATOMY (instrument) ============ -->
+  <section class="sec-pad" id="anatomy" style="padding-top:clamp(30px,4vw,56px);padding-bottom:clamp(40px,5vw,80px)">
+    <div class="wrap">
+      <SectionHead eyebrow="The bundle · anatomy of a tender" folio="exhibit"
+        dek="A tender arrives as a stack of documents, each carrying clauses that can win the bid or end it. Select a leaf to read its role.">
+        Six documents. <em class="em-brass">One decision system.</em>
+      </SectionHead>
+      <div class="bna rv regmark">
+        <div class="bna-stage">
+          <svg id="bnaSvg" viewBox="0 0 560 480" role="img"
+            aria-label="An exploded tender bundle: bid document, specification, BOQ, ATC, corrigendum and annexures drawn as stacked paper leaves">
+            <g id="bnaLeaves"></g>
+          </svg>
+        </div>
+        <div class="bna-ledger" role="tablist" aria-label="Bundle documents" id="bnaLedger"></div>
+      </div>
+      <div class="bna-detail rv" id="bnaDetail" aria-live="polite"></div>
+    </div>
+  </section>
+
   <!-- ============ THE BRIEFING (hero plate) ============ -->
   <section id="briefing" style="padding-bottom:clamp(40px,5vw,80px)">
     <div class="wrap">
@@ -169,7 +189,34 @@ const caps = [
 </V6Layout>
 
 <style is:global>
-/* /tas page-specific */
+/* /tas page-specific - bundle anatomy instrument */
+.bna{display:grid;grid-template-columns:minmax(0,6fr) minmax(280px,5fr);gap:clamp(20px,3vw,44px);
+  align-items:center;background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
+  padding:clamp(16px,2.4vw,30px)}
+.bna-stage svg{width:100%;height:auto}
+.bna-leaf{cursor:pointer}
+.bna-leaf rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;
+  transition:transform .35s ease,stroke .25s ease}
+.bna-leaf .rule-ln{stroke:var(--ink-sec);stroke-width:1;opacity:.45}
+.bna-leaf text{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;fill:var(--ink-sec);text-transform:uppercase}
+.bna-leaf.sel rect{stroke:var(--brass);stroke-width:2.2;transform:translateY(-8px)}
+.bna-leaf.sel text{fill:var(--ink)}
+.bna-ledger{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
+.bna-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:left;
+  padding:12px 4px;border-bottom:1px solid var(--rule);transition:background .2s;touch-action:manipulation}
+.bna-row:hover{background:rgba(15,14,11,.04)}
+.bna-row[aria-selected="true"]{background:var(--paper);box-shadow:inset 2px 0 0 var(--brass)}
+.bna-row .nm{font-weight:600;font-size:.92rem}
+.bna-row .code{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+.bna-detail{margin-top:14px;padding:16px 18px;background:var(--paper-raised);border:1px solid var(--rule);
+  border-radius:2px;font-size:.94rem;line-height:1.6;color:var(--ink-sec);min-height:84px;max-width:none}
+.bna-detail b{color:var(--ink);font-weight:600}
+.bna-detail .riskline{display:block;margin-top:8px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--brass-text)}
+@media (max-width:900px){.bna{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: reduce){.bna-leaf rect{transition:none}.bna-leaf.sel rect{transform:none}}
+
+/* pipeline */
 .pipe .ptitle{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink-sec);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 .prail{position:relative;height:2px;background:var(--rule);margin:30px 6px 16px}
@@ -193,6 +240,52 @@ const caps = [
 </style>
 
 <script is:inline>
+// Bundle anatomy: exploded document stack; leaf and ledger row select in both
+// directions. Document roles are domain description, not capability claims.
+(function () {
+  var svg = document.getElementById('bnaSvg'), leaves = document.getElementById('bnaLeaves'),
+      ledger = document.getElementById('bnaLedger'), detail = document.getElementById('bnaDetail');
+  if (!svg) return;
+  var docs = [
+    { code: 'BID-DOC', nm: 'Bid document', d: 'The cover of the decision system: issuing authority, dates, EMD and ePBG instruments, bid value. Buyer fields set eligibility before page one is read.', risk: 'eligibility starts here' },
+    { code: 'SPEC', nm: 'Specification', d: 'Technical clauses, line by line. SPEC §3.2 is where a Make-in-India content threshold lives. Each clause can win the bid or end it.', risk: 'one clause can end the bid' },
+    { code: 'BOQ', nm: 'Bill of quantities', d: 'Quantities, line items and rates: the commercial shape of the bid, cross-checked against the specification.', risk: 'must reconcile with SPEC' },
+    { code: 'ATC', nm: 'Additional terms', d: 'Additional terms and conditions. The quiet annex where hard non-compliance most often hides, clause by clause.', risk: 'where failures hide' },
+    { code: 'CORR', nm: 'Corrigenda', d: 'Amendments issued after publication. They silently rewrite earlier clauses; a bundle read without them is the wrong bundle.', risk: 'rewrites the rest' },
+    { code: 'ANNEX', nm: 'Annexures', d: 'Formats, declarations and certificates the bid must furnish, by clause and annex. The checklist the committee reads first.', risk: 'furnish by clause + annex' },
+  ];
+  var W = 360, H = 64, X0 = 60, Y0 = 36, STEP = 70;
+  docs.forEach(function (doc, i) {
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'bna-leaf');
+    g.setAttribute('data-i', i);
+    var x = X0 + (i % 2) * 16, y = Y0 + i * STEP;
+    var skew = (i % 2 === 0) ? -1.2 : 1.2;
+    g.innerHTML =
+      '<rect x="' + x + '" y="' + y + '" width="' + W + '" height="' + H + '" rx="1" transform="rotate(' + skew + ' ' + (x + W / 2) + ' ' + (y + H / 2) + ')"/>' +
+      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 24) + '" x2="' + (x + W - 26) + '" y2="' + (y + 24) + '"/>' +
+      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 40) + '" x2="' + (x + W - 70) + '" y2="' + (y + 40) + '"/>' +
+      '<text x="' + (x + 14) + '" y="' + (y + 28) + '">' + doc.code + '</text>';
+    g.addEventListener('click', function () { select(i); });
+    leaves.appendChild(g);
+    var b = document.createElement('button');
+    b.className = 'bna-row'; b.setAttribute('role', 'tab'); b.dataset.i = i;
+    b.setAttribute('aria-selected', 'false');
+    b.innerHTML = '<span class="nm">' + doc.nm + '</span><span class="code">' + doc.code + '</span>';
+    b.addEventListener('click', function () { select(i); });
+    b.addEventListener('mouseover', function () { select(i); });
+    ledger.appendChild(b);
+  });
+  function select(i) {
+    leaves.querySelectorAll('.bna-leaf').forEach(function (n) { n.classList.toggle('sel', +n.getAttribute('data-i') === i); });
+    ledger.querySelectorAll('.bna-row').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
+    var doc = docs[i];
+    detail.innerHTML = '<b>' + doc.nm + ' · ' + doc.code + '</b> · ' + doc.d +
+      '<span class="riskline">⚠ ' + doc.risk + '</span>';
+  }
+  select(1);
+})();
+
 // Pipeline module: click-driven stage selector. Stage wording mirrors the
 // founder-signed v6 homepage pipeline.
 (function () {
