@@ -108,6 +108,12 @@ header.v6.stuck .nav{padding-block:12px}
 @media (max-width:860px){
   .nlinks{display:none}
   .menu-btn{display:inline-flex}
+}
+@media (max-width:540px){
+  /* the mobile panel carries Contact; the header CTA wraps badly this narrow */
+  header.v6 .nav > div > .btn{display:none}
+}
+@media (max-width:860px){
   .mobile-panel.open{display:block;position:fixed;inset:0;z-index:999;background:var(--paper-raised);
     padding:110px var(--pad) 40px}
   .mobile-panel.open nav{display:flex;flex-direction:column;gap:4px}

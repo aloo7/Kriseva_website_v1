@@ -6,7 +6,11 @@ export const routes = {
   tas: '/tas',
   workflow: '/workflow',
   security: '/security',
-  issuerRoadmap: '/issuer-roadmap',
+  evaluator: '/evaluator',
+  // Deprecated alias: issuer-roadmap was superseded by the Evaluator product
+  // page (founder ruling 2026-06-09). Kept so archived pages still compile;
+  // public/_redirects 301s the old URL.
+  issuerRoadmap: '/evaluator',
   validation: '/validation',
   founder: '/founder',
   contact: '/contact',
