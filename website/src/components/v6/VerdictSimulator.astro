@@ -1,0 +1,122 @@
+---
+// VerdictSimulator.astro (X2) - the six-state verdict model as a thing you
+// can operate. The visitor flips what the committee finds for one criterion;
+// the verdict resolves through a pure state machine. Zero scoring math, no
+// weights, no thresholds: WHAT the model does, never HOW it weighs.
+//
+// Used on the homepage (Act 5) and /evaluator. Styles ride on the shared
+// v6 custom properties, which both surfaces define.
+const { id = 'vsim' } = Astro.props;
+---
+<div class="vsim regmark" id={id} data-vsim>
+  <div class="vs-head">
+    <span class="vs-kicker">Exhibit · try the verdict model</span>
+    <span class="vs-crit">Criterion: <b>EMD instrument present and valid</b> · FIN-1</span>
+  </div>
+  <p class="vs-plain">A criterion is one requirement a bid must meet. Choose what the committee finds. Watch where the verdict lands.</p>
+  <div class="vs-grid">
+    <div class="vs-controls">
+      <fieldset class="vs-f" data-q="doc">
+        <legend>Is the document in the bundle?</legend>
+        <label><input type="radio" name={id + '-doc'} value="present" checked> Present</label>
+        <label><input type="radio" name={id + '-doc'} value="absent"> Absent</label>
+      </fieldset>
+      <fieldset class="vs-f" data-q="ev">
+        <legend>What does the clause show?</legend>
+        <label><input type="radio" name={id + '-ev'} value="meets" checked> Meets the requirement</label>
+        <label><input type="radio" name={id + '-ev'} value="caveat"> Meets it, with a caveat</label>
+        <label><input type="radio" name={id + '-ev'} value="unclear"> Cannot tell from the page</label>
+        <label><input type="radio" name={id + '-ev'} value="contradicts"> Contradicts the requirement</label>
+      </fieldset>
+      <fieldset class="vs-f" data-q="demo">
+        <legend>Can it only be proven in person?</legend>
+        <label><input type="radio" name={id + '-demo'} value="no" checked> No, the paper is enough</label>
+        <label><input type="radio" name={id + '-demo'} value="yes"> Yes, it must be demonstrated</label>
+      </fieldset>
+    </div>
+    <div class="vs-out" aria-live="polite">
+      <span class="vs-pill" data-out="pill">Verified</span>
+      <p class="vs-why" data-out="why"></p>
+      <p class="vs-route" data-out="route"></p>
+      <div class="vs-states" aria-hidden="true" data-out="states"></div>
+    </div>
+  </div>
+  <p class="vs-note">A demonstration model of the six verdict states. No scoring shown or implied; uncertain states always route to a human.</p>
+</div>
+
+<style>
+  .vsim{border:1px solid var(--rule);border-radius:2px;background:var(--paper-raised);padding:clamp(16px,2.4vw,28px)}
+  .vs-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;margin-bottom:10px}
+  .vs-kicker{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass-text)}
+  .vs-crit{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-sec)}
+  .vs-crit b{color:var(--ink)}
+  .vs-plain{font-size:.95rem;color:var(--ink-sec);max-width:58ch;margin-bottom:18px}
+  .vs-grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(240px,5fr);gap:clamp(18px,3vw,40px);align-items:start}
+  .vs-f{border:none;border-top:1px solid var(--rule);padding:12px 2px 14px;margin:0}
+  .vs-f legend{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-sec);padding:0 0 8px}
+  .vs-f label{display:flex;align-items:baseline;gap:9px;font-size:.92rem;padding:4px 0;cursor:pointer}
+  .vs-f input{accent-color:var(--navy);transform:translateY(1px)}
+  .vs-f[data-disabled="true"]{opacity:.38;pointer-events:none}
+  .vs-out{background:var(--ink-deep);color:#E7E1D0;border-radius:2px;padding:20px;position:sticky;top:96px}
+  .vs-pill{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+    padding:6px 12px;border:1px solid;border-radius:2px;margin-bottom:12px}
+  .vs-why{font-size:.9rem;line-height:1.55;color:rgba(231,225,208,.85);min-height:3.1em}
+  .vs-route{margin-top:10px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--brass-lt);min-height:2.6em}
+  .vs-states{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+  .vs-states i{width:11px;height:11px;border-radius:1px;opacity:.28;transition:opacity .25s,transform .25s}
+  .vs-states i.lit{opacity:1;transform:scale(1.25)}
+  .vs-note{margin-top:16px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+  @media (max-width:760px){.vs-grid{grid-template-columns:1fr}.vs-out{position:static}}
+</style>
+
+<script>
+  // Pure state machine: (doc, evidence, demo) -> one of six states.
+  // Routing is a property of the state, not a computation.
+  const STATES = {
+    v: { name: 'Verified',                 c: '#3A7A5B', t: '#8FC5A8', why: 'The instrument is in the bundle and the clause meets the requirement as written.', human: false },
+    q: { name: 'Verified · qualified',     c: '#9A7322', t: '#D9B45E', why: 'Met, but a caveat narrows the scope. The qualification is recorded beside the verdict, not hidden.', human: false },
+    d: { name: 'Requires demonstration',   c: '#41618C', t: '#9DB7DC', why: 'The paper alone cannot carry this one. A demonstration is scheduled and the verdict waits for it.', human: false },
+    i: { name: 'Insufficient',             c: '#5F6A79', t: '#A8B3C2', why: 'Some evidence exists, but not enough to clear the clause. The system does not guess.', human: true },
+    m: { name: 'Missing',                  c: '#9C4F43', t: '#D99284', why: 'No instrument was located anywhere in the bundle. Absence is a finding, not a silence.', human: true },
+    f: { name: 'Failed',                   c: '#83332D', t: '#D98C82', why: 'Evidence is present and clearly non-compliant. It fails loudly, with the clause cited.', human: false },
+  };
+  const ORDER = ['v', 'q', 'd', 'i', 'm', 'f'];
+
+  function resolve(doc, ev, demo) {
+    if (doc === 'absent') return 'm';
+    if (ev === 'contradicts') return 'f';
+    if (ev === 'unclear') return 'i';
+    if (demo === 'yes') return 'd';
+    return ev === 'caveat' ? 'q' : 'v';
+  }
+
+  document.querySelectorAll('[data-vsim]').forEach((root) => {
+    const pill = root.querySelector('[data-out="pill"]');
+    const why = root.querySelector('[data-out="why"]');
+    const route = root.querySelector('[data-out="route"]');
+    const states = root.querySelector('[data-out="states"]');
+    states.innerHTML = ORDER.map((k) => `<i data-k="${k}" style="background:${STATES[k].c}"></i>`).join('');
+
+    function val(q) {
+      const el = root.querySelector(`.vs-f[data-q="${q}"] input:checked`);
+      return el ? el.value : '';
+    }
+    function update() {
+      const doc = val('doc'), ev = val('ev'), demo = val('demo');
+      root.querySelector('.vs-f[data-q="ev"]').dataset.disabled = String(doc === 'absent');
+      root.querySelector('.vs-f[data-q="demo"]').dataset.disabled = String(doc === 'absent' || ev === 'contradicts' || ev === 'unclear');
+      const k = resolve(doc, ev, demo);
+      const s = STATES[k];
+      pill.textContent = s.name;
+      pill.style.borderColor = s.c;
+      pill.style.color = s.t;
+      why.textContent = s.why;
+      route.textContent = s.human
+        ? '→ auto-routes to a human reviewer. Always. Nothing is disqualified silently.'
+        : '→ recorded with its source clause and page. The committee signs.';
+      states.querySelectorAll('i').forEach((i) => i.classList.toggle('lit', i.dataset.k === k));
+    }
+    root.addEventListener('change', update);
+    update();
+  });
+</script>
