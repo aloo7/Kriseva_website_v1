@@ -4,11 +4,16 @@
   "compatibility_date": "2025-01-01",
   "workers_dev": true,
   "preview_urls": true,
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./website/dist",
+    "binding": "ASSETS",
     "not_found_handling": "404-page"
   },
   "observability": {
     "enabled": true
   }
+  // Founder-gated: set MAILCHANNELS_API_KEY as a secret in the Cloudflare
+  // dashboard (wrangler secret put MAILCHANNELS_API_KEY) before the lead
+  // endpoint can forward mail. See website/functions/api/_lead-core.ts.
 }
