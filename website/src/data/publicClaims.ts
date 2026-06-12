@@ -488,6 +488,59 @@ const boundaries: PublicClaim[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
+// v7 story spine (Acts 1, 2, 7). Deliberately qualitative: the story
+// sections claim no duration, no statistic, and no national outcome.
+// ─────────────────────────────────────────────────────────────────────────
+const storyV7: PublicClaim[] = [
+  {
+    id: 'act1.cycle-insight',
+    wording: 'The speed of modernization is set by the speed of the cycle.',
+    category: 'safe-with-care',
+    evidence: ['Founder story mandate (KRISEVA_SITE_V7_MASTER_PROMPT.md)'],
+    surface: 'index.astro (Act 1, the nation’s clock)',
+    caveat:
+      'An insight about cycle speed, not a measured statistic. Never pair with a specific duration, a named program, or "India is behind X" framing.',
+  },
+  {
+    id: 'act1.stage-names',
+    wording:
+      'Need, approval (AoN), RFP, bids, evaluation, re-evaluation, award: stage names follow DAP 2020, the public procurement rulebook.',
+    category: 'safe-with-care',
+    evidence: ['DAP 2020 (Defence Acquisition Procedure, public document, Ministry of Defence)'],
+    surface: 'index.astro (Act 1 cycle stations + source note)',
+    caveat:
+      'Stage NAMES only, simplified for a lay reader. The section stays qualitative ("years, not months" register); no per-stage duration may ever be attached.',
+  },
+  {
+    id: 'act2.two-rooms',
+    wording: 'Two rooms, one problem: trust in what the documents claim.',
+    category: 'verified-and-safe',
+    evidence: ['Founder story mandate (KRISEVA_SITE_V7_MASTER_PROMPT.md)', 'EXECUTIVE_SUMMARY.md problem framing'],
+    surface: 'index.astro (Act 2 merge line)',
+  },
+  {
+    id: 'dossier.discovery-interviews',
+    wording:
+      'In six discovery interviews (2026), operators reported that the large majority of published tenders were irrelevant to them, and that working through one bid still meant a hundred or more pages, by hand.',
+    category: 'safe-with-care',
+    evidence: ['Discovery interview notes, n=6, 2026 (founder records)'],
+    surface: 'dossier.pdf (field notes)',
+    caveat:
+      'Always carries the "six interviews" provenance inline and the line "a field observation, not a market statistic". Never as a percentage, never as a market-size claim.',
+  },
+  {
+    id: 'act7.mission',
+    wording:
+      'We build so that an honest bid from a small company is not lost to one missed clause, and a committee can defend every verdict, years later, page by page.',
+    category: 'safe-with-care',
+    evidence: ['Founder story mandate (KRISEVA_SITE_V7_MASTER_PROMPT.md)'],
+    surface: 'index.astro (Act 7 mission rows)',
+    caveat:
+      'Commitment framing only ("we build so that..."). Never restate as an achieved outcome, a national-impact statistic, or a government endorsement.',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────
 // Aggregate
 // ─────────────────────────────────────────────────────────────────────────
 export const publicClaims: PublicClaim[] = [
@@ -501,6 +554,7 @@ export const publicClaims: PublicClaim[] = [
   ...fieldRecord,
   ...founder,
   ...boundaries,
+  ...storyV7,
 ];
 
 export const claimsByCategory = publicClaims.reduce<Record<ClaimCategory, PublicClaim[]>>(
