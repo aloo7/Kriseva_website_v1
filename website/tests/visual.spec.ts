@@ -14,10 +14,18 @@ for (const { path, label } of routes) {
     // Settle: wait for fonts + first paint.
     await page.waitForLoadState('networkidle');
     // Force scroll-reveal elements to their final state so the screenshot is
-    // deterministic. (BaseLayout's observer adds .is-visible; we add it
-    // unconditionally so the screenshot doesn't depend on observer timing.)
+    // deterministic (v1 .reveal → .is-visible; v6 .rv → .in; homepage GSAP
+    // reveals get inline final state).
     await page.evaluate(() => {
       document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+      document.querySelectorAll('.rv').forEach((el) => {
+        el.classList.add('in');
+        (el as HTMLElement).style.opacity = '1';
+        (el as HTMLElement).style.transform = 'none';
+      });
+      document.querySelectorAll('.ln-in').forEach((el) => {
+        (el as HTMLElement).style.transform = 'none';
+      });
     });
     await expect(page).toHaveScreenshot(`${label}.png`, {
       fullPage: true,

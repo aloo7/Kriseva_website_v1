@@ -26,3 +26,10 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Phase-gate screenshot evidence (PR attachments, not source)
+shots/
+
+# Visual-regression baselines: machine-specific renders (darwin suffix);
+# kept local per workstation, regenerated with --update-snapshots.
+tests/__snapshots__/

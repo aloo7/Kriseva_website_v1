@@ -1,0 +1,449 @@
+---
+// /evaluator - Kriseva Evaluator product page (issuer-side, Vol. II).
+// Promoted from "issuer roadmap" to shipped co-equal product per founder
+// ruling 2026-06-09. No Evaluator product screenshots on this page (the
+// captures carry protected fixtures); the six-state verdict system and
+// typographic exhibits are the visuals.
+// Claim-bearing wording: src/data/publicClaims.ts (evaluator.*) and the
+// founder-signed v6 homepage corpus.
+
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import { getClaim } from '../data/publicClaims';
+
+const positioning = getClaim('evaluator.positioning')!.wording;
+const oneLiner = getClaim('evaluator.one-liner')!.wording;
+const evalStatus = getClaim('evaluator.eval-status')!.wording;
+const sovereign = getClaim('evaluator.sovereign')!.wording;
+const sixState = getClaim('evaluator.six-state')!.wording;
+const auditChain = getClaim('evaluator.audit-chain')!.wording;
+const threePath = getClaim('evaluator.three-path')!.wording;
+const notClaimed = getClaim('boundary.notClaimed')!.wording;
+
+const title = 'Kriseva Evaluator · Committee-assist bid evaluation, on-premise';
+const description = oneLiner + ' Three-path convergence, a six-state verdict model, and a hash-chained audit log.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Kriseva Evaluator',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'On-premise deployment',
+    description: oneLiner,
+    publisher: { '@type': 'Organization', name: 'KRISEVA AI Private Limited' },
+  },
+];
+
+// Six verdict states. Wording mirrors the founder-signed homepage verdict
+// vocabulary and reason map; the two uncertain states route to humans.
+const states = [
+  { k: 'v', name: 'Verified', text: 'Declared and evidenced; meets the clause as written.', hitl: false },
+  { k: 'q', name: 'Verified · qualified', text: 'Met, but scope qualifies a sub-line; flagged for the committee.', hitl: false },
+  { k: 'd', name: 'Requires demonstration', text: 'Partially evidenced; a demonstration is required to confirm.', hitl: false },
+  { k: 'i', name: 'Insufficient', text: 'Some evidence present; not enough to clear the clause.', hitl: true },
+  { k: 'm', name: 'Missing', text: 'No instrument or document located in the bundle.', hitl: true },
+  { k: 'f', name: 'Failed', text: 'Evidence present and clearly non-compliant. Never silent.', hitl: false },
+];
+---
+<V6Layout title={title} description={description} path="/evaluator" schema={schema}>
+
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Kriseva Evaluator">
+    <div class="wrap">
+      <p class="eyebrow">Kriseva Evaluator · Issuer-side · Vol. II</p>
+      <h1 class="display">Evaluation that <em class="em-brass">shows its work.</em></h1>
+      <p class="dek">{positioning}</p>
+      <div class="acts">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="#audit">Walk the audit chain</a>
+      </div>
+      <div class="ihero-meta" aria-label="Product status">
+        <span><b>{evalStatus.replace(/\.$/, '')}</b></span>
+        <span>On-premise · local LLM</span>
+        <span>Committee-assist · the committee signs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THREE-PATH CONVERGENCE ============ -->
+  <section class="sec-pad" id="threepath">
+    <div class="wrap">
+      <SectionHead eyebrow="The reasoning · three paths, one criterion" folio="§01 / 05"
+        dek="Every criterion is evaluated three independent ways. The paths must converge; disagreement is surfaced to the committee, never averaged away. Select a criterion and watch the instrument resolve it.">
+        Three paths to <em class="em-brass">one verdict.</em>
+      </SectionHead>
+
+      <!-- ============ CONVERGENCE INSTRUMENT ============ -->
+      <div class="cvi rv regmark">
+        <div class="cvi-head">
+          <span class="eyebrow">Convergence instrument · synthetic criterion trace</span>
+          <div class="cvi-toggle" role="tablist" aria-label="Choose a criterion">
+            <button class="cvi-btn" id="cviA" role="tab" aria-selected="true">SPEC §3.2 · Make-in-India ≥ 50%</button>
+            <button class="cvi-btn" id="cviB" role="tab" aria-selected="false">FIN-2 · Turnover threshold</button>
+          </div>
+        </div>
+        <div class="cvi-stage">
+          <svg id="cviSvg" viewBox="0 0 960 340" role="img"
+            aria-label="Three reasoning paths, deterministic rules, retrieval evidence and local-model judgment, flowing toward a convergence point that resolves to a verdict or routes to human review">
+            <!-- path labels -->
+            <g class="cvi-lab" font-size="11" letter-spacing="1.5">
+              <text x="18" y="64">PATH 01 · DETERMINISTIC</text>
+              <text x="18" y="164">PATH 02 · RETRIEVAL</text>
+              <text x="18" y="264">PATH 03 · LOCAL MODEL</text>
+            </g>
+            <!-- strands -->
+            <g fill="none" stroke-width="2">
+              <path class="strand" id="st1" d="M20 80 C 260 80, 380 150, 560 166" pathLength="100"/>
+              <path class="strand" id="st2" d="M20 180 C 240 180, 400 176, 560 176" pathLength="100"/>
+              <path class="strand st2-split" id="st2b" d="M20 180 C 200 180, 300 184, 420 220" pathLength="100"/>
+              <path class="strand" id="st3" d="M20 280 C 260 280, 380 210, 560 186" pathLength="100"/>
+            </g>
+            <!-- per-path findings -->
+            <g class="cvi-find" font-size="11" letter-spacing="1">
+              <text id="f1" x="250" y="64"></text>
+              <text id="f2" x="250" y="158"></text>
+              <text id="f3" x="250" y="296"></text>
+            </g>
+            <!-- divergence break (split mode) -->
+            <g id="cviBreak" opacity="0">
+              <circle cx="430" cy="222" r="7" fill="none" stroke-width="2"/>
+              <text x="300" y="248" font-size="11" letter-spacing="1">EVIDENCE NOT LOCATED · PATH STOPS</text>
+            </g>
+            <!-- convergence node -->
+            <circle id="cviNode" cx="572" cy="176" r="9" fill="none" stroke-width="2"/>
+            <text id="cviNodeLab" x="572" y="146" text-anchor="middle" font-size="11" letter-spacing="2">CONVERGENCE</text>
+            <!-- output -->
+            <path class="strand" id="stOut" d="M584 176 L 760 176" pathLength="100"/>
+            <path class="strand strand-dash" id="stOutH" d="M584 176 C 660 176, 700 230, 760 244" pathLength="100"/>
+          </svg>
+          <div class="cvi-chip" id="cviChip" role="status" aria-live="polite"></div>
+        </div>
+        <p class="cvi-why" id="cviWhy" aria-live="polite"></p>
+        <p class="disclose">Illustrative instrument · synthetic criterion trace, not a real evaluation</p>
+      </div>
+
+      <div class="paths rv" role="list" aria-label={threePath} style="margin-top:clamp(24px,3.4vw,44px)">
+        <div class="path regmark" role="listitem">
+          <span class="pno">Path 01</span>
+          <h3>Deterministic</h3>
+          <p>Rule and clause checks run first. What can be decided by rule is decided by rule, and recorded as such.</p>
+          <span class="ptag">reproducible</span>
+        </div>
+        <div class="path regmark" role="listitem">
+          <span class="pno">Path 02</span>
+          <h3>Retrieval</h3>
+          <p>Evidence retrieval against the bid bundle. Every citation carries its clause and page.</p>
+          <span class="ptag">evidence-linked</span>
+        </div>
+        <div class="path regmark" role="listitem">
+          <span class="pno">Path 03</span>
+          <h3>Local-model judgment</h3>
+          <p>A local model reasons over the same criterion, on-premise. No cloud inference.</p>
+          <span class="ptag">sovereign-by-design</span>
+        </div>
+      </div>
+      <div class="converge rv" aria-hidden="true">
+        <span class="cv-line"></span><span class="cv-label">convergence</span><span class="cv-line"></span>
+      </div>
+      <div class="verdict-out rv regmark">
+        <span class="eyebrow">The output</span>
+        <p>One of six states, with the source clause beside it. {sixState}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIX-STATE VERDICT MODEL ============ -->
+  <section class="sec-pad sec-sunk" id="verdicts">
+    <div class="wrap">
+      <SectionHead eyebrow="The verdict model · six states, none silent" folio="§02 / 05"
+        dek="Saturated pass/fail hides judgment. Six desaturated states carry it: what is met, what is qualified, what needs a human, and what failed, each with its clause.">
+        Six states. <em class="em-brass">Nothing silent.</em>
+      </SectionHead>
+      <div class="vgrid rv" role="list">
+        {states.map((s) => (
+          <div class={`vcard regmark${s.hitl ? ' hitl' : ''}`} role="listitem">
+            <div class="vhead"><span class={`sq ${s.k}`} aria-hidden="true"></span><b class={`vname t-${s.k}`}>{s.name}</b></div>
+            <p>{s.text}</p>
+            {s.hitl && <span class="vroute">→ auto-routes to human review</span>}
+            {!s.hitl && <span class="vroute quiet">→ recorded with source · the committee signs</span>}
+          </div>
+        ))}
+      </div>
+      <p class="disclose">Verdict vocabulary as shipped · the two uncertain states always reach a human</p>
+    </div>
+  </section>
+
+  <!-- ============ AUDIT CHAIN (interactive) ============ -->
+  <section class="sec-pad sec-navy" id="audit">
+    <div class="wrap">
+      <SectionHead eyebrow="The audit chain · append-only" folio="§03 / 05"
+        dek="Every event is hash-chained to the last. Verify the chain, then tamper with a block and watch the break propagate. The database enforces this; the demo simulates it.">
+        A record that cannot<br />be quietly edited.
+      </SectionHead>
+      <div class="chaingrid rv">
+        <div>
+          <div class="chain" id="chain" aria-label="Hash-chained audit log demonstration"></div>
+          <p class="chain-status" id="chainStatus" aria-live="polite">Chain unverified. Run a verification pass.</p>
+          <div class="chain-controls">
+            <button class="btn btn-line btn-sm" id="verifyBtn">Verify chain</button>
+            <button class="btn btn-line btn-sm" id="tamperBtn">Tamper with block 0149</button>
+            <button class="btn btn-line btn-sm" id="resetBtn">Reset</button>
+          </div>
+          <p class="disclose">Simulated for demonstration: synthetic events, not a real evaluation.</p>
+        </div>
+        <aside class="chainaside">
+          <p>{auditChain} Not a screenshot, not a summary. A vigilance officer can walk it end to end.</p>
+          <p class="trust">append-only<br />sha-256-chained<br />mutation-blocked at the database</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOVEREIGN POSTURE ============ -->
+  <section class="sec-pad" id="posture">
+    <div class="wrap">
+      <SectionHead eyebrow="Deployment posture · inside the building" folio="§04 / 05"
+        dek="Built for evaluation networks where documents do not leave the room, let alone the country.">
+        The network is the <em class="em-brass">perimeter.</em>
+      </SectionHead>
+      <ul class="caps rv" aria-label="Deployment posture">
+        <li><span><b>{sovereign}</b></span><span class="ref">sovereign-by-design</span></li>
+        <li><span>Bid documents, verdicts and the audit log live in the customer deployment. Nothing routes through a vendor cloud.</span><span class="ref">on-premise</span></li>
+        <li><span>{threePath} The reasoning is shown, not summarised away.</span><span class="ref">reproducible</span></li>
+        <li><span>Committee-assist only. The system recommends; <b>the committee signs.</b></span><span class="ref">committee-assist</span></li>
+      </ul>
+      <div class="acts rv" style="margin-top:34px">
+        <a class="btn btn-line" href="/security">Read the boundary <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ON THE RECORD ============ -->
+  <section class="sec-pad sec-sunk" id="status">
+    <div class="wrap">
+      <SectionHead eyebrow="Field status" folio="§05 / 05"
+        dek="Status-labelled, no hype. Named relationships appear with consent.">
+        On the record.
+      </SectionHead>
+      <div class="record rv">
+        <div class="rec"><span class="date">Active</span><span class="what">{evalStatus}</span><span class="tag">In evaluation</span></div>
+        <div class="rec"><span class="date">Standing</span><span class="what">{notClaimed}</span><span class="tag">Boundary</span></div>
+      </div>
+      <div class="acts rv" style="margin-top:40px">
+        <a class="btn btn-fill" href="/contact">Speak with the founder <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+</V6Layout>
+
+<style is:global>
+/* /evaluator page-specific - convergence instrument */
+.cvi{background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
+  padding:clamp(16px,2.4vw,28px)}
+.cvi-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
+  padding-bottom:14px;border-bottom:1px solid var(--rule);margin-bottom:8px}
+.cvi-toggle{display:flex;flex-wrap:wrap;gap:8px}
+.cvi-btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:9px 13px;border:1px solid var(--rule);border-radius:2px;background:var(--paper);
+  transition:border-color .2s,background .2s;touch-action:manipulation}
+.cvi-btn:hover{border-color:var(--ink)}
+.cvi-btn[aria-selected="true"]{background:var(--ink);color:var(--paper-raised);border-color:var(--ink)}
+.cvi-stage{position:relative}
+.cvi-stage svg{width:100%;height:auto}
+.cvi-lab text,.cvi-find text,#cviNodeLab,#cviBreak text{font-family:var(--mono);fill:var(--ink-sec);text-transform:uppercase}
+.cvi-find text{fill:var(--ink)}
+.strand{fill:none;stroke:var(--ink);stroke-dasharray:100;stroke-dashoffset:0;
+  transition:stroke-dashoffset .9s ease,opacity .4s ease}
+.strand-dash{stroke-dasharray:4 4}
+#cviNode,#cviBreak circle{stroke:var(--brass)}
+#cviBreak{transition:opacity .4s ease}
+.cvi-chip{position:absolute;right:1.5%;top:42%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  padding:8px 12px;border:1px solid;border-radius:2px;background:var(--paper-raised);
+  display:inline-flex;align-items:center;gap:8px;max-width:21%;text-align:left}
+.cvi-chip .sq{flex:none}
+.cvi-why{margin-top:12px;font-size:.92rem;line-height:1.55;color:var(--ink-sec);min-height:2.6em;max-width:72ch}
+.cvi-why b{color:var(--ink);font-weight:600}
+@media (max-width:760px){
+  .cvi-chip{position:static;transform:none;max-width:none;margin-top:10px}
+}
+@media (prefers-reduced-motion: reduce){
+  .strand,#cviBreak{transition:none}
+}
+
+/* three-path exhibit */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,34px)}
+.path{border-top:2px solid var(--ink);padding:20px 18px 22px;background:var(--paper-raised)}
+.path .pno{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
+.path h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2vw,1.9rem);letter-spacing:-0.01em;margin-top:10px}
+.path p{margin-top:10px;font-size:.92rem;line-height:1.55;color:var(--ink-sec)}
+.path .ptag{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--brass);border:1px solid var(--rule);border-radius:2px;padding:4px 9px}
+.converge{display:flex;align-items:center;gap:14px;margin:clamp(22px,3vw,38px) auto;max-width:520px}
+.converge .cv-line{flex:1;height:1px;background:var(--ink-sec)}
+.converge .cv-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-sec)}
+.verdict-out{max-width:640px;margin-inline:auto;border:1px solid var(--ink);border-radius:2px;
+  background:var(--paper-raised);padding:22px 24px;text-align:left}
+.verdict-out p{margin-top:10px;font-size:.98rem;line-height:1.6}
+@media (max-width:860px){.paths{grid-template-columns:1fr}}
+
+/* six-state verdict grid */
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,26px)}
+.vcard{background:var(--paper-raised);border:1px solid var(--rule);border-radius:2px;padding:18px 18px 20px}
+.vcard.hitl{border-style:dashed;border-color:var(--ink-sec)}
+.vcard .vhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.vcard .vname{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.vcard p{font-size:.9rem;line-height:1.55;color:var(--ink-sec)}
+.vcard .vroute{display:block;margin-top:12px;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--brass)}
+.vcard .vroute.quiet{color:var(--ink-quiet)}
+.t-v{color:var(--vt-verified)}.t-q{color:var(--vt-qualified)}.t-i{color:var(--vt-insufficient)}
+.t-m{color:var(--vt-missing)}.t-d{color:var(--vt-demo)}.t-f{color:var(--vt-failed)}
+@media (max-width:860px){.vgrid{grid-template-columns:1fr}}
+
+/* audit chain (ported from the v6 homepage) */
+.chaingrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(260px,4fr);gap:clamp(24px,4vw,64px);align-items:start}
+.chain{display:flex;flex-direction:column;gap:0}
+.cblock{border:1px solid rgba(233,226,210,.28);background:rgba(233,226,210,.045);border-radius:2px;
+  padding:16px 18px;transition:border-color .3s,background .3s;position:relative}
+.clink{width:1px;height:26px;background:rgba(233,226,210,.3);margin-left:34px;position:relative}
+.clink::after{content:"⌄";position:absolute;left:-6px;bottom:-4px;color:rgba(233,226,210,.45);font-size:.7rem}
+.cblock .bh{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(233,226,210,.65);margin-bottom:8px}
+.cblock .hash{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--brass-lt);margin-bottom:8px}
+.cblock .bbody{font-size:.9rem;color:var(--on-navy-dim)}
+.cblock .flag{display:none;margin-top:10px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
+.cblock.valid{border-color:rgba(122,200,160,.55)}
+.cblock.valid .flag.ok{display:block;color:#9CD3B4}
+.cblock.broken{border-color:rgba(220,120,105,.6);background:rgba(131,51,45,.16)}
+.cblock.broken .flag.bad{display:block;color:#E8A99C}
+.chain-status{margin-top:18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  color:var(--on-navy-dim);min-height:2.6em}
+.chain-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chainaside p{color:var(--on-navy-dim);max-width:44ch;text-wrap:pretty}
+.chainaside .trust{margin-top:22px;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;
+  color:var(--brass-lt);line-height:2}
+@media (max-width:1080px){.chaingrid{grid-template-columns:1fr}}
+</style>
+
+<script is:inline>
+// Convergence instrument: two synthetic criteria; one converges, one splits
+// and routes to a human. Wording from the founder-signed matrix corpus.
+(function () {
+  var svg = document.getElementById('cviSvg');
+  if (!svg) return;
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var el = function (id) { return document.getElementById(id); };
+  var modes = {
+    A: {
+      findings: ['RULE: MET AS DECLARED', 'EVIDENCE: CERT · P.18', 'MODEL: MET'],
+      node: 'CONVERGENCE', split: false,
+      chip: '<span class="sq v" aria-hidden="true"></span>Verified',
+      chipColor: 'var(--vt-verified)', chipBorder: 'var(--v-verified)',
+      why: '<b>Make-in-India content ≥ 50% · SPEC §3.2 · p.18.</b> All three paths reach the same finding independently; the verdict is recorded with its source. The committee signs.',
+    },
+    B: {
+      findings: ['RULE: THRESHOLD CHECK ONLY', 'EVIDENCE: NOT LOCATED', 'MODEL: INSUFFICIENT'],
+      node: 'NO CONVERGENCE', split: true,
+      chip: '<span class="sq i" aria-hidden="true"></span>→ Human review',
+      chipColor: 'var(--vt-insufficient)', chipBorder: 'var(--v-insufficient)',
+      why: '<b>Turnover threshold, 3-yr avg · FIN-2 · p.11.</b> The retrieval path cannot locate the instrument; the paths disagree. Disagreement is surfaced and auto-routed to a human, never averaged into a score.',
+    },
+  };
+  function redraw(strand) {
+    if (REDUCE) return;
+    strand.style.transition = 'none';
+    strand.style.strokeDashoffset = '100';
+    void strand.getBoundingClientRect();
+    strand.style.transition = '';
+    strand.style.strokeDashoffset = '0';
+  }
+  function show(key) {
+    var m = modes[key];
+    el('cviA').setAttribute('aria-selected', String(key === 'A'));
+    el('cviB').setAttribute('aria-selected', String(key === 'B'));
+    el('f1').textContent = m.findings[0];
+    el('f2').textContent = m.findings[1];
+    el('f3').textContent = m.findings[2];
+    el('cviNodeLab').textContent = m.node;
+    el('st2').style.opacity = m.split ? '0' : '1';
+    el('st2b').style.opacity = m.split ? '1' : '0';
+    el('cviBreak').style.opacity = m.split ? '1' : '0';
+    el('stOut').style.opacity = m.split ? '0' : '1';
+    el('stOutH').style.opacity = m.split ? '1' : '0';
+    [el('st1'), el('st3'), m.split ? el('st2b') : el('st2'), m.split ? el('stOutH') : el('stOut')].forEach(redraw);
+    var chip = el('cviChip');
+    chip.innerHTML = m.chip;
+    chip.style.color = m.chipColor;
+    chip.style.borderColor = m.chipBorder;
+    el('cviWhy').innerHTML = m.why;
+  }
+  el('cviA').addEventListener('click', function () { show('A'); });
+  el('cviB').addEventListener('click', function () { show('B'); });
+  show('A');
+})();
+
+// Audit chain: verify / tamper / reset. Ported from the v6 homepage module;
+// synthetic events, simulated for demonstration.
+(function () {
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var blocks = [
+    { id: '0148', ev: 'verdict_signed', ts: '14:22:07 IST', h: '9f3a…c1d2', p: '4e58…a907', b: 'Criterion 31 · Verified · member B' },
+    { id: '0149', ev: 'clarification', ts: '14:26:41 IST', h: 'b70e…44af', p: '9f3a…c1d2', b: 'Criterion 47 · clarification requested' },
+    { id: '0150', ev: 'recommendation', ts: '15:03:12 IST', h: 'c2d8…91b6', p: 'b70e…44af', b: 'Tender recommendation sealed' }
+  ];
+  var chain = document.getElementById('chain'), status = document.getElementById('chainStatus');
+  if (!chain) return;
+  function render() {
+    chain.innerHTML = '';
+    blocks.forEach(function (bl, i) {
+      if (i > 0) { var l = document.createElement('div'); l.className = 'clink'; chain.appendChild(l); }
+      var d = document.createElement('div');
+      d.className = 'cblock' + (bl.state || '');
+      d.innerHTML =
+        '<div class="bh"><span>Block ' + bl.id + ' · ' + bl.ev + '</span><span>' + bl.ts + '</span></div>' +
+        '<div class="hash">' + bl.h + ' ← ' + bl.p + '</div>' +
+        '<div class="bbody">' + bl.b + '</div>' +
+        '<div class="flag ok">✓ hash matches previous block</div>' +
+        '<div class="flag bad">✕ hash mismatch · tamper detected</div>';
+      chain.appendChild(d);
+    });
+  }
+  render();
+  document.getElementById('verifyBtn').addEventListener('click', function () {
+    var broken = false;
+    blocks.forEach(function (bl, i) {
+      setTimeout(function () {
+        if (bl.tampered || broken) { broken = true; bl.state = ' broken'; } else { bl.state = ' valid'; }
+        render();
+        if (i === blocks.length - 1) {
+          status.textContent = broken
+            ? 'CHAIN BROKEN: an edited block no longer matches the next. Tamper is visible.'
+            : 'CHAIN VERIFIED: every block hashes to the next. Untampered.';
+          status.style.color = broken ? '#E8A99C' : '#9CD3B4';
+        }
+      }, REDUCE ? 0 : i * 460);
+    });
+  });
+  document.getElementById('tamperBtn').addEventListener('click', function () {
+    blocks[1].tampered = true;
+    blocks[1].b = 'Criterion 47 · verdict ALTERED post-hoc';
+    blocks[1].h = 'b70e…0000';
+    blocks.forEach(function (b) { b.state = ''; });
+    render();
+    status.textContent = 'Block 0149 edited. Now run "Verify chain".';
+    status.style.color = '#C89A4C';
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    blocks[1].tampered = false;
+    blocks[1].b = 'Criterion 47 · clarification requested';
+    blocks[1].h = 'b70e…44af';
+    blocks.forEach(function (b) { b.state = ''; });
+    render();
+    status.textContent = 'Chain unverified. Run a verification pass.';
+    status.style.color = '';
+  });
+})();
+</script>

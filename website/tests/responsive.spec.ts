@@ -26,9 +26,19 @@ for (const vp of responsiveViewports) {
         clientWidth + 1,
       );
 
-      // 2. Force scroll-reveal elements visible for deterministic screenshots.
+      // 2. Force scroll-reveal elements visible for deterministic screenshots
+      //    (v1 .reveal → .is-visible; v6 .rv → .in; homepage GSAP reveals get
+      //    inline final state).
       await page.evaluate(() => {
         document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+        document.querySelectorAll('.rv').forEach((el) => {
+          el.classList.add('in');
+          (el as HTMLElement).style.opacity = '1';
+          (el as HTMLElement).style.transform = 'none';
+        });
+        document.querySelectorAll('.ln-in').forEach((el) => {
+          (el as HTMLElement).style.transform = 'none';
+        });
       });
 
       // 3. Visual snapshot.

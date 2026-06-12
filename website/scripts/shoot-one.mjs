@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const [,, route='/', sel='body', label='one', w='1440', h='900'] = process.argv;
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: +w, height: +h } });
+await page.goto('http://localhost:4321' + route, { waitUntil: 'networkidle' });
+await page.evaluate((s) => document.querySelector(s)?.scrollIntoView({ block: 'start' }), sel);
+await page.waitForTimeout(2500);
+await page.screenshot({ path: `shots/phase3/${label}.png` });
+await browser.close();
+console.log('done', label);

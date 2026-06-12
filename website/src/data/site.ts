@@ -4,8 +4,10 @@
 export const site = {
   name: 'KRISEVA AI',
   legalName: 'KRISEVA AI Private Limited',
-  domain: 'kriseva.in',
-  url: 'https://kriseva.in',
+  domain: 'www.kriseva.in',
+  // TODO(founder): apex kriseva.in DNS is dead (2026-06-12 audit); flip when
+  // fixed and a canonical host is chosen.
+  url: 'https://www.kriseva.in',
   positioning: 'Procurement intelligence for India’s defense ecosystem.',
   shortPositioning: 'Tender intelligence for defense procurement.',
   email: 'ayush@kriseva.in',

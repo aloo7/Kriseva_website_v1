@@ -1,0 +1,17 @@
+---
+// SectionHead.astro - eyebrow + folio row, display headline, optional dek.
+// The headline comes through the default slot so pages can set
+// <em class="em-brass"> emphasis inline.
+
+interface Props {
+  eyebrow: string;
+  folio?: string;
+  dek?: string;
+}
+const { eyebrow, folio = '', dek = '' } = Astro.props;
+---
+<div class="sechead">
+  <div class="row"><span class="eyebrow">{eyebrow}</span>{folio && <span class="folio">{folio}</span>}</div>
+  <h2 class="display"><slot /></h2>
+  {dek && <p class="dek rv">{dek}</p>}
+</div>

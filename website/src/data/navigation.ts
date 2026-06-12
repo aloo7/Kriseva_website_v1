@@ -10,7 +10,7 @@ export const headerLinks: NavItem[] = [
   { href: '/tas', label: 'TAS' },
   { href: '/workflow', label: 'Workflow' },
   { href: '/security', label: 'Security' },
-  { href: '/issuer-roadmap', label: 'Issuer Roadmap' },
+  { href: '/evaluator', label: 'Evaluator' },
   { href: '/validation', label: 'Validation' },
   { href: '/founder', label: 'Founder' },
 ];
@@ -20,7 +20,7 @@ export const footerSitemap: NavItem[] = [
   { href: '/tas', label: 'TAS' },
   { href: '/workflow', label: 'Workflow' },
   { href: '/security', label: 'Security' },
-  { href: '/issuer-roadmap', label: 'Issuer Roadmap' },
+  { href: '/evaluator', label: 'Evaluator' },
   { href: '/validation', label: 'Validation' },
   { href: '/founder', label: 'Founder' },
   { href: '/contact', label: 'Contact' },
