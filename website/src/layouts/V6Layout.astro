@@ -1,0 +1,48 @@
+---
+// V6Layout.astro - thin composition of V6Head + V6Nav + V6Footer around a
+// <main> slot, plus the shared reveal observer. All v6 inner pages use this;
+// the homepage stays self-contained by design.
+
+import '../styles/tokens-v6.css';
+import V6Head from '../components/v6/V6Head.astro';
+import V6Nav from '../components/v6/V6Nav.astro';
+import V6Footer from '../components/v6/V6Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  schema?: Record<string, unknown>[];
+}
+const { title, description, path, schema = [] } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <V6Head title={title} description={description} path={path} schema={schema} />
+  </head>
+  <body>
+    <V6Nav current={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <V6Footer />
+    <script is:inline>
+      // Reveal-on-scroll: IntersectionObserver only, no library. Elements are
+      // visible by default without JS; reduced-motion neutralises the
+      // transition in CSS.
+      (function () {
+        if (!('IntersectionObserver' in window)) {
+          document.querySelectorAll('.rv').forEach(function (el) { el.classList.add('in'); });
+          return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        }, { rootMargin: '0px 0px -8% 0px' });
+        document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+      })();
+    </script>
+  </body>
+</html>

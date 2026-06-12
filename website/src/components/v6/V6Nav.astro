@@ -1,0 +1,61 @@
+---
+// V6Nav.astro - fixed header for v6 inner pages.
+// Desktop: mono route links + filled CTA. Mobile: MENU button opening a
+// full-screen paper panel (keyboard reachable, aria-expanded wired).
+
+interface Props {
+  /** Current route path, e.g. '/evaluator' - sets aria-current. */
+  current?: string;
+}
+const { current = '' } = Astro.props;
+
+const links = [
+  { href: '/tas', label: 'TAS' },
+  { href: '/evaluator', label: 'Evaluator' },
+  { href: '/workflow', label: 'Workflow' },
+  { href: '/security', label: 'The Boundary' },
+  { href: '/validation', label: 'Validation' },
+  { href: '/founder', label: 'Founder' },
+];
+---
+<a class="skip" href="#main">Skip to content</a>
+<header class="v6" id="hdr">
+  <div class="nav">
+    <a class="brand" href="/" aria-label="KRISEVA home">KRISEVA<span class="tika" aria-hidden="true"></span></a>
+    <nav class="nlinks" aria-label="Primary">
+      {links.map((l) => (
+        <a href={l.href} aria-current={current === l.href ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a class="btn btn-fill btn-sm" href="/contact">Request a demo</a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobilePanel">Menu</button>
+    </div>
+  </div>
+  <div class="mobile-panel" id="mobilePanel">
+    <nav aria-label="Primary, mobile">
+      <a href="/">Home</a>
+      {links.map((l) => (
+        <a href={l.href} aria-current={current === l.href ? 'page' : undefined}>{l.label}</a>
+      ))}
+      <a href="/contact">Contact</a>
+    </nav>
+  </div>
+</header>
+<script is:inline>
+(function () {
+  var hdr = document.getElementById('hdr');
+  function onScroll() { hdr.classList.toggle('stuck', window.scrollY > 40); }
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  var btn = document.getElementById('menuBtn'), panel = document.getElementById('mobilePanel');
+  if (btn && panel) {
+    btn.addEventListener('click', function () {
+      var open = panel.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? 'Close' : 'Menu';
+      document.documentElement.style.overflow = open ? 'hidden' : '';
+    });
+  }
+})();
+</script>
