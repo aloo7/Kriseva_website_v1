@@ -212,8 +212,8 @@ const security: PublicClaim[] = [
 // Promoted from "roadmap" to shipped, co-equal product by founder ruling
 // 2026-06-09 (two co-equal products: TAS bidder-side, Kriseva Evaluator
 // issuer-side). Wording below matches the founder-signed v6 homepage.
-// Display name: KRISEVA EVALUATOR. The string "KCVI" never appears on any
-// public surface.
+// Display name: KRISEVA EVALUATOR. The legacy internal codename never
+// appears on any public surface.
 // ─────────────────────────────────────────────────────────────────────────
 const evaluator: PublicClaim[] = [
   {
