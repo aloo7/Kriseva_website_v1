@@ -180,9 +180,9 @@ header{position:fixed;inset-inline:0;top:0;z-index:1000;transition:background .3
   max-width:var(--wrap);margin-inline:auto;padding:22px var(--pad);transition:padding .35s}
 header.stuck{background:rgba(243,237,224,.94);box-shadow:0 1px 0 var(--rule)}
 header.stuck .nav{padding-block:12px}
-.brand{display:flex;align-items:baseline;gap:7px;font-family:var(--sans);font-weight:600;
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600;
   letter-spacing:.34em;font-size:.95rem;text-decoration:none}
-.brand .tika{width:7px;height:7px;border-radius:50%;background:var(--brass);transform:translateY(-1px)}
+.brand .bmark{width:24px;height:24px;display:block}
 .nlinks{display:flex;gap:clamp(14px,2.6vw,36px)}
 .nlinks a{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-sec);text-decoration:none;padding:6px 2px;position:relative}
@@ -727,7 +727,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 
 <header id="hdr">
   <div class="nav">
-    <a class="brand" href="#top" aria-label="KRISEVA home">KRISEVA<span class="tika" aria-hidden="true"></span></a>
+    <a class="brand" href="#top" aria-label="KRISEVA home"><img class="bmark" src="/assets/brand/kriseva-mark.svg" alt="" width="24" height="24">KRISEVA</a>
     <nav class="nlinks" aria-label="Primary">
       <a href="#platform">Platform</a>
       <a href="#evidence">Evidence</a>
@@ -1298,7 +1298,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 
 <footer>
   <div class="foot">
-    <span>KRISEVA AI Private Limited</span>
+    <span style="display:flex;align-items:center;gap:12px"><img src="/assets/brand/kriseva-mark-light.svg" alt="KRISEVA mark" width="30" height="30" loading="lazy">KRISEVA AI Private Limited</span>
     <span>No military or government endorsement claimed or implied.<br>Product visuals are synthetic / seeded demo data, not a real tender.</span>
     <span>Deterministic · Auditable · Evidence-linked · Sovereign-by-design<br>www.kriseva.in</span>
   </div>
@@ -1537,7 +1537,7 @@ if (FINE && !REDUCE) {
     fill.style.width = ((i + 1) / 6 * 100) + '%';
   }
   show(0);
-  if (ANIM && hasST && DESKTOP) {
+  if (ANIM && hasST) {
     ScrollTrigger.create({
       trigger: '#pipe', start: 'top 75%', end: 'bottom 35%', scrub: true,
       onUpdate: function (self) { show(Math.min(5, Math.floor(self.progress * 6))); }
@@ -2021,6 +2021,33 @@ if (ANIM && hasST && DESKTOP) {
 })();
 
 /* ============================================================
+   HERO FALLBACK CHOREOGRAPHY - phones and no-GL devices get the
+   same thesis moment as the WebGL hero: the static plate draws
+   itself on scroll. Brass strands trace from the bundle, then the
+   six verdict chips resolve, scrubbed and reversible.
+   ============================================================ */
+(function () {
+  if (!(ANIM && hasST)) return;
+  if (DESKTOP && !document.documentElement.classList.contains('hero-fallback')) return;
+  var svg = document.querySelector('.hero-static svg');
+  if (!svg) return;
+  var strands = svg.querySelectorAll('g[stroke="#A87229"] path');
+  var chips = svg.querySelectorAll('g[font-size="11"] > g');
+  if (!strands.length) return;
+  strands.forEach(function (p) {
+    var L = p.getTotalLength();
+    p.style.strokeDasharray = L;
+    p.style.strokeDashoffset = L;
+  });
+  chips.forEach(function (c) { c.style.opacity = 0; });
+  var tl = gsap.timeline({
+    scrollTrigger: { trigger: '.hero-static', start: 'top 88%', end: 'top 18%', scrub: true }
+  });
+  strands.forEach(function (p, i) { tl.to(p, { strokeDashoffset: 0, ease: 'none', duration: 1 }, i * 0.3); });
+  chips.forEach(function (c, i) { tl.to(c, { opacity: 1, ease: 'none', duration: 0.35 }, 0.5 + i * 0.3); });
+})();
+
+/* ============================================================
    ACT 1 - the nation's clock: one acquisition travels the rule
    while the year counter advances. Qualitative on purpose: the
    final tick reads YEAR N, not a number we cannot cite.
@@ -2046,6 +2073,15 @@ if (ANIM && hasST && DESKTOP) {
     setP(0);
     ScrollTrigger.create({
       trigger: '#clockStage', start: 'top top', end: '+=110%', pin: true, scrub: true,
+      onUpdate: function (self) { setP(self.progress); }
+    });
+  } else if (ANIM && hasST) {
+    /* mobile: same journey, no pin. The vertical ledger lights station
+       by station and the year advances as the section passes through
+       the viewport; fully reversible. */
+    setP(0);
+    ScrollTrigger.create({
+      trigger: '#clock', start: 'top 70%', end: 'bottom 92%', scrub: true,
       onUpdate: function (self) { setP(self.progress); }
     });
   } else {
@@ -2080,10 +2116,12 @@ if (ANIM && hasST && DESKTOP) {
     var n = Math.floor(p * ticks.length);
     ticks.forEach(function (t, i) { t.setAttribute('opacity', i < n ? '1' : '0'); });
   }
-  if (ANIM && hasST && DESKTOP) {
+  if (ANIM && hasST) {
+    /* desktop and mobile alike: the bundle fans out and the committee's
+       checks tick in as the rooms cross the viewport, both directions */
     setRooms(0);
     ScrollTrigger.create({
-      trigger: '#rooms', start: 'top 72%', end: 'center 40%', scrub: true,
+      trigger: '#rooms', start: 'top 78%', end: 'center 42%', scrub: true,
       onUpdate: function (self) { setRooms(self.progress); }
     });
   } else {
@@ -2113,8 +2151,19 @@ if (ANIM && hasST) {
         var l = document.getElementById('bboxLabel');
         if (l) l.classList.toggle('on', self.progress > 0.9);
       } } });
-  /* filmstrip: pinned horizontal scrub on desktop */
+  /* filmstrip: pinned horizontal scrub on desktop; on mobile the reel is
+     a native swipe and the rail + counter track the swipe position */
   var strip = document.getElementById('strip');
+  if (strip && !DESKTOP) {
+    strip.addEventListener('scroll', function () {
+      var max = strip.scrollWidth - strip.clientWidth;
+      var p = max > 0 ? strip.scrollLeft / max : 0;
+      var f = document.getElementById('stripFill');
+      if (f) f.style.width = (p * 100) + '%';
+      var c = document.getElementById('stripCount');
+      if (c) c.textContent = '0' + Math.min(5, 1 + Math.floor(p * 4.999)) + ' / 05';
+    }, { passive: true });
+  }
   if (strip && DESKTOP) {
     var dist = function () { return Math.max(0, strip.scrollWidth - document.documentElement.clientWidth); };
     gsap.to(strip, { x: function () { return -dist(); }, ease: 'none',
@@ -2236,10 +2285,17 @@ if (ANIM && hasST) {
   function start() { on = true; go(0); }
   function exit() { on = false; idx = -1; chip.classList.remove('on'); }
   btn.addEventListener('click', start);
+  /* touch path: tapping the caption chip advances to the next act */
+  chip.addEventListener('click', function () { if (on) go(idx + 1); });
   /* taking the wheel back ends the walk; the caption never lingers
-     over content it no longer describes */
+     over content it no longer describes (taps on the chip or the
+     start button are not "taking the wheel back") */
   ['wheel', 'touchstart'].forEach(function (ev) {
-    window.addEventListener(ev, function () { if (on) exit(); }, { passive: true });
+    window.addEventListener(ev, function (e) {
+      if (!on) return;
+      if (e.target && e.target.closest && e.target.closest('#tourChip,#tourStart')) return;
+      exit();
+    }, { passive: true });
   });
   document.addEventListener('keydown', function (e) {
     if (e.target.matches && e.target.matches('input,textarea,select')) return;
