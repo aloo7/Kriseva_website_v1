@@ -252,6 +252,14 @@ html.hero-fallback #webgl{display:none}
   padding:13px 2px;border-bottom:1px solid var(--rule);font-size:.94rem;line-height:1.5}
 .caps .ref{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec);white-space:nowrap}
 .caps b{font-weight:600}
+/* volume doors - each product volume opens its own page */
+.vol-door{display:inline-flex;align-items:center;gap:10px;margin-top:22px;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink);padding:12px 18px;border:1px solid var(--ink);border-radius:2px;
+  transition:background .25s,color .25s}
+.vol-door .arr{transition:transform .25s}
+.vol-door:hover{background:var(--ink);color:var(--paper-raised)}
+.vol-door:hover .arr{transform:translateX(4px)}
 /* pipeline rail inside TAS volume */
 .pipe{margin-top:30px}
 .pipe .ptitle{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
@@ -304,6 +312,16 @@ table.mx{width:100%;border-collapse:collapse}
 .legend{display:flex;flex-wrap:wrap;gap:8px 18px;padding:12px 16px;border-top:1px solid var(--rule)}
 .legend span{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-sec);display:inline-flex;align-items:center;gap:7px}
+/* verdict distribution ledger - computed from the same synthetic matrix */
+.mxdist{padding:14px 16px 16px;border-top:1px solid var(--rule)}
+.mxdist .mxd-t{font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:10px}
+.mxd-row{display:grid;grid-template-columns:13px 138px 1fr 2ch;gap:10px;align-items:center;padding:3px 0}
+.mxd-row .nm{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-sec)}
+.mxd-row .bar{height:8px;background:var(--paper-sunk);border-radius:1px;position:relative;overflow:hidden}
+.mxd-row .bar i{position:absolute;inset:0;width:0;border-radius:1px;transition:width .9s ease}
+.mxd-row .ct{font-family:var(--mono);font-size:.66rem;font-variant-numeric:tabular-nums;text-align:right}
+@media (prefers-reduced-motion: reduce){.mxd-row .bar i{transition:none}}
 .mxdetail{background:var(--ink-deep);color:#E7E1D0;border-radius:2px;padding:22px;min-height:240px;position:sticky;top:96px}
 .mxdetail .dt{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
 .verdict-pill{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
@@ -700,6 +718,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
           <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
           <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
         </div>
+        <a class="vol-door" href="/tas" data-cursor="open">Open Vol. I · TAS <span class="arr">→</span></a>
       </article>
       <article class="vol vol-eval rv regmark" data-cursor="inspect">
         <div class="vhead"><span class="vno">Vol. II · Issuer-side</span><span class="folio">EVALUATOR</span></div>
@@ -711,6 +730,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
           <li><span>A <b>hash-chained, append-only audit log</b>. A single edited verdict breaks the chain; tamper is visible.</span><span class="ref">sha-256</span></li>
           <li><span><b>On-premise, local LLM, zero egress</b>, built for networks that do not leave the building.</span><span class="ref">sovereign-by-design</span></li>
         </ul>
+        <a class="vol-door" href="/evaluator" data-cursor="open">Open Vol. II · Evaluator <span class="arr">→</span></a>
       </article>
     </div>
   </div>
@@ -744,6 +764,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
           <span><i class="sq v"></i>Verified</span><span><i class="sq q"></i>Qualified</span><span><i class="sq d"></i>Req. demo</span>
           <span><i class="sq i"></i>Insufficient</span><span><i class="sq m"></i>Missing</span><span><i class="sq f"></i>Failed</span>
         </div>
+        <div class="mxdist" id="mxDist" aria-label="Verdict distribution across this synthetic session"></div>
       </div>
       <div class="mxdetail" id="mxd" aria-live="polite">
         <div class="dt"><span class="verdict-pill" style="border-color:rgba(231,225,208,.4);color:rgba(231,225,208,.7)">Select a cell</span><span class="srcref">- · -</span></div>
@@ -1209,6 +1230,31 @@ if (FINE && !REDUCE) {
       '<div class="body"><b>' + crit[ri].c + '</b> - ' + reason[st] + '</div>' +
       '<div class="route">' + ((st === 'i' || st === 'm') ? '→ auto-routes to human review (HITL)' : '→ recorded with source · the committee signs') + '</div>';
   });
+
+  /* verdict distribution ledger: counts derived from the same matrix data */
+  var dist = document.getElementById('mxDist');
+  if (dist) {
+    var counts = {};
+    data.forEach(function (row) { row.forEach(function (st) { counts[st] = (counts[st] || 0) + 1; }); });
+    var order = ['v', 'q', 'd', 'i', 'm', 'f'];
+    var maxC = Math.max.apply(null, order.map(function (k) { return counts[k] || 0; }));
+    var total = data.length * data[0].length;
+    var html = '<div class="mxd-t">Distribution · ' + total + ' verdicts in this synthetic session</div>';
+    order.forEach(function (k) {
+      var c = counts[k] || 0;
+      html += '<div class="mxd-row"><span class="sq ' + k + '" aria-hidden="true"></span>' +
+        '<span class="nm">' + V[k] + '</span>' +
+        '<span class="bar" aria-hidden="true"><i data-w="' + (c / maxC * 100) + '" style="background:' + VC[k] + '"></i></span>' +
+        '<span class="ct" style="color:' + VT[k] + '">' + c + '</span></div>';
+    });
+    dist.innerHTML = html;
+    var bars = dist.querySelectorAll('.bar i');
+    function fill() { bars.forEach(function (b) { b.style.width = b.dataset.w + '%'; }); }
+    if (REDUCE || !('IntersectionObserver' in window)) fill();
+    else new IntersectionObserver(function (es, io) {
+      es.forEach(function (e) { if (e.isIntersecting) { fill(); io.disconnect(); } });
+    }, { threshold: 0.4 }).observe(dist);
+  }
 })();
 
 /* ============================================================
