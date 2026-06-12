@@ -7,6 +7,7 @@ import '../styles/tokens-v6.css';
 import V6Head from '../components/v6/V6Head.astro';
 import V6Nav from '../components/v6/V6Nav.astro';
 import V6Footer from '../components/v6/V6Footer.astro';
+import { publicClaims } from '../data/publicClaims';
 
 interface Props {
   title: string;
@@ -15,6 +16,14 @@ interface Props {
   schema?: Record<string, unknown>[];
 }
 const { title, description, path, schema = [] } = Astro.props;
+
+// X1: the provenance-chip registry, baked from publicClaims.ts at build.
+// Only publishable categories ship; the chips read it from the JSON island.
+const claimRegistry = Object.fromEntries(
+  publicClaims
+    .filter((c) => c.category === 'verified-and-safe' || c.category === 'safe-with-care')
+    .map((c) => [c.id, { w: c.wording, cat: c.category, ev: c.evidence[0] }])
+);
 ---
 <!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -44,5 +53,7 @@ const { title, description, path, schema = [] } = Astro.props;
         document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
       })();
     </script>
+    <script type="application/json" id="claimRegistry" set:html={JSON.stringify(claimRegistry)}></script>
+    <script is:inline defer src="/js/kriseva-chips.js"></script>
   </body>
 </html>
