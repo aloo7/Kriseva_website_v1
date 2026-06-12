@@ -26,3 +26,6 @@ pnpm-debug.log*
 .env
 .env.local
 .env.*.local
+
+# Phase-gate screenshot evidence (PR attachments, not source)
+shots/
