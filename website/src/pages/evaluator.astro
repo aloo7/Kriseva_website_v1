@@ -9,6 +9,7 @@
 
 import V6Layout from '../layouts/V6Layout.astro';
 import SectionHead from '../components/v6/SectionHead.astro';
+import VerdictSimulator from '../components/v6/VerdictSimulator.astro';
 import { getClaim } from '../data/publicClaims';
 
 const positioning = getClaim('evaluator.positioning')!.wording;
@@ -171,6 +172,9 @@ const states = [
         ))}
       </div>
       <p class="disclose">Verdict vocabulary as shipped · the two uncertain states always reach a human</p>
+      <div style="margin-top:clamp(28px,4vw,52px)">
+        <VerdictSimulator id="vsim-eval" />
+      </div>
     </div>
   </section>
 

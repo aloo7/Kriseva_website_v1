@@ -32,6 +32,12 @@ const FORBIDDEN_PATH_FRAGMENTS = [
 // Forbidden file extensions in dist/.
 const FORBIDDEN_EXT = ['.docx', '.pdf', '.zip', '.tar', '.gz', '.7z', '.mp4', '.mov'];
 
+// Deliberate first-party exceptions (v7): the public dossier download and
+// the scanner-loop media plates are shipped artifacts. Everything else
+// with a forbidden extension still fails.
+const ALLOWED_EXACT = new Set(['dossier.pdf']);
+const ALLOWED_PREFIXES = ['assets/media/'];
+
 // Forbidden filenames specifically for Claude Design reference HTML.
 const FORBIDDEN_HTML_NAMES = [
   'kriseva-claim-safe-components',
@@ -62,6 +68,26 @@ const FORBIDDEN_CONTENT = [
   'text/babel',
   'unpkg.com/@babel/standalone',
   'api.anthropic.com/v1/design',
+];
+
+// IP disclosure gate (v7 Phase A). The patent is not filed; the public
+// site is prior art against Kriseva's own future filing. Scoring weights
+// and splits, deterministic factor names, model names and sizes, and
+// runtime file paths must never ship in any dist text content (HTML, JS,
+// CSS, SVG, JSON-LD, alt text, comments). Case-insensitive substrings.
+const IP_FORBIDDEN = [
+  '60 . 30',
+  '60.30.10',
+  '60/30/10',
+  'nic_category',
+  'keyword_hits',
+  'value_band',
+  'geography_fit',
+  'qwen',
+  'gemma',
+  'bge-m3',
+  /\bBGE\b/,
+  'runtime/',
 ];
 
 const TEXT_EXT = new Set(['.html', '.js', '.mjs', '.cjs', '.css', '.svg', '.json', '.xml', '.txt']);
@@ -99,8 +125,10 @@ async function main() {
         failures.push({ file: rel, reason: `path includes "${frag}"` });
       }
     }
-    // Extension block
-    if (FORBIDDEN_EXT.includes(ext)) {
+    // Extension block (with the explicit first-party allowlist)
+    const allowed =
+      ALLOWED_EXACT.has(rel) || ALLOWED_PREFIXES.some((p) => rel.startsWith(p));
+    if (FORBIDDEN_EXT.includes(ext) && !allowed) {
       failures.push({ file: rel, reason: `forbidden extension ${ext}` });
     }
     // Reference HTML names (heuristic: kebab-case filename match)
@@ -117,6 +145,15 @@ async function main() {
         for (const token of FORBIDDEN_CONTENT) {
           if (content.includes(token)) {
             failures.push({ file: rel, reason: `dist content contains "${token}"` });
+            break;
+          }
+        }
+        const lower = content.toLowerCase();
+        for (const term of IP_FORBIDDEN) {
+          const hit =
+            term instanceof RegExp ? term.test(content) : lower.includes(term);
+          if (hit) {
+            failures.push({ file: rel, reason: `IP gate: dist content contains "${term}"` });
             break;
           }
         }

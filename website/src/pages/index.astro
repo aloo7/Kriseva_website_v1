@@ -1,3 +1,37 @@
+---
+// v7 story build. The page stays self-contained; this frontmatter only bakes
+// build-time facts. claimRegistry feeds the X1 provenance chips (wording,
+// category and evidence straight from publicClaims.ts); the build stamp
+// feeds the X5 footer audit strip. No runtime dependency on either.
+import { execSync } from 'node:child_process';
+import { getClaim } from '../data/publicClaims';
+import VerdictSimulator from '../components/v6/VerdictSimulator.astro';
+
+const CHIP_IDS = [
+  'positioning.thesis',
+  'tas.one-liner',
+  'evaluator.three-path',
+  'evaluator.six-state',
+  'evaluator.audit-chain',
+  'evaluator.sovereign',
+  'security.local-first',
+  'record.pan-iit',
+  'validation.synthetic-data',
+];
+const claimRegistry = Object.fromEntries(
+  CHIP_IDS.flatMap((id) => {
+    const c = getClaim(id);
+    return c ? [[id, { w: c.wording, cat: c.category, ev: c.evidence[0] }]] : [];
+  })
+);
+const git = (cmd: string) => {
+  try { return execSync(cmd).toString().trim(); } catch { return 'untracked'; }
+};
+const buildSha = git('git rev-parse --short HEAD');
+const claimsSha = git('git log -1 --format=%h -- src/data/publicClaims.ts');
+const buildDate = new Date().toISOString().slice(0, 10);
+---
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -562,6 +596,121 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   .plate,.plate:hover{transform:none}
   .bbox-label{opacity:1}
 }
+/* ============================================================
+   v7 - THE STORY SPINE
+   Act breaks, the nation's clock, two rooms, the turn, mission,
+   and the X-factor panels. Primitives only: rules, ledger rows,
+   mono labels, verdict chips. Nothing decorative.
+   ============================================================ */
+/* ---------- act break: the chapter system ---------- */
+.act-break{padding-block:clamp(44px,6vw,92px) 0}
+.act-break .ab-row{display:flex;align-items:baseline;gap:18px;border-top:1px solid var(--ink);padding-top:12px}
+.act-break .ab-no{font-family:var(--mono);font-weight:600;font-size:.66rem;letter-spacing:.26em;color:var(--brass-text)}
+.act-break .ab-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
+.act-break .ab-line{margin-top:16px;font-family:var(--serif);font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.22;letter-spacing:-.01em;max-width:36ch;text-wrap:balance}
+/* ---------- ACT 1: the nation's clock ---------- */
+.clock-stage{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-block:clamp(60px,8vw,90px)}
+.clock-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(220px,4fr);gap:clamp(24px,4vw,64px);align-items:end}
+.clock-top .dek{max-width:52ch}
+.yearbox{text-align:right}
+.yearbox .yk{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec);display:block;margin-bottom:6px}
+.yearbox .yr{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.6rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.yearbox .yr i{font-style:normal;color:var(--brass-text)}
+.cycle{margin-top:clamp(44px,6vw,76px)}
+.crail{position:relative;height:2px;background:var(--rule)}
+.crail .cfill{position:absolute;inset-block:0;left:0;width:0%;background:var(--brass)}
+.crail .cdot{position:absolute;top:50%;left:0;width:13px;height:13px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 5px rgba(168,114,41,.16)}
+.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px}
+.cst{padding-top:2px}
+.cst .tick{width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
+.cst .nm{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
+.cst .cap{font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s}
+.cst.lit .tick{background:var(--ink)}
+.cst.lit .nm{color:var(--ink);font-weight:600}
+.cst.lit .cap{color:var(--ink-sec)}
+.clock-line{margin-top:clamp(40px,5.4vw,64px);font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.5rem);line-height:1.2;letter-spacing:-.012em;max-width:30ch;text-wrap:balance}
+.clock-line .em-brass{font-style:italic}
+.clock-src{margin-top:18px}
+@media (max-width:860px){
+  .clock-stage{min-height:0}
+  .clock-top{grid-template-columns:1fr}
+  .yearbox{text-align:left}
+  .cstations{grid-template-columns:1fr;gap:0;border-top:1px solid var(--rule);margin-top:22px}
+  .cst{display:grid;grid-template-columns:110px 1fr;gap:4px 16px;padding:12px 2px;border-bottom:1px solid var(--rule)}
+  .cst .tick{display:none}
+  .cst .cap{max-width:none;margin-top:0}
+  .crail{display:none}
+}
+/* ---------- ACT 2: two rooms ---------- */
+.rooms{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,44px);align-items:stretch}
+.room{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);padding:clamp(18px,2.6vw,32px);display:flex;flex-direction:column}
+.room .rh{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sec);margin-bottom:12px}
+.room h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.2vw,2.1rem);letter-spacing:-.01em;line-height:1.15}
+.room .rplain{margin-top:10px;color:var(--ink-sec);font-size:.95rem;max-width:46ch}
+.room .rfig{margin-block:clamp(18px,2.6vw,28px);flex:1;display:flex;align-items:center}
+.room .rfig svg{width:100%;height:auto}
+.room .pains{border-top:1px solid var(--rule)}
+.room .pains li{list-style:none;padding:11px 2px;border-bottom:1px solid var(--rule);font-size:.92rem;line-height:1.5}
+.room .pains b{font-weight:600}
+.room-b{background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+.room-b .rh{color:rgba(233,226,210,.65)}
+.room-b .rplain{color:var(--on-navy-dim)}
+.room-b .pains{border-top-color:rgba(233,226,210,.22)}
+.room-b .pains li{border-bottom-color:rgba(233,226,210,.22)}
+.rooms-merge{margin-top:clamp(34px,4.6vw,56px);text-align:center}
+.rooms-merge .rm-line{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.6rem);line-height:1.2;letter-spacing:-.012em;max-width:30ch;margin-inline:auto;text-wrap:balance}
+@media (max-width:860px){.rooms{grid-template-columns:1fr}}
+/* ---------- ACT 3: the turn ---------- */
+.turn{background:var(--paper-sunk);padding-block:clamp(92px,13vw,190px)}
+.turn .tline{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,5vw,4.7rem);line-height:1.1;letter-spacing:-.015em;max-width:22ch;text-wrap:balance}
+.turn .tline .em-brass{font-style:italic}
+/* ---------- ACT 5: simulator placement ---------- */
+.simwrap{margin-top:clamp(30px,4.4vw,56px)}
+/* ---------- ACT 6: X4 devtools panel ---------- */
+.x4{margin-top:clamp(28px,4vw,48px);border:1px dashed var(--ink-sec);border-radius:2px;padding:clamp(16px,2.4vw,26px);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px clamp(20px,3vw,44px);align-items:center}
+.x4 .big{font-family:var(--serif);font-size:clamp(2.8rem,4.6vw,4.4rem);line-height:1;font-variant-numeric:tabular-nums}
+.x4 .x4h{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sec);margin-bottom:8px}
+.x4 p{font-size:.92rem;line-height:1.55;color:var(--ink-sec);max-width:62ch}
+.x4 .origins{grid-column:1/-1;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink-sec);min-height:1.4em}
+.x4 .origins b{color:var(--vt-verified);font-weight:600}
+.x4 .origins .bad{color:var(--vt-missing)}
+@media (max-width:760px){.x4{grid-template-columns:1fr}}
+/* ---------- ACT 7: mission ---------- */
+.mission .mlede{font-family:var(--serif);font-size:clamp(1.6rem,3.2vw,2.9rem);line-height:1.18;letter-spacing:-.012em;max-width:28ch;text-wrap:balance}
+.mrows{margin-top:clamp(28px,4vw,48px);border-top:1px solid var(--ink)}
+.mrow{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px 26px;align-items:baseline;padding:16px 2px;border-bottom:1px solid var(--rule)}
+.mrow .mk{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass-text)}
+.mrow p{font-size:1rem;line-height:1.55}
+.mnote{margin-top:18px}
+@media (max-width:760px){.mrow{grid-template-columns:1fr;gap:5px}}
+/* ---------- X3: working loop inside the console plate ---------- */
+.console-plate .pimg video{width:100%;height:auto;display:none}
+.console-plate.video-live .pimg video{display:block}
+.console-plate.video-live .pimg > img{display:none}
+.console-plate.video-live .ann{display:none}
+.vbadge{position:absolute;z-index:3;left:14px;bottom:14px;font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;
+  text-transform:uppercase;color:#F3EDE0;background:rgba(23,19,13,.85);padding:6px 11px;border-left:2px solid var(--brass);border-radius:2px;display:none}
+.console-plate.video-live .vbadge{display:block}
+/* ---------- X7: guided walk ---------- */
+.tourchip{position:fixed;z-index:10003;bottom:24px;left:50%;transform:translateX(-50%);width:min(640px,88vw);
+  background:var(--ink-deep);color:#EFE9DA;border:1px solid rgba(200,154,76,.55);border-radius:2px;
+  padding:14px 18px;display:none;box-shadow:0 18px 44px -18px rgba(15,14,11,.7)}
+.tourchip.on{display:block}
+.tourchip .tc-k{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono);font-size:.56rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--brass-lt);margin-bottom:7px}
+.tourchip .tc-s{font-family:var(--serif);font-size:1.08rem;line-height:1.4}
+/* ---------- X5: footer audit strip ---------- */
+.audit-strip{border-top:1px solid rgba(231,225,208,.15);padding-top:18px!important}
+.audit-strip span{overflow-wrap:anywhere}
+/* ---------- reduced motion for the spine ---------- */
+@media (prefers-reduced-motion: reduce){
+  .crail .cfill{width:100%}
+  .crail .cdot{left:100%}
+  .cst .nm,.cst .cap{color:var(--ink-sec)}
+  .cst .tick{background:var(--ink)}
+  .yearbox .yr{font-size:clamp(2rem,4vw,3rem)}
+}
 </style>
 </head>
 <body>
@@ -637,10 +786,11 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
         <span class="ln"><span class="ln-in">It is a <em class="em-brass">decision system</em></span></span>
         <span class="ln"><span class="ln-in">hidden inside a document bundle.</span></span>
       </h1>
-      <p class="dek rv">Deterministic, auditable procurement intelligence for the teams that <b>bid</b> and the committees that <b>evaluate</b>. Every verdict linked to a clause and a page.</p>
+      <p class="dek rv">Deterministic, auditable procurement intelligence for the teams that <b>bid</b> and the committees that <b>evaluate</b>. Every verdict linked to a clause and a page. <button class="kchip-claim" type="button" data-claim="positioning.thesis" aria-label="Provenance: the thesis">c1</button></p>
       <div class="hero-acts rv">
         <a class="btn btn-fill magnetic" href="/contact" data-cursor="write">Request a demo <span class="arr">→</span></a>
         <a class="btn btn-line magnetic" href="#evidence" data-cursor="inspect">See the evidence</a>
+        <button class="btn btn-line magnetic" id="tourStart" data-cursor="walk" hidden>Guided walk · press T</button>
       </div>
       <div class="cred rv" aria-label="Credibility record">
         <span><b>Grand Finalist</b> · Pan IIT “AI for Bharat” · 13,500+ teams</span>
@@ -654,24 +804,200 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   </div>
 </section>
 
+<!-- ════════════ ACT 1 · THE NATION'S CLOCK ════════════ -->
+<div class="act-break wrap rv" data-act="1">
+  <div class="ab-row"><span class="ab-no">ACT 01</span><span class="ab-title">The nation's clock</span></div>
+  <p class="ab-line">India's modernization does not lack technology, capital, or talent. It waits on a cycle.</p>
+</div>
+
+<section class="clock-sec" id="clock" aria-label="The procurement cycle, in years">
+  <div class="clock-stage wrap" id="clockStage">
+    <div class="clock-top">
+      <div>
+        <p class="eyebrow rv" style="margin-bottom:16px">The problem · one acquisition, many stations</p>
+        <h2 class="display"><span class="ln"><span class="ln-in">The bottleneck</span></span><span class="ln"><span class="ln-in">is the <em class="em-brass">cycle.</em></span></span></h2>
+        <p class="dek rv" style="margin-top:18px">When the armed forces need new equipment, they cannot simply buy it. A request begins a journey through stations of approval, bidding and checking. Watch one acquisition travel, and watch the clock.</p>
+      </div>
+      <div class="yearbox rv" aria-hidden="true">
+        <span class="yk">Elapsed</span>
+        <span class="yr">YEAR <i id="yearN">1</i></span>
+      </div>
+    </div>
+    <div class="cycle rv" id="cycle">
+      <div class="crail" aria-hidden="true"><div class="cfill" id="cycleFill"></div><div class="cdot" id="cycleDot"></div></div>
+      <ol class="cstations" id="cycleStations">
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">01 · Need</span><span class="cap">A unit states what it needs.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">02 · Approval</span><span class="cap">The need is examined and accepted: the <button class="kchip-gloss" type="button" data-gloss="aon">AoN</button>.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">03 · <button class="kchip-gloss" type="button" data-gloss="rfp">RFP</button></span><span class="cap">The request goes out to industry.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">04 · Bids</span><span class="cap">Companies answer with bundles of documents.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">05 · Evaluation</span><span class="cap">A committee checks every claim in every bid.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">06 · Re-evaluation</span><span class="cap">Queries and disputes restart the clock.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">07 · Award</span><span class="cap">Years later, a contract. The need has aged.</span></li>
+      </ol>
+    </div>
+    <p class="clock-line rv">The speed of modernization is set by the <em class="em-brass">speed of the cycle.</em></p>
+    <p class="src-note clock-src rv">Stage names follow <button class="kchip-gloss" type="button" data-gloss="dap">DAP 2020</button>, the public rulebook · qualitative by design: this page claims no specific duration</p>
+  </div>
+</section>
+
+<!-- ════════════ ACT 2 · TWO ROOMS, ONE PROBLEM ════════════ -->
+<div class="act-break wrap rv" data-act="2">
+  <div class="ab-row"><span class="ab-no">ACT 02</span><span class="ab-title">Two rooms, one problem</span></div>
+  <p class="ab-line">On one side of the table, a small team and a heavy bundle. On the other, a committee that must be right.</p>
+</div>
+
+<section class="sec-pad" id="rooms" style="padding-top:clamp(40px,5vw,70px)">
+  <div class="wrap">
+    <div class="rooms">
+      <article class="room room-a rv regmark" data-cursor="inspect">
+        <div class="rh"><span>Room A · the bidder</span><span>a defence <button class="kchip-gloss" type="button" data-gloss="msme">MSME</button> office</span></div>
+        <h3>The team that bids.</h3>
+        <p class="rplain">A small company finds a tender it could win. Then the bundle arrives.</p>
+        <div class="rfig" aria-hidden="true">
+          <svg viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" id="bundleX">
+            <g class="bx-leaf" data-fx="-190" data-fy="-10" data-fr="-7"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="244" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">BID DOC</text></g>
+            <g class="bx-leaf" data-fx="-112" data-fy="-58" data-fr="-3"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="252" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">SPECS</text></g>
+            <g class="bx-leaf" data-fx="-30" data-fy="-86" data-fr="2"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="262" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">BOQ</text></g>
+            <g class="bx-leaf" data-fx="52" data-fy="-86" data-fr="-2"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="262" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">ATC</text></g>
+            <g class="bx-leaf" data-fx="134" data-fy="-58" data-fr="4"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="240" y="155" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1" fill="#7E3A2F">CORRIGENDA</text></g>
+            <g class="bx-leaf" data-fx="212" data-fy="-10" data-fr="8"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="243" y="155" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1" fill="#4E4838">ANNEXURES</text></g>
+            <text x="230" y="288" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="#4E4838">ONE TENDER · MANY PARTS</text>
+          </svg>
+        </div>
+        <ul class="pains">
+          <li><b>Hundreds of pages.</b> One deadline.</li>
+          <li>One missed clause can disqualify the whole bid.</li>
+          <li><button class="kchip-gloss" type="button" data-gloss="corrigenda">Corrigenda</button> change the rules while you read.</li>
+          <li>Weeks of work, decided in minutes of reading.</li>
+        </ul>
+      </article>
+      <article class="room room-b rv regmark" data-cursor="inspect">
+        <div class="rh"><span>Room B · the committee</span><span>an evaluation room</span></div>
+        <h3>The committee that judges.</h3>
+        <p class="rplain">Stacks of rival bids arrive. Every claim in each one must be checked, by hand.</p>
+        <div class="rfig" aria-hidden="true">
+          <svg viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" id="checksFig">
+            <g stroke="#E9E2D2" stroke-width="1.2" opacity=".9">
+              <rect x="36" y="70" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+              <rect x="48" y="82" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+              <rect x="60" y="94" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+            </g>
+            <text x="36" y="240" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="rgba(233,226,210,.6)">RIVAL BIDS</text>
+            <g id="checkGrid"></g>
+            <text x="220" y="240" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="rgba(233,226,210,.6)">EVERY CLAIM, CHECKED BY HAND</text>
+            <text x="220" y="288" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="#C89A4C">MUST SURVIVE AUDIT · YEARS LATER</text>
+          </svg>
+        </div>
+        <ul class="pains">
+          <li><b>Hundreds of claims,</b> cross-checked by hand.</li>
+          <li>Every verdict must be defensible, on paper, forever.</li>
+          <li>An audit can arrive years after the file is closed.</li>
+          <li>One quiet edit can poison the whole record.</li>
+        </ul>
+      </article>
+    </div>
+    <div class="rooms-merge rv">
+      <p class="rm-line">Two rooms, one problem: <em class="em-brass">trust in what the documents claim.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 3 · THE TURN ════════════ -->
+<div class="act-break wrap rv" data-act="3">
+  <div class="ab-row"><span class="ab-no">ACT 03</span><span class="ab-title">The turn</span></div>
+  <p class="ab-line">Kriseva's answer is not a faster reader. It is a stricter one.</p>
+</div>
+
+<section class="turn" id="turn">
+  <div class="wrap">
+    <p class="tline"><span class="ln"><span class="ln-in">What if every claim in the bundle</span></span><span class="ln"><span class="ln-in"><em class="em-brass">had to show its work?</em></span></span></p>
+  </div>
+</section>
+
+<!-- ============ THESIS (the answer, in words) ============ -->
+<section class="thesis" id="thesis">
+  <div class="wrap tgrid">
+    <blockquote class="tquote rv">The bundle is the interface. Specifications, <button class="kchip-gloss" type="button" data-gloss="boq">BOQs</button>, <button class="kchip-gloss" type="button" data-gloss="atc">ATCs</button>, corrigenda, annexures. Each carries a clause that can win the bid <em class="it">or end it.</em> Reading is not the work. Reconstruction is.</blockquote>
+    <aside class="tmargin rv" aria-label="Margin annotations">
+      <div class="tnote"><span class="tn-k">Document intelligence</span><p>The bundle is parsed locally, page by page, into structured requirements.</p></div>
+      <div class="tnote"><span class="tn-k">Compliance reconstruction</span><p>Eligibility, instruments and certifications are rebuilt as checkable claims.</p></div>
+      <div class="tnote"><span class="tn-k">Decision traceability</span><p>Every verdict carries its clause and page: at rest, not on hover.</p></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ TWO VOLUMES ============ -->
+<section class="sec-pad" id="platform">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">The platform · two volumes, one evidence engine</span><span class="folio">ACT 03 · THE PLATFORM</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Two sides of the same table.</span></span></h2>
+      <p class="dek rv">One product for the teams that bid. One for the committees that evaluate. Both run on the same engine: every claim traceable to a clause and a page.</p>
+    </div>
+    <div class="vols">
+      <article class="vol vol-tas rv regmark" data-cursor="inspect">
+        <div class="vhead"><span class="vno">Vol. I · Bidder-side</span><span class="folio">TAS</span></div>
+        <h3>KRISEVA TAS</h3>
+        <p class="vsub">Bidder-side tender intelligence and bid review for defence <button class="kchip-gloss" type="button" data-gloss="msme">MSMEs</button> and defence-tech teams. A scattered bundle becomes a defensible <b>BID / REVIEW / SKIP</b> decision. Recommendation only; the operator signs. <button class="kchip-claim" type="button" data-claim="tas.one-liner" aria-label="Provenance: TAS one-liner">c2</button></p>
+        <ul class="caps">
+          <li><span>Treats tenders as <b>bundles</b>: bid documents, specifications, BOQs, ATCs, corrigenda, annexures.</span><span class="ref">bundle-aware</span></li>
+          <li><span>Parses PDF, DOCX, XLSX, TXT and CSV tender files <b>locally</b>, with local OCR for scanned pages.</span><span class="ref">on-premise</span></li>
+          <li><span>Extracts metadata such as buyer fields, dates, values, <button class="kchip-gloss" type="button" data-gloss="emd">EMD</button>/<button class="kchip-gloss" type="button" data-gloss="epbg">ePBG</button> and eligibility signals, <b>with provenance</b>.</span><span class="ref">clause + page</span></li>
+          <li><span>Live <b><button class="kchip-gloss" type="button" data-gloss="gem">GeM</button></b> discovery and acquisition; <button class="kchip-gloss" type="button" data-gloss="defproc">DefProc</button> public discovery with operator-assisted flows for protected documents.</span><span class="ref">operator-gated</span></li>
+          <li><span>Operator review briefs with <b>BID / REVIEW / SKIP</b> recommendations. No autonomous authority.</span><span class="ref">committee-assist</span></li>
+        </ul>
+        <div class="pipe" id="pipe">
+          <div class="ptitle"><span>The pipeline · six deterministic stages</span><span class="folio" id="pipeCount">01 / 06</span></div>
+          <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill"></div></div>
+          <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
+          <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
+        </div>
+        <a class="vol-door" href="/tas" data-cursor="open">Open Vol. I · TAS <span class="arr">→</span></a>
+      </article>
+      <article class="vol vol-eval rv regmark" data-cursor="inspect">
+        <div class="vhead"><span class="vno">Vol. II · Issuer-side</span><span class="folio">EVALUATOR</span></div>
+        <h3>KRISEVA EVALUATOR</h3>
+        <p class="vsub">For evaluation committees. Committee-assist bid evaluation that shows its reasoning, routes uncertainty to humans, and leaves a record that cannot be quietly edited.</p>
+        <ul class="caps">
+          <li><span><b>Three-path convergence</b> reasoning on every criterion. <button class="kchip-claim" type="button" data-claim="evaluator.three-path" aria-label="Provenance: three-path convergence">c3</button></span><span class="ref">reproducible</span></li>
+          <li><span>A <b>six-state verdict model</b>. The two uncertain states auto-route to a human; nothing is disqualified silently. <button class="kchip-claim" type="button" data-claim="evaluator.six-state" aria-label="Provenance: six-state model">c4</button></span><span class="ref">HITL</span></li>
+          <li><span>A <b>hash-chained, append-only audit log</b>. A single edited verdict breaks the chain; tamper is visible.</span><span class="ref">sha-256</span></li>
+          <li><span><b>On-premise, local LLM, zero egress</b>, built for networks that do not leave the building. <button class="kchip-claim" type="button" data-claim="evaluator.sovereign" aria-label="Provenance: sovereign posture">c6</button></span><span class="ref">sovereign-by-design</span></li>
+        </ul>
+        <a class="vol-door" href="/evaluator" data-cursor="open">Open Vol. II · Evaluator <span class="arr">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 4 · THE BIDDER'S TOOL ════════════ -->
+<div class="act-break wrap rv" data-act="4">
+  <div class="ab-row"><span class="ab-no">ACT 04</span><span class="ab-title">The bidder's tool · KRISEVA TAS</span></div>
+  <p class="ab-line">The bundle goes in scattered. It comes out as a brief the team can sign.</p>
+</div>
 
 <!-- ============ THE CONSOLE (field evidence) ============ -->
 <section class="console-sec" id="console">
   <div class="wrap">
     <div class="sechead" style="margin-bottom:clamp(26px,3.4vw,48px)">
-      <div class="row"><span class="eyebrow">Field evidence · The console</span><span class="folio">§01 / 08</span></div>
+      <div class="row"><span class="eyebrow">Field evidence · The console</span><span class="folio">ACT 04 · TAS</span></div>
       <h2 class="display"><span class="ln"><span class="ln-in">Not a mockup. <em class="em-brass">The console.</em></span></span></h2>
-      <p class="dek rv">The approval brief exactly as the operator signs it: a recommended verdict, the gated requirements, and the counts that carry it.</p>
+      <p class="dek rv">This is the brief the team signs. Every number on it points to a page. Below: the approval brief exactly as the operator signs it, and a working loop of the console itself.</p>
     </div>
   </div>
   <figure class="plate console-plate bleed regmark" data-cursor="inspect" style="border-inline:none">
     <div class="ph"><span><b>TAS</b> · 02 · Briefing · GEM/2026/B/7281746</span><span>On-premise · Local LLM · Demo fixture</span></div>
     <div class="pimg">
       <img class="pan" src="/assets/v6/console_briefing.jpg" width="2360" height="1392" alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous" loading="lazy">
+      <video id="consoleLoop" muted loop playsinline preload="none" width="1280" height="888" poster="/assets/media/tas-console-loop-poster.jpg" aria-label="A fourteen second muted working loop of the TAS console: the operator home, the decision working list, then the approval brief. Captured from a repo-owned local instance, synthetic data.">
+        <source data-src="/assets/media/tas-console-loop.webm" type="video/webm">
+        <source data-src="/assets/media/tas-console-loop.mp4" type="video/mp4">
+      </video>
+      <span class="vbadge">Working loop · 14s · muted · synthetic data</span>
       <div class="ann ann1" data-cursor="inspect">Recommended: <b>REVIEW</b> · never an auto-bid</div>
       <div class="ann ann2" data-cursor="inspect">2 verified · 1 partial · 7 missing · 2 ambiguous</div>
     </div>
-    <figcaption class="pcap"><span>The operator signs; TAS retains the decision until signature</span><span>Synthetic demo data · captured 2026-05-20 · repo-owned local instance</span></figcaption>
+    <figcaption class="pcap"><span>The operator signs; TAS retains the decision until signature</span><span>Synthetic demo data · captured 2026-05 · repo-owned local instance</span></figcaption>
   </figure>
 </section>
 
@@ -692,69 +1018,104 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   </div>
 </div>
 
-<!-- ============ TWO VOLUMES ============ -->
-<section class="sec-pad" id="platform">
+<!-- ============ BUNDLE TRACE (from verdict to page) ============ -->
+<section class="sec-pad" id="bundletrace">
+  <div class="wrap">
+    <div class="sechead" style="margin-bottom:clamp(22px,3vw,40px)">
+      <div class="row"><span class="eyebrow">TAS · From verdict to page</span><span class="folio">ACT 04 · TAS</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">The verdict points to a page.</span></span></h2>
+      <p class="dek rv">Nothing to operate here. Just watch: the brass box is the exact region of the exact page the verdict cites.</p>
+    </div>
+    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:880px;margin-inline:auto">
+      <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
+      <div class="pimg">
+        <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
+        <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect id="bboxRect" x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" pathLength="100" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg>
+        <span class="bbox-label" id="bboxLabel">bid-details table · p.1 · traced</span>
+      </div>
+      <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>Synthetic demo bundle · captured 2026-05-20</span></figcaption>
+    </figure>
+    <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+  </div>
+</section>
+
+<!-- ============ BIDABILITY ============ -->
+<section class="sec-pad" id="bidability">
   <div class="wrap">
     <div class="sechead">
-      <div class="row"><span class="eyebrow">The platform · two volumes, one evidence engine</span><span class="folio">§02 / 08</span></div>
-      <h2 class="display"><span class="ln"><span class="ln-in">Two sides of the same table.</span></span></h2>
-      <p class="dek rv">One product for the teams that bid. One for the committees that evaluate. Both run on the same engine: every claim traceable to a clause and a page.</p>
+      <div class="row"><span class="eyebrow">TAS · Bidability</span><span class="folio">ACT 04 · TAS</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Why you may win, or lose.</span></span><span class="ln"><span class="ln-in">With evidence.</span></span></h2>
+      <p class="dek rv">Before a team spends weeks on a bid, this shows whether the bid is worth it. Hover or tap a dimension to see why it reads that way. The operator decides; TAS shows its work.</p>
     </div>
-    <div class="vols">
-      <article class="vol vol-tas rv regmark" data-cursor="inspect">
-        <div class="vhead"><span class="vno">Vol. I · Bidder-side</span><span class="folio">TAS</span></div>
-        <h3>KRISEVA TAS</h3>
-        <p class="vsub">Bidder-side tender intelligence and bid review for defence MSMEs and defence-tech teams. A scattered bundle becomes a defensible <b>BID / REVIEW / SKIP</b> decision. Recommendation only; the operator signs.</p>
-        <ul class="caps">
-          <li><span>Treats tenders as <b>bundles</b>: bid documents, specifications, BOQs, ATCs, corrigenda, annexures.</span><span class="ref">bundle-aware</span></li>
-          <li><span>Parses PDF, DOCX, XLSX, TXT and CSV tender files <b>locally</b>, with local OCR for scanned pages.</span><span class="ref">on-premise</span></li>
-          <li><span>Extracts metadata such as buyer fields, dates, values, EMD/ePBG and eligibility signals, <b>with provenance</b>.</span><span class="ref">clause + page</span></li>
-          <li><span>Live <b>GeM</b> discovery and acquisition; DefProc public discovery with operator-assisted flows for protected documents.</span><span class="ref">operator-gated</span></li>
-          <li><span>Operator review briefs with <b>BID / REVIEW / SKIP</b> recommendations. No autonomous authority.</span><span class="ref">committee-assist</span></li>
-        </ul>
-        <div class="pipe" id="pipe">
-          <div class="ptitle"><span>The pipeline · six deterministic stages</span><span class="folio" id="pipeCount">01 / 06</span></div>
-          <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill"></div></div>
-          <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
-          <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
-        </div>
-        <a class="vol-door" href="/tas" data-cursor="open">Open Vol. I · TAS <span class="arr">→</span></a>
-      </article>
-      <article class="vol vol-eval rv regmark" data-cursor="inspect">
-        <div class="vhead"><span class="vno">Vol. II · Issuer-side</span><span class="folio">EVALUATOR</span></div>
-        <h3>KRISEVA EVALUATOR</h3>
-        <p class="vsub">For evaluation committees. Committee-assist bid evaluation that shows its reasoning, routes uncertainty to humans, and leaves a record that cannot be quietly edited.</p>
-        <ul class="caps">
-          <li><span><b>Three-path convergence</b> reasoning on every criterion.</span><span class="ref">reproducible</span></li>
-          <li><span>A <b>six-state verdict model</b>. The two uncertain states auto-route to a human; nothing is disqualified silently.</span><span class="ref">HITL</span></li>
-          <li><span>A <b>hash-chained, append-only audit log</b>. A single edited verdict breaks the chain; tamper is visible.</span><span class="ref">sha-256</span></li>
-          <li><span><b>On-premise, local LLM, zero egress</b>, built for networks that do not leave the building.</span><span class="ref">sovereign-by-design</span></li>
-        </ul>
-        <a class="vol-door" href="/evaluator" data-cursor="open">Open Vol. II · Evaluator <span class="arr">→</span></a>
-      </article>
+    <div class="bidgrid rv">
+      <div class="radarbox regmark">
+        <svg class="radar-svg" id="radar" viewBox="0 0 340 340" role="img" aria-label="Bidability radar across six dimensions: technical fit 90, financial eligibility 78, certification 85, past performance 60, delivery capacity 72, disqualification risk 40"></svg>
+      </div>
+      <div>
+        <div class="dimlist" id="dims" role="tablist" aria-label="Bidability dimensions"></div>
+        <div class="dimwhy" id="dimWhy" aria-live="polite">Hover or select a dimension to see the reasoning and its evidence pointer.</div>
+        <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============ THESIS ============ -->
-<section class="thesis sec-sunk" id="thesis">
-  <div class="wrap tgrid">
-    <blockquote class="tquote rv">The bundle is the interface. Specifications, BOQs, ATCs, corrigenda, annexures. Each carries a clause that can win the bid <em class="it">or end it.</em> Reading is not the work. Reconstruction is.</blockquote>
-    <aside class="tmargin rv" aria-label="Margin annotations">
-      <div class="tnote"><span class="tn-k">Document intelligence</span><p>The bundle is parsed locally, page by page, into structured requirements.</p></div>
-      <div class="tnote"><span class="tn-k">Compliance reconstruction</span><p>Eligibility, instruments and certifications are rebuilt as checkable claims.</p></div>
-      <div class="tnote"><span class="tn-k">Decision traceability</span><p>Every verdict carries its clause and page: at rest, not on hover.</p></div>
-    </aside>
+<!-- ============ FIELD EVIDENCE FILMSTRIP ============ -->
+<section class="strip-sec" id="fieldstrip">
+  <div class="strip-stage">
+    <div class="wrap">
+      <div class="sechead" style="margin-bottom:0"><div class="row"><span class="eyebrow">Field evidence · Working surfaces</span><span class="folio">ACT 04 · TAS</span></div></div>
+      <h2 class="display" style="margin-top:18px"><span class="ln"><span class="ln-in">Walk the product.</span></span></h2>
+      <p class="dek rv" style="margin-top:14px">These are real working screens, with practice data. Five surfaces, in the order an operator meets them.</p>
+      <p class="strip-hint" aria-hidden="true">Scroll · the reel advances ⟶</p>
+      <div style="display:flex;align-items:center;gap:18px"><div class="striprail" aria-hidden="true" style="flex:1"><i id="stripFill"></i></div><span class="folio tabular" id="stripCount">01 / 05</span></div>
+    </div>
+    <div class="stripwrap">
+      <div class="strip" id="strip">
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 00 · Home</span><span>queue · sources · scanners</span></div>
+          <div class="pimg"><img src="/assets/v6/console_home.jpg" loading="lazy" width="1700" height="1200" alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"></div>
+          <figcaption class="pcap"><span>The operator's morning: a queue, not a search box</span></figcaption>
+        </figure>
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 01 · GeM live scanner</span><span>streaming</span></div>
+          <div class="pimg"><img src="/assets/v6/console_gem_scanner.jpg" loading="lazy" width="1700" height="1208" alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"></div>
+          <figcaption class="pcap"><span>9 discovered → acquired → extracted → scored, with the event log open</span></figcaption>
+        </figure>
+        <figure class="plate pl-sq" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 02 · Score breakdown</span><span>exhibit</span></div>
+          <div class="pimg"><img src="/assets/v6/console_score_drawer.jpg" loading="lazy" width="940" height="695" alt="KRISEVA TAS score breakdown drawer: a synthetic C-UAS detector and jammer fixture scored 13.5 out of 100, with the INSUFFICIENT DATA banner"></div>
+          <figcaption class="pcap"><span>13.5/100 · INSUFFICIENT DATA · it fails loudly</span></figcaption>
+        </figure>
+        <figure class="plate pl-sq" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 05 · Decisions</span><span>signed ledger</span></div>
+          <div class="pimg"><img src="/assets/v6/console_decisions.jpg" loading="lazy" width="1190" height="1230" alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"></div>
+          <figcaption class="pcap"><span>Recommendation beside signature; disagreement is recorded</span></figcaption>
+        </figure>
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 06 · The Boundary · Zone II</span><span>disclosure</span></div>
+          <div class="pimg"><img src="/assets/v6/console_boundary_zones.jpg" loading="lazy" width="1352" height="480" alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"></div>
+          <figcaption class="pcap"><span>Zone II: refused at the architecture, listed in the product</span></figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="disclose wrap">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender. <button class="kchip-claim" type="button" data-claim="validation.synthetic-data" aria-label="Provenance: synthetic data statement">c9</button></p>
   </div>
 </section>
+
+<!-- ════════════ ACT 5 · THE COMMITTEE'S TOOL ════════════ -->
+<div class="act-break wrap rv" data-act="5">
+  <div class="ab-row"><span class="ab-no">ACT 05</span><span class="ab-title">The committee's tool · KRISEVA EVALUATOR</span></div>
+  <p class="ab-line">The same strictness, handed to the other room. With a memory that cannot be quietly edited.</p>
+</div>
 
 <!-- ============ EVALUATION MATRIX ============ -->
 <section class="sec-pad" id="evidence">
   <div class="wrap">
     <div class="sechead">
-      <div class="row"><span class="eyebrow">Evaluator · The evaluation matrix</span><span class="folio">§03 / 08</span></div>
+      <div class="row"><span class="eyebrow">Evaluator · The evaluation matrix</span><span class="folio">ACT 05 · EVALUATOR</span></div>
       <h2 class="display"><span class="ln"><span class="ln-in">Every verdict carries</span></span><span class="ln"><span class="ln-in">its source.</span></span></h2>
-      <p class="dek rv">Bidders × criteria. Click any cell to see the criterion, the clause it rests on, and why the system reached that state. Nothing is decided in the dark.</p>
+      <p class="dek rv">Now the other room. This is the table where every bid is checked, one claim at a time. Click any cell to see the criterion, the clause it rests on, and why the system reached that state. Then run the verdict model yourself, below.</p>
     </div>
     <div class="mxwrap rv">
       <div class="mxpanel regmark">
@@ -771,15 +1132,9 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
         <div class="body">The matrix is the committee's worktable. Each cell is one criterion, for one bidder, resolved to one of six states, with the source clause beside it, not behind it.</div>
       </div>
     </div>
-    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:880px;margin-inline:auto">
-      <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
-      <div class="pimg">
-        <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
-        <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect id="bboxRect" x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" pathLength="100" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg>
-        <span class="bbox-label" id="bboxLabel">bid-details table · p.1 · traced</span>
-      </div>
-      <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>Synthetic demo bundle · captured 2026-05-20</span></figcaption>
-    </figure>
+    <div class="simwrap rv">
+      <VerdictSimulator id="vsim-home" />
+    </div>
     <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
   </div>
 </section>
@@ -788,9 +1143,9 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 <section class="sec-pad sec-navy" id="audit">
   <div class="wrap">
     <div class="sechead">
-      <div class="row"><span class="eyebrow">Evaluator · The audit chain</span><span class="folio">§04 / 08</span></div>
+      <div class="row"><span class="eyebrow">Evaluator · The audit chain</span><span class="folio">ACT 05 · EVALUATOR</span></div>
       <h2 class="display"><span class="ln"><span class="ln-in">A record that cannot</span></span><span class="ln"><span class="ln-in">be quietly edited.</span></span></h2>
-      <p class="dek rv">Every event is hash-chained to the last. Verify the chain, then tamper with a block and watch the break propagate. The database enforces this; the demo simulates it.</p>
+      <p class="dek rv">If anyone edits the record afterwards, the seam shows. Every event is hash-chained to the last. Verify the chain, then tamper with a block and watch the break propagate. The database enforces this; the demo simulates it. <button class="kchip-claim" type="button" data-claim="evaluator.audit-chain" aria-label="Provenance: audit chain claim">c5</button></p>
     </div>
     <div class="chaingrid rv">
       <div>
@@ -811,34 +1166,19 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   </div>
 </section>
 
-<!-- ============ BIDABILITY ============ -->
-<section class="sec-pad" id="bidability">
-  <div class="wrap">
-    <div class="sechead">
-      <div class="row"><span class="eyebrow">TAS · Bidability</span><span class="folio">§05 / 08</span></div>
-      <h2 class="display"><span class="ln"><span class="ln-in">Why you may win, or lose.</span></span><span class="ln"><span class="ln-in">With evidence.</span></span></h2>
-      <p class="dek rv">Bidability is multi-dimensional and explainable. Hover or tap a dimension to see why it scored that way. The operator decides; TAS shows its work.</p>
-    </div>
-    <div class="bidgrid rv">
-      <div class="radarbox regmark">
-        <svg class="radar-svg" id="radar" viewBox="0 0 340 340" role="img" aria-label="Bidability radar across six dimensions: technical fit 90, financial eligibility 78, certification 85, past performance 60, delivery capacity 72, disqualification risk 40"></svg>
-      </div>
-      <div>
-        <div class="dimlist" id="dims" role="tablist" aria-label="Bidability dimensions"></div>
-        <div class="dimwhy" id="dimWhy" aria-live="polite">Hover or select a dimension to see the reasoning and its evidence pointer.</div>
-        <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ════════════ ACT 6 · NOTHING LEAVES THE BUILDING ════════════ -->
+<div class="act-break wrap rv" data-act="6">
+  <div class="ab-row"><span class="ab-no">ACT 06</span><span class="ab-title">Nothing leaves the building</span></div>
+  <p class="ab-line">Defence documents stay where they were born. Then verify that claim yourself, right now.</p>
+</div>
 
 <!-- ============ THE BOUNDARY ============ -->
 <section class="sec-pad sec-sunk" id="sovereignty">
   <div class="wrap">
     <div class="sechead">
-      <div class="row"><span class="eyebrow">Sovereign by design · The Boundary</span><span class="folio">§06 / 08</span></div>
+      <div class="row"><span class="eyebrow">Sovereign by design · The Boundary</span><span class="folio">ACT 06 · BOUNDARY</span></div>
       <h2 class="display"><span class="ln"><span class="ln-in">Local-first.</span></span><span class="ln"><span class="ln-in">Zero silent egress.</span></span></h2>
-      <p class="dek rv">Select any asset to see whether it stays inside the deployment, or crosses an explicit, documented, operator-triggered boundary. Dashed means crossable. Tender contents never leave.</p>
+      <p class="dek rv">The product runs inside your building. What leaves is listed, and the list is short. Select any asset to see whether it stays inside the deployment, or crosses an explicit, documented, operator-triggered boundary. Dashed means crossable. Tender contents never leave. <button class="kchip-claim" type="button" data-claim="security.local-first" aria-label="Provenance: local-first claim">c7</button></p>
     </div>
     <div class="bgrid rv">
       <div>
@@ -856,54 +1196,43 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
         <p>Select an asset to see exactly where it lives, and whether anything about it crosses the line.</p>
       </div>
     </div>
+    <div class="x4 rv regmark" id="x4">
+      <div class="big tabular" id="x4Count" aria-hidden="true">…</div>
+      <div>
+        <div class="x4h">Verify us in DevTools · this very page</div>
+        <p>This site practices what the product preaches. The number beside this text is a live count of third-party origins this page has contacted since you opened it, measured by your own browser. Open DevTools, watch the network panel, and check the claim yourself.</p>
+      </div>
+      <p class="origins" id="x4Origins">measuring in your browser…</p>
+    </div>
   </div>
 </section>
 
 
-<!-- ============ FIELD EVIDENCE FILMSTRIP ============ -->
-<section class="strip-sec" id="fieldstrip">
-  <div class="strip-stage">
-    <div class="wrap">
-      <div class="sechead" style="margin-bottom:0"><div class="row"><span class="eyebrow">Field evidence · Working surfaces</span><span class="folio">§07 / 08</span></div></div>
-      <h2 class="display" style="margin-top:18px"><span class="ln"><span class="ln-in">Walk the product.</span></span></h2>
-      <p class="strip-hint" aria-hidden="true">Scroll · the reel advances ⟶</p>
-      <div style="display:flex;align-items:center;gap:18px"><div class="striprail" aria-hidden="true" style="flex:1"><i id="stripFill"></i></div><span class="folio tabular" id="stripCount">01 / 05</span></div>
+<!-- ════════════ ACT 7 · WHY THIS MATTERS ════════════ -->
+<div class="act-break wrap rv" data-act="7">
+  <div class="ab-row"><span class="ab-no">ACT 07</span><span class="ab-title">Why this matters</span></div>
+  <p class="ab-line">Faster honest cycles. Wider participation. That is the whole argument.</p>
+</div>
+
+<!-- ============ MISSION ============ -->
+<section class="sec-pad" id="mission">
+  <div class="wrap mission">
+    <div class="sechead" style="margin-bottom:clamp(22px,3vw,40px)">
+      <div class="row"><span class="eyebrow">The mission · stated plainly</span><span class="folio">ACT 07 · MISSION</span></div>
     </div>
-    <div class="stripwrap">
-      <div class="strip" id="strip">
-        <figure class="plate pl-land" data-cursor="inspect">
-          <div class="ph"><span><b>TAS</b> · 00 · Home</span><span>queue · sources · scanners</span></div>
-          <div class="pimg"><img src="/assets/v6/console_home.jpg" loading="lazy" width="1700" height="1200" alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"></div>
-          <figcaption class="pcap"><span>The operator's morning: a queue, not a search box</span></figcaption>
-        </figure>
-        <figure class="plate pl-land" data-cursor="inspect">
-          <div class="ph"><span><b>TAS</b> · 01 · GeM live scanner</span><span>streaming</span></div>
-          <div class="pimg"><img src="/assets/v6/console_gem_scanner.jpg" loading="lazy" width="1700" height="1208" alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"></div>
-          <figcaption class="pcap"><span>9 discovered → acquired → extracted → scored, with the event log open</span></figcaption>
-        </figure>
-        <figure class="plate pl-port" data-cursor="inspect">
-          <div class="ph"><span><b>TAS</b> · 02 · Score breakdown</span><span>exhibit</span></div>
-          <div class="pimg"><img src="/assets/v6/console_score_drawer.jpg" loading="lazy" width="940" height="1600" alt="KRISEVA TAS score breakdown drawer: 13.5 out of 100, INSUFFICIENT DATA, three path bars for deterministic, retrieval and LLM, and the convergence panel: all three paths reject"></div>
-          <figcaption class="pcap"><span>13.5/100 · all three paths reject · it fails loudly</span></figcaption>
-        </figure>
-        <figure class="plate pl-sq" data-cursor="inspect">
-          <div class="ph"><span><b>TAS</b> · 05 · Decisions</span><span>signed ledger</span></div>
-          <div class="pimg"><img src="/assets/v6/console_decisions.jpg" loading="lazy" width="1190" height="1230" alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"></div>
-          <figcaption class="pcap"><span>Recommendation beside signature; disagreement is recorded</span></figcaption>
-        </figure>
-        <figure class="plate pl-sq" data-cursor="inspect">
-          <div class="ph"><span><b>TAS</b> · 06 · The Boundary</span><span>disclosure</span></div>
-          <div class="pimg"><img src="/assets/v6/console_boundary_zones.jpg" loading="lazy" width="1400" height="1310" alt="KRISEVA TAS Boundary page: Zone one: customer network on-premise stack; Zone two: refused at the architecture, including cloud LLM APIs, hosted vector databases, SaaS telemetry"></div>
-          <figcaption class="pcap"><span>Zone II: refused at the architecture, listed in the product</span></figcaption>
-        </figure>
-      </div>
+    <p class="mlede rv">A procurement cycle that can show its work can afford to move faster. That is what we build for.</p>
+    <div class="mrows rv">
+      <div class="mrow"><span class="mk">We build so that</span><p>an honest bid from a small company is not lost to one missed clause.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>a committee can defend every verdict, years later, page by page.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>checking faster never means checking less. The cycle speeds up only where trust survives it.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>more <button class="kchip-gloss" type="button" data-gloss="msme">MSMEs</button> can take part in Make-in-India procurement, in practice and not just in principle.</p></div>
     </div>
-    <p class="disclose wrap">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender.</p>
+    <p class="src-note mnote rv">Commitments about our own work. No claim of national outcome, no government endorsement implied, no invented statistics.</p>
   </div>
 </section>
 
 <!-- ============ STATS ============ -->
-<section class="sec-pad" id="figures" aria-label="Key figures">
+<section class="sec-pad" id="figures" aria-label="Key figures" style="padding-top:0">
   <div class="wrap">
     <div class="stats rv">
       <div class="stat"><div class="big tabular" data-count="6">6</div><div class="lab">verdict states, none silent</div><div class="ssrc">Verified · Qualified · Insufficient · Missing · Req-demo · Failed</div></div>
@@ -918,12 +1247,12 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 <section class="sec-pad sec-sunk" id="record">
   <div class="wrap">
     <div class="sechead">
-      <div class="row"><span class="eyebrow">Field record</span><span class="folio">§08 / 08</span></div>
+      <div class="row"><span class="eyebrow">Field record</span><span class="folio">ACT 07 · THE RECORD</span></div>
       <h2 class="display"><span class="ln"><span class="ln-in">What is on the record.</span></span></h2>
-      <p class="dek rv">Status-labelled, no hype. Public milestones only; named relationships appear with consent.</p>
+      <p class="dek rv">Proof of seriousness, not promises. Status-labelled, no hype. Public milestones only; named relationships appear with consent.</p>
     </div>
     <div class="record rv">
-      <div class="rec"><span class="date">2026 · May</span><span class="what">Pan IIT “AI for Bharat” <b>Grand Finalist</b>, from 13,500+ teams</span><span class="tag">Validated</span></div>
+      <div class="rec"><span class="date">2026 · May</span><span class="what">Pan IIT “AI for Bharat” <b>Grand Finalist</b>, from 13,500+ teams <button class="kchip-claim" type="button" data-claim="record.pan-iit" aria-label="Provenance: Pan IIT record">c8</button></span><span class="tag">Validated</span></div>
       <div class="rec"><span class="date">2026</span><span class="what"><b>Udyam</b>-registered MSME, on government record</span><span class="tag">On record</span></div>
       <div class="rec"><span class="date">2026</span><span class="what"><b>DPIIT</b> Startup-India recognition</span><span class="tag">In process</span></div>
       <div class="rec"><span class="date">Origin</span><span class="what">Incubated at <b>IIT Gandhinagar</b> · IIEC</span><span class="tag">On record</span></div>
@@ -932,6 +1261,12 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
     </div>
   </div>
 </section>
+
+<!-- ════════════ ACT 8 · THE DOOR ════════════ -->
+<div class="act-break wrap rv" data-act="8">
+  <div class="ab-row"><span class="ab-no">ACT 08</span><span class="ab-title">The door</span></div>
+  <p class="ab-line">If this matters to your work, the founder reads his own mail.</p>
+</div>
 
 <!-- ============ CONTACT ============ -->
 <section class="sec-pad contact" id="contact">
@@ -960,6 +1295,11 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
     <span>KRISEVA AI Private Limited</span>
     <span>No military or government endorsement claimed or implied.<br>Product visuals are synthetic / seeded demo data, not a real tender.</span>
     <span>Deterministic · Auditable · Evidence-linked · Sovereign-by-design<br>www.kriseva.in</span>
+  </div>
+  <div class="foot audit-strip">
+    <span>This site keeps its own ledger · build {buildDate} · commit {buildSha}</span>
+    <span>copy traces to publicClaims.ts @ {claimsSha}</span>
+    <span><a href="/dossier.pdf" style="text-decoration:none;border-bottom:1px solid rgba(231,225,208,.35)">Dossier · PDF · no email gate</a></span>
   </div>
   <nav class="foot" style="padding-top:0;gap:8px 26px" aria-label="Footer">
     <span style="display:flex;flex-wrap:wrap;gap:8px 26px">
@@ -1010,10 +1350,15 @@ var VC = { v:'#3A7A5B', q:'#9A7322', i:'#5F6A79', m:'#9C4F43', d:'#41618C', f:'#
 var VT = { v:'#2E6149', q:'#6E520F', i:'#454F5D', m:'#7E3A2F', d:'#324C6E', f:'#6E2B26' };          /* AA text on paper */
 var VN = { v:'#8FC5A8', q:'#D9B45E', i:'#A8B3C2', m:'#D99284', d:'#9DB7DC', f:'#D98C82' };          /* AA text on near-black */
 
-/* ---------- Lenis smooth scroll ---------- */
+/* ---------- Lenis smooth scroll ----------
+   Scroll-feel contract (v7): ONE damping system. Lenis owns inertia
+   (lerp .12, ~120ms settle); every scrubbed ScrollTrigger uses scrub .6
+   so pinned scenes lag the wheel by the same constant; pins declare
+   anticipatePin to kill the start-of-pin jump; geometry refreshes after
+   fonts, images and full load so trigger positions never drift. */
 var lenis = null;
 if (hasLenis && !REDUCE) {
-  lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+  lenis = new Lenis({ lerp: 0.12, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.4 });
   window.__lenis = lenis;
   document.documentElement.classList.add('lenis-on');
   if (hasST) lenis.on('scroll', ScrollTrigger.update);
@@ -1024,6 +1369,7 @@ if (hasLenis && !REDUCE) {
     (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
   }
 }
+if (hasST) ScrollTrigger.config({ ignoreMobileResize: true });
 /* anchor navigation through Lenis */
 document.querySelectorAll('a[href^="#"]').forEach(function (a) {
   a.addEventListener('click', function (e) {
@@ -1052,9 +1398,9 @@ if (ANIM && hasST) {
       gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
     });
   }
-  document.querySelectorAll('h2 .ln-in, .contact .ln-in').forEach(function (el) {
+  document.querySelectorAll('h2 .ln-in, .contact .ln-in, .tline .ln-in').forEach(function (el) {
     gsap.to(el, { y: 0, duration: 1, ease: 'power4.out',
-      scrollTrigger: { trigger: el.closest('h2') || el, start: 'top 86%' } });
+      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 86%' } });
   });
   gsap.utils.toArray('.rv').filter(function (el) {
     return DESKTOP || !el.closest('.hero-content');
@@ -1418,6 +1764,8 @@ if (hasST) {
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
   }
+  /* late image decode shifts trigger geometry; re-measure once settled */
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
 }
 
 /* ---------- light parallax on section plates ---------- */
@@ -1442,8 +1790,20 @@ if (ANIM && hasST && DESKTOP) {
      (loader in <head>); boot waits for it, so phones never parse it */
   var deviceGL = hasGSAP && hasST && !REDUCE && DESKTOP && FINE;
 
-  function fallback() { document.documentElement.classList.add('hero-fallback'); }
+  var P = 0, heroPin = null;
+  function fallback() {
+    document.documentElement.classList.add('hero-fallback');
+    if (heroPin) { heroPin.kill(true); heroPin = null; ScrollTrigger.refresh(); }
+  }
   if (!deviceGL) { fallback(); return; }
+  /* The pin is created HERE, synchronously, not inside boot(): pins must
+     come into existence in document order, before any trigger below them
+     measures the page, or every downstream trigger is short by the 230%
+     pin-spacer (the v6 "sloppy scroll" defect). boot() only consumes P. */
+  heroPin = ScrollTrigger.create({
+    trigger: '.hero', start: 'top top', end: '+=230%', pin: true, scrub: 0.6, anticipatePin: 1,
+    onUpdate: function (self) { P = self.progress; }
+  });
   if (typeof window.THREE !== 'undefined') { boot(); }
   else {
     var ldr = document.getElementById('threeLoader');
@@ -1556,14 +1916,10 @@ if (ANIM && hasST && DESKTOP) {
     strands.push({ mesh: mesh, total: geo.index.count, window: [0.06 + i * 0.10, 0.16] });
   });
 
-  /* ---- scroll + idle state ---- */
-  var P = 0, mouseX = 0, mouseY = 0, idle = 0, lastT = 0, visible = true, resolvedCount = -1;
+  /* ---- scroll + idle state (P is owned by the pin created above) ---- */
+  var mouseX = 0, mouseY = 0, idle = 0, lastT = 0, visible = true, resolvedCount = -1;
   function smooth(t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); }
 
-  ScrollTrigger.create({
-    trigger: '.hero', start: 'top top', end: '+=230%', pin: true, scrub: true,
-    onUpdate: function (self) { P = self.progress; }
-  });
   stage.addEventListener('mousemove', function (e) {
     var r = stage.getBoundingClientRect();
     mouseX = (e.clientX - r.left) / r.width * 2 - 1;
@@ -1646,6 +2002,77 @@ if (ANIM && hasST && DESKTOP) {
 })();
 
 /* ============================================================
+   ACT 1 - the nation's clock: one acquisition travels the rule
+   while the year counter advances. Qualitative on purpose: the
+   final tick reads YEAR N, not a number we cannot cite.
+   (Created here, after the hero pin and before the strip pin,
+   so pin creation order matches document order.)
+   ============================================================ */
+(function () {
+  var stations = document.querySelectorAll('#cycleStations .cst');
+  if (!stations.length) return;
+  var fill = document.getElementById('cycleFill'),
+      dot  = document.getElementById('cycleDot'),
+      yr   = document.getElementById('yearN');
+  var YEARS = ['1', '2', '3', '4', 'N'];
+  function setP(p) {
+    var pct = Math.max(0, Math.min(1, p)) * 100;
+    if (fill) fill.style.width = pct + '%';
+    if (dot) dot.style.left = pct + '%';
+    var idx = Math.min(6, Math.floor(p * 7));
+    stations.forEach(function (s, i) { s.classList.toggle('lit', i <= idx); });
+    if (yr) yr.textContent = YEARS[Math.min(4, Math.floor(p * 5))];
+  }
+  if (ANIM && hasST && DESKTOP) {
+    setP(0);
+    ScrollTrigger.create({
+      trigger: '#clockStage', start: 'top top', end: '+=180%', pin: true, scrub: 0.6, anticipatePin: 1,
+      onUpdate: function (self) { setP(self.progress); }
+    });
+  } else {
+    setP(1);   /* static fallback: the whole journey, already travelled */
+  }
+})();
+
+/* ============================================================
+   ACT 2 - room A: the bundle explodes into its parts;
+   room B: the committee's checks tick in, by hand.
+   ============================================================ */
+(function () {
+  var leaves = document.querySelectorAll('#bundleX .bx-leaf');
+  var grid = document.getElementById('checkGrid');
+  if (grid) {
+    var cells = '';
+    for (var r = 0; r < 4; r++) {
+      for (var c = 0; c < 8; c++) {
+        var x = 220 + c * 40, y = 60 + r * 40;
+        cells += '<g class="ck"><rect x="' + x + '" y="' + y + '" width="24" height="24" fill="none" stroke="rgba(233,226,210,.4)"/>' +
+          '<path class="ckt" d="M' + (x + 5) + ' ' + (y + 13) + ' l5 5 l9 -11" stroke="#C89A4C" stroke-width="2" fill="none" opacity="0"/></g>';
+      }
+    }
+    grid.innerHTML = cells;
+  }
+  var ticks = document.querySelectorAll('#checkGrid .ckt');
+  function setRooms(p) {
+    leaves.forEach(function (g) {
+      var fx = +g.dataset.fx, fy = +g.dataset.fy, fr = +g.dataset.fr;
+      g.setAttribute('transform', 'translate(' + (fx * p) + ',' + (fy * p) + ') rotate(' + (fr * p) + ' 282 150)');
+    });
+    var n = Math.floor(p * ticks.length);
+    ticks.forEach(function (t, i) { t.setAttribute('opacity', i < n ? '1' : '0'); });
+  }
+  if (ANIM && hasST && DESKTOP) {
+    setRooms(0);
+    ScrollTrigger.create({
+      trigger: '#rooms', start: 'top 72%', end: 'center 40%', scrub: 0.6,
+      onUpdate: function (self) { setRooms(self.progress); }
+    });
+  } else {
+    setRooms(1);   /* static fallback: fanned bundle, all checks ticked */
+  }
+})();
+
+/* ============================================================
    FIELD EVIDENCE - plate reveals, console pan, bbox trace, filmstrip
    ============================================================ */
 if (ANIM && hasST) {
@@ -1673,7 +2100,7 @@ if (ANIM && hasST) {
     var dist = function () { return Math.max(0, strip.scrollWidth - document.documentElement.clientWidth); };
     gsap.to(strip, { x: function () { return -dist(); }, ease: 'none',
       scrollTrigger: { trigger: '#fieldstrip', start: 'top top', end: function () { return '+=' + (dist() + 300); },
-        pin: true, scrub: 1, invalidateOnRefresh: true,
+        pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true,
         onUpdate: function (self) {
           var f = document.getElementById('stripFill');
           if (f) f.style.width = (self.progress * 100) + '%';
@@ -1686,6 +2113,122 @@ if (ANIM && hasST) {
   var bb = document.getElementById('bboxRect'); if (bb) bb.style.strokeDashoffset = 0;
 }
 
+/* ============================================================
+   X3 - the working loop: sources attach only when the plate
+   nears the viewport; reduced motion keeps the still brief.
+   ============================================================ */
+(function () {
+  var v = document.getElementById('consoleLoop');
+  if (!v) return;
+  if (REDUCE || !('IntersectionObserver' in window)) { v.remove(); return; }
+  var plate = document.querySelector('.console-plate');
+  var armed = false;
+  function arm() {
+    if (armed) return; armed = true;
+    v.querySelectorAll('source').forEach(function (s) { s.src = s.dataset.src; });
+    v.load();
+    v.addEventListener('canplay', function once() {
+      v.removeEventListener('canplay', once);
+      plate.classList.add('video-live');
+      v.play().catch(function () { plate.classList.remove('video-live'); });
+    });
+  }
+  new IntersectionObserver(function (es, io) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { arm(); v.play && v.play().catch(function () {}); }
+      else if (armed) { v.pause(); }
+    });
+  }, { rootMargin: '240px' }).observe(plate);
+})();
+
+/* ============================================================
+   X4 - live third-party origin counter. The browser is the
+   witness: PerformanceObserver counts every origin this page
+   touched. If it is not zero, we say so, by name.
+   ============================================================ */
+(function () {
+  var elC = document.getElementById('x4Count'), elO = document.getElementById('x4Origins');
+  if (!elC || !elO) return;
+  var origins = new Set();
+  function note(list) {
+    list.forEach(function (e) {
+      try {
+        var u = new URL(e.name);
+        if (u.origin !== location.origin && u.protocol.indexOf('http') === 0) origins.add(u.host);
+      } catch (err) {}
+    });
+    render();
+  }
+  function render() {
+    elC.textContent = String(origins.size);
+    elO.textContent = '';
+    if (!origins.size) {
+      var b = document.createElement('b');
+      b.textContent = 'zero third-party origins observed';
+      elO.appendChild(b);
+      elO.appendChild(document.createTextNode(' · every byte served from ' + location.host));
+    } else {
+      var s = document.createElement('span');
+      s.className = 'bad';
+      s.textContent = 'observed: ' + Array.from(origins).join(' · ');
+      elO.appendChild(s);
+      elO.appendChild(document.createTextNode(' · we said zero. If you can read this, hold us to it.'));
+    }
+  }
+  try { note(performance.getEntriesByType('resource')); } catch (e) { render(); }
+  try {
+    new PerformanceObserver(function (l) { note(l.getEntries()); }).observe({ type: 'resource', buffered: true });
+  } catch (e) { render(); }
+})();
+
+/* ============================================================
+   X7 - the guided walk: T or the hero button steps acts 0-6.
+   Arrow keys advance, Escape exits. Off under reduced motion.
+   ============================================================ */
+(function () {
+  var btn = document.getElementById('tourStart'), chip = document.getElementById('tourChip');
+  if (!btn || !chip || REDUCE) return;
+  btn.hidden = false;
+  var STOPS = [
+    ['#top',         'ACT 00', 'A tender becomes a decision system, before your eyes.'],
+    ['#clock',       'ACT 01', 'India does not lack technology, capital, or talent. The bottleneck is the cycle.'],
+    ['#rooms',       'ACT 02', 'Two rooms, one problem: trust in what the documents claim.'],
+    ['#turn',        'ACT 03', 'What if every claim in the bundle had to show its work?'],
+    ['#platform',    'ACT 03', 'Two volumes, one evidence engine.'],
+    ['#console',     'ACT 04', 'The brief the team signs. Every number on it points to a page.'],
+    ['#bidability',  'ACT 04', 'Why you may win, or lose. With evidence.'],
+    ['#evidence',    'ACT 05', 'Every verdict carries its source. Uncertain cases go to a human. Always.'],
+    ['#audit',       'ACT 05', 'Edit the record afterwards and the seam shows.'],
+    ['#sovereignty', 'ACT 06', 'Nothing leaves the building. Your own browser is the witness.']
+  ];
+  var idx = -1, on = false;
+  var pos = document.getElementById('tourPos'), line = document.getElementById('tourLine');
+  function go(n) {
+    if (n < 0 || n >= STOPS.length) { exit(); return; }
+    idx = n;
+    var s = STOPS[idx], el = document.querySelector(s[0]);
+    if (!el) return;
+    pos.textContent = s[1] + ' · ' + (idx + 1) + '/' + STOPS.length;
+    line.textContent = s[2];
+    chip.classList.add('on');
+    if (lenis) lenis.scrollTo(el, { offset: -40, duration: 1.1 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  }
+  function start() { on = true; go(0); }
+  function exit() { on = false; idx = -1; chip.classList.remove('on'); }
+  btn.addEventListener('click', start);
+  document.addEventListener('keydown', function (e) {
+    if (e.target.matches && e.target.matches('input,textarea,select')) return;
+    if (!on) { if (e.key === 't' || e.key === 'T') start(); return; }
+    if (e.key === 'Escape') exit();
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); go(idx + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(idx - 1); }
+  });
+})();
+
+/* one global re-measure now that every pin and trigger exists */
+if (hasST) ScrollTrigger.refresh();
+
 });
 </script>
 <style is:inline>
@@ -1693,6 +2236,16 @@ html.hero-fallback .scroll-cue{display:none}
 .node-label{opacity:0;transition:opacity .3s}
 .scroll-cue{transition:opacity .4s}
 </style>
+
+<!-- X7: guided walk caption chip -->
+<div class="tourchip" id="tourChip" role="dialog" aria-label="Guided walk" aria-live="polite">
+  <div class="tc-k"><span id="tourPos">ACT 00 · 1/10</span><span>→ next · ← back · esc exits</span></div>
+  <p class="tc-s" id="tourLine"></p>
+</div>
+
+<!-- X1: claim-chip registry, baked from publicClaims.ts at build -->
+<script type="application/json" id="claimRegistry" set:html={JSON.stringify(claimRegistry)}></script>
+<script is:inline defer src="/js/kriseva-chips.js"></script>
 
 <!-- BUILD NOTES ==================================================
 CONCEPT - "Evidential Cartography: the dossier, alive."

@@ -23,7 +23,10 @@ const { title, description, path, schema = [] } = Astro.props;
 const SITE = 'https://www.kriseva.in';
 
 const canonical = SITE + (path === '/' ? '/' : path);
-const ogImage = SITE + '/og.png';
+// X8: per-page OG images, generated at build by scripts/render-og-pages.mjs
+// into public/og/<slug>.png on brand tokens. Home keeps /og.png.
+const slug = path === '/' ? '' : path.replace(/^\//, '').replace(/\//g, '-');
+const ogImage = SITE + (slug ? `/og/${slug}.png` : '/og.png');
 
 const organization = {
   '@context': 'https://schema.org',
