@@ -117,5 +117,12 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
   pop.addEventListener('mouseover', function () { clearTimeout(hideTimer); });
   pop.addEventListener('mouseleave', delayedHide);
-  window.addEventListener('scroll', hide, { passive: true });
+  /* hide on real scrolling only; smooth-scroll libraries emit settling
+     events for many frames after the wheel stops */
+  var shownY = 0;
+  var _show = show;
+  show = function (chip) { _show(chip); shownY = window.scrollY; };
+  window.addEventListener('scroll', function () {
+    if (pop.classList.contains('on') && Math.abs(window.scrollY - shownY) > 32) hide();
+  }, { passive: true });
 })();
