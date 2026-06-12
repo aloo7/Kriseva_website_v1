@@ -180,9 +180,9 @@ header{position:fixed;inset-inline:0;top:0;z-index:1000;transition:background .3
   max-width:var(--wrap);margin-inline:auto;padding:22px var(--pad);transition:padding .35s}
 header.stuck{background:rgba(243,237,224,.94);box-shadow:0 1px 0 var(--rule)}
 header.stuck .nav{padding-block:12px}
-.brand{display:flex;align-items:baseline;gap:7px;font-family:var(--sans);font-weight:600;
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600;
   letter-spacing:.34em;font-size:.95rem;text-decoration:none}
-.brand .tika{width:7px;height:7px;border-radius:50%;background:var(--brass);transform:translateY(-1px)}
+.brand .bmark{width:24px;height:24px;display:block}
 .nlinks{display:flex;gap:clamp(14px,2.6vw,36px)}
 .nlinks a{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
   color:var(--ink-sec);text-decoration:none;padding:6px 2px;position:relative}
@@ -572,7 +572,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .strip-sec{overflow:hidden}
 .strip-stage{padding-block:clamp(40px,4.5vw,68px)}
 .stripwrap{margin-top:clamp(24px,3.4vw,42px)}
-.strip{display:flex;gap:clamp(18px,2.4vw,34px);width:max-content;
+.strip{display:flex;align-items:flex-start;gap:clamp(18px,2.4vw,34px);width:max-content;
   padding-inline:max(calc((100vw - var(--wrap))/2 + var(--pad)),20px)}
 .strip .plate{flex:0 0 auto}
 .strip .pl-land{width:clamp(420px,44vw,620px)}
@@ -620,11 +620,11 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .crail{position:relative;height:2px;background:var(--rule)}
 .crail .cfill{position:absolute;inset-block:0;left:0;width:0%;background:var(--brass)}
 .crail .cdot{position:absolute;top:50%;left:0;width:13px;height:13px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 5px rgba(168,114,41,.16)}
-.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px}
-.cst{padding-top:2px}
-.cst .tick{width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
-.cst .nm{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
-.cst .cap{font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s}
+.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px;list-style:none;padding:0}
+.cst{padding-top:2px;min-width:0}
+.cst .tick{display:block;width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
+.cst .nm{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
+.cst .cap{display:block;font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s;text-wrap:pretty}
 .cst.lit .tick{background:var(--ink)}
 .cst.lit .nm{color:var(--ink);font-weight:600}
 .cst.lit .cap{color:var(--ink-sec)}
@@ -684,8 +684,14 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .mrow p{font-size:1rem;line-height:1.55}
 .mnote{margin-top:18px}
 @media (max-width:760px){.mrow{grid-template-columns:1fr;gap:5px}}
-/* ---------- X3: working loop inside the console plate ---------- */
-.console-plate .pimg video{width:100%;height:auto;display:none}
+/* ---------- X3: working loop inside the console plate ----------
+   The media box has a FIXED aspect (the still's ratio): swapping the
+   still for the loop must never change document height, or every
+   ScrollTrigger refreshes mid-scroll and the page visibly snaps back
+   (the "stuck at multiple phases" defect). The loop letterboxes. */
+.console-plate .pimg{aspect-ratio:2360/1392;background:var(--paper-sunk)}
+.console-plate .pimg img.pan{width:100%;height:100%;object-fit:contain}
+.console-plate .pimg video{width:auto;height:100%;margin-inline:auto;display:none}
 .console-plate.video-live .pimg video{display:block}
 .console-plate.video-live .pimg > img{display:none}
 .console-plate.video-live .ann{display:none}
@@ -721,7 +727,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 
 <header id="hdr">
   <div class="nav">
-    <a class="brand" href="#top" aria-label="KRISEVA home">KRISEVA<span class="tika" aria-hidden="true"></span></a>
+    <a class="brand" href="#top" aria-label="KRISEVA home"><img class="bmark" src="/assets/brand/kriseva-mark.svg" alt="" width="24" height="24">KRISEVA</a>
     <nav class="nlinks" aria-label="Primary">
       <a href="#platform">Platform</a>
       <a href="#evidence">Evidence</a>
@@ -1026,7 +1032,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
       <h2 class="display"><span class="ln"><span class="ln-in">The verdict points to a page.</span></span></h2>
       <p class="dek rv">Nothing to operate here. Just watch: the brass box is the exact region of the exact page the verdict cites.</p>
     </div>
-    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:880px;margin-inline:auto">
+    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:720px;margin-inline:auto">
       <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
       <div class="pimg">
         <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
@@ -1292,7 +1298,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 
 <footer>
   <div class="foot">
-    <span>KRISEVA AI Private Limited</span>
+    <span style="display:flex;align-items:center;gap:12px"><img src="/assets/brand/kriseva-mark-light.svg" alt="KRISEVA mark" width="30" height="30" loading="lazy">KRISEVA AI Private Limited</span>
     <span>No military or government endorsement claimed or implied.<br>Product visuals are synthetic / seeded demo data, not a real tender.</span>
     <span>Deterministic · Auditable · Evidence-linked · Sovereign-by-design<br>www.kriseva.in</span>
   </div>
@@ -1320,7 +1326,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
      (desktop + fine pointer + motion allowed); phones never pay for it. -->
 <script is:inline defer src="/vendor/gsap-3.12.5.min.js"></script>
 <script is:inline defer src="/vendor/ScrollTrigger-3.12.5.min.js"></script>
-<script is:inline defer src="/vendor/lenis-1.1.14.min.js"></script>
+<script is:inline defer src="/vendor/lenis-1.3.23.min.js"></script>
 <script is:inline>
 (function(){try{var mm=window.matchMedia;
 if(mm('(min-width: 761px)').matches&&mm('(pointer: fine)').matches&&!mm('(prefers-reduced-motion: reduce)').matches){
@@ -1351,14 +1357,18 @@ var VT = { v:'#2E6149', q:'#6E520F', i:'#454F5D', m:'#7E3A2F', d:'#324C6E', f:'#
 var VN = { v:'#8FC5A8', q:'#D9B45E', i:'#A8B3C2', m:'#D99284', d:'#9DB7DC', f:'#D98C82' };          /* AA text on near-black */
 
 /* ---------- Lenis smooth scroll ----------
-   Scroll-feel contract (v7): ONE damping system. Lenis owns inertia
-   (lerp .12, ~120ms settle); every scrubbed ScrollTrigger uses scrub .6
-   so pinned scenes lag the wheel by the same constant; pins declare
-   anticipatePin to kill the start-of-pin jump; geometry refreshes after
-   fonts, images and full load so trigger positions never drift. */
+   Scroll-feel contract (v7.1): ONE damping system, Lenis lerp .1.
+   Lenis is pinned at 1.3.23: 1.1.14 misclassified its own scroll-write
+   echoes as user scrolling and kept cancelling its animation mid-flight
+   (measured: a wheel flick took ~1.25s to reach HALF its travel, with a
+   visible snap-back). Every scrubbed ScrollTrigger uses scrub:true
+   (direct) so nothing double-damps behind the already-smoothed scroll;
+   pins are short enough that the page never feels parked; and no
+   element may change document height mid-scroll (see the console
+   plate). autoRaf stays off: the GSAP ticker is the one clock. */
 var lenis = null;
 if (hasLenis && !REDUCE) {
-  lenis = new Lenis({ lerp: 0.12, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.4 });
+  lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.4, autoRaf: false });
   window.__lenis = lenis;
   document.documentElement.classList.add('lenis-on');
   if (hasST) lenis.on('scroll', ScrollTrigger.update);
@@ -1389,24 +1399,31 @@ function onScrollHdr(){ hdr.classList.toggle('stuck', window.scrollY > 40); }
 onScrollHdr();
 window.addEventListener('scroll', onScrollHdr, { passive: true });
 
-/* ---------- masked reveals ---------- */
+/* ---------- reveals: scrubbed to the scroll position ----------
+   v7.1 feel contract: every reveal is a scrub window tied directly to
+   where the element sits in the viewport. Scroll down and it draws in;
+   scroll back up and it draws out, immediately. No one-shot tweens, no
+   late batching, no state that disagrees with the scrollbar. The hero
+   alone keeps a timed entrance: it is on screen before any scroll
+   exists. Hero text stays CSS-visible on mobile (LCP). */
 if (ANIM && hasST) {
-  /* hero text is exempt on mobile: it is visible at first paint (CSS) and
-     GSAP must not restyle it, or the repaint re-anchors LCP to JS load */
   if (DESKTOP) {
     document.querySelectorAll('h1 .ln-in').forEach(function (el, i) {
       gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
     });
+    gsap.utils.toArray('.hero-content .rv').forEach(function (el, i) {
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.55 + i * 0.12 });
+    });
   }
   document.querySelectorAll('h2 .ln-in, .contact .ln-in, .tline .ln-in').forEach(function (el) {
-    gsap.to(el, { y: 0, duration: 1, ease: 'power4.out',
-      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 86%' } });
+    gsap.fromTo(el, { y: '112%' }, { y: '0%', ease: 'none',
+      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 94%', end: 'top 74%', scrub: true } });
   });
   gsap.utils.toArray('.rv').filter(function (el) {
-    return DESKTOP || !el.closest('.hero-content');
+    return !el.closest('.hero-content');
   }).forEach(function (el) {
-    gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 88%' } });
+    gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 97%', end: 'top 80%', scrub: true } });
   });
 } else {
   document.querySelectorAll('.ln-in').forEach(function(el){ el.style.transform = 'none'; });
@@ -1520,7 +1537,7 @@ if (FINE && !REDUCE) {
     fill.style.width = ((i + 1) / 6 * 100) + '%';
   }
   show(0);
-  if (ANIM && hasST && DESKTOP) {
+  if (ANIM && hasST) {
     ScrollTrigger.create({
       trigger: '#pipe', start: 'top 75%', end: 'bottom 35%', scrub: true,
       onUpdate: function (self) { show(Math.min(5, Math.floor(self.progress * 6))); }
@@ -1798,10 +1815,12 @@ if (ANIM && hasST && DESKTOP) {
   if (!deviceGL) { fallback(); return; }
   /* The pin is created HERE, synchronously, not inside boot(): pins must
      come into existence in document order, before any trigger below them
-     measures the page, or every downstream trigger is short by the 230%
-     pin-spacer (the v6 "sloppy scroll" defect). boot() only consumes P. */
+     measures the page, or every downstream trigger is short by the
+     pin-spacer (the v6 "sloppy scroll" defect). boot() only consumes P.
+     150% pin distance: long enough for the strand choreography, short
+     enough that the page never feels parked. */
   heroPin = ScrollTrigger.create({
-    trigger: '.hero', start: 'top top', end: '+=230%', pin: true, scrub: 0.6, anticipatePin: 1,
+    trigger: '.hero', start: 'top top', end: '+=150%', pin: true, scrub: true,
     onUpdate: function (self) { P = self.progress; }
   });
   if (typeof window.THREE !== 'undefined') { boot(); }
@@ -2002,6 +2021,33 @@ if (ANIM && hasST && DESKTOP) {
 })();
 
 /* ============================================================
+   HERO FALLBACK CHOREOGRAPHY - phones and no-GL devices get the
+   same thesis moment as the WebGL hero: the static plate draws
+   itself on scroll. Brass strands trace from the bundle, then the
+   six verdict chips resolve, scrubbed and reversible.
+   ============================================================ */
+(function () {
+  if (!(ANIM && hasST)) return;
+  if (DESKTOP && !document.documentElement.classList.contains('hero-fallback')) return;
+  var svg = document.querySelector('.hero-static svg');
+  if (!svg) return;
+  var strands = svg.querySelectorAll('g[stroke="#A87229"] path');
+  var chips = svg.querySelectorAll('g[font-size="11"] > g');
+  if (!strands.length) return;
+  strands.forEach(function (p) {
+    var L = p.getTotalLength();
+    p.style.strokeDasharray = L;
+    p.style.strokeDashoffset = L;
+  });
+  chips.forEach(function (c) { c.style.opacity = 0; });
+  var tl = gsap.timeline({
+    scrollTrigger: { trigger: '.hero-static', start: 'top 88%', end: 'top 18%', scrub: true }
+  });
+  strands.forEach(function (p, i) { tl.to(p, { strokeDashoffset: 0, ease: 'none', duration: 1 }, i * 0.3); });
+  chips.forEach(function (c, i) { tl.to(c, { opacity: 1, ease: 'none', duration: 0.35 }, 0.5 + i * 0.3); });
+})();
+
+/* ============================================================
    ACT 1 - the nation's clock: one acquisition travels the rule
    while the year counter advances. Qualitative on purpose: the
    final tick reads YEAR N, not a number we cannot cite.
@@ -2026,7 +2072,16 @@ if (ANIM && hasST && DESKTOP) {
   if (ANIM && hasST && DESKTOP) {
     setP(0);
     ScrollTrigger.create({
-      trigger: '#clockStage', start: 'top top', end: '+=180%', pin: true, scrub: 0.6, anticipatePin: 1,
+      trigger: '#clockStage', start: 'top top', end: '+=110%', pin: true, scrub: true,
+      onUpdate: function (self) { setP(self.progress); }
+    });
+  } else if (ANIM && hasST) {
+    /* mobile: same journey, no pin. The vertical ledger lights station
+       by station and the year advances as the section passes through
+       the viewport; fully reversible. */
+    setP(0);
+    ScrollTrigger.create({
+      trigger: '#clock', start: 'top 70%', end: 'bottom 92%', scrub: true,
       onUpdate: function (self) { setP(self.progress); }
     });
   } else {
@@ -2061,10 +2116,12 @@ if (ANIM && hasST && DESKTOP) {
     var n = Math.floor(p * ticks.length);
     ticks.forEach(function (t, i) { t.setAttribute('opacity', i < n ? '1' : '0'); });
   }
-  if (ANIM && hasST && DESKTOP) {
+  if (ANIM && hasST) {
+    /* desktop and mobile alike: the bundle fans out and the committee's
+       checks tick in as the rooms cross the viewport, both directions */
     setRooms(0);
     ScrollTrigger.create({
-      trigger: '#rooms', start: 'top 72%', end: 'center 40%', scrub: 0.6,
+      trigger: '#rooms', start: 'top 78%', end: 'center 42%', scrub: true,
       onUpdate: function (self) { setRooms(self.progress); }
     });
   } else {
@@ -2076,15 +2133,15 @@ if (ANIM && hasST && DESKTOP) {
    FIELD EVIDENCE - plate reveals, console pan, bbox trace, filmstrip
    ============================================================ */
 if (ANIM && hasST) {
-  /* steady plates: fade-rise only, never zoom or crop */
+  /* steady plates: fade-rise only, never zoom or crop; scrubbed both ways */
   gsap.utils.toArray('.plate:not(.rv)').forEach(function (p) {
-    gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
-      scrollTrigger: { trigger: p, start: 'top 88%' } });
+    gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: p, start: 'top 97%', end: 'top 82%', scrub: true } });
   });
-  /* console annotations slide in */
+  /* console annotations slide in, staggered by window, reversible */
   gsap.utils.toArray('.ann').forEach(function (a, i) {
-    gsap.fromTo(a, { opacity: 0, x: 26 }, { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out', delay: 0.18 * i,
-      scrollTrigger: { trigger: '.console-plate', start: 'top 62%' } });
+    gsap.fromTo(a, { opacity: 0, x: 26 }, { opacity: 1, x: 0, ease: 'none',
+      scrollTrigger: { trigger: '.console-plate', start: 'top ' + (66 - i * 8) + '%', end: 'top ' + (52 - i * 8) + '%', scrub: true } });
   });
   /* bundle: brass bbox draws itself, then the label lands */
   var bbox = document.getElementById('bboxRect');
@@ -2094,13 +2151,24 @@ if (ANIM && hasST) {
         var l = document.getElementById('bboxLabel');
         if (l) l.classList.toggle('on', self.progress > 0.9);
       } } });
-  /* filmstrip: pinned horizontal scrub on desktop */
+  /* filmstrip: pinned horizontal scrub on desktop; on mobile the reel is
+     a native swipe and the rail + counter track the swipe position */
   var strip = document.getElementById('strip');
+  if (strip && !DESKTOP) {
+    strip.addEventListener('scroll', function () {
+      var max = strip.scrollWidth - strip.clientWidth;
+      var p = max > 0 ? strip.scrollLeft / max : 0;
+      var f = document.getElementById('stripFill');
+      if (f) f.style.width = (p * 100) + '%';
+      var c = document.getElementById('stripCount');
+      if (c) c.textContent = '0' + Math.min(5, 1 + Math.floor(p * 4.999)) + ' / 05';
+    }, { passive: true });
+  }
   if (strip && DESKTOP) {
     var dist = function () { return Math.max(0, strip.scrollWidth - document.documentElement.clientWidth); };
     gsap.to(strip, { x: function () { return -dist(); }, ease: 'none',
-      scrollTrigger: { trigger: '#fieldstrip', start: 'top top', end: function () { return '+=' + (dist() + 300); },
-        pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true,
+      scrollTrigger: { trigger: '#fieldstrip', start: 'top top', end: function () { return '+=' + (dist() + 80); },
+        pin: true, scrub: true, invalidateOnRefresh: true,
         onUpdate: function (self) {
           var f = document.getElementById('stripFill');
           if (f) f.style.width = (self.progress * 100) + '%';
@@ -2217,6 +2285,18 @@ if (ANIM && hasST) {
   function start() { on = true; go(0); }
   function exit() { on = false; idx = -1; chip.classList.remove('on'); }
   btn.addEventListener('click', start);
+  /* touch path: tapping the caption chip advances to the next act */
+  chip.addEventListener('click', function () { if (on) go(idx + 1); });
+  /* taking the wheel back ends the walk; the caption never lingers
+     over content it no longer describes (taps on the chip or the
+     start button are not "taking the wheel back") */
+  ['wheel', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      if (!on) return;
+      if (e.target && e.target.closest && e.target.closest('#tourChip,#tourStart')) return;
+      exit();
+    }, { passive: true });
+  });
   document.addEventListener('keydown', function (e) {
     if (e.target.matches && e.target.matches('input,textarea,select')) return;
     if (!on) { if (e.key === 't' || e.key === 'T') start(); return; }

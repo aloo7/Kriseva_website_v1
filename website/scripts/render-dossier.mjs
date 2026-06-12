@@ -37,8 +37,8 @@ body{width:210mm;height:296mm;background:#DED6C9;color:#0F0E0B;font-family:'IBM 
 .frame::after{bottom:-1px;right:-1px;border-bottom:1.5px solid #0F0E0B;border-right:1.5px solid #0F0E0B}
 .mono{font-family:'IBM Plex Mono',monospace}
 .hdr{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #0F0E0B;padding-bottom:3mm}
-.brand{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11pt;letter-spacing:.3em}
-.brand i{display:inline-block;width:2.4mm;height:2.4mm;border-radius:50%;background:#A87229;font-style:normal}
+.brand{display:flex;align-items:center;gap:3mm;font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11pt;letter-spacing:.3em}
+.brand img{width:8mm;height:8mm;display:block}
 .fileline{font-family:'IBM Plex Mono',monospace;font-size:6.2pt;letter-spacing:.18em;text-transform:uppercase;color:#4E4838}
 h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:23pt;line-height:1.12;letter-spacing:-0.01em;margin:6mm 0 2.5mm;max-width:150mm}
 h1 em{font-style:italic;color:#8A5C16}
@@ -70,7 +70,7 @@ h1 em{font-style:italic;color:#8A5C16}
 </style></head><body>
 <div class="frame"></div>
 <div class="hdr">
-  <span class="brand">KRISEVA <i></i></span>
+  <span class="brand"><img src="${FONTS.replace('/fonts', '/assets/brand/kriseva-mark.svg')}" alt="">KRISEVA</span>
   <span class="fileline">Dossier · defence procurement intelligence · India · ${date} · ${sha}</span>
 </div>
 

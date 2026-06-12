@@ -17,7 +17,7 @@ const buildDate = new Date().toISOString().slice(0, 10);
 ---
 <footer class="v6">
   <div class="foot">
-    <span>KRISEVA AI Private Limited</span>
+    <span class="fbrand"><img src="/assets/brand/kriseva-mark-light.svg" alt="KRISEVA mark" width="30" height="30" loading="lazy">KRISEVA AI Private Limited</span>
     <span>No military or government endorsement claimed or implied.<br />Product visuals are synthetic / seeded demo data, not a real tender.</span>
     <span>Deterministic · Auditable · Evidence-linked · Sovereign-by-design<br />www.kriseva.in</span>
   </div>
@@ -38,6 +38,7 @@ const buildDate = new Date().toISOString().slice(0, 10);
   </nav>
 </footer>
 <style>
+  .fbrand{display:flex;align-items:center;gap:12px}
   .strip-x5{border-top:1px solid rgba(231,225,208,.15);padding-top:16px}
   .strip-x5 span{overflow-wrap:anywhere}
   .strip-x5 a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(231,225,208,.35)}
