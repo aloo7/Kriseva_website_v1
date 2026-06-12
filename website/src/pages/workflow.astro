@@ -99,9 +99,9 @@ const trail = [
         dek="One requirement, traced end to end. Every step keeps the pointer back to the page it came from.">
         Follow one clause <em class="em-brass">all the way down.</em>
       </SectionHead>
-      <div class="trail rv" role="list">
+      <div class="trail" role="list">
         {trail.map((t, i) => (
-          <div class="trow" role="listitem">
+          <div class="trow rv" role="listitem" style={`transition-delay:${i * 120}ms`}>
             <span class="tk">{String(i + 1).padStart(2, '0')} · {t.k}</span>
             <span class="tv">{t.v}</span>
           </div>
@@ -142,7 +142,13 @@ const trail = [
 
 .trail{border-top:1px solid rgba(233,226,210,.3)}
 .trow{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:10px 26px;align-items:baseline;
-  padding:15px 2px;border-bottom:1px solid rgba(233,226,210,.18)}
+  padding:15px 2px;border-bottom:1px solid rgba(233,226,210,.18);position:relative}
+/* clause-trace: a brass tick draws in as each step of the trace lands */
+.trow::before{content:"";position:absolute;left:-14px;top:18px;bottom:18px;width:2px;
+  background:var(--brass-lt);transform:scaleY(0);transform-origin:top;transition:transform .5s ease .15s}
+html.js .trow.in::before{transform:scaleY(1)}
+html.no-js .trow::before{transform:scaleY(1)}
+@media (prefers-reduced-motion: reduce){.trow::before{transform:scaleY(1);transition:none}}
 .trow .tk{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-lt)}
 .trow .tv{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--on-navy-dim)}
 @media (max-width:700px){.trow{grid-template-columns:1fr;gap:4px}}

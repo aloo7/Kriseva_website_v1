@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await page.goto('http://localhost:4321/evaluator/', { waitUntil: 'networkidle' });
+await page.evaluate(() => document.querySelector('.cvi')?.scrollIntoView({ block: 'center' }));
+await page.waitForTimeout(2000);
+await page.screenshot({ path: 'shots/v7/cvi-converge.png' });
+await page.click('#cviB');
+await page.waitForTimeout(1400);
+await page.screenshot({ path: 'shots/v7/cvi-split.png' });
+await browser.close();
+console.log('cvi shots done');
