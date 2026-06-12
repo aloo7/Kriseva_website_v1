@@ -1,0 +1,43 @@
+---
+// Plate.astro - the v6 product-evidence frame.
+// Chrome strip (header), whole image at native aspect ratio (never
+// cover-cropped, never zoomed; focal crops are made in the asset
+// pipeline), caption strip with provenance.
+//
+// Founder rule: every product visual carries the synthetic-data line;
+// pass provenance text via `capRight` (defaults to the standing line).
+
+interface Props {
+  /** Bold lead of the chrome strip, e.g. 'TAS' */
+  kicker: string;
+  /** Rest of the chrome strip after the kicker, e.g. '02 · Briefing' */
+  head: string;
+  /** Right side of the chrome strip, e.g. 'On-premise · Local LLM' */
+  meta?: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** Left caption under the image. */
+  capLeft: string;
+  /** Right caption; provenance. */
+  capRight?: string;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  kicker, head, meta = '', src, width, height, alt, capLeft,
+  capRight = 'Synthetic / seeded demo data, not a real tender',
+  loading = 'lazy',
+  class: cls = '',
+} = Astro.props;
+---
+<figure class={`plate regmark ${cls}`.trim()}>
+  <div class="ph"><span><b>{kicker}</b> · {head}</span>{meta && <span>{meta}</span>}</div>
+  <div class="pimg">
+    <img src={src} width={width} height={height} alt={alt} loading={loading} />
+    <slot />
+  </div>
+  <figcaption class="pcap"><span>{capLeft}</span><span>{capRight}</span></figcaption>
+</figure>

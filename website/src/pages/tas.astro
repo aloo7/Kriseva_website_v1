@@ -1,347 +1,319 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RouteHero from '../components/RouteHero.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import DossierCard from '../components/DossierCard.astro';
-import ProductScreenshotFrame from '../components/ProductScreenshotFrame.astro';
-import ComplianceMatrixPreview from '../components/ComplianceMatrixPreview.astro';
-import DecisionPill from '../components/DecisionPill.astro';
-import FounderCTA from '../components/FounderCTA.astro';
-import PrimaryButton from '../components/PrimaryButton.astro';
-import SecondaryButton from '../components/SecondaryButton.astro';
-import CapabilityPipeline from '../components/CapabilityPipeline.astro';
-import { routes } from '../data/routes';
-import { claims } from '../data/claims';
+// /tas - KRISEVA TAS product page (bidder-side, Vol. I).
+// Approved tas_* focal crops (assets/v6/console_*.jpg) shown whole in Plate
+// frames; six-stage pipeline rail; capability ledger from register strings.
+// Claim-bearing wording: src/data/publicClaims.ts (tas.*, boundary.*) and the
+// founder-signed v6 homepage corpus.
 
-const title = 'TAS — Tender Automation System';
-const description = 'KRISEVA TAS is the bidder-side tender automation and procurement intelligence product for defense MSMEs. Discover, parse, score, and review tender opportunities with source-linked evidence and operator-reviewed BID / REVIEW / SKIP recommendations.';
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import Plate from '../components/v6/Plate.astro';
+import { getClaim } from '../data/publicClaims';
+
+const longLine = getClaim('tas.long-line')!.wording;
+const oneLiner = getClaim('tas.one-liner')!.wording;
+const status = getClaim('tas.status')!.wording;
+const boundaryList = getClaim('boundary.list')!.wording;
+
+const title = 'KRISEVA TAS · Bidder-side tender intelligence for defence MSMEs';
+const description = oneLiner + ' Deterministic pipeline, evidence-linked extraction, BID / REVIEW / SKIP briefs the operator signs.';
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'KRISEVA TAS',
+    alternateName: 'KRISEVA Tender Automation System',
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'On-premise deployment',
+    description: oneLiner,
+    publisher: { '@type': 'Organization', name: 'KRISEVA AI Private Limited' },
+  },
+];
+
+// Capability ledger: exact register wording, register tag on the right.
+const caps = [
+  { id: 'tas.bundle-thesis', ref: 'bundle-aware' },
+  { id: 'tas.parsing', ref: 'on-premise' },
+  { id: 'tas.ocr', ref: 'under evaluation' },
+  { id: 'tas.metadata', ref: 'clause + page' },
+  { id: 'tas.compliance', ref: 'human review' },
+  { id: 'tas.gem', ref: 'live' },
+  { id: 'tas.defproc', ref: 'operator-gated' },
+  { id: 'tas.recommendation', ref: 'committee-assist' },
+].map((c) => ({ w: getClaim(c.id)!.wording, ref: c.ref }));
 ---
-<BaseLayout title={title} description={description}>
-  <RouteHero
-    eyebrow="Product · KRISEVA TAS"
-    title="The bidder-side<br /><span class='brass'>Tender Automation System.</span>"
-    subtitle={claims.productLongLine}
-    meta="Status · in pilot / demo evaluation · not production SaaS"
-  >
-    <Fragment slot="cta">
-      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
-      <SecondaryButton href={routes.contactWithIntent('pilot')}>Join Pilot</SecondaryButton>
-    </Fragment>
-  </RouteHero>
+<V6Layout title={title} description={description} path="/tas" schema={schema}>
 
-  {/* Operator capability map */}
-  <section class="section section--paper tas-pipeline-section">
-    <div class="container">
-      <div class="reveal">
-        <SectionLabel>Operator Pipeline</SectionLabel>
-        <h2 style="margin-bottom: 14px;">From discovery to operator decision, one map.</h2>
-        <p style="color: var(--ink-soft); max-width: 720px; margin-bottom: 28px;">
-          The full operator workflow at a glance. Each stage is observable, reviewable, and recorded against the bundle. Hover or focus a stage to highlight it.
-        </p>
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="KRISEVA TAS">
+    <div class="wrap">
+      <p class="eyebrow">KRISEVA TAS · Bidder-side · Vol. I</p>
+      <h1 class="display">A scattered bundle becomes a <em class="em-brass">defensible decision.</em></h1>
+      <p class="dek">{longLine}</p>
+      <div class="acts">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="#pipeline">Walk the pipeline</a>
       </div>
-      <div class="reveal">
-        <CapabilityPipeline />
+      <div class="ihero-meta" aria-label="Product status">
+        <span><b>{status}</b></span>
+        <span>Recommendation only · the operator signs</span>
       </div>
     </div>
   </section>
 
-  {/* Capabilities */}
-  <section class="section section--dark">
-    <div class="container">
-      <SectionLabel>Capabilities</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">What each station does, in plain terms.</h2>
-      <p class="reveal" style="color:var(--paper-mute);max-width:760px;margin-bottom:32px;">
-        Capability statements below mirror the public claim register. Anything that needs careful wording is wrapped in caveats; anything not yet validated is excluded.
-      </p>
+  <!-- ============ BUNDLE ANATOMY (instrument) ============ -->
+  <section class="sec-pad" id="anatomy" style="padding-top:clamp(30px,4vw,56px);padding-bottom:clamp(40px,5vw,80px)">
+    <div class="wrap">
+      <SectionHead eyebrow="The bundle · anatomy of a tender" folio="exhibit"
+        dek="A tender arrives as a stack of documents, each carrying clauses that can win the bid or end it. Select a leaf to read its role.">
+        Six documents. <em class="em-brass">One decision system.</em>
+      </SectionHead>
+      <div class="bna rv regmark">
+        <div class="bna-stage">
+          <svg id="bnaSvg" viewBox="0 0 560 480" role="img"
+            aria-label="An exploded tender bundle: bid document, specification, BOQ, ATC, corrigendum and annexures drawn as stacked paper leaves">
+            <g id="bnaLeaves"></g>
+          </svg>
+        </div>
+        <div class="bna-ledger" role="tablist" aria-label="Bundle documents" id="bnaLedger"></div>
+      </div>
+      <div class="bna-detail rv" id="bnaDetail" aria-live="polite"></div>
+    </div>
+  </section>
 
-      <div class="tas-caps" data-stagger>
-        <div class="reveal"><DossierCard label="01" title="Tender discovery & ingestion" meta="Status · operational">
-          {claims.gem} {claims.defproc} Operator-pasted bundles and uploads are first-class citizens.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="02" title="Bundle organization" meta="Status · operational">
-          {claims.bundleThesis}
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="03" title="Document parsing" meta="Status · operational">
-          {claims.parsing}
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="04" title="OCR routing" meta="Status · under active evaluation">
-          {claims.ocr}
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="05" title="Relevance scoring" meta="Status · in pilot">
-          Relevance scoring against company capability context. Operator overrides are first-class.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="06" title="Compliance extraction" meta="Status · operator-reviewed">
-          {claims.compliance}
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="07" title="Source-linked evidence" meta="Status · clause + page citations">
-          Every extracted fact carries a clause + page citation. Reviewers can step from the brief into the underlying clause.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="08" title="BID / REVIEW / SKIP recommendation" meta="Recommends · not autonomous">
-          {claims.recommendation}
-        </DossierCard></div>
-        <div class="reveal"><DossierCard label="09" title="Operator review workflow" meta="Operator-recorded · reviewable in audit">
-          The operator records the decision, the rationale, and the corrigenda watch. The brief is reviewable in audit.
-        </DossierCard></div>
+  <!-- ============ THE BRIEFING (hero plate) ============ -->
+  <section id="briefing" style="padding-bottom:clamp(40px,5vw,80px)">
+    <div class="wrap">
+      <Plate kicker="TAS" head="02 · Briefing · GEM/2026/B/7281746" meta="On-premise · Local LLM · Demo fixture"
+        src="/assets/v6/console_briefing.jpg" width={2360} height={1392}
+        alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous"
+        capLeft="The operator signs; TAS retains the decision until signature"
+        capRight="Synthetic demo data · captured 2026-05-20 · repo-owned local instance"
+        loading="eager" class="rv" />
+      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
+
+  <!-- ============ PIPELINE ============ -->
+  <section class="sec-pad sec-sunk" id="pipeline">
+    <div class="wrap">
+      <SectionHead eyebrow="The pipeline · six deterministic stages" folio="§01 / 05"
+        dek="Discover, score, acquire, bundle, extract, brief. Each stage is deterministic and inspectable; nothing decides in the dark.">
+        Six stages. <em class="em-brass">No black box.</em>
+      </SectionHead>
+      <div class="pipe rv" id="pipe">
+        <div class="ptitle"><span>Select a stage</span><span class="folio tabular" id="pipeCount">01 / 06</span></div>
+        <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill"></div></div>
+        <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
+        <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
       </div>
     </div>
   </section>
 
-  {/* Source-linked extraction */}
-  <section class="section section--dark">
-    <div class="container tas-extraction">
-      <div class="reveal">
-        <SectionLabel>Source-Linked Extraction</SectionLabel>
-        <h2>Extraction that survives the audit.</h2>
-        <p style="color:var(--paper-mute);max-width:540px;margin-bottom:22px;">
-          {claims.metadata} Each value carries a back-pointer to the bundle clause that produced it.
-        </p>
-        <ul class="tas-extraction__list">
-          <li><strong>Buyer / agency fields</strong> — issuing entity, contracting officer, location, mode.</li>
-          <li><strong>Dates</strong> — publication, pre-bid, submission, opening, validity, EMD release.</li>
-          <li><strong>Values</strong> — estimated cost, EMD, ePBG, performance security, payment terms.</li>
-          <li><strong>Eligibility signals</strong> — turnover, past performance, MSE/MII declarations, certifications.</li>
-          <li><strong>Document requirements</strong> — what the bidder must furnish, by clause and annex.</li>
-        </ul>
-      </div>
-      <div class="reveal">
-        <ProductScreenshotFrame
-          src="/assets/screenshots/04_bundle_source_evidence.png"
-          alt="KRISEVA TAS — bundle and source-evidence view"
-          caption="Bundle / source-evidence view"
-          disclosure="Repo-owned capture · seeded demo data"
-        />
-      </div>
-    </div>
-  </section>
-
-  {/* Compliance matrix */}
-  <section class="section section--paper">
-    <div class="container tas-matrix">
-      <div class="reveal">
-        <SectionLabel>Compliance Matrix</SectionLabel>
-        <h2>Compliance, structured for human review.</h2>
-        <p style="color:var(--ink-soft);max-width:520px;">
-          {claims.compliance} The matrix is a starting point for a human reviewer, not a substitute for one. Gaps are flagged with the source clause that triggered them.
-        </p>
-      </div>
-      <div class="reveal">
-        <ComplianceMatrixPreview />
-      </div>
-    </div>
-  </section>
-
-  {/* Decision panel */}
-  <section class="section section--navy">
-    <div class="container tas-decision">
-      <div class="reveal">
-        <SectionLabel>Decision Brief</SectionLabel>
-        <h2>BID / REVIEW / SKIP — recommendations the operator reviews.</h2>
-        <p style="color:var(--paper-mute);max-width:680px;margin-bottom:26px;">
-          The brief is a recommendation, not an action. The operator reviews the rationale, accepts or overrides, and records the decision against the bundle.
-        </p>
-      </div>
-      <div class="tas-decision__grid" data-stagger>
-        <div class="reveal tas-decision__cell tas-decision__cell--bid">
-          <DecisionPill state="bid" size="md">BID</DecisionPill>
-          <p>Eligibility clear, compliance signals favorable, fit aligned with company capability context.</p>
-          <p class="tas-decision__meta">Recommended · operator confirms</p>
-        </div>
-        <div class="reveal tas-decision__cell tas-decision__cell--review">
-          <DecisionPill state="review" size="md">REVIEW</DecisionPill>
-          <p>Material ambiguity, partial compliance gap, or missing certifications. Operator review required before submission.</p>
-          <p class="tas-decision__meta">Held · operator reviews evidence</p>
-        </div>
-        <div class="reveal tas-decision__cell tas-decision__cell--skip">
-          <DecisionPill state="skip" size="md">SKIP</DecisionPill>
-          <p>Eligibility miss, capacity gap, or risk threshold breached. Skip with a documented rationale.</p>
-          <p class="tas-decision__meta">Skipped · rationale recorded</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* Screenshots */}
-  <section class="section section--dark">
-    <div class="container">
-      <SectionLabel>Product Surfaces</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:32px;">Repo-grounded TAS captures.</h2>
-      <div class="tas-shots" data-stagger>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/01_home_dashboard.png"
-            alt="TAS home dashboard"
-            caption="Home / dashboard"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/02_queue_tender_list.png"
-            alt="TAS tender queue"
-            caption="Tender queue / list"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/05_sources_import_status.png"
-            alt="TAS sources / import status"
-            caption="Sources / import status"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/03_tender_briefing_recommendation.png"
-            alt="TAS tender briefing with recommendation"
-            caption="Tender briefing / recommendation"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* What TAS is not */}
-  <section class="section section--paper">
-    <div class="container">
-      <SectionLabel>Boundaries</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">What TAS does not claim.</h2>
-      <p class="reveal" style="color:var(--ink-soft);max-width:680px;margin-bottom:24px;">
-        Listing the things TAS will not pretend to do is part of the product. Pretending otherwise breaks the trust this category needs.
-      </p>
-      <ul class="tas-not" data-stagger>
-        {claims.notClaimed.map((item) => (
-          <li class="reveal">
-            <span class="tas-not__tag">NOT</span>
-            <span>{item}</span>
-          </li>
+  <!-- ============ CAPABILITY LEDGER ============ -->
+  <section class="sec-pad" id="capabilities">
+    <div class="wrap">
+      <SectionHead eyebrow="The capability ledger · register-sourced" folio="§02 / 05"
+        dek="Each line below is the approved claim wording from the public claims register, with its working register tag. No paraphrase, no inflation.">
+        What it does, <em class="em-brass">on the record.</em>
+      </SectionHead>
+      <ul class="caps rv" aria-label="TAS capabilities">
+        {caps.map((c) => (
+          <li><span>{c.w}</span><span class="ref">{c.ref}</span></li>
         ))}
       </ul>
     </div>
   </section>
 
-  <FounderCTA
-    heading="Walk through TAS with the founder."
-    body="The most useful first conversation is a screen-share through the actual product, against a tender bundle from your domain. Direct line, confidential by default."
-  />
-</BaseLayout>
+  <!-- ============ WORKING SURFACES ============ -->
+  <section class="sec-pad sec-sunk" id="surfaces">
+    <div class="wrap">
+      <SectionHead eyebrow="Field evidence · working surfaces" folio="§03 / 05"
+        dek="Captures from a repo-owned local instance, shown whole at native aspect. Synthetic demo data throughout.">
+        Walk the product.
+      </SectionHead>
+      <div class="pgrid">
+        <Plate kicker="TAS" head="01 · GeM live scanner" meta="streaming"
+          src="/assets/v6/console_gem_scanner.jpg" width={1700} height={1208}
+          alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"
+          capLeft="9 discovered → acquired → extracted → scored" class="rv" />
+        <Plate kicker="TAS" head="02 · Score breakdown" meta="exhibit"
+          src="/assets/v6/console_score_drawer.jpg" width={940} height={1600}
+          alt="KRISEVA TAS score breakdown drawer: 13.5 out of 100, INSUFFICIENT DATA, three path bars for deterministic, retrieval and LLM, and the convergence panel: all three paths reject"
+          capLeft="13.5/100 · all three paths reject · it fails loudly" class="rv" />
+        <Plate kicker="TAS" head="03 · Bundle" meta="evidence"
+          src="/assets/v6/console_bundle.jpg" width={1400} height={1570}
+          alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows"
+          capLeft="From verdict to page: every claim resolves to a region" class="rv" />
+        <Plate kicker="TAS" head="05 · Decisions" meta="signed ledger"
+          src="/assets/v6/console_decisions.jpg" width={1190} height={1230}
+          alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"
+          capLeft="Recommendation beside signature; disagreement is recorded" class="rv" />
+      </div>
+      <p class="disclose">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
 
-<style>
-  .tas-pipeline-section {
-    padding-bottom: 72px;
-  }
+  <!-- ============ BOUNDARIES ============ -->
+  <section class="sec-pad" id="boundaries">
+    <div class="wrap">
+      <SectionHead eyebrow="Boundaries · what TAS does not claim" folio="§04 / 05"
+        dek="The register keeps an explicit anti-claims list. It ships on this page, unabridged.">
+        Read the <em class="em-brass">refusals.</em>
+      </SectionHead>
+      <div class="bclaims rv regmark">
+        <p>{boundaryList}</p>
+      </div>
+      <div class="record rv" style="margin-top:34px">
+        <div class="rec"><span class="date">Status</span><span class="what">{status}</span><span class="tag">Honest label</span></div>
+        <div class="rec"><span class="date">Posture</span><span class="what">Local-first processing; the deployment boundary is documented on its own page.</span><a class="tag" href="/security" style="text-decoration:none">The Boundary →</a></div>
+      </div>
+    </div>
+  </section>
 
-  .tas-caps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  @media (max-width: 980px) { .tas-caps { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .tas-caps { grid-template-columns: 1fr; } }
+  <!-- ============ CTA ============ -->
+  <section class="sec-pad sec-navy" id="cta">
+    <div class="wrap">
+      <SectionHead eyebrow="Next step" folio="§05 / 05"
+        dek="If your team bids on GeM or DefProc tenders, the conversation is direct and founder-led.">
+        See it on your <em class="em-brass">own tenders.</em>
+      </SectionHead>
+      <div class="acts rv" style="display:flex;flex-wrap:wrap;gap:14px">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/workflow">How the workflow runs</a>
+      </div>
+    </div>
+  </section>
 
-  .tas-extraction {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 56px;
-    align-items: center;
-  }
-  @media (max-width: 920px) { .tas-extraction { grid-template-columns: 1fr; gap: 36px; } }
-  .tas-extraction__list {
-    display: grid;
-    gap: 12px;
-  }
-  .tas-extraction__list li {
-    font-size: 0.94rem;
-    color: var(--paper-mute);
-    padding: 10px 0;
-    border-top: 1px solid rgba(193, 138, 62, 0.14);
-    line-height: 1.55;
-  }
-  .tas-extraction__list strong { color: var(--brass); font-weight: 600; }
+</V6Layout>
 
-  .tas-matrix {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 48px;
-    align-items: start;
-  }
-  @media (max-width: 920px) { .tas-matrix { grid-template-columns: 1fr; gap: 32px; } }
+<style is:global>
+/* /tas page-specific - bundle anatomy instrument */
+.bna{display:grid;grid-template-columns:minmax(0,6fr) minmax(280px,5fr);gap:clamp(20px,3vw,44px);
+  align-items:center;background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
+  padding:clamp(16px,2.4vw,30px)}
+.bna-stage svg{width:100%;height:auto}
+.bna-leaf{cursor:pointer}
+.bna-leaf rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;
+  transition:transform .35s ease,stroke .25s ease}
+.bna-leaf .rule-ln{stroke:var(--ink-sec);stroke-width:1;opacity:.45}
+.bna-leaf text{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;fill:var(--ink-sec);text-transform:uppercase}
+.bna-leaf.sel rect{stroke:var(--brass);stroke-width:2.2;transform:translateY(-8px)}
+.bna-leaf.sel text{fill:var(--ink)}
+.bna-ledger{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
+.bna-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:left;
+  padding:12px 4px;border-bottom:1px solid var(--rule);transition:background .2s;touch-action:manipulation}
+.bna-row:hover{background:rgba(15,14,11,.04)}
+.bna-row[aria-selected="true"]{background:var(--paper);box-shadow:inset 2px 0 0 var(--brass)}
+.bna-row .nm{font-weight:600;font-size:.92rem}
+.bna-row .code{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+.bna-detail{margin-top:14px;padding:16px 18px;background:var(--paper-raised);border:1px solid var(--rule);
+  border-radius:2px;font-size:.94rem;line-height:1.6;color:var(--ink-sec);min-height:84px;max-width:none}
+.bna-detail b{color:var(--ink);font-weight:600}
+.bna-detail .riskline{display:block;margin-top:8px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--brass-text)}
+@media (max-width:900px){.bna{grid-template-columns:1fr}}
+@media (prefers-reduced-motion: reduce){.bna-leaf rect{transition:none}.bna-leaf.sel rect{transform:none}}
 
-  .tas-decision__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-  @media (max-width: 880px) { .tas-decision__grid { grid-template-columns: 1fr; } }
-  .tas-decision__cell {
-    padding: 26px;
-    border: var(--rule-edge);
-    border-radius: var(--radius-panel);
-    background: rgba(10, 31, 68, 0.5);
-    border-top: 3px solid var(--accent-primary);
-    position: relative;
-  }
-  .tas-decision__cell--bid    { border-top-color: var(--decision-bid); }
-  .tas-decision__cell--review { border-top-color: var(--decision-review); }
-  .tas-decision__cell--skip   { border-top-color: var(--decision-skip); }
-  .tas-decision__cell p {
-    color: var(--paper-mute);
-    margin-top: 14px;
-    font-size: 0.92rem;
-    line-height: 1.55;
-  }
-  .tas-decision__meta {
-    margin-top: 14px !important;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(193, 138, 62, 0.22);
-    font-family: var(--font-mono);
-    font-size: 0.64rem !important;
-    letter-spacing: 0.12em;
-    color: var(--text-faint) !important;
-    text-transform: uppercase;
-  }
+/* pipeline */
+.pipe .ptitle{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.prail{position:relative;height:2px;background:var(--rule);margin:30px 6px 16px}
+.prail .pfill{position:absolute;inset:0;width:0%;background:var(--ink);transition:width .2s linear}
+.psteps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.pstep{text-align:left;padding:10px 8px 12px;border:1px solid transparent;border-radius:2px;transition:border-color .25s,background .25s}
+.pstep .pn{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;color:var(--ink-quiet)}
+.pstep .pt{display:block;margin-top:5px;font-weight:600;font-size:.82rem}
+.pstep[aria-selected="true"]{border-color:var(--ink);background:var(--paper-raised)}
+.pdetail{margin-top:16px;min-height:84px;padding:16px 18px;background:var(--paper-raised);
+  border:1px solid var(--rule);border-radius:2px;font-size:.92rem;line-height:1.55;color:var(--ink-sec)}
+.pdetail b{color:var(--ink);font-weight:600}
+@media (max-width:760px){.psteps{grid-template-columns:repeat(3,1fr)}}
 
-  .tas-shots {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-  }
-  @media (max-width: 880px) { .tas-shots { grid-template-columns: 1fr; } }
+.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,2.6vw,36px);align-items:start}
+@media (max-width:900px){.pgrid{grid-template-columns:1fr}}
 
-  .tas-not {
-    display: grid;
-    gap: 12px;
-    max-width: 760px;
-  }
-  .tas-not li {
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 14px;
-    padding: 14px 18px;
-    border: 1px solid rgba(154, 53, 44, 0.32);
-    /* Dashed left rule = "boundary documented and crossable / not committed" — */
-    /* matches the design-system rule discipline on /security. */
-    border-left: 2px dashed rgba(154, 53, 44, 0.55);
-    background: rgba(154, 53, 44, 0.04);
-    border-radius: var(--radius-control);
-    color: var(--ink);
-    font-size: 0.94rem;
-    line-height: 1.5;
-    list-style: none;
-  }
-  .tas-not__tag {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.18em;
-    color: var(--decision-skip);
-    text-transform: uppercase;
-    padding-top: 2px;
-  }
-  /* Narrow viewports: tighten the tag column so the body text gets
-     breathing room at 320–390 px content widths. */
-  @media (max-width: 420px) {
-    .tas-not li { grid-template-columns: 44px 1fr; gap: 10px; padding: 12px 14px; }
-    .tas-not__tag { font-size: 0.62rem; letter-spacing: 0.14em; }
-  }
+.bclaims{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(18px,2.6vw,30px)}
+.bclaims p{font-size:1rem;line-height:1.8;max-width:72ch}
 </style>
+
+<script is:inline>
+// Bundle anatomy: exploded document stack; leaf and ledger row select in both
+// directions. Document roles are domain description, not capability claims.
+(function () {
+  var svg = document.getElementById('bnaSvg'), leaves = document.getElementById('bnaLeaves'),
+      ledger = document.getElementById('bnaLedger'), detail = document.getElementById('bnaDetail');
+  if (!svg) return;
+  var docs = [
+    { code: 'BID-DOC', nm: 'Bid document', d: 'The cover of the decision system: issuing authority, dates, EMD and ePBG instruments, bid value. Buyer fields set eligibility before page one is read.', risk: 'eligibility starts here' },
+    { code: 'SPEC', nm: 'Specification', d: 'Technical clauses, line by line. SPEC §3.2 is where a Make-in-India content threshold lives. Each clause can win the bid or end it.', risk: 'one clause can end the bid' },
+    { code: 'BOQ', nm: 'Bill of quantities', d: 'Quantities, line items and rates: the commercial shape of the bid, cross-checked against the specification.', risk: 'must reconcile with SPEC' },
+    { code: 'ATC', nm: 'Additional terms', d: 'Additional terms and conditions. The quiet annex where hard non-compliance most often hides, clause by clause.', risk: 'where failures hide' },
+    { code: 'CORR', nm: 'Corrigenda', d: 'Amendments issued after publication. They silently rewrite earlier clauses; a bundle read without them is the wrong bundle.', risk: 'rewrites the rest' },
+    { code: 'ANNEX', nm: 'Annexures', d: 'Formats, declarations and certificates the bid must furnish, by clause and annex. The checklist the committee reads first.', risk: 'furnish by clause + annex' },
+  ];
+  var W = 360, H = 64, X0 = 60, Y0 = 36, STEP = 70;
+  docs.forEach(function (doc, i) {
+    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'bna-leaf');
+    g.setAttribute('data-i', i);
+    var x = X0 + (i % 2) * 16, y = Y0 + i * STEP;
+    var skew = (i % 2 === 0) ? -1.2 : 1.2;
+    g.innerHTML =
+      '<rect x="' + x + '" y="' + y + '" width="' + W + '" height="' + H + '" rx="1" transform="rotate(' + skew + ' ' + (x + W / 2) + ' ' + (y + H / 2) + ')"/>' +
+      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 24) + '" x2="' + (x + W - 26) + '" y2="' + (y + 24) + '"/>' +
+      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 40) + '" x2="' + (x + W - 70) + '" y2="' + (y + 40) + '"/>' +
+      '<text x="' + (x + 14) + '" y="' + (y + 28) + '">' + doc.code + '</text>';
+    g.addEventListener('click', function () { select(i); });
+    leaves.appendChild(g);
+    var b = document.createElement('button');
+    b.className = 'bna-row'; b.setAttribute('role', 'tab'); b.dataset.i = i;
+    b.setAttribute('aria-selected', 'false');
+    b.innerHTML = '<span class="nm">' + doc.nm + '</span><span class="code">' + doc.code + '</span>';
+    b.addEventListener('click', function () { select(i); });
+    b.addEventListener('mouseover', function () { select(i); });
+    ledger.appendChild(b);
+  });
+  function select(i) {
+    leaves.querySelectorAll('.bna-leaf').forEach(function (n) { n.classList.toggle('sel', +n.getAttribute('data-i') === i); });
+    ledger.querySelectorAll('.bna-row').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
+    var doc = docs[i];
+    detail.innerHTML = '<b>' + doc.nm + ' · ' + doc.code + '</b> · ' + doc.d +
+      '<span class="riskline">⚠ ' + doc.risk + '</span>';
+  }
+  select(1);
+})();
+
+// Pipeline module: click-driven stage selector. Stage wording mirrors the
+// founder-signed v6 homepage pipeline.
+(function () {
+  var stages = [
+    { n: '01', t: 'Discover', d: '<b>Discover.</b> Live GeM discovery and DefProc public discovery surface candidate tenders; no manual portal-watching. Protected documents route through operator-assisted flows.' },
+    { n: '02', t: 'Score', d: '<b>Score.</b> Each tender is scored for relevance against the company capability context, with the reasoning shown rather than a black-box number.' },
+    { n: '03', t: 'Acquire', d: '<b>Acquire.</b> The full bundle is pulled or ingested locally. Live acquisition fails closed and routes to a human rather than guessing.' },
+    { n: '04', t: 'Bundle', d: '<b>Bundle.</b> Bid documents, specs, BOQs, ATCs, corrigenda and annexures are organised as one decision artifact, not loose files.' },
+    { n: '05', t: 'Extract', d: '<b>Extract.</b> Requirements, eligibility signals, dates, EMD/ePBG and compliance clauses are extracted with provenance to clause and page.' },
+    { n: '06', t: 'Brief', d: '<b>Brief.</b> A management-ready BID / REVIEW / SKIP brief, every claim linked to its source. The operator signs.' }
+  ];
+  var box = document.getElementById('pipeSteps'), det = document.getElementById('pipeDetail'),
+      fill = document.getElementById('pipeFill'), count = document.getElementById('pipeCount');
+  if (!box) return;
+  stages.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.className = 'pstep'; b.setAttribute('role', 'tab'); b.dataset.i = i;
+    b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    b.innerHTML = '<span class="pn">' + s.n + '</span><span class="pt">' + s.t + '</span>';
+    b.addEventListener('click', function () { show(i); });
+    box.appendChild(b);
+  });
+  function show(i) {
+    box.querySelectorAll('.pstep').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
+    det.innerHTML = stages[i].d;
+    count.textContent = stages[i].n + ' / 06';
+    fill.style.width = ((i + 1) / 6 * 100) + '%';
+  }
+  show(0);
+})();
+</script>

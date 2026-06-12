@@ -1,20 +1,21 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RouteHero from '../components/RouteHero.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import EvidenceCard from '../components/EvidenceCard.astro';
-import FounderCTA from '../components/FounderCTA.astro';
-import PrimaryButton from '../components/PrimaryButton.astro';
-import SecondaryButton from '../components/SecondaryButton.astro';
-import MotifFrame from '../components/MotifFrame.astro';
-import { routes } from '../data/routes';
+// /workflow - the operator's day, before and after, plus the evidence trail.
+// Process description, not capability inflation; before/after content carried
+// over from the prior approved page, restyled to the v6 system.
 
-const title = 'Workflow — Tender Intelligence Pipeline';
-const description = 'Before/after workflow comparison: how TAS turns scattered downloads, manual eligibility checks, and Excel tracking into a structured tender bundle, source-linked extraction, compliance matrix, decision brief, and BID / REVIEW / SKIP record.';
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import Plate from '../components/v6/Plate.astro';
+import { getClaim } from '../data/publicClaims';
+
+const recommendation = getClaim('tas.recommendation')!.wording;
+
+const title = 'Workflow · From scattered downloads to a signed decision';
+const description = 'What changes when a bid team moves from portal-and-Excel discipline to a tender intelligence workflow with clause-and-page evidence and an audit-ready brief.';
 
 const before = [
   'Manual portal search across GeM, DefProc public, DPSU sites.',
-  'Scattered downloads — RFP, BOQ, ATCs, corrigenda each in a different folder.',
+  'Scattered downloads: RFP, BOQ, ATCs, corrigenda each in a different folder.',
   'RFP, spec, BOQ, corrigenda, annexures reviewed separately.',
   'Excel tracking with manual status columns.',
   'Technical fit decided over calls and chat threads.',
@@ -32,274 +33,123 @@ const after = [
   'Decision brief with BID / REVIEW / SKIP recommendation.',
   'Operator records the decision and rationale against the bundle.',
 ];
+
+const trail = [
+  { k: 'Clause', v: 'SPEC §3.2 · p.18 · "minimum 50% indigenous content"' },
+  { k: 'Extracted field', v: 'make_in_india_min: 50% · provenance kept' },
+  { k: 'Compliance row', v: 'Make-in-India content ≥ 50% · evidence attached' },
+  { k: 'Brief line', v: 'Met as declared; certificate on file · [SPEC §3.2]' },
+  { k: 'Signed decision', v: 'REVIEW → BID · operator signature · on the record' },
+];
 ---
-<BaseLayout title={title} description={description}>
-  <RouteHero
-    eyebrow="Workflow"
-    title="From scattered downloads<br /><span class='brass'>to a reviewable decision artifact.</span>"
-    subtitle="What changes when a bid team moves from manual portal-and-Excel discipline to a tender intelligence workflow with source-linked evidence and an audit-ready decision brief."
-    meta="Before / after · operator-shaped, not autonomous"
-  >
-    <Fragment slot="cta">
-      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
-      <SecondaryButton href={routes.tas}>Open the TAS page</SecondaryButton>
-    </Fragment>
-  </RouteHero>
+<V6Layout title={title} description={description} path="/workflow">
 
-  {/* Before / After — operator transformation */}
-  <section class="section section--paper">
-    <div class="container">
-      <div class="reveal">
-        <SectionLabel>Before · After</SectionLabel>
-        <h2 style="margin-bottom: 14px;">The same operator, with one workflow change.</h2>
-        <p style="color: var(--ink-soft); max-width: 720px; margin-bottom: 32px;">
-          Manual portal-and-Excel discipline does the work but does not produce a reviewable artifact. TAS produces the artifact alongside the operator decision.
-        </p>
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Workflow">
+    <div class="wrap">
+      <p class="eyebrow">The workflow · operator-shaped, not autonomous</p>
+      <h1 class="display">Reading is not the work. <em class="em-brass">Reconstruction is.</em></h1>
+      <p class="dek">Finding tenders is easy. The hard work sits between alert and a defensible decision: extraction, eligibility cross-check, compliance reconstruction, and a brief that survives audit.</p>
+      <div class="acts">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/tas">The product behind it</a>
       </div>
+    </div>
+  </section>
 
-      <div class="wf-ba">
-        <div class="wf-ba__col wf-ba__col--before reveal">
-          <header class="wf-ba__header">
-            <p class="wf-ba__heading">BEFORE TAS</p>
-            <p class="wf-ba__sub">Manual · scattered</p>
-          </header>
-          <ol class="wf-ba__list" data-stagger>
-            {before.map((b, i) => (
-              <li class="reveal">
-                <span class="wf-ba__idx">{String(i + 1).padStart(2, '0')}</span>
-                <span class="wf-ba__text">{b}</span>
-              </li>
-            ))}
-          </ol>
-          <p class="wf-ba__caveat">The work is real, but it is not reviewable.</p>
+  <!-- ============ BEFORE / AFTER ============ -->
+  <section class="sec-pad sec-sunk" id="beforeafter" style="padding-top:clamp(40px,5vw,70px)">
+    <div class="wrap">
+      <SectionHead eyebrow="Before / after · the same operator" folio="§01 / 04"
+        dek="Portal-and-Excel discipline does the work but leaves no reviewable artifact. The workflow change produces the artifact alongside the decision.">
+        One workflow change.
+      </SectionHead>
+      <div class="ba rv">
+        <div class="ba-col regmark">
+          <div class="ba-h">Before · manual discipline</div>
+          <ul>{before.map((b) => <li>{b}</li>)}</ul>
         </div>
-
-        <div class="wf-ba__divider" aria-hidden="true">
-          <span class="wf-ba__divider-rule"></span>
-          <span class="wf-ba__divider-arrow">→</span>
-          <span class="wf-ba__divider-rule"></span>
-        </div>
-
-        <div class="wf-ba__col wf-ba__col--after reveal">
-          <header class="wf-ba__header">
-            <p class="wf-ba__heading">WITH TAS</p>
-            <p class="wf-ba__sub">Bundle · evidence-linked · operator-recorded</p>
-          </header>
-          <ol class="wf-ba__list" data-stagger>
-            {after.map((a, i) => (
-              <li class="reveal">
-                <span class="wf-ba__idx">{String(i + 1).padStart(2, '0')}</span>
-                <span class="wf-ba__text">{a}</span>
-              </li>
-            ))}
-          </ol>
-          <p class="wf-ba__caveat">Operator-shaped. Source-linked. Audit-ready.</p>
+        <div class="ba-col ba-after regmark">
+          <div class="ba-h">After · evidence-linked workflow</div>
+          <ul>{after.map((a) => <li>{a}</li>)}</ul>
         </div>
       </div>
     </div>
   </section>
 
-  {/* Pipeline */}
-  <section class="section section--dark">
-    <div class="container">
-      <SectionLabel>Pipeline</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">Eight steps from alert to decision.</h2>
-      <p class="reveal" style="color:var(--paper-mute);max-width:720px;margin-bottom:36px;">
-        Each step is operator-visible and reviewable. The pipeline does not autonomously submit anything; it produces an evidence-linked recommendation the operator confirms or overrides.
-      </p>
+  <!-- ============ THE MORNING QUEUE ============ -->
+  <section class="sec-pad" id="queue">
+    <div class="wrap">
+      <SectionHead eyebrow="Field evidence · the operator's morning" folio="§02 / 04"
+        dek="The day starts in a queue, not a search box: what needs action, what is ready, what waits, what is blocked.">
+        A queue, <em class="em-brass">not a search box.</em>
+      </SectionHead>
+      <Plate kicker="TAS" head="00 · Home · operator control surface" meta="what-needs-action lanes"
+        src="/assets/v6/console_home.jpg" width={1700} height={1200}
+        alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"
+        capLeft="Action 5 · ready 3 · waiting 2 · blocked 1" class="rv" />
+      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
 
-      <div class="wf-pipeline reveal" data-stagger>
-        <div class="reveal"><EvidenceCard step="01" title="Discover or ingest" source="GeM · DefProc public · upload">
-          Live GeM discovery and DefProc public discovery, plus operator-assisted protected-document flows. Direct uploads and pasted bundles are first-class.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="02" title="Bundle assembly" source="RFP · BOQ · ATC · corrigenda">
-          Documents are grouped into a bundle. Corrigenda are tracked against the original tender so changes do not get lost.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="03" title="Parse" source="PDF · DOCX · XLSX · TXT · CSV · OCR routing">
-          Local parsing for text-bearing files. Scanned/low-text PDFs are routed through local OCR with quality clearly disclosed.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="04" title="Extract key fields" source="metadata · dates · values · eligibility">
-          Buyer fields, dates, EMD/ePBG, eligibility signals, and document requirements. Each value carries a clause + page back-pointer.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="05" title="Score relevance" source="capability context">
-          Relevance scoring against the company’s capability context. Operator overrides are first-class and recorded against the bundle.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="06" title="Compile compliance" source="clause-anchored evidence">
-          Compliance requirements are extracted and structured for human review. Gaps are flagged with the source clause that triggered them.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="07" title="Generate decision brief" source="operator review brief">
-          The brief packages relevance, compliance, and the BID / REVIEW / SKIP recommendation, with every claim back-linked to its evidence.
-        </EvidenceCard></div>
-        <div class="reveal"><EvidenceCard step="08" title="Operator decision" source="recorded against bundle">
-          The operator confirms or overrides the recommendation, records the rationale, and the decision becomes part of the bundle’s history.
-        </EvidenceCard></div>
+  <!-- ============ EVIDENCE TRAIL ============ -->
+  <section class="sec-pad sec-navy" id="trail">
+    <div class="wrap">
+      <SectionHead eyebrow="The evidence trail · clause to signature" folio="§03 / 04"
+        dek="One requirement, traced end to end. Every step keeps the pointer back to the page it came from.">
+        Follow one clause <em class="em-brass">all the way down.</em>
+      </SectionHead>
+      <div class="trail" role="list">
+        {trail.map((t, i) => (
+          <div class="trow rv" role="listitem" style={`transition-delay:${i * 120}ms`}>
+            <span class="tk">{String(i + 1).padStart(2, '0')} · {t.k}</span>
+            <span class="tv">{t.v}</span>
+          </div>
+        ))}
+      </div>
+      <p class="disclose">Illustrative trace on synthetic demo content.</p>
+    </div>
+  </section>
+
+  <!-- ============ BOTH SIDES ============ -->
+  <section class="sec-pad" id="bothsides">
+    <div class="wrap">
+      <SectionHead eyebrow="Both sides of the table" folio="§04 / 04"
+        dek="The bidder assembles the evidence; the committee weighs it. One engine carries the provenance through both.">
+        The same evidence, <em class="em-brass">twice read.</em>
+      </SectionHead>
+      <div class="record rv">
+        <div class="rec"><span class="date">Vol. I</span><span class="what"><b>KRISEVA TAS</b> · {recommendation}</span><a class="tag" href="/tas" style="text-decoration:none">TAS →</a></div>
+        <div class="rec"><span class="date">Vol. II</span><span class="what"><b>KRISEVA EVALUATOR</b> · committee-assist evaluation; uncertainty routes to humans; the audit chain keeps the record.</span><a class="tag" href="/evaluator" style="text-decoration:none">Evaluator →</a></div>
       </div>
     </div>
   </section>
 
-  {/* Evidence trail visual */}
-  <section class="section section--paper">
-    <div class="container wf-trail">
-      <div class="reveal">
-        <SectionLabel>Evidence Trail</SectionLabel>
-        <h2>One trail, from clause to decision.</h2>
-        <p style="color:var(--ink-soft);max-width:540px;">
-          Every recommendation in the brief points back to a clause and a page. Reviewers, not summary paragraphs, decide.
-        </p>
-      </div>
-      <div class="reveal">
-        <MotifFrame
-          src="/assets/motifs/evidence-trail-line.svg"
-          alt="Evidence trail — clause to extracted field to compliance row to decision"
-          width={800}
-          height={400}
-          surface="paper"
-          topLabel="EVIDENCE TRAIL · CLAUSE → DECISION"
-          caption="Five nodes: document, page, clause, field, brief"
-        />
-      </div>
-    </div>
-  </section>
+</V6Layout>
 
-  <FounderCTA
-    heading="Want to see this against your bundle?"
-    body="The most useful first conversation is a screen-share against a tender bundle from your own domain. Confidential by default."
-  />
-</BaseLayout>
+<style is:global>
+/* /workflow page-specific */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,34px)}
+.ba-col{border:1px dashed var(--ink-sec);border-radius:2px;background:transparent;padding:clamp(16px,2.2vw,26px)}
+.ba-col.ba-after{border-style:solid;border-color:var(--ink);background:var(--paper-raised)}
+.ba-h{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.ba-col ul{list-style:none}
+.ba-col li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:.92rem;line-height:1.5;color:var(--ink-sec)}
+.ba-col.ba-after li{color:var(--ink)}
+.ba-col li:last-child{border-bottom:none}
+@media (max-width:860px){.ba{grid-template-columns:1fr}}
 
-<style>
-  /* ─────────────── Before / After ─────────────── */
-  .wf-ba {
-    display: grid;
-    grid-template-columns: 1fr 32px 1fr;
-    gap: 18px;
-    align-items: stretch;
-  }
-  @media (max-width: 880px) {
-    .wf-ba { grid-template-columns: 1fr; gap: 18px; }
-  }
-  .wf-ba__col {
-    padding: 28px;
-    border-radius: var(--radius-frame);
-    position: relative;
-  }
-  .wf-ba__col--before {
-    background:
-      linear-gradient(180deg, rgba(154, 53, 44, 0.10) 0%, rgba(154, 53, 44, 0.04) 100%);
-    border: 1px solid rgba(154, 53, 44, 0.24);
-    border-left: 3px solid rgba(154, 53, 44, 0.55);
-  }
-  .wf-ba__col--after {
-    background:
-      linear-gradient(180deg, rgba(47, 107, 79, 0.10) 0%, rgba(47, 107, 79, 0.04) 100%);
-    border: 1px solid rgba(47, 107, 79, 0.28);
-    border-left: 3px solid var(--decision-bid);
-  }
-  .wf-ba__header {
-    margin-bottom: 18px;
-    padding-bottom: 14px;
-    border-bottom: 1px dashed currentColor;
-    color: var(--decision-skip);
-  }
-  .wf-ba__col--after .wf-ba__header { color: var(--decision-bid); }
-  .wf-ba__heading {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: inherit;
-    margin-bottom: 4px;
-  }
-  .wf-ba__sub {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-quiet);
-  }
-  .wf-ba__list {
-    display: grid;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .wf-ba__list li {
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    gap: 12px;
-    align-items: baseline;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(16, 35, 59, 0.08);
-    color: var(--ink);
-    font-size: 0.94rem;
-    line-height: 1.55;
-  }
-  .wf-ba__list li:last-child { border-bottom: none; }
-  .wf-ba__idx {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.14em;
-    color: var(--ink-quiet);
-  }
-  .wf-ba__col--before .wf-ba__idx { color: rgba(154, 53, 44, 0.7); }
-  .wf-ba__col--after .wf-ba__idx { color: var(--decision-bid); }
-  .wf-ba__text { color: var(--ink-secondary); }
-  .wf-ba__caveat {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px dashed rgba(16, 35, 59, 0.16);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    color: var(--ink-quiet);
-  }
-
-  /* Brass arrow divider between the two columns. Hidden on mobile. */
-  .wf-ba__divider {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .wf-ba__divider-rule {
-    width: 1px;
-    flex: 1;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      var(--accent-primary) 50%,
-      transparent 100%
-    );
-    opacity: 0.55;
-  }
-  .wf-ba__divider-arrow {
-    font-family: var(--font-mono);
-    color: var(--accent-primary);
-    font-size: 1.2rem;
-    line-height: 1;
-    transform: rotate(90deg);
-  }
-  @media (max-width: 880px) {
-    .wf-ba__divider { display: none; }
-  }
-
-  /* ─────────────── Pipeline ─────────────── */
-  .wf-pipeline {
-    border: var(--rule-edge);
-    border-radius: var(--radius-frame);
-    padding: 8px 28px;
-    background: rgba(10, 31, 68, 0.4);
-    box-shadow: var(--shadow-lift);
-  }
-
-  /* ─────────────── Trail visual ─────────────── */
-  .wf-trail {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 48px;
-    align-items: center;
-  }
-  @media (max-width: 880px) { .wf-trail { grid-template-columns: 1fr; gap: 32px; } }
+.trail{border-top:1px solid rgba(233,226,210,.3)}
+.trow{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:10px 26px;align-items:baseline;
+  padding:15px 2px;border-bottom:1px solid rgba(233,226,210,.18);position:relative}
+/* clause-trace: a brass tick draws in as each step of the trace lands */
+.trow::before{content:"";position:absolute;left:-14px;top:18px;bottom:18px;width:2px;
+  background:var(--brass-lt);transform:scaleY(0);transform-origin:top;transition:transform .5s ease .15s}
+html.js .trow.in::before{transform:scaleY(1)}
+html.no-js .trow::before{transform:scaleY(1)}
+@media (prefers-reduced-motion: reduce){.trow::before{transform:scaleY(1);transition:none}}
+.trow .tk{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--brass-lt)}
+.trow .tv{font-family:var(--mono);font-size:.8rem;letter-spacing:.04em;color:var(--on-navy-dim)}
+@media (max-width:700px){.trow{grid-template-columns:1fr;gap:4px}}
 </style>

@@ -1,4 +1,11 @@
+# www.kriseva.in - deliberate crawl policy.
+# All crawlers welcome, including AI answer engines: the site is the public
+# record and should surface in search and AI answers.
+# TODO(founder): Cloudflare may inject a content-signals preamble at the
+# edge; review the zone's Content Signals setting so it does not contradict
+# this policy.
+
 User-agent: *
 Allow: /
 
-Sitemap: https://kriseva.in/sitemap.xml
+Sitemap: https://www.kriseva.in/sitemap.xml

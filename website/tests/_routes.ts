@@ -4,7 +4,7 @@ export const routes: { path: string; label: string }[] = [
   { path: '/tas',             label: 'tas' },
   { path: '/workflow',        label: 'workflow' },
   { path: '/security',        label: 'security' },
-  { path: '/issuer-roadmap',  label: 'issuer-roadmap' },
+  { path: '/evaluator',       label: 'evaluator' },
   { path: '/validation',      label: 'validation' },
   { path: '/founder',         label: 'founder' },
   { path: '/contact',         label: 'contact' },

@@ -1,371 +1,114 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RouteHero from '../components/RouteHero.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import DossierCard from '../components/DossierCard.astro';
-import ProductScreenshotFrame from '../components/ProductScreenshotFrame.astro';
-import ProofStrip from '../components/ProofStrip.astro';
-import FounderCTA from '../components/FounderCTA.astro';
-import PrimaryButton from '../components/PrimaryButton.astro';
-import SecondaryButton from '../components/SecondaryButton.astro';
-import MotifFrame from '../components/MotifFrame.astro';
-import { routes } from '../data/routes';
-import { claims } from '../data/claims';
+// /validation - the field record. Status-labelled recognitions, anonymized
+// stakeholder discovery, careful test-status wording, synthetic-data
+// statement. Every claim-bearing line comes from publicClaims.ts; the
+// 4,072-test claim ships ONLY with its mandated caveat, never condensed.
 
-const title = 'Validation — Proof Without Hype';
-const description = 'Validation dossier: repo-grounded TAS captures, local-first architecture proof at high level, anonymized stakeholder discovery summary, and carefully worded test status.';
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import { getClaim } from '../data/publicClaims';
+
+const panIit = getClaim('record.pan-iit')!.wording;
+const udyam = getClaim('record.udyam')!.wording;
+const dpiit = getClaim('record.dpiit')!.wording;
+const iiec = getClaim('record.iiec')!.wording;
+const evalStatus = getClaim('evaluator.eval-status')!.wording;
+const tier2 = getClaim('stakeholder.tier-2-validation')!.wording;
+const bilateral = getClaim('stakeholder.tier-2-bilateral')!.wording;
+const tier2Issuer = getClaim('stakeholder.tier-2-issuer')!.wording;
+const testCount = getClaim('validation.test-count')!.wording;
+const syntheticData = getClaim('validation.synthetic-data')!.wording;
+const notClaimed = getClaim('boundary.notClaimed')!.wording;
+
+const title = 'Validation · The field record, status-labelled';
+const description = 'What is on the record: public recognitions, anonymized stakeholder discovery, careful test status, and the synthetic-data statement. No fake metrics, no testimonial carousel.';
 ---
-<BaseLayout title={title} description={description}>
-  <RouteHero
-    eyebrow="Validation · Field Findings"
-    title="Proof,<br /><span class='brass'>without hype.</span>"
-    subtitle="A working dossier of what is observed, what is validated, what is in pilot, and what is roadmap. No fake metrics, no fake logos, no testimonial carousel."
-    meta="Repo-grounded · Anonymized stakeholder findings · Status-labeled"
-  >
-    <Fragment slot="cta">
-      <SecondaryButton href={routes.tas}>See TAS in detail</SecondaryButton>
-      <PrimaryButton href={routes.contactWithIntent('demo')}>Book Demo</PrimaryButton>
-    </Fragment>
-  </RouteHero>
+<V6Layout title={title} description={description} path="/validation">
 
-  {/* Evidence Index — audit-room chapter list */}
-  <section class="section section--paper val-index-section">
-    <div class="container">
-      <div class="reveal">
-        <SectionLabel>Evidence Index</SectionLabel>
-        <h2 style="margin-bottom: 14px;">What's in this dossier.</h2>
-        <p style="color: var(--ink-soft); max-width: 740px; margin-bottom: 28px;">
-          Four chapters, in order. Each is evidence-backed where the underlying material exists, and explicitly caveat-wrapped where it doesn't.
-        </p>
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Validation">
+    <div class="wrap">
+      <p class="eyebrow">Validation · proof without hype</p>
+      <h1 class="display">What is <em class="em-brass">on the record.</em></h1>
+      <p class="dek">A working dossier of what is observed, what is validated, what is in evaluation, and what is still in process. No fake metrics, no fake logos, no testimonial carousel. Named relationships appear with consent.</p>
+    </div>
+  </section>
+
+  <!-- ============ FIELD RECORD ============ -->
+  <section class="sec-pad" id="record" style="padding-top:clamp(30px,4vw,56px)">
+    <div class="wrap">
+      <SectionHead eyebrow="The field record · public milestones" folio="§01 / 04"
+        dek="Each entry carries a status tag. Public recognitions only; the evaluating agency stays unnamed until written consent is on record.">
+        The ledger.
+      </SectionHead>
+      <div class="record rv">
+        <div class="rec"><span class="date">2026 · May</span><span class="what">{panIit}</span><span class="tag">Validated</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{udyam}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{dpiit}</span><span class="tag">In process</span></div>
+        <div class="rec"><span class="date">Origin</span><span class="what">{iiec}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">Active</span><span class="what">{evalStatus}</span><span class="tag">In evaluation</span></div>
       </div>
-      <ol class="val-index reveal" data-stagger>
-        <li class="reveal">
-          <span class="val-index__num">§ 01</span>
-          <a href="#repo-grounded" class="val-index__link">Repo-grounded product proof</a>
-          <span class="val-index__meta">5 repo-owned TAS captures</span>
-        </li>
-        <li class="reveal">
-          <span class="val-index__num">§ 02</span>
-          <a href="#architecture" class="val-index__link">Local-first architecture proof</a>
-          <span class="val-index__meta">High-level boundary motif</span>
-        </li>
-        <li class="reveal">
-          <span class="val-index__num">§ 03</span>
-          <a href="#test-status" class="val-index__link">Test status</a>
-          <span class="val-index__meta">Repo-inspection telemetry · careful wording</span>
-        </li>
-        <li class="reveal">
-          <span class="val-index__num">§ 04</span>
-          <a href="#stakeholder" class="val-index__link">Stakeholder discovery</a>
-          <span class="val-index__meta">Anonymized findings · bidder-side &amp; issuer-side</span>
-        </li>
-      </ol>
+      <p class="disclose">{notClaimed}</p>
     </div>
   </section>
 
-  {/* Repo-grounded proof */}
-  <section id="repo-grounded" class="section section--paper" style="padding-top: 0;">
-    <div class="container">
-      <SectionLabel>Repo-Grounded Product Proof</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">What can be shown, shown directly.</h2>
-      <p class="reveal" style="color:var(--ink-soft);max-width:740px;margin-bottom:32px;">
-        TAS captures below are taken from a repo-owned local instance running on the developer’s machine. Tender data is seeded demo content; reviewers should treat the captures as product proof, not deal proof.
-      </p>
-
-      <ProofStrip items={[
-        { label: 'Source', body: 'Local TAS app, repo-owned, on the developer’s machine.', meta: 'Reviewed before publication' },
-        { label: 'Tender data', body: 'Synthetic / demo bundles. No real tender content exposed.', meta: 'Synthetic disclosure on every capture' },
-        { label: 'Captures', body: 'Five repo-owned screenshots covering home, queue, briefing, bundle, and sources.', meta: 'See product surfaces below' },
-      ]} />
+  <!-- ============ STAKEHOLDER DISCOVERY ============ -->
+  <section class="sec-pad sec-navy" id="stakeholder">
+    <div class="wrap">
+      <SectionHead eyebrow="Stakeholder discovery · anonymized" folio="§02 / 04"
+        dek="Discovery findings are anonymized unless explicit written permission is on record. The findings feed product spec, not marketing.">
+        Who the problem was <em class="em-brass">checked with.</em>
+      </SectionHead>
+      <ul class="caps rv caps-navy" aria-label="Stakeholder findings">
+        <li><span>{tier2}</span><span class="ref">anonymized</span></li>
+        <li><span>{bilateral}</span><span class="ref">both sides</span></li>
+        <li><span>{tier2Issuer}</span><span class="ref">names withheld</span></li>
+      </ul>
     </div>
   </section>
 
-  {/* Screenshots */}
-  <section class="section section--dark">
-    <div class="container">
-      <SectionLabel>Public-Safe TAS Screenshots</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">Captures from the local TAS instance.</h2>
-      <p class="reveal" style="color:var(--paper-mute);max-width:720px;margin-bottom:32px;">
-        Each capture carries an explicit synthetic / demo disclosure. The captures are illustrative; they are not evidence of any deployment with a named agency.
-      </p>
-
-      <div class="val-shots" data-stagger>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/01_home_dashboard.png"
-            alt="TAS home / dashboard"
-            caption="Home / dashboard"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/02_queue_tender_list.png"
-            alt="TAS tender queue"
-            caption="Tender queue / list"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/03_tender_briefing_recommendation.png"
-            alt="TAS tender briefing with recommendation"
-            caption="Tender briefing / recommendation"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/04_bundle_source_evidence.png"
-            alt="TAS bundle / source evidence"
-            caption="Bundle / source-evidence view"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
-        <div class="reveal val-shots__wide">
-          <ProductScreenshotFrame
-            src="/assets/screenshots/05_sources_import_status.png"
-            alt="TAS sources / import status"
-            caption="Sources / import status"
-            disclosure="Repo-owned · seeded demo data"
-          />
-        </div>
+  <!-- ============ TEST STATUS ============ -->
+  <section class="sec-pad" id="tests">
+    <div class="wrap">
+      <SectionHead eyebrow="Test status · careful wording" folio="§03 / 04"
+        dek="One number, published only with its caveat in the same paragraph. The register forbids condensing it.">
+        The number, <em class="em-brass">with its caveat.</em>
+      </SectionHead>
+      <div class="teststatus rv regmark">
+        <p>{testCount}</p>
+        <span class="src-note">Register entry validation.test-count · safe-with-care · never condensed</span>
       </div>
     </div>
   </section>
 
-  {/* Local-first architecture (high level) */}
-  <section id="architecture" class="section section--paper">
-    <div class="container val-arch">
-      <div class="reveal">
-        <SectionLabel>Architecture Proof</SectionLabel>
-        <h2>Local-first, at a high level.</h2>
-        <p style="color:var(--ink-soft);max-width:540px;">
-          The architecture proof is intentionally high-level. It shows that local storage, local document processing, and local model routes (where configured) are the design defaults, and that external connectors are explicit.
-        </p>
-        <ul class="val-arch__list">
-          <li>Local file storage and local database for tender bundles.</li>
-          <li>Local document parsing for PDF, DOCX, XLSX, TXT, CSV.</li>
-          <li>Local OCR routing for scanned / low-text PDFs.</li>
-          <li>Local model routes available where configured.</li>
-          <li>Explicit external boundary; no silent network calls.</li>
-        </ul>
-        <p style="margin-top:18px;font-family:var(--font-mono);font-size:0.7rem;color:var(--slate-600);letter-spacing:0.08em;text-transform:uppercase;">
-          See the security page for boundary detail.
-        </p>
+  <!-- ============ SYNTHETIC DATA STATEMENT ============ -->
+  <section class="sec-pad sec-sunk" id="synthetic">
+    <div class="wrap">
+      <SectionHead eyebrow="The data statement · standing disclosure" folio="§04 / 04"
+        dek="Every product visual on this site carries the same line. It is repeated here as policy, not caption.">
+        No real tender data. <em class="em-brass">Anywhere.</em>
+      </SectionHead>
+      <div class="teststatus rv regmark">
+        <p>{syntheticData}</p>
+        <span class="src-note">Applies to every capture, plate, demo and fixture on this site</span>
       </div>
-      <div class="reveal">
-        <MotifFrame
-          src="/assets/motifs/local-first-boundary.svg"
-          alt="Local-first architecture · high-level"
-          width={800}
-          height={500}
-          surface="paper"
-          topLabel="ARCHITECTURE · LOCAL-FIRST"
-          caption="Solid line: inside the boundary · Dashed bridge: explicit egress"
-        />
+      <div class="acts rv" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:34px">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/tas">See the product</a>
       </div>
     </div>
   </section>
 
-  {/* Test status — careful */}
-  <section id="test-status" class="section section--navy">
-    <div class="container">
-      <SectionLabel>Test Status</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">Careful test wording, intentionally.</h2>
-      <div class="val-test reveal">
-        <header class="val-test__head">
-          <span class="val-test__label">CAREFUL WORDING · NOT A MARKETING HEADLINE</span>
-          <span class="val-test__id">§ 03 / VALIDATION</span>
-        </header>
-        <p>{claims.recentTestNote}</p>
-        <p class="val-test__caveat">
-          The number above is repo-inspection telemetry, not a marketing headline. It does not appear on the homepage. Public production-readiness claims require auth, tenant isolation, security hardening, and a deployment audit that have not been completed.
-        </p>
-      </div>
-    </div>
-  </section>
+</V6Layout>
 
-  {/* Stakeholder discovery */}
-  <section id="stakeholder" class="section section--paper">
-    <div class="container">
-      <SectionLabel>Stakeholder Discovery</SectionLabel>
-      <h2 class="reveal" style="margin-bottom:14px;">Long-form conversations, anonymized by default.</h2>
-      <p class="reveal" style="color:var(--ink-soft);max-width:720px;margin-bottom:24px;">
-        Findings on this page are summaries of conversations with defense MSMEs, defense-tech operators, and senior procurement-side stakeholders. Identities are anonymized unless explicit permission is on record.
-      </p>
-
-      <div class="val-grid" data-stagger>
-        <div class="reveal"><DossierCard surface="paper" label="Bidder-side" title="The decision is the bottleneck" meta="Anonymized · Tier 2">
-          Operators can find tenders. The hard work is between alert and a defensible BID / REVIEW / SKIP decision — extraction, eligibility cross-check, compliance reconstruction, and a brief that survives audit.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard surface="paper" label="Bidder-side" title="Evidence trail beats summary" meta="Anonymized · Tier 2">
-          Every operator interviewed asked for clause + page back-pointers, not a summary paragraph. Decisions need to be reviewable a quarter from now.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard surface="paper" label="Issuer-side" title="Reviewer load is real" meta="Anonymized · senior procurement-side">
-          Issuer-side reviewers carry a non-trivial workload through the evaluation cycle. Compliance reconstruction and ambiguity surfacing are the candidate areas.
-        </DossierCard></div>
-        <div class="reveal"><DossierCard surface="paper" label="Issuer-side" title="Audit posture matters" meta="Anonymized · senior procurement-side">
-          Decision artifacts that survive an audit are the constraint. Anything that hides reasoning behind a model is a non-starter.
-        </DossierCard></div>
-      </div>
-
-      <p class="reveal" style="margin-top:28px;padding:16px 18px;border:1px dashed rgba(193,138,62,0.45);border-radius:var(--radius-control);font-family:var(--font-mono);font-size:0.7rem;color:var(--ink-quiet);letter-spacing:0.1em;text-transform:uppercase;background:rgba(193,138,62,0.04);">
-        No public attribution unless authorized · No agency endorsement claimed · Names withheld where confidentiality applies
-      </p>
-    </div>
-  </section>
-
-  <FounderCTA
-    heading="Want to walk the dossier in person?"
-    body="If you’re evaluating KRISEVA seriously, the most useful conversation is direct. Anonymization holds where the conversation requires it."
-  />
-</BaseLayout>
-
-<style>
-  /* ─────────────── Evidence Index (audit-room chapter list) ─────────────── */
-  .val-index-section {
-    padding-bottom: 24px;
-  }
-  .val-index {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 0;
-    border-top: 1px solid rgba(16, 35, 59, 0.18);
-  }
-  .val-index li {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    gap: 18px;
-    align-items: baseline;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(16, 35, 59, 0.10);
-    transition: background var(--micro), padding-left var(--micro);
-  }
-  .val-index li:hover {
-    background: rgba(193, 138, 62, 0.04);
-    padding-left: 8px;
-  }
-  .val-index__num {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    color: var(--accent-soft);
-    text-transform: uppercase;
-  }
-  .val-index__link {
-    font-family: var(--font-serif);
-    font-size: 1.08rem;
-    color: var(--surface-deep);
-    text-decoration: none;
-    transition: color var(--micro);
-  }
-  .val-index__link:hover { color: var(--accent-soft); }
-  .val-index__meta {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.12em;
-    color: var(--ink-quiet);
-    text-transform: uppercase;
-  }
-  @media (max-width: 600px) {
-    .val-index li {
-      grid-template-columns: 1fr;
-      gap: 4px;
-      padding: 14px 0;
-    }
-    .val-index li:hover { padding-left: 0; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .val-index li,
-    .val-index li:hover { transition: none; padding-left: 0; }
-  }
-
-  /* ─────────────── Screenshots ─────────────── */
-  .val-shots {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  @media (max-width: 880px) { .val-shots { grid-template-columns: 1fr; } }
-  .val-shots__wide { grid-column: 1 / -1; }
-
-  /* ─────────────── Architecture ─────────────── */
-  .val-arch {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 48px;
-    align-items: center;
-  }
-  @media (max-width: 880px) { .val-arch { grid-template-columns: 1fr; gap: 32px; } }
-  .val-arch__list {
-    display: grid;
-    gap: 8px;
-    margin-top: 18px;
-  }
-  .val-arch__list li {
-    list-style: none;
-    padding: 10px 0;
-    border-top: 1px solid rgba(16, 35, 59, 0.1);
-    font-size: 0.92rem;
-    color: var(--ink-soft);
-  }
-  .val-arch__list li:last-child { border-bottom: 1px solid rgba(16, 35, 59, 0.1); }
-
-  /* ─────────────── Test status ─────────────── */
-  .val-test {
-    border: 1px solid rgba(193, 138, 62, 0.32);
-    /* Dashed left rule = "carefully worded; not the marketing line". */
-    border-left: 3px dashed rgba(193, 138, 62, 0.55);
-    background: rgba(193, 138, 62, 0.04);
-    padding: 24px 28px;
-    border-radius: var(--radius-frame);
-    max-width: 820px;
-    box-shadow: var(--shadow-lift);
-  }
-  .val-test__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 12px;
-    border-bottom: 1px dashed rgba(193, 138, 62, 0.32);
-  }
-  .val-test__label {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    color: var(--accent-primary);
-    text-transform: uppercase;
-  }
-  .val-test__id {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.16em;
-    color: var(--text-faint);
-    text-transform: uppercase;
-  }
-  .val-test p { color: var(--paper); line-height: 1.65; }
-  .val-test__caveat {
-    margin-top: 14px;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(193, 138, 62, 0.22);
-    font-family: var(--font-mono);
-    font-size: 0.72rem !important;
-    letter-spacing: 0.06em;
-    color: var(--paper-mute) !important;
-    line-height: 1.55;
-  }
-
-  /* ─────────────── Stakeholder grid ─────────────── */
-  .val-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  @media (max-width: 720px) { .val-grid { grid-template-columns: 1fr; } }
+<style is:global>
+/* /validation page-specific */
+.teststatus{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(20px,3vw,34px)}
+.teststatus p{font-size:1.06rem;line-height:1.75;max-width:72ch}
+.teststatus .src-note{display:block;margin-top:14px}
+.caps-navy li{border-bottom-color:rgba(233,226,210,.18)}
+.caps-navy{border-top-color:rgba(233,226,210,.3)}
+.caps-navy li span:first-child{color:var(--on-navy)}
+.caps-navy .ref{color:var(--brass-lt)}
 </style>

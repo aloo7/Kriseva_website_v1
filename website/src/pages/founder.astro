@@ -1,654 +1,98 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import DossierCard from '../components/DossierCard.astro';
-import FounderCTA from '../components/FounderCTA.astro';
-import MotifFrame from '../components/MotifFrame.astro';
-import { site } from '../data/site';
+// /founder - founder dossier. Photo, register-sourced bio claims
+// (founder.* in publicClaims.ts), direct contact. No hagiography;
+// status-labelled entries only.
 
-const title = 'Founder';
-const description = `${site.founder.firstName} — ${site.founder.education}. ${site.founder.priorWork}. Building KRISEVA from direct procurement field discovery.`;
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import { getClaim } from '../data/publicClaims';
 
-const observations = [
-  { label: 'OBSERVED', body: 'Procurement bottlenecks were not a side-issue; they were a daily, structural problem. Manual discovery across portals, missed tenders, and documentation cycles that consumed disproportionate operator time.' },
-  { label: 'OBSERVED', body: 'Tenders were missed not because tools did not exist, but because the work between an alert and a defensible BID / REVIEW / SKIP decision was still being done by a person, in a hurry, against a deadline.' },
-  { label: 'OBSERVED', body: 'Technical review was scattered: an analyst would forward a bundle, a reviewer would read it on their own time, and compliance would be reconstructed from memory.' },
-  { label: 'INFERRED', body: 'The shared primitive across these workflows is structured tender intelligence — source-linked, evidence-backed, operator-reviewed — not another notification feed.' },
-];
+const observation = getClaim('founder.observation')!.wording;
+const insight = getClaim('founder.insight')!.wording;
+const thesis = getClaim('founder.thesis')!.wording;
+const education = getClaim('founder.education')!.wording;
+const priorWork = getClaim('founder.prior-work')!.wording;
+const iiec = getClaim('record.iiec')!.wording;
 
-const timeline = [
-  {
-    n: '01',
-    tag: 'EXPOSURE',
-    year: '2024 – 2025',
-    title: 'Defense operations exposure',
-    body: 'Marketing and operations work in the defense electronics ecosystem (electronic warfare / anti-drone / radar adjacent). First-hand contact with the procurement workflow problems that motivated KRISEVA.',
-    status: 'safe',
-  },
-  {
-    n: '02',
-    tag: 'CONTEXT',
-    year: '2025',
-    title: 'IIT Gandhinagar · AI/ML and agentic AI context',
-    body: 'Formal AI/ML and agentic-AI grounding. The technical foundation for designing source-linked extraction, structured tender intelligence, and reviewable agent flows.',
-    status: 'safe',
-  },
-  {
-    n: '03',
-    tag: 'DISCOVERY',
-    year: '2025 – 2026',
-    title: 'Stakeholder discovery, bidder and issuer side',
-    body: 'Long-form conversations with defense MSMEs, defense-tech operators, and senior procurement-side stakeholders. Findings published in the validation dossier; identities anonymized unless permission is on record.',
-    status: 'validated',
-  },
-  {
-    n: '04',
-    tag: 'PRODUCT',
-    year: '2026',
-    title: 'TAS — Tender Automation System (pilot)',
-    body: 'Bidder-side pilot product: discover, parse, score, and review tender opportunities with source-linked briefs and a defensible BID / REVIEW / SKIP decision.',
-    status: 'pilot',
-  },
-  {
-    n: '05',
-    tag: 'EXPLORATION',
-    year: '2026 →',
-    title: 'Issuer-side roadmap exploration',
-    body: 'Procurement-side intelligence, operator-assisted DefProc flows, and evaluation tooling under exploration with senior issuer-side stakeholders. Roadmap, not product.',
-    status: 'roadmap',
-  },
-];
-
-const statusMeta: Record<string, { label: string; color: string }> = {
-  safe: { label: 'Safe published', color: 'var(--brass)' },
-  validated: { label: 'Validated', color: 'var(--decision-bid)' },
-  pilot: { label: 'In pilot', color: 'var(--brass)' },
-  roadmap: { label: 'Roadmap', color: 'var(--decision-review)' },
-};
-
-const principles = [
-  { n: '01', title: 'Evidence over hype', body: 'Every claim in a brief must point back to a clause and a page. Marketing claims on this site are status-labeled.', meta: 'Claim discipline · Source trails' },
-  { n: '02', title: 'Local-first where appropriate', body: 'Tender bundles and operator data stay on local storage and local model routes where configured. Cloud routes are explicit, not default.', meta: 'Local storage · Local model routes' },
-  { n: '03', title: 'Human-reviewed recommendations', body: 'KRISEVA recommends; the operator decides. BID / REVIEW / SKIP is a defensible recommendation, not an autonomous action.', meta: 'Operator authority · No autonomous bid' },
-  { n: '04', title: 'Claim discipline', body: 'No agency-endorsed or defense-validated language. No fake metrics, no fake logos, no testimonial carousel. Anonymized stakeholders stay anonymized.', meta: 'No endorsement claimed or implied' },
-  { n: '05', title: 'Defense procurement specificity', body: 'The product is built for defense procurement workflows — bundle anatomy, eligibility logic, compliance tables — not generic tender automation.', meta: 'Bidder-side first · Issuer-side roadmap' },
-];
+const title = 'Founder · Ayush Tiwary · KRISEVA AI';
+const description = 'Ayush Tiwary, founder of KRISEVA AI. ' + observation + ' ' + thesis;
 ---
-<BaseLayout title={title} description={description}>
-  {/* Founder Hero */}
-  <section class="section section--dark founder-hero">
-    <div class="container">
-      <div class="reveal founder-ribbon">
-        <span>DOSSIER · KRISEVA-FNDR-01</span>
-        <span class="founder-ribbon__dot" style="background: var(--brass);" />
-        <span class="founder-ribbon__muted">Founder-market fit</span>
-        <span class="founder-ribbon__dot" style="background: var(--slate-600);" />
-        <span class="founder-ribbon__muted">Last revised May 02, 2026</span>
-      </div>
+<V6Layout title={title} description={description} path="/founder">
 
-      <div class="founder-hero__grid">
-        <div class="reveal">
-          <SectionLabel>About / Founder</SectionLabel>
-          <h1>Built from inside the tender pain,<br /><span class="brass">not outside it.</span></h1>
-          <p class="founder-hero__lede">
-            KRISEVA exists because procurement decisions in Indian defense are still hidden inside document bundles, and the people running those bundles are short on time, not on capability.
-          </p>
-          <p class="founder-hero__sub">
-            This page is the founder-fit case: where the problem was first observed, what was learned in discovery, and the operating principles the product is being built under.
-          </p>
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Founder">
+    <div class="wrap fgrid">
+      <div>
+        <p class="eyebrow">The founder · direct line</p>
+        <h1 class="display">Built from the <em class="em-brass">field, not a deck.</em></h1>
+        <p class="dek">{observation}</p>
+        <p class="dek" style="margin-top:14px">{insight}</p>
+        <div class="acts">
+          <a class="btn btn-fill" href="/contact">Speak directly <span class="arr">→</span></a>
         </div>
-
-        <aside class="reveal founder-id">
-          <div class="founder-id__inner">
-            <div class="founder-id__head">
-              <span class="founder-id__caption">Identification</span>
-              <span class="founder-id__caption-soft">FNDR · 001</span>
-            </div>
-            <figure class="founder-id__photo">
-              <img
-                src={site.founder.photo}
-                alt={`${site.founder.firstName}, founder, ${site.name}`}
-                width="400" height="280"
-                loading="eager"
-              />
-              <figcaption class="founder-id__photo-caption">FOUNDER PORTRAIT · 2026</figcaption>
-            </figure>
-            <div class="founder-id__name">
-              <h3>{site.founder.firstName}</h3>
-              <p class="founder-id__role">{site.founder.role}</p>
-              <p class="founder-id__focus">Procurement intelligence · Bidder-side workflows</p>
-              <p class="founder-id__email">
-                <a href={`mailto:${site.founder.email}`}>{site.founder.email}</a>
-              </p>
-            </div>
-            <dl class="founder-id__dl">
-              <dt>Prior work</dt>
-              <dd>{site.founder.priorWork}</dd>
-              <dt>Education</dt>
-              <dd>{site.founder.education}</dd>
-              <dt>Building</dt>
-              <dd>TAS · Tender Automation System (bidder-side, in pilot discovery)</dd>
-            </dl>
-            <p class="founder-id__discipline">No military or government endorsement claimed or implied</p>
-          </div>
-        </aside>
       </div>
-    </div>
-  </section>
-
-  {/* Founder Note */}
-  <section class="section section--paper">
-    <div class="container founder-note">
-      <div class="reveal">
-        <SectionLabel>Founder Note</SectionLabel>
-        <h2>Where the problem was first observed.</h2>
-        <p style="color:var(--ink-soft);">
-          Before IIT Gandhinagar, time spent in defense marketing and operations — electronic warfare, anti-drone, radar-adjacent products — surfaced a pattern that did not look like a tooling gap on the surface, but underneath it was.
-        </p>
-      </div>
-      <div class="reveal">
-        <figure class="founder-quote">
-          <blockquote>
-            “The procurement process had a lot of bottlenecks. People were missing tenders. Documentation had become hectic. The pain was not abstract — it was on the calendar, every cycle.”
-          </blockquote>
-          <figcaption>Founder note · Origin observation</figcaption>
-        </figure>
-
-        <div class="founder-ledger" data-stagger>
-          {observations.map((row, i) => (
-            <div class:list={['founder-ledger__row', 'reveal', i === 0 && 'is-first']}>
-              <span class:list={['founder-ledger__label', row.label === 'OBSERVED' ? 'is-observed' : 'is-inferred']}>{row.label}</span>
-              <span class="founder-ledger__body">{row.body}</span>
-            </div>
-          ))}
-        </div>
-        <p class="founder-ledger__source">Source: founder origin notes · Prior employer details kept to safe published wording</p>
-      </div>
-    </div>
-  </section>
-
-  {/* Why KRISEVA */}
-  <section class="section section--navy">
-    <div class="container founder-why">
-      <SectionLabel>Why KRISEVA</SectionLabel>
-      <div class="founder-why__grid">
-        <div class="reveal">
-          <h2>The problem is not that companies lack another alert tool.<br /><span class="brass">The problem is that tender decisions are hidden inside document bundles.</span></h2>
-          <p style="color:var(--paper-mute);max-width:660px;margin-bottom:14px;">
-            Across the workflows surveyed, listings and notifications are not the bottleneck — extraction, eligibility cross-check, compliance reconstruction, and bid-readiness review are. KRISEVA is being built as procurement intelligence for that work, specifically.
-          </p>
-          <p style="color:var(--slate-600);max-width:660px;">
-            TAS — the Tender Automation System — begins on the bidder side because that pain is immediate, validated, and operator-shaped. Issuer-side workflows are on the roadmap, not in the product.
-          </p>
-        </div>
-        <div class="founder-why__cards" data-stagger>
-          <div class="reveal founder-why__card founder-why__card--not"><span>NOT</span><p>A generic AI assistant for tenders.</p></div>
-          <div class="reveal founder-why__card founder-why__card--not"><span>NOT</span><p>A notification feed that summarizes listings.</p></div>
-          <div class="reveal founder-why__card founder-why__card--not"><span>NOT</span><p>An autonomous bid-submission system.</p></div>
-          <div class="reveal founder-why__card founder-why__card--is"><span>IS</span><p>Procurement intelligence — defense-procurement specific, evidence-linked, operator-reviewed.</p></div>
+      <div class="fcard regmark rv">
+        <div class="fph"><img src="/assets/v6/founder_ayush.jpg" width="900" height="1125" alt="Ayush Tiwary, founder of KRISEVA AI" loading="eager" /></div>
+        <b>Ayush Tiwary</b>
+        <div class="fmeta">
+          Founder · KRISEVA AI<br />
+          {education}<br />
+          <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a>
         </div>
       </div>
     </div>
   </section>
 
-  {/* Timeline */}
-  <section class="section section--dark">
-    <div class="container">
-      <div class="founder-tl__head">
-        <SectionLabel>Founder-Market Fit Timeline</SectionLabel>
-        <span class="founder-tl__count">05 entries · sober & status-labeled</span>
-      </div>
-      <h2 class="reveal" style="margin-bottom:14px;">From inside the workflow, to a product worth building.</h2>
-      <p class="reveal" style="color:var(--paper-mute);max-width:720px;margin-bottom:36px;">
-        A timeline of exposure, context, and discovery — not a hagiography. Each entry carries a status so the reader can see what is published, what is validated, what is in pilot, and what is roadmap.
-      </p>
-
-      <div class="reveal founder-tl">
-        {timeline.map((s, i) => {
-          const st = statusMeta[s.status]!;
-          return (
-            <div class="founder-tl__row">
-              <div class="founder-tl__rail">
-                <span class="founder-tl__dot" style={`border-color: ${st.color};`} />
-                {i < timeline.length - 1 && <span class="founder-tl__line" />}
-              </div>
-              <div class="founder-tl__num">
-                <span class="founder-tl__n">{s.n}</span>
-                <span class="founder-tl__year">{s.year}</span>
-              </div>
-              <div class="founder-tl__body">
-                <div class="founder-tl__meta">
-                  <span class="founder-tl__tag">{s.tag}</span>
-                  <span class="founder-tl__status" style={`color: ${st.color}; border-color: ${st.color}55;`}>
-                    <span class="founder-tl__status-dot" style={`background: ${st.color};`} />
-                    {st.label}
-                  </span>
-                </div>
-                <h3>{s.title}</h3>
-                <p>{s.body}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <p class="reveal founder-tl__discipline">
-        No claim of military or government affiliation beyond actual prior employment and education
-      </p>
+  <!-- ============ THESIS ============ -->
+  <section class="sec-pad sec-sunk" id="thesis">
+    <div class="wrap">
+      <blockquote class="fquote rv">{thesis}</blockquote>
     </div>
   </section>
 
-  {/* Field notes visual */}
-  <section class="section section--paper">
-    <div class="container founder-field">
-      <div class="reveal">
-        <SectionLabel>Field Notes</SectionLabel>
-        <h2>Procurement bottlenecks are document bottlenecks.</h2>
-        <p style="color:var(--ink-soft);max-width:540px;margin-bottom:14px;">
-          The original founder field-notes card — the one-line thesis the rest of the product is downstream of. Bundle review is manual. Compliance is hidden in clauses. Decisions need source trails.
-        </p>
-        <p style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.08em;color:var(--brass-soft);text-transform:uppercase;">
-          Public wording: stakeholder discovery, not endorsement
-        </p>
-      </div>
-      <div class="reveal">
-        <MotifFrame
-          src="/assets/motifs/founder-field-notes-card.svg"
-          alt="KRISEVA founder field notes card — procurement bottlenecks are document bottlenecks"
-          width={800}
-          height={500}
-          surface="paper"
-          topLabel="FIELD NOTES · ORIGIN OBSERVATION"
-          caption="The one-line thesis the rest of the product is downstream of"
-        />
+  <!-- ============ THE RECORD ============ -->
+  <section class="sec-pad" id="dossier">
+    <div class="wrap">
+      <SectionHead eyebrow="The dossier · status-labelled" folio="§01 / 02"
+        dek="A record of exposure, context and discovery. Each entry carries its register category; nothing here outruns its evidence.">
+        On file.
+      </SectionHead>
+      <div class="record rv">
+        <div class="rec"><span class="date">Exposure</span><span class="what">{priorWork}</span><span class="tag">safe-with-care</span></div>
+        <div class="rec"><span class="date">Context</span><span class="what">{education}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">Origin</span><span class="what">{iiec}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">Discovery</span><span class="what">{insight}</span><span class="tag">Field-sourced</span></div>
       </div>
     </div>
   </section>
 
-  {/* Operating principles */}
-  <section class="section section--navy">
-    <div class="container">
-      <div class="founder-pri__head">
-        <SectionLabel>Operating Principles</SectionLabel>
-        <span class="founder-pri__count">05 principles · enforced in product & copy</span>
-      </div>
-      <h2 class="reveal" style="margin-bottom:14px;">How the work gets made — and what it refuses to be.</h2>
-      <p class="reveal" style="color:var(--paper-mute);max-width:720px;margin-bottom:36px;">
-        These are not aspirational values. They are operating constraints, applied to the product surface, the marketing surface, and stakeholder conversations alike.
-      </p>
-
-      <div class="founder-pri__grid" data-stagger>
-        {principles.map((p) => (
-          <div class="reveal"><DossierCard label={p.n} title={p.title} meta={p.meta}>
-            {p.body}
-          </DossierCard></div>
-        ))}
+  <!-- ============ DIRECT CONTACT ============ -->
+  <section class="sec-pad sec-navy" id="direct">
+    <div class="wrap">
+      <SectionHead eyebrow="Speak directly" folio="§02 / 02"
+        dek="Bidder-side, evaluation-side, or institutional: the conversation is direct and founder-led. No SDR funnel.">
+        One inbox. <em class="em-brass">The founder's.</em>
+      </SectionHead>
+      <div class="acts rv" style="display:flex;flex-wrap:wrap;gap:14px">
+        <a class="btn btn-fill" href="/contact">Contact the founder <span class="arr">→</span></a>
+        <a class="btn btn-line" href="mailto:ayush@kriseva.in">ayush@kriseva.in</a>
       </div>
     </div>
   </section>
 
-  <FounderCTA
-    surface="paper"
-    heading="Speak directly with the founder."
-    body="Direct inquiries only — defense MSME, defense-tech, OEM/SI, issuer-side, or institutional observer. No SDR funnel. Confidential by default. Findings feed product spec, not marketing."
-  />
-</BaseLayout>
+</V6Layout>
 
-<style>
-  .founder-hero { padding-top: 130px; padding-bottom: 64px; }
-  .founder-ribbon {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.22em;
-    color: var(--brass);
-    text-transform: uppercase;
-  }
-  .founder-ribbon__dot { width: 6px; height: 6px; border-radius: 50%; }
-  .founder-ribbon__muted { color: var(--slate-600); letter-spacing: 0.18em; }
-
-  .founder-hero__grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 56px;
-    align-items: flex-start;
-  }
-  @media (max-width: 880px) { .founder-hero__grid { grid-template-columns: 1fr; gap: 36px; } }
-  .founder-hero h1 { line-height: 1.08; margin-bottom: 24px; }
-  .founder-hero__lede { color: var(--paper-mute); font-size: 1.06rem; max-width: 640px; margin-bottom: 14px; }
-  .founder-hero__sub { color: var(--slate-600); max-width: 640px; }
-
-  .founder-id {
-    background: var(--paper);
-    border: 1px solid rgba(193, 138, 62, 0.45);
-    border-radius: var(--radius-panel);
-    box-shadow: var(--shadow-lift);
-    position: relative;
-  }
-  .founder-id::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, var(--brass) 0%, var(--brass) 24%, transparent 24%, transparent 28%, var(--brass) 28%, var(--brass) 100%);
-    opacity: 0.55;
-    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-  }
-  .founder-id__inner { padding: 26px 28px 22px; color: var(--ink); }
-  .founder-id__head {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 18px;
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-  .founder-id__caption { color: var(--brass-soft); }
-  .founder-id__caption-soft { color: var(--slate-600); }
-  .founder-id__photo {
-    margin: 0 0 18px;
-    border-radius: var(--radius-panel);
-    overflow: hidden;
-    border: 1px solid rgba(169, 116, 42, 0.4);
-    box-shadow: 0 8px 32px rgba(3, 10, 20, 0.12);
-    position: relative;
-  }
-  .founder-id__photo img {
-    width: 100%; height: 280px; object-fit: cover; object-position: center 15%;
-    display: block;
-  }
-  /* Photo caption — small mono tab anchored to the bottom-right of the
-     portrait. Editorial signal that this is a dossier portrait, not a
-     stock-photo headshot. */
-  .founder-id__photo-caption {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    letter-spacing: 0.18em;
-    color: var(--accent-primary);
-    background: rgba(6, 16, 31, 0.78);
-    padding: 4px 8px;
-    border-radius: 3px;
-    border: 1px solid rgba(193, 138, 62, 0.32);
-    text-transform: uppercase;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-  .founder-id__name h3 {
-    font-family: var(--font-serif);
-    font-size: 1.45rem;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .founder-id__role {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    color: var(--brass-soft);
-    margin-bottom: 4px;
-  }
-  .founder-id__focus {
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.08em;
-    color: var(--slate-600);
-    text-transform: uppercase;
-  }
-  .founder-id__email {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    margin-top: 8px;
-  }
-  .founder-id__email a { color: var(--brass-soft); }
-  .founder-id__dl {
-    display: grid;
-    grid-template-columns: 110px 1fr;
-    gap: 10px 14px;
-    margin: 18px 0;
-    padding-top: 14px;
-    border-top: 1px solid rgba(16, 35, 59, 0.18);
-  }
-  .founder-id__dl dt {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-    color: var(--brass-soft);
-    text-transform: uppercase;
-    align-self: center;
-  }
-  .founder-id__dl dd { font-size: 0.86rem; color: var(--ink); line-height: 1.45; }
-  .founder-id__discipline {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    color: var(--slate-600);
-    text-transform: uppercase;
-    padding-top: 12px;
-    border-top: 1px dashed rgba(16, 35, 59, 0.18);
-  }
-
-  .founder-note {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 64px;
-    align-items: flex-start;
-  }
-  @media (max-width: 880px) { .founder-note { grid-template-columns: 1fr; gap: 36px; } }
-
-  .founder-quote {
-    margin: 0 0 36px;
-    padding: 32px 36px;
-    background: var(--paper-light);
-    border: 1px solid rgba(16, 35, 59, 0.16);
-    border-left: 3px solid var(--brass);
-    border-radius: var(--radius-panel);
-    box-shadow: 0 8px 24px rgba(3, 10, 20, 0.06);
-  }
-  .founder-quote blockquote {
-    font-family: var(--font-serif);
-    font-size: 1.32rem;
-    line-height: 1.45;
-    color: var(--navy-deep);
-    font-style: italic;
-    margin-bottom: 14px;
-  }
-  .founder-quote figcaption {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.14em;
-    color: var(--brass-soft);
-    text-transform: uppercase;
-  }
-
-  .founder-ledger { display: grid; }
-  .founder-ledger__row {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 20px;
-    padding: 16px 0;
-    border-bottom: 1px solid rgba(16, 35, 59, 0.12);
-  }
-  .founder-ledger__row.is-first { border-top: 1px solid rgba(16, 35, 59, 0.18); }
-  .founder-ledger__label {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  .founder-ledger__label.is-observed { color: var(--brass-soft); }
-  .founder-ledger__label.is-inferred { color: var(--decision-review); }
-  .founder-ledger__body { font-size: 0.92rem; color: var(--ink); line-height: 1.6; }
-  .founder-ledger__source {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.1em;
-    color: var(--slate-600);
-    text-transform: uppercase;
-    margin-top: 20px;
-  }
-
-  .founder-why { display: grid; gap: 24px; }
-  .founder-why__grid {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 56px;
-    align-items: flex-start;
-    margin-top: 8px;
-  }
-  @media (max-width: 880px) { .founder-why__grid { grid-template-columns: 1fr; gap: 36px; } }
-  .founder-why h2 { line-height: 1.18; margin-bottom: 24px; }
-  .founder-why__cards { display: grid; gap: 14px; }
-  .founder-why__card {
-    display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: var(--radius-control);
-    border: 1px solid rgba(154, 53, 44, 0.28);
-    background: rgba(154, 53, 44, 0.04);
-  }
-  .founder-why__card--is {
-    border-color: rgba(193, 138, 62, 0.5);
-    background: rgba(193, 138, 62, 0.06);
-  }
-  .founder-why__card span {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--decision-skip);
-    padding-top: 2px;
-  }
-  .founder-why__card--is span { color: var(--brass); }
-  .founder-why__card p { color: var(--paper); font-size: 0.9rem; line-height: 1.55; }
-
-  .founder-tl__head, .founder-pri__head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 12px;
-  }
-  .founder-tl__count, .founder-pri__count {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.16em;
-    color: var(--slate-600);
-    text-transform: uppercase;
-  }
-
-  .founder-tl {
-    border: var(--hairline);
-    border-radius: var(--radius-panel);
-    background: rgba(10, 31, 68, 0.4);
-    padding: 8px 28px;
-  }
-  .founder-tl__row {
-    display: grid;
-    grid-template-columns: 32px 110px 1fr;
-    gap: 22px;
-    padding: 26px 0;
-    border-bottom: 1px solid rgba(193, 138, 62, 0.1);
-    position: relative;
-  }
-  .founder-tl__row:last-child { border-bottom: none; }
-  .founder-tl__rail { position: relative; display: flex; flex-direction: column; align-items: center; }
-  .founder-tl__dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: var(--navy-dark);
-    border: 2px solid var(--brass);
-    margin-top: 6px;
-    box-shadow: 0 0 0 4px var(--navy-dark);
-  }
-  .founder-tl__line {
-    position: absolute;
-    top: 18px; bottom: -26px;
-    left: 50%; transform: translateX(-50%);
-    width: 1px;
-    background: rgba(193, 138, 62, 0.28);
-  }
-  .founder-tl__num { display: flex; flex-direction: column; padding-top: 4px; }
-  .founder-tl__n {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--brass);
-    letter-spacing: 0.1em;
-  }
-  .founder-tl__year {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.16em;
-    color: var(--slate-600);
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-  .founder-tl__meta {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-  .founder-tl__tag {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    color: var(--brass);
-    text-transform: uppercase;
-  }
-  .founder-tl__status {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.14em;
-    padding: 3px 9px;
-    border-radius: var(--radius-badge);
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid;
-    text-transform: uppercase;
-  }
-  .founder-tl__status-dot { width: 5px; height: 5px; border-radius: 50%; }
-  .founder-tl__body h3 {
-    font-family: var(--font-serif);
-    font-size: 1.15rem;
-    color: var(--paper);
-    margin-bottom: 8px;
-    line-height: 1.3;
-  }
-  .founder-tl__body p { font-size: 0.92rem; color: var(--slate-600); line-height: 1.6; }
-  @media (max-width: 720px) {
-    .founder-tl { padding: 4px 18px; }
-    .founder-tl__row { grid-template-columns: 28px 1fr; }
-    .founder-tl__num { grid-column: 2; flex-direction: row; gap: 12px; align-items: baseline; padding-bottom: 6px; }
-  }
-  .founder-tl__discipline {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    color: var(--slate-600);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 24px;
-  }
-
-  .founder-field {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    gap: 56px;
-    align-items: center;
-  }
-  @media (max-width: 880px) { .founder-field { grid-template-columns: 1fr; gap: 32px; } }
-
-  .founder-pri__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-  @media (max-width: 980px) { .founder-pri__grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .founder-pri__grid { grid-template-columns: 1fr; } }
+<style is:global>
+/* /founder page-specific */
+.fgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(280px,4fr);gap:clamp(28px,4vw,72px);align-items:start}
+.fcard{border:1px solid var(--ink);border-radius:2px;padding:22px;background:var(--paper-raised)}
+.fph{margin:-22px -22px 18px;overflow:hidden;border-bottom:1px solid var(--ink);aspect-ratio:4/5}
+.fph img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92)}
+.fcard b{display:block;font-family:var(--serif);font-weight:400;font-size:1.6rem;letter-spacing:-.01em;margin-bottom:6px}
+.fcard .fmeta{font-size:.9rem;line-height:1.9;color:var(--ink-sec)}
+.fcard a{color:var(--brass-deep);text-decoration:none;border-bottom:1px solid rgba(168,114,41,.4)}
+.fcard a:hover{border-bottom-color:var(--brass-deep)}
+.fquote{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,3.6vw,3.4rem);
+  line-height:1.18;letter-spacing:-0.015em;text-wrap:balance;max-width:26ch}
+@media (max-width:900px){.fgrid{grid-template-columns:1fr}.fcard{max-width:420px}}
 </style>

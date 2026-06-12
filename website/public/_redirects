@@ -14,7 +14,6 @@
 # Force www → apex (recommended for procurement-grade URLs):
 # https://www.kriseva.in/* https://kriseva.in/:splat 301
 
-# ─── Future redirects (none now) ──────────────────────────────────────
-# If pages get renamed in the future, add 301s here so old links keep working.
-# Example:
-# /old-tas-page /tas 301
+# ─── Page renames ──────────────────────────────────────────────────────
+# Issuer-side promoted from roadmap to product (founder ruling 2026-06-09).
+/issuer-roadmap /evaluator 301

@@ -1,0 +1,512 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import TenderBundleDiagram from '../components/TenderBundleDiagram.astro';
+import ProductScreenshotFrame from '../components/ProductScreenshotFrame.astro';
+import DecisionPill from '../components/DecisionPill.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import FounderCTA from '../components/FounderCTA.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import HeroExhibit from '../components/HeroExhibit.astro';
+import { routes } from '../data/routes';
+import { site } from '../data/site';
+import { claims } from '../data/claims';
+
+const title = site.defaults.title;
+const description = site.defaults.description;
+---
+<BaseLayout title={title} description={description}>
+  {/* ─────────────── Hero ─────────────── */}
+  <section class="section section--dark hp-hero" aria-labelledby="hp-hero-heading">
+    <div class="container hp-hero__grid">
+      <div class="hp-hero__copy reveal">
+        <span class="mono-eyebrow hp-hero__eyebrow">
+          <span class="dot-brass" aria-hidden="true"></span>
+          Procurement Intelligence · Defense
+        </span>
+        <h1 id="hp-hero-heading" class="hp-hero__title">
+          A tender is not a PDF.<br />
+          <span class="brass">It is a decision system hidden inside a document bundle.</span>
+        </h1>
+        <p class="hp-hero__positioning">
+          KRISEVA AI builds procurement intelligence systems for India’s defense ecosystem. KRISEVA TAS helps bid teams discover, parse, score, and review tender opportunities with source-linked evidence and operator-reviewed recommendations.
+        </p>
+
+        <div class="hp-hero__cta">
+          <PrimaryButton href={routes.contact}>Contact Founder</PrimaryButton>
+          <SecondaryButton href={routes.contactWithIntent('demo')}>Book Demo</SecondaryButton>
+          <SecondaryButton href={routes.contactWithIntent('pilot')}>Join Pilot</SecondaryButton>
+        </div>
+
+        <ul class="hp-hero__credibility" aria-label="Current state at a glance">
+          <li>
+            <span class="hp-hero__credibility-tag">TAS</span>
+            <span>in pilot / demo evaluation</span>
+          </li>
+          <li>
+            <span class="hp-hero__credibility-tag">Bidder-side</span>
+            <span>tender intelligence for defense MSMEs</span>
+          </li>
+          <li>
+            <span class="hp-hero__credibility-tag">Issuer-side</span>
+            <span>roadmap under validation</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hp-hero__exhibit">
+        <HeroExhibit />
+      </div>
+    </div>
+  </section>
+
+  {/* Problem thesis */}
+  <section class="section section--paper">
+    <div class="container">
+      <div class="problem">
+        <div class="reveal">
+          <SectionLabel>Problem Thesis</SectionLabel>
+          <h2>Defense procurement is document intelligence, compliance, evaluation, and decision-traceability.</h2>
+          <p class="problem__lede">
+            Across defense MSMEs and defense-tech bid teams, the operational bottleneck is not finding tenders. It is the work between a tender alert and a defensible BID / REVIEW / SKIP decision: scattered documents, manual eligibility cross-checks, compliance reconstruction, and decisions that need a source trail.
+          </p>
+        </div>
+        <div class="problem__grid" data-stagger>
+          <div class="reveal"><DossierCard surface="paper" label="01" title="Document intelligence">
+            Tenders ship as bundles of bid documents, specifications, BOQs, ATCs, corrigenda, and annexures — not single PDFs.
+          </DossierCard></div>
+          <div class="reveal"><DossierCard surface="paper" label="02" title="Compliance reconstruction">
+            Eligibility, EMD/ePBG, certifications, and Make-in-India clauses live across pages and documents that have to be read together.
+          </DossierCard></div>
+          <div class="reveal"><DossierCard surface="paper" label="03" title="Evidence-linked evaluation">
+            A defensible decision needs every claim to point back to a clause and a page, not a summary paragraph.
+          </DossierCard></div>
+          <div class="reveal"><DossierCard surface="paper" label="04" title="Decision traceability">
+            BID / REVIEW / SKIP is a structured operator decision. The brief should be reviewable a quarter from now.
+          </DossierCard></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* TAS preview */}
+  <section class="section section--dark">
+    <div class="container hp-tas">
+      <div class="reveal">
+        <SectionLabel>The Product · KRISEVA TAS</SectionLabel>
+        <h2>From tender bundle to decision brief, with the operator in the loop.</h2>
+        <p class="hp-tas__lede">{claims.productOneLiner}</p>
+        <ul class="hp-tas__list">
+          <li><span class="hp-tas__tag">Discover / ingest</span> Live GeM discovery, DefProc public discovery, and operator-assisted protected-document flows.</li>
+          <li><span class="hp-tas__tag">Parse</span> {claims.parsing}</li>
+          <li><span class="hp-tas__tag">Extract</span> {claims.metadata}</li>
+          <li><span class="hp-tas__tag">Compliance</span> {claims.compliance}</li>
+          <li><span class="hp-tas__tag">Decision</span> {claims.recommendation}</li>
+        </ul>
+        <div class="hp-tas__cta">
+          <PrimaryButton href={routes.tas}>Open the TAS page</PrimaryButton>
+          <SecondaryButton href={routes.workflow}>See the workflow</SecondaryButton>
+        </div>
+      </div>
+      <div class="reveal hp-tas__visual">
+        <ProductScreenshotFrame
+          src="/assets/screenshots/03_tender_briefing_recommendation.png"
+          alt="KRISEVA TAS — tender briefing with relevance, compliance, and BID/REVIEW/SKIP recommendation"
+          caption="Tender briefing — relevance, compliance, recommendation"
+          disclosure="Repo-owned capture · seeded demo data · review per deployment"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* Tender bundle workflow */}
+  <section class="section section--navy">
+    <div class="container hp-bundle">
+      <div class="reveal">
+        <SectionLabel>Bundle Anatomy</SectionLabel>
+        <h2>Tenders are bundles, not files.</h2>
+        <p class="hp-bundle__lede">
+          {claims.bundleThesis} TAS organizes the bundle, anchors evidence to the right clause, and keeps the source trail attached to every extracted fact.
+        </p>
+        <div class="hp-bundle__chips">
+          <span>RFP</span><span>BOQ</span><span>ATC</span><span>Corrigenda</span><span>Annexures</span><span>Specs</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <TenderBundleDiagram caption="Bundle anatomy · tender as a multi-document decision artifact" />
+      </div>
+    </div>
+  </section>
+
+  {/* Evidence-linked decisions */}
+  <section class="section section--dark">
+    <div class="container hp-evidence">
+      <div class="reveal">
+        <SectionLabel>Evidence-Linked Decisions</SectionLabel>
+        <h2>Every recommendation points back to a clause and a page.</h2>
+        <p class="hp-evidence__lede">
+          KRISEVA generates operator review briefs with BID, REVIEW, or SKIP recommendations. The recommendation is not the decision — the operator is.
+        </p>
+      </div>
+      <div class="hp-evidence__grid" data-stagger>
+        <div class="reveal"><DossierCard label="Recommendation" title="BID">
+          Clear eligibility, compliance signals favorable, fit aligned with company capability context.
+          <p class="hp-evidence__pill"><DecisionPill state="bid">BID · evidence-backed</DecisionPill></p>
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="Recommendation" title="REVIEW">
+          Material ambiguity, partial compliance gap, or missing certifications. Operator review required before submission.
+          <p class="hp-evidence__pill"><DecisionPill state="review">REVIEW · operator-assisted</DecisionPill></p>
+        </DossierCard></div>
+        <div class="reveal"><DossierCard label="Recommendation" title="SKIP">
+          Eligibility miss, capacity gap, or risk threshold breached. Skip with a documented reason for audit.
+          <p class="hp-evidence__pill"><DecisionPill state="skip">SKIP · with rationale</DecisionPill></p>
+        </DossierCard></div>
+      </div>
+    </div>
+  </section>
+
+  {/* Local-first preview */}
+  <section class="section section--paper">
+    <div class="container hp-local">
+      <div class="reveal">
+        <SectionLabel>Local-First Posture</SectionLabel>
+        <h2>Designed for local-first tender processing.</h2>
+        <p>{claims.localFirst}</p>
+        <p class="hp-local__caveat">
+          {claims.localFirstBoundary}
+        </p>
+        <div class="hp-local__cta">
+          <SecondaryButton href={routes.security} variant="ghost-paper">Open the security page</SecondaryButton>
+        </div>
+      </div>
+      <div class="reveal hp-local__visual">
+        <img
+          src="/assets/motifs/local-first-boundary.svg"
+          alt="Local-first boundary — local DB, local file storage, local model routes, explicit external connectors"
+          loading="lazy"
+          width="640"
+          height="420"
+        />
+      </div>
+    </div>
+  </section>
+
+  {/* Issuer-side roadmap preview */}
+  <section class="section section--navy">
+    <div class="container hp-issuer">
+      <div class="reveal">
+        <SectionLabel tone="muted">Roadmap · Validation · Pilot Exploration</SectionLabel>
+        <h2>Issuer-side procurement intelligence — the next direction.</h2>
+        <p>
+          {claims.issuerRoadmap} Procurement-side intelligence — AI-assisted technical and financial bid evaluation, RFP ambiguity surfacing, evidence-linked compliance review, and decision auditability — is on the roadmap, not in the product.
+        </p>
+        <p class="hp-issuer__not">
+          {claims.issuerNotProduct}
+        </p>
+        <div class="hp-issuer__cta">
+          <SecondaryButton href={routes.issuerRoadmap}>Open the issuer roadmap memo</SecondaryButton>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Validation strip */}
+  <section class="section section--dark">
+    <div class="container">
+      <SectionLabel>Validation</SectionLabel>
+      <h2 class="reveal" style="margin-bottom:24px;">Proof, without hype.</h2>
+      <ProofStrip items={[
+        { label: 'Repo-grounded', body: 'Real TAS captures from a repo-owned local instance, with seeded demo data clearly disclosed.', meta: 'See validation page' },
+        { label: 'Stakeholder discovery', body: 'Long-form conversations with defense MSMEs and senior procurement-side stakeholders. Identities anonymized unless on record.', meta: 'Field findings, not testimonials' },
+        { label: 'Claim discipline', body: 'Every public claim traces to a status-labeled register: observed, validated, in pilot, or roadmap.', meta: 'No government endorsement claimed' },
+      ]} />
+      <div class="hp-validation__cta reveal" style="margin-top:24px;">
+        <SecondaryButton href={routes.validation}>Open the validation dossier</SecondaryButton>
+      </div>
+    </div>
+  </section>
+
+  {/* Founder preview */}
+  <section class="section section--paper">
+    <div class="container hp-founder">
+      <div class="reveal">
+        <img
+          src={site.founder.photo}
+          alt={`${site.founder.firstName}, founder, ${site.name}`}
+          width="320" height="320"
+          loading="lazy"
+          class="hp-founder__photo"
+        />
+      </div>
+      <div class="reveal">
+        <SectionLabel>Founder</SectionLabel>
+        <h2>Built from inside the tender pain, not outside it.</h2>
+        <p>
+          KRISEVA exists because procurement decisions in Indian defense are still hidden inside document bundles, and the people running those bundles are short on time, not on capability. Direct, founder-led conversations — no SDR funnel, no logo wall.
+        </p>
+        <div class="hp-founder__cta">
+          <SecondaryButton href={routes.founder} variant="ghost-paper">Read the founder page</SecondaryButton>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FounderCTA
+    surface="navy"
+    heading="Speak directly with the founder."
+    body="If you run a tender workflow on the bidder side, sit on the procurement side, or are evaluating KRISEVA seriously, the conversation is direct. Anonymization holds where the conversation requires it."
+  />
+</BaseLayout>
+
+<style>
+  /* ─────────────── Hero ─────────────── */
+  .hp-hero {
+    padding-top: clamp(110px, 8vw, 140px);
+    padding-bottom: clamp(56px, 6vw, 96px);
+    /* Subtle brass-on-navy depth wash. CSS-only, no images, no animation. */
+    background:
+      radial-gradient(60% 50% at 78% 12%, rgba(193, 138, 62, 0.10) 0%, transparent 60%),
+      radial-gradient(80% 60% at 12% 88%, rgba(10, 31, 68, 0.55) 0%, transparent 70%),
+      var(--surface-base);
+    position: relative;
+  }
+  /* Faint horizontal "register line" — a dossier-page top rule. */
+  .hp-hero::before {
+    content: "";
+    position: absolute;
+    top: 84px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(193, 138, 62, 0.18) 30%,
+      rgba(193, 138, 62, 0.18) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+  .hp-hero__grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: clamp(40px, 5vw, 72px);
+    align-items: center;
+    position: relative;
+  }
+  .hp-hero__copy {
+    max-width: 640px;
+  }
+  .hp-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .hp-hero__title {
+    font-size: clamp(2.1rem, 1.4rem + 3.4vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: 22px;
+    text-wrap: balance;
+  }
+  .hp-hero__positioning {
+    font-size: clamp(1rem, 0.92rem + 0.4vw, 1.08rem);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 600px;
+    text-wrap: pretty;
+  }
+  .hp-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .hp-hero__credibility {
+    list-style: none;
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding: 14px 0 0;
+    border-top: 1px dashed rgba(193, 138, 62, 0.22);
+  }
+  .hp-hero__credibility li {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .hp-hero__credibility-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+  }
+  .hp-hero__exhibit {
+    /* The exhibit owns its own surface; let it stretch to full height. */
+    width: 100%;
+  }
+
+  /* Hero responsive: collapse to single column on tablet/mobile.
+     Source order is correct for mobile UX (headline + CTAs first, exhibit
+     below) — do not reorder. */
+  @media (max-width: 920px) {
+    .hp-hero__grid { grid-template-columns: 1fr; gap: 36px; }
+    .hp-hero__exhibit { max-width: 540px; margin: 0 auto; width: 100%; }
+    .hp-hero::before { display: none; }
+  }
+  @media (max-width: 600px) {
+    .hp-hero__cta { flex-direction: column; align-items: stretch; }
+    .hp-hero__cta :global(.btn) { width: 100%; justify-content: center; }
+    .hp-hero__credibility li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(193, 138, 62, 0.10);
+    }
+    .hp-hero__credibility li:last-child { border-bottom: none; }
+  }
+
+  /* ─────────────── Problem section ─────────────── */
+  .problem { display: grid; gap: 32px; }
+  .problem__lede {
+    color: var(--ink-soft);
+    max-width: 760px;
+  }
+  .problem__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 720px) {
+    .problem__grid { grid-template-columns: 1fr; }
+  }
+
+  .hp-tas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 920px) {
+    .hp-tas { grid-template-columns: 1fr; gap: 36px; }
+  }
+  .hp-tas__lede { color: var(--paper-mute); margin-bottom: 22px; max-width: 540px; }
+  .hp-tas__list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .hp-tas__list li {
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: var(--paper-mute);
+    padding: 10px 0;
+    border-top: 1px solid rgba(193, 138, 62, 0.12);
+  }
+  .hp-tas__list li:last-child { border-bottom: 1px solid rgba(193, 138, 62, 0.12); }
+  .hp-tas__tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+    color: var(--brass);
+    text-transform: uppercase;
+    margin-right: 10px;
+  }
+  .hp-tas__cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .hp-bundle {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .hp-bundle { grid-template-columns: 1fr; gap: 36px; } }
+  .hp-bundle__lede { color: var(--paper-mute); margin-bottom: 18px; max-width: 480px; }
+  .hp-bundle__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .hp-bundle__chips span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    padding: 5px 10px;
+    border-radius: var(--radius-badge);
+    border: 1px solid rgba(193, 138, 62, 0.34);
+    color: var(--brass);
+    text-transform: uppercase;
+  }
+
+  .hp-evidence__lede {
+    color: var(--paper-mute);
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+  .hp-evidence__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 880px) { .hp-evidence__grid { grid-template-columns: 1fr; } }
+  .hp-evidence__pill { margin-top: 12px; }
+
+  .hp-local {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 880px) { .hp-local { grid-template-columns: 1fr; gap: 36px; } }
+  .hp-local__caveat {
+    color: var(--slate-600);
+    font-size: 0.92rem;
+    margin-top: 12px;
+  }
+  .hp-local__cta { margin-top: 24px; }
+  .hp-local__visual img {
+    border-radius: var(--radius-panel);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+    background: var(--paper-light);
+  }
+
+  .hp-issuer { max-width: 800px; }
+  .hp-issuer h2 { margin-bottom: 16px; }
+  .hp-issuer p { color: var(--paper-mute); margin-bottom: 12px; }
+  .hp-issuer__not {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.08em;
+    color: var(--brass);
+    text-transform: uppercase;
+  }
+  .hp-issuer__cta { margin-top: 24px; }
+
+  .hp-founder {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 720px) { .hp-founder { grid-template-columns: 1fr; } }
+  .hp-founder__photo {
+    border-radius: var(--radius-panel);
+    border: 1px solid rgba(16, 35, 59, 0.2);
+    object-fit: cover;
+    object-position: center 15%;
+    width: 100%;
+    height: 320px;
+  }
+  .hp-founder__cta { margin-top: 22px; }
+</style>

@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await page.goto('http://localhost:4321/', { waitUntil: 'networkidle' });
+await page.evaluate(() => document.getElementById('mxDist').scrollIntoView({ block: 'center' }));
+await page.waitForTimeout(1800);
+await page.screenshot({ path: 'shots/v7/v7-mxdist3.png' });
+await page.evaluate(() => document.querySelector('.vol-door').scrollIntoView({ block: 'center' }));
+await page.waitForTimeout(1200);
+await page.screenshot({ path: 'shots/v7/v7-door3.png' });
+await browser.close();
+console.log('done');
