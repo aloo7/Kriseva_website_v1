@@ -572,7 +572,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .strip-sec{overflow:hidden}
 .strip-stage{padding-block:clamp(40px,4.5vw,68px)}
 .stripwrap{margin-top:clamp(24px,3.4vw,42px)}
-.strip{display:flex;gap:clamp(18px,2.4vw,34px);width:max-content;
+.strip{display:flex;align-items:flex-start;gap:clamp(18px,2.4vw,34px);width:max-content;
   padding-inline:max(calc((100vw - var(--wrap))/2 + var(--pad)),20px)}
 .strip .plate{flex:0 0 auto}
 .strip .pl-land{width:clamp(420px,44vw,620px)}
@@ -620,11 +620,11 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .crail{position:relative;height:2px;background:var(--rule)}
 .crail .cfill{position:absolute;inset-block:0;left:0;width:0%;background:var(--brass)}
 .crail .cdot{position:absolute;top:50%;left:0;width:13px;height:13px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 5px rgba(168,114,41,.16)}
-.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px}
-.cst{padding-top:2px}
-.cst .tick{width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
-.cst .nm{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
-.cst .cap{font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s}
+.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px;list-style:none;padding:0}
+.cst{padding-top:2px;min-width:0}
+.cst .tick{display:block;width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
+.cst .nm{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
+.cst .cap{display:block;font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s;text-wrap:pretty}
 .cst.lit .tick{background:var(--ink)}
 .cst.lit .nm{color:var(--ink);font-weight:600}
 .cst.lit .cap{color:var(--ink-sec)}
@@ -1032,7 +1032,7 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
       <h2 class="display"><span class="ln"><span class="ln-in">The verdict points to a page.</span></span></h2>
       <p class="dek rv">Nothing to operate here. Just watch: the brass box is the exact region of the exact page the verdict cites.</p>
     </div>
-    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:880px;margin-inline:auto">
+    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:720px;margin-inline:auto">
       <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
       <div class="pimg">
         <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
@@ -1399,24 +1399,31 @@ function onScrollHdr(){ hdr.classList.toggle('stuck', window.scrollY > 40); }
 onScrollHdr();
 window.addEventListener('scroll', onScrollHdr, { passive: true });
 
-/* ---------- masked reveals ---------- */
+/* ---------- reveals: scrubbed to the scroll position ----------
+   v7.1 feel contract: every reveal is a scrub window tied directly to
+   where the element sits in the viewport. Scroll down and it draws in;
+   scroll back up and it draws out, immediately. No one-shot tweens, no
+   late batching, no state that disagrees with the scrollbar. The hero
+   alone keeps a timed entrance: it is on screen before any scroll
+   exists. Hero text stays CSS-visible on mobile (LCP). */
 if (ANIM && hasST) {
-  /* hero text is exempt on mobile: it is visible at first paint (CSS) and
-     GSAP must not restyle it, or the repaint re-anchors LCP to JS load */
   if (DESKTOP) {
     document.querySelectorAll('h1 .ln-in').forEach(function (el, i) {
       gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
     });
+    gsap.utils.toArray('.hero-content .rv').forEach(function (el, i) {
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.55 + i * 0.12 });
+    });
   }
   document.querySelectorAll('h2 .ln-in, .contact .ln-in, .tline .ln-in').forEach(function (el) {
-    gsap.to(el, { y: 0, duration: 1, ease: 'power4.out',
-      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 86%' } });
+    gsap.fromTo(el, { y: '112%' }, { y: '0%', ease: 'none',
+      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 94%', end: 'top 74%', scrub: true } });
   });
   gsap.utils.toArray('.rv').filter(function (el) {
-    return DESKTOP || !el.closest('.hero-content');
+    return !el.closest('.hero-content');
   }).forEach(function (el) {
-    gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 88%' } });
+    gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 97%', end: 'top 80%', scrub: true } });
   });
 } else {
   document.querySelectorAll('.ln-in').forEach(function(el){ el.style.transform = 'none'; });
@@ -2088,15 +2095,15 @@ if (ANIM && hasST && DESKTOP) {
    FIELD EVIDENCE - plate reveals, console pan, bbox trace, filmstrip
    ============================================================ */
 if (ANIM && hasST) {
-  /* steady plates: fade-rise only, never zoom or crop */
+  /* steady plates: fade-rise only, never zoom or crop; scrubbed both ways */
   gsap.utils.toArray('.plate:not(.rv)').forEach(function (p) {
-    gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out',
-      scrollTrigger: { trigger: p, start: 'top 88%' } });
+    gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: p, start: 'top 97%', end: 'top 82%', scrub: true } });
   });
-  /* console annotations slide in */
+  /* console annotations slide in, staggered by window, reversible */
   gsap.utils.toArray('.ann').forEach(function (a, i) {
-    gsap.fromTo(a, { opacity: 0, x: 26 }, { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out', delay: 0.18 * i,
-      scrollTrigger: { trigger: '.console-plate', start: 'top 62%' } });
+    gsap.fromTo(a, { opacity: 0, x: 26 }, { opacity: 1, x: 0, ease: 'none',
+      scrollTrigger: { trigger: '.console-plate', start: 'top ' + (66 - i * 8) + '%', end: 'top ' + (52 - i * 8) + '%', scrub: true } });
   });
   /* bundle: brass bbox draws itself, then the label lands */
   var bbox = document.getElementById('bboxRect');
@@ -2229,6 +2236,11 @@ if (ANIM && hasST) {
   function start() { on = true; go(0); }
   function exit() { on = false; idx = -1; chip.classList.remove('on'); }
   btn.addEventListener('click', start);
+  /* taking the wheel back ends the walk; the caption never lingers
+     over content it no longer describes */
+  ['wheel', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, function () { if (on) exit(); }, { passive: true });
+  });
   document.addEventListener('keydown', function (e) {
     if (e.target.matches && e.target.matches('input,textarea,select')) return;
     if (!on) { if (e.key === 't' || e.key === 'T') start(); return; }
