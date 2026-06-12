@@ -20,6 +20,10 @@ for (const { path, label } of routes) {
   test(`a11y · ${label} (${path})`, async ({ page }) => {
     await page.goto(path);
     await page.waitForLoadState('networkidle');
+    // Let the entrance choreography settle: contrast is judged at the
+    // page's steady state, not mid-fade (axe blends partial opacity into
+    // the text colour and false-fails an element it caught animating).
+    await page.waitForTimeout(2400);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
