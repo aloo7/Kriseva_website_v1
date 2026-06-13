@@ -157,6 +157,13 @@ async function main() {
             break;
           }
         }
+        // Em-dash gate (v8): no em dash (U+2014) ships in rendered pages.
+        // Scoped to .html so first-party copy and inline style/script are
+        // covered while vendored libraries (their own .js files) are not.
+        if (ext === '.html' && content.includes('—')) {
+          const line = content.slice(0, content.indexOf('—')).split('\n').length;
+          failures.push({ file: rel, reason: `em dash (U+2014) in shipped page, first at line ${line}` });
+        }
       } catch {}
     }
   }

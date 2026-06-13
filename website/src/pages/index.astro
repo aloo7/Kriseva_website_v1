@@ -124,13 +124,33 @@ try{var mm=window.matchMedia;if(mm('(prefers-reduced-motion: reduce)').matches||
   --sans:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
   --mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
   --wrap:1380px; --pad:clamp(20px,4vw,56px);
+  /* ──────────────────────────────────────────────────────────────
+     v8 READABLE TYPE SCALE (fluid, px-anchored clamp())
+     The v6/v7 page set ~60 labels at .54-.68rem (9-11px), unreadable
+     for the founder's stated reader (a 55-year-old reviewing officer).
+     These tokens set an absolute floor that never drops on any viewport:
+       fs-chip     interactive provenance citation marker  >=14px
+       fs-eyebrow  decorative tracked-mono micro-labels    >=13px
+       fs-meta     mono DATA a reader parses (counts,       >=14px
+                   scores, hashes, refs, button labels)
+       fs-caption  captions, table cells, secondary prose   >=14.75px
+       fs-body     primary reading                          >=17px
+     Applied via the "v8 readable type floor" override layer below.
+     ────────────────────────────────────────────────────────────── */
+  --fs-chip:    clamp(14px, 13.6px + 0.20vw, 15px);
+  /* eyebrow floored at 14px so even decorative tracked labels stay readable on
+     a 390px phone (the founder's reader is often older and on mobile) */
+  --fs-eyebrow: clamp(14px, 13.7px + 0.16vw, 14.75px);
+  --fs-meta:    clamp(14px, 13.5px + 0.24vw, 15.25px);
+  --fs-caption: clamp(14.75px, 14.2px + 0.30vw, 16.5px);
+  --fs-body:    clamp(17px, 16.3px + 0.42vw, 18.75px);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-anchor:none}
 html.js.lenis-on{scroll-behavior:auto}
 body{
   background:var(--paper); color:var(--ink);
-  font-family:var(--sans); font-size:16px; line-height:1.6;
+  font-family:var(--sans); font-size:17px; line-height:1.62;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
@@ -286,6 +306,12 @@ html.hero-fallback #webgl{display:none}
   padding:13px 2px;border-bottom:1px solid var(--rule);font-size:.94rem;line-height:1.5}
 .caps .ref{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec);white-space:nowrap}
 .caps b{font-weight:600}
+/* very narrow phones: the readable-size ledger ref no longer fits beside the
+   term on one row, so stack it and let it wrap (no horizontal overflow) */
+@media (max-width:430px){
+  .caps li{grid-template-columns:1fr;gap:3px 0}
+  .caps .ref{white-space:normal;justify-self:start}
+}
 /* volume doors - each product volume opens its own page */
 .vol-door{display:inline-flex;align-items:center;gap:10px;margin-top:22px;
   font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
@@ -546,7 +572,11 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .plate .pcap{border-top:1px solid var(--rule)}
 .plate .ph b{color:var(--ink);font-weight:600}
 .plate .pimg{position:relative;overflow:hidden;background:var(--paper-sunk)}
-.plate .pimg img{width:100%;display:block}
+/* height:auto is load-bearing: without it the <img height> attribute survives
+   as a presentational hint, the box keeps the full native height while width
+   clamps to the column, and the default object-fit:fill squishes the shot.
+   With height:auto the box ratio tracks the image's intrinsic ratio (R2). */
+.plate .pimg img{width:100%;height:auto;display:block}
 .sec-navy .plate{border-color:rgba(233,226,210,.35);background:rgba(233,226,210,.04);box-shadow:0 24px 50px -28px rgba(0,0,0,.6)}
 .sec-navy .plate .ph,.sec-navy .plate .pcap{color:rgba(233,226,210,.65)}
 .sec-navy .plate .ph{border-bottom-color:rgba(233,226,210,.2)}
@@ -616,6 +646,12 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
 .yearbox .yk{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec);display:block;margin-bottom:6px}
 .yearbox .yr{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.6rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
 .yearbox .yr i{font-style:normal;color:var(--brass-text)}
+/* the counter ages into a qualitative end-state instead of a literal "N":
+   the number climbs while the dot travels, then resolves to "Years later"
+   (no specific duration claimed · see the source note below the rail). */
+.yearbox .yr-aged{display:none;font-style:italic;font-size:clamp(1.8rem,3.4vw,3rem);color:var(--brass-text)}
+.yearbox.aged .yr-live{display:none}
+.yearbox.aged .yr-aged{display:inline}
 .cycle{margin-top:clamp(44px,6vw,76px)}
 .crail{position:relative;height:2px;background:var(--rule)}
 .crail .cfill{position:absolute;inset-block:0;left:0;width:0%;background:var(--brass)}
@@ -717,6 +753,42 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
   .cst .tick{background:var(--ink)}
   .yearbox .yr{font-size:clamp(2rem,4vw,3rem)}
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   v8 READABLE TYPE FLOOR  (R1 / FIX A)
+   The v6/v7 page set ~60 labels at .54-.68rem (9-11px), unreadable for
+   the founder's stated reader. This layer re-points each of those to the
+   fluid scale tokens in :root, at the original selector's specificity.
+   It changes ONLY font-size; palette, spacing, tracking, motion are
+   untouched. Grouped by role so intent is auditable and revertible.
+   ══════════════════════════════════════════════════════════════════ */
+/* decorative tracked-mono micro-labels  >=13px */
+.skip,.eyebrow,.folio,.src-note,.disclose,
+.nlinks a,.cred span,.scroll-cue,.node-label,
+.mq span,.vol .vno,.vol-door,.caps .ref,.pipe .ptitle,.tnote .tn-k,
+.mxh span,.mx th,.mx td.crit .s,.legend span,.mxdist .mxd-t,.mxd-row .nm,
+.mxdetail .srcref,.mxdetail .route,.cblock .bh,.chainaside .trust,
+.dimwhy .riskline,.zone .zh,.asset,.bdetail .tag,.rec .date,.rec .tag,
+.foot,.strip-hint,.bbox-label,.vbadge,.tourchip .tc-k,.cursor-label,
+.act-break .ab-title,.yearbox .yk,.cst .nm,.room .rh,.x4 .x4h,.mrow .mk,
+.plate .ph{font-size:var(--fs-eyebrow)}
+/* mono DATA + interactive labels a reader parses  >=14px */
+.btn,.btn-sm,.act-break .ab-no,.verdict-pill,.mxd-row .ct,.cblock .hash,
+.dimrow .sc,.pstep .pn,.plate .pcap,.ann,.x4 .origins,.stat .ssrc{font-size:var(--fs-meta)}
+/* captions, table cells, list rows, secondary prose, step/station text  >=14.75px */
+.caps li,.pstep .pt,.pdetail,.tnote p,.mx td.crit,.dimrow .nm,
+.room .rplain,.room .pains li,.cst .cap,.stat .lab,.founder-card .meta,
+.mxdetail .body,.bdetail p,.cblock .bbody,.dimwhy,.chain-status{font-size:var(--fs-caption)}
+/* primary narrative reading  >=17px */
+.dek,.x4 p,.mrow p,.rec .what{font-size:var(--fs-body)}
+/* SVG infographic labels (A3): CSS font-size overrides the SVG presentation
+   attribute, enlarging the plain-language part labels and diagram titles to
+   the largest size the viewBox geometry allows without overflow. These render
+   smaller than the user-unit value once the viewBox scales, so they sit just
+   under the UI floor by design; they are data-labels, not UI chrome. */
+#bundleX text{font-size:13px}
+#checksFig text{font-size:12px}
+.radar-svg text{font-size:12.5px}
 </style>
 </head>
 <body>
@@ -824,9 +896,9 @@ body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor
         <h2 class="display"><span class="ln"><span class="ln-in">The bottleneck</span></span><span class="ln"><span class="ln-in">is the <em class="em-brass">cycle.</em></span></span></h2>
         <p class="dek rv" style="margin-top:18px">When the armed forces need new equipment, they cannot simply buy it. A request begins a journey through stations of approval, bidding and checking. Watch one acquisition travel, and watch the clock.</p>
       </div>
-      <div class="yearbox rv" aria-hidden="true">
+      <div class="yearbox rv" id="yearBox" aria-hidden="true">
         <span class="yk">Elapsed</span>
-        <span class="yr">YEAR <i id="yearN">1</i></span>
+        <span class="yr"><span class="yr-live">YEAR <i id="yearN">1</i></span><span class="yr-aged">Years later</span></span>
       </div>
     </div>
     <div class="cycle rv" id="cycle">
@@ -2049,8 +2121,11 @@ if (ANIM && hasST && DESKTOP) {
 
 /* ============================================================
    ACT 1 - the nation's clock: one acquisition travels the rule
-   while the year counter advances. Qualitative on purpose: the
-   final tick reads YEAR N, not a number we cannot cite.
+   while an elapsed-years counter actually climbs (A2). Qualitative
+   on purpose: the number ticks up as the dot passes each station,
+   then ages into "Years later" at the end instead of a literal
+   placeholder. The page still claims no specific duration (see the
+   source note under the rail).
    (Created here, after the hero pin and before the strip pin,
    so pin creation order matches document order.)
    ============================================================ */
@@ -2059,15 +2134,19 @@ if (ANIM && hasST && DESKTOP) {
   if (!stations.length) return;
   var fill = document.getElementById('cycleFill'),
       dot  = document.getElementById('cycleDot'),
+      box  = document.getElementById('yearBox'),
       yr   = document.getElementById('yearN');
-  var YEARS = ['1', '2', '3', '4', 'N'];
   function setP(p) {
-    var pct = Math.max(0, Math.min(1, p)) * 100;
+    var cl = Math.max(0, Math.min(1, p));
+    var pct = cl * 100;
     if (fill) fill.style.width = pct + '%';
     if (dot) dot.style.left = pct + '%';
     var idx = Math.min(6, Math.floor(p * 7));
     stations.forEach(function (s, i) { s.classList.toggle('lit', i <= idx); });
-    if (yr) yr.textContent = YEARS[Math.min(4, Math.floor(p * 5))];
+    /* one tick per station passed: a real integer that climbs 1..7 */
+    if (yr) yr.textContent = String(Math.min(7, Math.floor(cl * 7) + 1));
+    /* near the last station the counter ages into the qualitative end-state */
+    if (box) box.classList.toggle('aged', cl >= 0.985);
   }
   if (ANIM && hasST && DESKTOP) {
     setP(0);

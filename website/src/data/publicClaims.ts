@@ -1,17 +1,17 @@
 // publicClaims.ts
 //
-// Stage 6 categorized claim register — the single source of truth for every
+// Stage 6 categorized claim register · the single source of truth for every
 // claim-bearing string the public website may publish. Each claim has a
 // category, evidence pointer, and approved wording. New public copy must use
 // strings from here. Pages should not invent claim wording inline.
 //
 // Categories (per project/uploads/CLAIM_REGISTER.md and Stage 6 brief):
-//   1) verified-and-safe   — publishable as-is.
-//   2) safe-with-care      — publishable with the exact careful wording
+//   1) verified-and-safe · publishable as-is.
+//   2) safe-with-care · publishable with the exact careful wording
 //                            committed below; do not paraphrase.
-//   3) needs-measurement   — not publishable until measurement evidence
+//   3) needs-measurement · not publishable until measurement evidence
 //                            exists in the repo.
-//   4) do-not-publish      — never publish; included here as a tripwire.
+//   4) do-not-publish · never publish; included here as a tripwire.
 //
 // Evidence sources are repo-relative paths; the audit doc
 // docs/STAGE_6_CLAIMS_AUDIT.md links each claim to its evidence.
@@ -84,7 +84,7 @@ const product: PublicClaim[] = [
     wording:
       'KRISEVA TAS is a bidder-side tender intelligence and bid-review system for defense MSMEs and defense-tech companies.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — TAS positioning'],
+    evidence: ['Stage 6 brief · TAS positioning'],
     surface: 'tas.astro hero subtitle',
   },
   {
@@ -99,7 +99,7 @@ const product: PublicClaim[] = [
     id: 'tas.parsing',
     wording: 'Parses PDF, DOCX, XLSX, TXT, and CSV tender files locally.',
     category: 'verified-and-safe',
-    evidence: ['project/uploads/CLAIM_REGISTER.md (row 4) — extractor audit'],
+    evidence: ['project/uploads/CLAIM_REGISTER.md (row 4) · extractor audit'],
     surface: 'index.astro, tas.astro, workflow.astro',
     caveat: 'Do not claim PPT/PPTX or legacy DOC/XLS.',
   },
@@ -193,7 +193,7 @@ const security: PublicClaim[] = [
     wording:
       'Deployment boundaries should be reviewed per environment, especially where external portals, model endpoints, email, calendar, or other integrations are enabled.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — security copy rules'],
+    evidence: ['Stage 6 brief · security copy rules'],
     surface: 'security.astro, claims.localFirstBoundary',
   },
   {
@@ -201,7 +201,7 @@ const security: PublicClaim[] = [
     wording:
       'Absolute-security framing of any kind. See PUBLIC_CLAIMS_REGISTER.md §security for the literal phrase list maintained by the lint script.',
     category: 'do-not-publish',
-    evidence: ['Stage 6 brief — security copy rules', 'docs/PUBLIC_CLAIMS_REGISTER.md'],
+    evidence: ['Stage 6 brief · security copy rules', 'docs/PUBLIC_CLAIMS_REGISTER.md'],
     surface: 'security.astro renders only labelled "NOT" anti-claims with rephrased substrings.',
   },
 ];
@@ -291,7 +291,7 @@ const issuer: PublicClaim[] = [
     wording: 'Issuer-side procurement intelligence is under validation and pilot exploration.',
     category: 'do-not-publish',
     evidence: ['Superseded by founder ruling 2026-06-09 (two co-equal products)'],
-    surface: '— never appears on any public page — (was issuer-roadmap.astro; use evaluator.* claims)',
+    surface: ' · never appears on any public page · (was issuer-roadmap.astro; use evaluator.* claims)',
     caveat:
       'STALE: framed the Evaluator as a roadmap direction. Superseded 2026-06-09; publish evaluator.* wording instead.',
   },
@@ -301,7 +301,7 @@ const issuer: PublicClaim[] = [
       'KRISEVA is studying AI-assisted technical and financial bid evaluation workflows for government and defense procurement organizations.',
     category: 'do-not-publish',
     evidence: ['Superseded by founder ruling 2026-06-09 (two co-equal products)'],
-    surface: '— never appears on any public page — (was issuer-roadmap.astro; use evaluator.* claims)',
+    surface: ' · never appears on any public page · (was issuer-roadmap.astro; use evaluator.* claims)',
     caveat:
       'STALE: "studying / exploring" framing superseded 2026-06-09; the Evaluator is a shipped, co-equal product.',
   },
@@ -310,7 +310,7 @@ const issuer: PublicClaim[] = [
     wording:
       'The need has been validated through senior procurement-side discovery conversations. Names withheld where confidentiality applies.',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — issuer copy rules', 'project/uploads/RESEARCH_LIMITATIONS.md'],
+    evidence: ['Stage 6 brief · issuer copy rules', 'project/uploads/RESEARCH_LIMITATIONS.md'],
     surface: 'issuer-roadmap.astro',
     caveat: 'Anonymized unless explicit written/public permission is on record.',
   },
@@ -319,8 +319,8 @@ const issuer: PublicClaim[] = [
     wording:
       'Any agency-endorsement, agency-approval, or agency-validation language for issuer-side. See PUBLIC_CLAIMS_REGISTER.md §issuer for the literal phrase list maintained by the lint script.',
     category: 'do-not-publish',
-    evidence: ['Stage 6 brief — Tier 3 stakeholder rules', 'docs/PUBLIC_CLAIMS_REGISTER.md'],
-    surface: '— never appears on any public page —',
+    evidence: ['Stage 6 brief · Tier 3 stakeholder rules', 'docs/PUBLIC_CLAIMS_REGISTER.md'],
+    surface: ' · never appears on any public page · ',
   },
 ];
 
@@ -333,7 +333,7 @@ const stakeholder: PublicClaim[] = [
     wording:
       'Validated through direct stakeholder discovery across defense MSMEs and senior procurement-side stakeholders.',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — Tier 2 wording', 'project/uploads/RESEARCH_LIMITATIONS.md'],
+    evidence: ['Stage 6 brief · Tier 2 wording', 'project/uploads/RESEARCH_LIMITATIONS.md'],
     surface: 'validation.astro, founder.astro',
     caveat: 'Anonymized unless permission is on record.',
   },
@@ -341,7 +341,7 @@ const stakeholder: PublicClaim[] = [
     id: 'stakeholder.tier-2-bilateral',
     wording: 'Problem validated across both bidder-side and issuer-side workflows.',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — Tier 2 wording'],
+    evidence: ['Stage 6 brief · Tier 2 wording'],
     surface: 'validation.astro, founder.astro',
   },
   {
@@ -349,7 +349,7 @@ const stakeholder: PublicClaim[] = [
     wording:
       'Issuer-side need validated through senior retired paramilitary and defense R&D procurement conversations. Names withheld due to confidentiality.',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — Tier 2 wording'],
+    evidence: ['Stage 6 brief · Tier 2 wording'],
     surface: 'issuer-roadmap.astro, validation.astro',
   },
   {
@@ -357,7 +357,7 @@ const stakeholder: PublicClaim[] = [
     wording: '(Reserved for any explicit-permission named validation; none currently published.)',
     category: 'do-not-publish',
     evidence: ['Pending: written permission record before any name is published.'],
-    surface: '— not used on any public page yet —',
+    surface: ' · not used on any public page yet · ',
   },
 ];
 
@@ -370,8 +370,8 @@ const validation: PublicClaim[] = [
     wording:
       'A recent internal repo inspection reported 4,072 pytest-collected tests and a passing fast test run for the TAS codebase. Full verification status should be reviewed before using this as a headline production-readiness claim.',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — validation copy rules'],
-    surface: 'validation.astro (test-status section only — never on homepage)',
+    evidence: ['Stage 6 brief · validation copy rules'],
+    surface: 'validation.astro (test-status section only · never on homepage)',
     caveat:
       'Carries its own caveat in the same paragraph. Do not condense to "4,072 tests prove production readiness".',
   },
@@ -430,7 +430,7 @@ const founder: PublicClaim[] = [
     wording:
       'Ayush observed procurement workflow bottlenecks while working in the defense technology ecosystem.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — founder copy rules'],
+    evidence: ['Stage 6 brief · founder copy rules'],
     surface: 'founder.astro',
   },
   {
@@ -438,7 +438,7 @@ const founder: PublicClaim[] = [
     wording:
       'The insight behind KRISEVA came from seeing tender discovery, document review, compliance tracking, and bid/no-bid decisioning happen through fragmented manual workflows.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — founder copy rules'],
+    evidence: ['Stage 6 brief · founder copy rules'],
     surface: 'founder.astro',
   },
   {
@@ -446,28 +446,28 @@ const founder: PublicClaim[] = [
     wording:
       'KRISEVA was built around a simple thesis: defense procurement needs auditable intelligence, not generic chatbot summaries.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — founder copy rules'],
+    evidence: ['Stage 6 brief · founder copy rules'],
     surface: 'founder.astro',
   },
   {
     id: 'founder.education',
     wording: 'IIT Gandhinagar · AI/ML & agentic AI context.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — founder details', 'site.ts'],
+    evidence: ['Stage 6 brief · founder details', 'site.ts'],
     surface: 'founder.astro, site.ts',
   },
   {
     id: 'founder.prior-work',
     wording: 'Defense marketing & operations exposure (electronic warfare / anti-drone domain).',
     category: 'safe-with-care',
-    evidence: ['Stage 6 brief — founder details'],
+    evidence: ['Stage 6 brief · founder details'],
     surface: 'founder.astro, site.ts',
     caveat: 'Keep wording to "exposure" / "operations work"; do not name the prior employer publicly.',
   },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
-// Boundaries — explicit "we do not claim" assertions
+// Boundaries · explicit "we do not claim" assertions
 // ─────────────────────────────────────────────────────────────────────────
 const boundaries: PublicClaim[] = [
   {
@@ -482,7 +482,7 @@ const boundaries: PublicClaim[] = [
     wording:
       'TAS does not claim: autonomous bid submission · win-rate improvement promises · replacing bid teams · working on every portal automatically · CPPP support · production SaaS readiness · agency endorsement · validation by any defense agency.',
     category: 'verified-and-safe',
-    evidence: ['Stage 6 brief — TAS copy rules', 'project/uploads/CLAIM_REGISTER.md'],
+    evidence: ['Stage 6 brief · TAS copy rules', 'project/uploads/CLAIM_REGISTER.md'],
     surface: 'tas.astro (Boundaries section), claims.notClaimed',
   },
 ];

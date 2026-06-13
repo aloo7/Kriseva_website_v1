@@ -16,14 +16,14 @@
  *  - The brass orb pulses ONCE via a non-looping CSS keyframe.
  *  - Reduced-motion: cards render at final state instantly, orb does not pulse.
  *  - Pointer-coarse: no hover-only affordances are exposed.
- *  - Sample labels are abstract document types — no real tender numbers,
+ *  - Sample labels are abstract document types · no real tender numbers,
  *    agency names, or sensitive values appear.
  *  - Cards are decorative. The exhibit's accessible name is set via aria-label
  *    on the figure; inner content is `aria-hidden="true"` so a screen reader
  *    reads one short caption rather than every card label.
  */
 ---
-<figure class="exhibit reveal" aria-label="Sample exhibit — a tender bundle resolves into a BID / REVIEW / SKIP recommendation. Decorative.">
+<figure class="exhibit reveal" aria-label="Sample exhibit · a tender bundle resolves into a BID / REVIEW / SKIP recommendation. Decorative.">
   <header class="exhibit__head">
     <span class="exhibit__caption">EXHIBIT · BUNDLE → DECISION</span>
     <span class="exhibit__id">SAMPLE / KRISEVA-EXH-01</span>
@@ -113,7 +113,7 @@
     display: grid;
     gap: 14px;
   }
-  /* Faint corner brass tab — picks up the dossier-tab idiom. */
+  /* Faint corner brass tab · picks up the dossier-tab idiom. */
   .exhibit::before {
     content: "";
     position: absolute;
@@ -175,7 +175,7 @@
     gap: 10px;
     align-content: start;
     color: var(--ink-primary);
-    /* Reveal mechanics — start hidden + slightly off, transition into final
+    /* Reveal mechanics · start hidden + slightly off, transition into final
        transform when the parent gains .is-visible. Stagger via --idx. */
     opacity: 0;
     transform: translate(var(--tx, 0), var(--ty, 0)) translateY(18px) rotate(var(--rot, 0deg));
@@ -188,7 +188,7 @@
     opacity: 1;
     transform: translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg));
   }
-  /* Final positions for each card — stacked diagonally. */
+  /* Final positions for each card · stacked diagonally. */
   .exhibit__card--1 { --tx: 0; --ty: 0px; --rot: -1.2deg; z-index: 3; }
   .exhibit__card--2 { --tx: 16px; --ty: 38px; --rot: 0.4deg; z-index: 2; }
   .exhibit__card--3 { --tx: -10px; --ty: 76px; --rot: -0.6deg; z-index: 1; }

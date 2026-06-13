@@ -60,7 +60,7 @@ const intents: { value: string; label: string; meta: string }[] = [
 
   <label class="contact-form__textarea">
     <span>Message</span>
-    <textarea name="message" rows="6" placeholder="A few lines of context — what you do, what you’re evaluating, what would make a useful first conversation."></textarea>
+    <textarea name="message" rows="6" placeholder="A few lines of context · what you do, what you’re evaluating, what would make a useful first conversation."></textarea>
   </label>
 
   <div class="contact-form__actions">
@@ -124,7 +124,7 @@ const intents: { value: string; label: string; meta: string }[] = [
     border-color: var(--accent-primary);
     background: rgba(193, 138, 62, 0.04);
   }
-  /* :has(:checked) — the chosen row gets a strong brass left rule. CSS-only
+  /* :has(:checked) · the chosen row gets a strong brass left rule. CSS-only
      so the URL-deep-link state paints correctly on first render. */
   .contact-form__intent-row:has(input:checked) {
     border-left-color: var(--accent-primary);
@@ -257,7 +257,7 @@ const intents: { value: string; label: string; meta: string }[] = [
 
 <script>
   // Pre-select intent from ?intent=... and compose a mailto: draft on submit.
-  // No fake "submitted" state — the form transparently opens the user's mail
+  // No fake "submitted" state · the form transparently opens the user's mail
   // client; nothing is sent unless the user presses send there.
   const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
   if (form) {
@@ -279,7 +279,7 @@ const intents: { value: string; label: string; meta: string }[] = [
         partnership: 'Partnership',
         other: 'KRISEVA inquiry',
       };
-      const subject = `KRISEVA — ${intentSubjectMap[intentValue] ?? 'Inquiry'}`;
+      const subject = `KRISEVA · ${intentSubjectMap[intentValue] ?? 'Inquiry'}`;
       const lines: string[] = [];
       const fields = ['name', 'organization', 'role', 'email', 'phone', 'stakeholder', 'intent'];
       for (const f of fields) {

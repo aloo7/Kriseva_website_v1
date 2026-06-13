@@ -33,3 +33,6 @@ shots/
 # Visual-regression baselines: machine-specific renders (darwin suffix);
 # kept local per workstation, regenerated with --update-snapshots.
 tests/__snapshots__/
+
+# v8 QA proof artifacts (PR attachments, not source)
+tests/.v8-proof/

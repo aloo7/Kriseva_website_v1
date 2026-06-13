@@ -8,11 +8,11 @@ type Row = {
 };
 
 const rows: Row[] = [
-  { requirement: 'Bidder eligibility — turnover threshold', source: 'RFP §3.2 / page 6', status: 'met' },
+  { requirement: 'Bidder eligibility · turnover threshold', source: 'RFP §3.2 / page 6', status: 'met' },
   { requirement: 'EMD / ePBG quantum + format', source: 'RFP §5.1 / page 11', status: 'met' },
   { requirement: 'Make-in-India vendor declaration', source: 'ATC §A.4 / page 23', status: 'review' },
-  { requirement: 'Past performance — same category', source: 'BOQ Annex II / page 29', status: 'review' },
-  { requirement: 'Quality certification — IS / MIL spec', source: 'Spec Annex / page 41', status: 'gap' },
+  { requirement: 'Past performance · same category', source: 'BOQ Annex II / page 29', status: 'review' },
+  { requirement: 'Quality certification · IS / MIL spec', source: 'Spec Annex / page 41', status: 'gap' },
 ];
 
 const statusLabel: Record<Row['status'], string> = {

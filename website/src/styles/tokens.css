@@ -1,9 +1,9 @@
 /* tokens.css
- * KRISEVA design tokens — Stage 7.
+ * KRISEVA design tokens · Stage 7.
  *
  * Two layers:
- *   1) BACKING — raw values (colour, font, spacing, motion).
- *   2) ROLES   — semantic aliases used by components, so a future repalette
+ *   1) BACKING · raw values (colour, font, spacing, motion).
+ *   2) ROLES · semantic aliases used by components, so a future repalette
  *                changes hex in one place without sweeping CSS.
  *
  * Reduced-motion contract (also enforced in global.css §reduce):
@@ -17,7 +17,7 @@
  */
 
 :root {
-  /* ─────────────── BACKING — raw values ─────────────── */
+  /* ─────────────── BACKING · raw values ─────────────── */
 
   /* Navy field */
   --navy-deep: #04112a;
@@ -55,7 +55,7 @@
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 
-  /* ─────────────── ROLES — semantic aliases ─────────────── */
+  /* ─────────────── ROLES · semantic aliases ─────────────── */
 
   /* Surfaces */
   --surface-deep:        var(--navy-deep);    /* hero darks, deepest section */
@@ -65,12 +65,12 @@
   --surface-paper:       var(--paper);        /* paper section page bg */
   --surface-paper-rise:  var(--paper-light);  /* paper card on paper section */
 
-  /* Ink — text on paper */
+  /* Ink · text on paper */
   --ink-primary:         var(--ink);
   --ink-secondary:       var(--ink-soft);
   --ink-quiet:           var(--slate-600);
 
-  /* Text — text on navy */
+  /* Text · text on navy */
   --text-primary:        var(--paper);
   --text-secondary:      var(--paper-mute);
   --text-quiet:          var(--slate-600);
@@ -157,7 +157,7 @@
   --space-9:             56px;
   --space-10:            72px;
 
-  /* Section vertical rhythm — 3 tiers */
+  /* Section vertical rhythm · 3 tiers */
   --space-section-tight: 64px;   /* contact form, closing CTAs */
   --space-section:       96px;   /* default */
   --space-section-loose: 128px;  /* hero sections, founder hero */
