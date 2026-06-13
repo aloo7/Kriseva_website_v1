@@ -306,6 +306,12 @@ html.hero-fallback #webgl{display:none}
   padding:13px 2px;border-bottom:1px solid var(--rule);font-size:.94rem;line-height:1.5}
 .caps .ref{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec);white-space:nowrap}
 .caps b{font-weight:600}
+/* very narrow phones: the readable-size ledger ref no longer fits beside the
+   term on one row, so stack it and let it wrap (no horizontal overflow) */
+@media (max-width:430px){
+  .caps li{grid-template-columns:1fr;gap:3px 0}
+  .caps .ref{white-space:normal;justify-self:start}
+}
 /* volume doors - each product volume opens its own page */
 .vol-door{display:inline-flex;align-items:center;gap:10px;margin-top:22px;
   font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
