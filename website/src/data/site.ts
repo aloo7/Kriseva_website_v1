@@ -29,7 +29,7 @@ export const site = {
   },
   thesis: 'A tender is not a PDF. It is a decision system hidden inside a document bundle.',
   defaults: {
-    title: 'KRISEVA AI — Procurement Intelligence for India’s Defense Ecosystem',
+    title: 'KRISEVA AI · Procurement Intelligence for India’s Defense Ecosystem',
     description:
       'KRISEVA AI builds procurement intelligence systems for India’s defense ecosystem. KRISEVA TAS helps defense MSMEs discover, parse, score, and review tender opportunities.',
     ogImage: '/assets/brand/kriseva-og.png',

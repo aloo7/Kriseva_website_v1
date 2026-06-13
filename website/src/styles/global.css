@@ -176,7 +176,7 @@ textarea:focus-visible {
 .section--paper {
   background: var(--surface-paper);
   color: var(--ink-primary);
-  /* Paper grain — very subtle, CSS-only, performance-safe.
+  /* Paper grain · very subtle, CSS-only, performance-safe.
      Two faint warming radials at section corners; never animated. */
   background-image:
     radial-gradient(120% 60% at 0% 0%, rgba(193, 138, 62, 0.025) 0%, transparent 50%),
@@ -207,7 +207,7 @@ textarea:focus-visible {
 
 /* ─────────────── Mono utilities (consolidates Stage 4 inline patterns) ─────────────── */
 
-/* Eyebrow — appears above headlines */
+/* Eyebrow · appears above headlines */
 .mono-eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-eyebrow);
@@ -221,7 +221,7 @@ textarea:focus-visible {
   color: var(--accent-soft);
 }
 
-/* Section bar — flex header used on /workflow, /founder, /tas, etc. */
+/* Section bar · flex header used on /workflow, /founder, /tas, etc. */
 .section-bar {
   display: flex;
   align-items: baseline;
@@ -231,7 +231,7 @@ textarea:focus-visible {
   margin-bottom: var(--gap-section-bar);
 }
 
-/* Meta line — short caption / label */
+/* Meta line · short caption / label */
 .mono-meta {
   font-family: var(--font-mono);
   font-size: var(--text-meta);
@@ -243,7 +243,7 @@ textarea:focus-visible {
   color: var(--ink-quiet);
 }
 
-/* Discipline line — small print, footer-style */
+/* Discipline line · small print, footer-style */
 .mono-discipline {
   font-family: var(--font-mono);
   font-size: var(--text-discipline);
@@ -252,7 +252,7 @@ textarea:focus-visible {
   line-height: var(--leading-mono);
 }
 
-/* The decision dot — brand-mark callback. Use as a leading accent. */
+/* The decision dot · brand-mark callback. Use as a leading accent. */
 .dot-brass {
   display: inline-block;
   width: 6px;

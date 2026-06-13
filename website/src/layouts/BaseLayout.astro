@@ -24,7 +24,7 @@ const {
 const path = Astro.url.pathname;
 const normalizedPath = path === '/' ? '/' : path.replace(/\/$/, '');
 const canonicalUrl = canonical ?? new URL(normalizedPath, site.url).toString();
-const fullTitle = title === site.defaults.title ? title : `${title} — ${site.name}`;
+const fullTitle = title === site.defaults.title ? title : `${title} · ${site.name}`;
 ---
 <!doctype html>
 <html lang="en">
@@ -51,14 +51,14 @@ const fullTitle = title === site.defaults.title ? title : `${title} — ${site.n
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name} — ${site.shortPositioning}`} />
+    <meta property="og:image:alt" content={`${site.name} · ${site.shortPositioning}`} />
 
     {/* Twitter card */}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(ogImage, site.url).toString()} />
-    <meta name="twitter:image:alt" content={`${site.name} — ${site.shortPositioning}`} />
+    <meta name="twitter:image:alt" content={`${site.name} · ${site.shortPositioning}`} />
 
     {/* Fonts: self-hosted (Instrument Serif + IBM Plex Sans/Mono/Serif) via src/styles/fonts.css; no CDN (Brand System v1, sovereignty). */}
   </head>
@@ -74,7 +74,7 @@ const fullTitle = title === site.defaults.title ? title : `${title} — ${site.n
     <Footer />
 
     <script>
-      // Scroll reveal — single IntersectionObserver, reduced-motion safe.
+      // Scroll reveal · single IntersectionObserver, reduced-motion safe.
       // Containers tagged [data-stagger] cascade their direct .reveal children
       // by setting a CSS custom property --reveal-index on each child, which
       // global.css turns into a transition-delay.
