@@ -67,6 +67,11 @@ const { id = 'vsim' } = Astro.props;
   .vs-states i.lit{opacity:1;transform:scale(1.25)}
   .vs-note{margin-top:16px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
   @media (max-width:760px){.vs-grid{grid-template-columns:1fr}.vs-out{position:static}}
+  /* v8 readable type floor (R1): the flagship simulator set its labels at
+     .56-.66rem; re-point to the shared fluid scale. font-size only. */
+  .vs-kicker,.vs-crit,.vs-f legend{font-size:var(--fs-eyebrow)}
+  .vs-pill{font-size:var(--fs-meta)}
+  .vs-plain,.vs-f label,.vs-why,.vs-route,.vs-note{font-size:var(--fs-caption)}
 </style>
 
 <script>
