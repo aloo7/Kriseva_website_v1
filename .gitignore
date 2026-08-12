@@ -31,3 +31,6 @@ pnpm-debug.log*
 # Local download artifacts (regenerable; not committed)
 *.tar.gz
 *.bundle
+
+# v2 program worker receipts: may contain sensitive internal references. Never commit.
+docs/v2-handoffs/
