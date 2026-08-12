@@ -138,3 +138,122 @@ Issuer-side intelligence is **never** described as launched. Every mention is wr
 | A6 | TAS screenshots `01–05` and `06_settings_local_first_boundary.png` | Sensitive-data review on the seeded demo content before public deploy. |
 
 These are not blockers for shipping the site; the site already ships without making any of them. They are blockers for any future copy change that would weaken the current discipline.
+
+---
+
+## V2 extension (2026-08-13)
+
+Scope: Phase 2 claims work order under `docs/CORPORATE_SITE_V2_ARCHITECTURE.md` (§3, §5, §11, §15). Adds the company positioning set, capability tiles, sector statements, portfolio card copy, the full ATTEST claim set, an EVALUATOR maturity update, trust-pillar copy, and proof-row copy to `website/src/data/publicClaims.ts`. Nothing above this line is modified; existing claims, ids, and wording stay byte-identical, the lint deny-list is untouched, and ratchet items A1–A6 remain locked.
+
+Source discipline: ATTEST and EVALUATOR facts are derived only from items marked `DOCUMENTED` in the local, untracked `docs/v2-handoffs/ATTEST_EVALUATOR_FACTS.md`. Evidence pointers below cite the underlying company source paths that file names (e.g. `ATTEST_PROBLEM_STATEMENT.md`, `01_PRODUCTS/evaluator/README.md`), never the handoff file itself, since this register is public. The IFSCA enforcement statistic is excluded per architecture §11. No agency names beyond already-registered wording, no real tender identifiers, no stakeholder identities or roles beyond register-approved anonymized phrases, no percentages.
+
+**Claim count.** `publicClaims.ts` held 51 registered claims before this extension. This extension adds 54 claims across 8 new groups (companyV2 5, capabilityV2 6, sectorV2 2, portfolioV2 18, attestV2 12, evaluatorV2 4, trustV2 4, proofV2 3). Of the 54, 2 are `do-not-publish` tripwires (no live wording) and 2 are `do-not-publish` PENDING-FABLE candidates (not authorized for publication). **Total registered claims after this extension: 105.**
+
+New ids use the `<groupV2>.<name>` pattern (e.g. `companyV2.sentence`, matching the existing `<group>.<name>` convention). Ids marked "Reuses claim id: X" carry byte-identical wording copied from the cited pre-V2 claim; the pre-V2 claim itself was not edited.
+
+### companyV2 (company positioning, wording exact per architecture §3)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-1 | `companyV2.sentence` | site.ts, index.astro, /company | "KRISEVA AI builds evidence-first AI systems for high-stakes institutional decisions." | Verified and safe | Architecture §3; ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (lines 3-4) | Low | No |
+| V2-2 | `companyV2.hero-headline` | HeroCorporate (index.astro) | "The evidence layer for high-stakes institutional decisions." | Verified and safe | Architecture §3 | Low | No |
+| V2-3 | `companyV2.hero-support` | HeroCorporate (index.astro) | "KRISEVA builds systems that turn institutional document bundles into decisions a named human can defend. Sources sealed. Conflicts surfaced. Every decision recorded." | Safe with care | Architecture §3; ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§2.3, §9) | Medium | No |
+| V2-4 | `companyV2.hero-meta-sectors` | HeroCorporate meta chip | "Defense procurement · Regulated finance" | Safe with care | Architecture §3 | Medium (caveat: names two domains, not parity of maturity) | No |
+| V2-5 | `companyV2.hero-meta-status` | HeroCorporate meta chip | "Pilot and research stage · No endorsement claimed" | Verified and safe | Architecture §3; reuses `boundary.notClaimed` | Low | No |
+
+### capabilityV2 (six Evidence Spine tiles, architecture §6, capability claims only)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-6 | `capabilityV2.source` (SOURCE) | EvidenceSpine, CapabilityGrid | "Every source document is sealed on arrival, and any change to the expected reporting template is detected automatically." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (ATTEST-documented; do not extend to EVALUATOR as identical) | No |
+| V2-7 | `capabilityV2.evidence` (EVIDENCE) | EvidenceSpine, CapabilityGrid | "Every value is checked through three independent extraction paths, and confidence comes from where they agree, not from any single path." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§172-184) | Medium | No |
+| V2-8 | `capabilityV2.conflict` (CONFLICT) | EvidenceSpine, CapabilityGrid | "When the extraction paths disagree, the system surfaces the conflict instead of resolving it silently." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (line 22, §111-123) | Medium | No |
+| V2-9 | `capabilityV2.human-review` (HUMAN REVIEW) | EvidenceSpine, CapabilityGrid | "Every exception routes to a named human, who records a stated reason before the record moves forward." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§115-124) | Medium | No |
+| V2-10 | `capabilityV2.decision` (DECISION) | EvidenceSpine, CapabilityGrid | "The system recommends. A named human makes and records the decision; the system does not hold decision authority." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (lines 24-25); evaluator README (lines 3-4) | Medium | No |
+| V2-11 | `capabilityV2.retained-record` (RETAINED RECORD) | EvidenceSpine, CapabilityGrid | "Every decision is written to an append-only record that cannot be edited after the fact." | Safe with care | evaluator README (§2.3); reuses `evaluator.audit-chain`; attest-public-export/README.md (lines 34-39) | Medium (EVALUATOR is DB-trigger-verified; ATTEST is a demonstration export, not production-hardened) | No |
+
+### sectorV2 (one defense statement, one regulated-finance statement)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-12 | `sectorV2.defense` | SectorPanels, /defense | "KRISEVA serves defense procurement with two systems: TAS for bidders, in pilot and demo evaluation, and EVALUATOR for evaluation committees, a working prototype." | Safe with care | Architecture §5 item 4, §7; reuses `tas.status`, `evaluator.one-liner`, `evaluator.eval-status` | Medium (must render beside `boundary.notClaimed`) | No |
+| V2-13 | `sectorV2.finance` | SectorPanels, /finance | "In regulated finance, ATTEST is a research-stage, human-reviewed prototype for evidence-first regulatory filing review, tested on synthetic demonstration data, and not connected to any regulator system." | Safe with care | attest-public-export/README.md (lines 1, 5, 40-41); 00_CONTROL/STATUS.md (lines 26-27) | Medium (mandatory §11 maturity framing; no regulator name) | No |
+
+### portfolioV2 (per product: purpose, primary user, three capability bullets, maturity line)
+
+TAS and EVALUATOR rows are byte-identical reuse of already-registered wording (see Evidence column for source id); nothing here re-invents registered TAS or EVALUATOR claims.
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-14 | `portfolioV2.tas-purpose` | PortfolioCards | "KRISEVA TAS is a bidder-side tender intelligence and bid-review system for defense MSMEs and defense-tech companies." | Verified and safe | Reuses `tas.long-line` | Low | No |
+| V2-15 | `portfolioV2.tas-primary-user` | PortfolioCards | "Defense MSMEs and defense-tech bid teams." | Verified and safe | Reuses `positioning.bidder-msme`, `tas.long-line` | Low | No |
+| V2-16 | `portfolioV2.tas-cap-1` | PortfolioCards | "Treats tenders as bundles of bid documents, specifications, BOQs, ATCs, corrigenda, annexures, and supporting files." | Verified and safe | Reuses `tas.bundle-thesis` | Low | No |
+| V2-17 | `portfolioV2.tas-cap-2` | PortfolioCards | "Parses PDF, DOCX, XLSX, TXT, and CSV tender files locally." | Verified and safe | Reuses `tas.parsing` | Low | No |
+| V2-18 | `portfolioV2.tas-cap-3` | PortfolioCards | "Generates operator review briefs with BID, REVIEW, or SKIP recommendations." | Safe with care | Reuses `tas.recommendation` | Medium | No |
+| V2-19 | `portfolioV2.tas-maturity` | PortfolioCards | "TAS is in pilot and demo evaluation, not a production SaaS." | Safe with care | Reuses `tas.status` (ratchet A4) | Medium | No |
+| V2-20 | `portfolioV2.evaluator-purpose` | PortfolioCards | "Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defence procurement organisations." | Safe with care | Reuses `evaluator.one-liner` | Medium (never name the agency) | No |
+| V2-21 | `portfolioV2.evaluator-primary-user` | PortfolioCards | "Government and defense procurement evaluation committees." | Safe with care | Reuses `evaluator.one-liner`, `evaluator.positioning` | Medium (no agency name) | No |
+| V2-22 | `portfolioV2.evaluator-cap-1` | PortfolioCards | "A six-state verdict model. The two uncertain states auto-route to a human; nothing is disqualified silently." | Safe with care | Reuses `evaluator.six-state` | Medium | No |
+| V2-23 | `portfolioV2.evaluator-cap-2` | PortfolioCards | "Three-path convergence reasoning on every criterion." | Safe with care | Reuses `evaluator.three-path` | Medium | No |
+| V2-24 | `portfolioV2.evaluator-cap-3` | PortfolioCards | "A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible." | Safe with care | Reuses `evaluator.audit-chain` | Medium | No |
+| V2-25 | `portfolioV2.evaluator-maturity` | PortfolioCards | "Working prototype. In active evaluation with a central armed police force." | Safe with care | Architecture §7; reuses `evaluator.eval-status` | Medium (no end-to-end framing here, see evaluatorV2 PENDING-FABLE) | No |
+| V2-26 | `portfolioV2.attest-purpose` | PortfolioCards | "ATTEST is a research-stage prototype that reviews regulatory filing evidence for regulated-finance compliance teams, sealing sources and surfacing conflicts for a named human to resolve." | Safe with care | attest-public-export/README.md (line 1); ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (must render beside V2-31 maturity line) | No |
+| V2-27 | `portfolioV2.attest-primary-user` | PortfolioCards | "Compliance officers at regulated financial entities." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 11) | Medium (generalized, no regulator/regime named) | No |
+| V2-28 | `portfolioV2.attest-cap-1` | PortfolioCards | "Seals every source document on arrival and detects when the reporting template changes." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-29 | `portfolioV2.attest-cap-2` | PortfolioCards | "Populates each filing value through three independent extraction paths and surfaces disagreement instead of resolving it silently." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-30 | `portfolioV2.attest-cap-3` | PortfolioCards | "Binds every value in the filed return to the page and region that produced it, with a linked document reference." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-31 | `portfolioV2.attest-maturity` | PortfolioCards, /attest, /finance | "Research-stage, human-reviewed prototype. Synthetic demonstration data. Not connected to any regulator system. No customers, no pilots." | Verified and safe | attest-public-export/README.md (lines 1, 5, 40-41); 00_CONTROL/STATUS.md (lines 26-27) | Low (mandatory §11 statement) | No |
+
+### attestV2 (full ATTEST claim set, architecture §11)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-32 | `attestV2.source-sealing` | /attest | "ATTEST seals every source document on arrival and detects when the regulator's reporting template changes." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (generic "the regulator", no name) | No |
+| V2-33 | `attestV2.three-path` | /attest | "ATTEST populates each filing value through three independent extraction paths and surfaces any disagreement between them rather than resolving it silently." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-34 | `attestV2.provenance` | /attest | "Every cell in the filed return is bound to the page and region that produced it, with a linked document reference." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-35 | `attestV2.human-review` | /attest | "Every exception, conflicting evidence, an unsupported claim, or a missing source, routes to a named human who states a reason in the interface." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium | No |
+| V2-36 | `attestV2.non-interpretive` | /attest | "ATTEST does not interpret regulation, state what a rule requires, give legal or regulatory advice, or claim a number is correct. It surfaces evidence; a named human decides." | Verified and safe | ATTEST_PROBLEM_STATEMENT.md (lines 24-25) | Low | No |
+| V2-37 | `attestV2.demo-hub` | /attest, ProofRow | "A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow." | Verified and safe | attest-public-export/README.md (lines 7-8) | Low (always pair with synthetic-data label) | No |
+| V2-38 | `attestV2.maturity-research-stage` | /attest, /finance, PortfolioCards | "ATTEST is a research-stage, human-reviewed prototype." | Verified and safe | attest-public-export/README.md (line 1) | Low (mandatory §11) | No |
+| V2-39 | `attestV2.maturity-synthetic-data` | /attest, /finance, PortfolioCards | "ATTEST demonstrations run on synthetic demonstration data, not real filings or real customer data." | Verified and safe | attest-public-export/README.md (line 5) | Low (mandatory §11) | No |
+| V2-40 | `attestV2.maturity-no-regulator-connection` | /attest, /finance, PortfolioCards | "ATTEST is not connected to any regulator system." | Verified and safe | attest-public-export/README.md (lines 40-41) | Low (mandatory §11) | No |
+| V2-41 | `attestV2.maturity-no-customers` | /attest, /finance, PortfolioCards | "ATTEST has no customers and no pilots." | Verified and safe | 00_CONTROL/STATUS.md (lines 26-27) | Low (mandatory §11) | No |
+| V2-42 | `attestV2.do-not-publish-enforcement-stat` | never appears | "(Reserved. The excluded IFSCA enforcement-trend statistic is not for publication on any v2 surface.)" | Do not publish | Architecture §11 | High | No (tripwire only) |
+| V2-43 | `attestV2.regulator-name-pending` | not used | "(Reserved. No regulator name is used in any ATTEST v2 public claim.)" | Do not publish | Architecture §11, §15 item 3(b) | High | **Yes, PENDING-FABLE** |
+
+### evaluatorV2 (maturity update claims)
+
+Hard constraints applied: no agency names, no tender identifiers, no stakeholder roles or identities, no test counts, no percentages.
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-44 | `evaluatorV2.functional-verified` | /evaluator, /capabilities | "The core evaluation components of EVALUATOR, document ingestion, the hash-chained audit log, the pattern-intelligence layer, the committee-triggered external-verification stack, and the recommendation memorandum generator, are built and functionally verified." | Safe with care | evaluator README (§9, Functional components verified) | Medium (component-level only) | No |
+| V2-45 | `evaluatorV2.roadmap-boundary` | /evaluator (boundaries) | "Multi-tender breadth, cross-tender bidder identity, and production authentication are wired or planned, not yet demonstrated end to end." | Verified and safe | evaluator README (§9 wired, §9 PLANNED) | Low (self-limiting) | No |
+| V2-46 | `evaluatorV2.maturity-working-prototype` | /evaluator, /defense, /capabilities | "EVALUATOR is a working prototype." | Safe with care | Architecture §7, §5 item 4 | Medium | No |
+| V2-47 | `evaluatorV2.e2e-candidate` | not used on any public page yet | "EVALUATOR has completed a full, end-to-end evaluation cycle on a real defense-sector tender, with all six verdict states demonstrated." | Do not publish | evaluator README (§9 shipping list); COMPLETION_SUMMARY.md | High | **Yes, PENDING-FABLE** |
+
+### trustV2 (four trust-pillar sentences, architecture §12)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-48 | `trustV2.local-first` | TrustStrip, /security | "Designed for local-first tender processing, with local database, local file storage, and local model routes where configured." | Safe with care | Reuses `security.local-first`, `security.local-routes`, `security.boundary` (claims 15-17) | Medium | No |
+| V2-49 | `trustV2.audit-records` | TrustStrip, /security | "A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible." | Safe with care | Reuses `evaluator.audit-chain` | Medium | No |
+| V2-50 | `trustV2.human-in-command` | TrustStrip, /security | "Recommendations, never autonomous authority. Every material decision is made and recorded by a named human." | Safe with care | Reuses `tas.recommendation`; ATTEST_PROBLEM_STATEMENT.md (lines 24-25); evaluator README (lines 3-4) | Medium | No |
+| V2-51 | `trustV2.claims-discipline` | TrustStrip, ProofRow, /company, /evidence | "Every material public claim on this site is registered, evidence-mapped, and checked by an automated lint gate before it can publish." | Verified and safe | This register (golden rule); `website/scripts/check-public-copy.mjs` | Low | No |
+
+### proofV2 (homepage Selected Proof row, architecture §5 item 7)
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-52 | `proofV2.claims-discipline` | ProofRow | "Every material public claim on this site is registered, evidence-mapped, and checked by an automated lint gate before it can publish." | Verified and safe | Reuses `trustV2.claims-discipline` | Low | No |
+| V2-53 | `proofV2.attest-hub` | ProofRow | "A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow." | Verified and safe | Reuses `attestV2.demo-hub` | Low (pair with synthetic-data label) | No |
+| V2-54 | `proofV2.tas-status` | ProofRow | "TAS is in pilot and demo evaluation, not a production SaaS." | Safe with care | Reuses `tas.status` (ratchet A4) | Medium | No |
+
+### V2 claims requiring human approval before publish (appended to A1–A6; those items are unchanged)
+
+| # | Claim id | Reason |
+|---|---|---|
+| A7 | `evaluatorV2.e2e-candidate` (V2-47) | Architecture §15 item 3(a): the exact "working prototype, demonstrated end-to-end" wording, stripped of agency name, tender identifier, and counts per the Phase 2 hard constraints, is drafted but not cleared. Fable must rule whether the stripped claim is still an accurate, non-misleading representation before it can move to a publishable category. |
+| A8 | `attestV2.regulator-name-pending` (V2-43) | Architecture §15 item 3(b): whether any regulator name may appear on /finance or /attest, even in neutral descriptive context, is undecided. Default is to avoid entirely; every attestV2 and sectorV2.finance claim in this extension follows that default. |
+
+These two items are not blockers for shipping v2; no page in this extension names a regulator or claims an end-to-end demonstration. They block only the two specific `do-not-publish` candidate wordings above from ever being promoted to a publishable category.

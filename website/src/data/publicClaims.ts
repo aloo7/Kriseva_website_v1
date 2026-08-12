@@ -541,6 +541,548 @@ const storyV7: PublicClaim[] = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────
+// V2 extension (2026-08-13). Corporate site v2, Phase 2 claims work order.
+// Source contract: docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3, §5, §11, §15.
+// ATTEST/EVALUATOR facts derive only from items marked DOCUMENTED in the
+// local, untracked docs/v2-handoffs/ATTEST_EVALUATOR_FACTS.md; evidence
+// pointers below cite the underlying company source paths that file names,
+// never the handoff file itself. No agency names beyond already-registered
+// wording, no tender identifiers, no stakeholder roles/identities beyond
+// register-approved anonymized phrases, no percentages (architecture §15.4).
+// ─────────────────────────────────────────────────────────────────────────
+
+// companyV2 (company positioning set, wording exact per architecture §3).
+const companyV2: PublicClaim[] = [
+  {
+    id: 'companyV2.sentence',
+    wording: 'KRISEVA AI builds evidence-first AI systems for high-stakes institutional decisions.',
+    category: 'verified-and-safe',
+    evidence: [
+      'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3',
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+      '01_PRODUCTS/evaluator/README.md (lines 3-4)',
+    ],
+    surface: 'site.ts (positioning v2), index.astro (hero), /company',
+  },
+  {
+    id: 'companyV2.hero-headline',
+    wording: 'The evidence layer for high-stakes institutional decisions.',
+    category: 'verified-and-safe',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3'],
+    surface: 'HeroCorporate (index.astro)',
+  },
+  {
+    id: 'companyV2.hero-support',
+    wording:
+      'KRISEVA builds systems that turn institutional document bundles into decisions a named human can defend. Sources sealed. Conflicts surfaced. Every decision recorded.',
+    category: 'safe-with-care',
+    evidence: [
+      'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3',
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+      '01_PRODUCTS/evaluator/README.md (§2.3, §9)',
+    ],
+    surface: 'HeroCorporate (index.astro)',
+    caveat:
+      'Capability claims only, no market or accuracy claim. "Sources sealed" maps to ATTEST document sealing; "Conflicts surfaced" maps to ATTEST three-path disagreement surfacing and EVALUATOR six-state routing; "Every decision recorded" maps to EVALUATOR hash-chained audit log. Does not imply uniform maturity across products; see attestV2 and evaluatorV2 maturity claims.',
+  },
+  {
+    id: 'companyV2.hero-meta-sectors',
+    wording: 'Defense procurement · Regulated finance',
+    category: 'safe-with-care',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3'],
+    surface: 'HeroCorporate meta chip (index.astro)',
+    caveat:
+      'Names two domains of work, not parity of product maturity. Defense procurement covers TAS (pilot) and EVALUATOR (working prototype); regulated finance covers ATTEST (research-stage prototype only). Must render beside companyV2.hero-meta-status.',
+  },
+  {
+    id: 'companyV2.hero-meta-status',
+    wording: 'Pilot and research stage · No endorsement claimed',
+    category: 'verified-and-safe',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §3', 'Reuses claim id: boundary.notClaimed'],
+    surface: 'HeroCorporate meta chip (index.astro)',
+  },
+];
+
+// capabilityV2 (six capability tiles mapped to the Evidence Spine stations,
+// (architecture §6). Capability claims only, no market claims.
+const capabilityV2: PublicClaim[] = [
+  {
+    id: 'capabilityV2.source',
+    wording:
+      'Every source document is sealed on arrival, and any change to the expected reporting template is detected automatically.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat:
+      'Documented and demonstrated in ATTEST. EVALUATOR ingestion (two-tier document router) is analogous but sealing / template-change detection specifically is an ATTEST-documented capability; do not extend to claim identical EVALUATOR implementation.',
+  },
+  {
+    id: 'capabilityV2.evidence',
+    wording:
+      'Every value is checked through three independent extraction paths, and confidence comes from where they agree, not from any single path.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+      'KRISEVA_EVALUATOR/README.md (§172-184)',
+    ],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat: 'Shared three-path language across ATTEST and EVALUATOR (architecture §6). No accuracy percentage without measurement evidence.',
+  },
+  {
+    id: 'capabilityV2.conflict',
+    wording: 'When the extraction paths disagree, the system surfaces the conflict instead of resolving it silently.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+      '01_PRODUCTS/evaluator/README.md (line 22)',
+      'KRISEVA_EVALUATOR/README.md (§111-123)',
+    ],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat:
+      'EVALUATOR expresses this architecturally: two of six verdict states route to human review by construction, so silent disqualification is not possible.',
+  },
+  {
+    id: 'capabilityV2.human-review',
+    wording: 'Every exception routes to a named human, who records a stated reason before the record moves forward.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+      'KRISEVA_EVALUATOR/README.md (§115-124)',
+    ],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat:
+      'Human review is a recommendation-routing mechanism, not a claim that any output is pre-approved or validated beyond the stated reason.',
+  },
+  {
+    id: 'capabilityV2.decision',
+    wording: 'The system recommends. A named human makes and records the decision; the system does not hold decision authority.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)',
+      '01_PRODUCTS/evaluator/README.md (lines 3-4)',
+    ],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat:
+      'Reuses the recommendation-only framing already registered for TAS (tas.recommendation) and EVALUATOR (evaluator.positioning); no autonomous authority is ever claimed.',
+  },
+  {
+    id: 'capabilityV2.retained-record',
+    wording: 'Every decision is written to an append-only record that cannot be edited after the fact.',
+    category: 'safe-with-care',
+    evidence: [
+      'KRISEVA_EVALUATOR/README.md (§2.3)',
+      'Reuses claim id: evaluator.audit-chain',
+      '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 34-39)',
+    ],
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    caveat:
+      'Verified at the database layer for EVALUATOR (Postgres trigger blocks UPDATE/DELETE). The ATTEST retained record at this stage is a demonstration export (JSON/HTML) from a research prototype, not a production-hardened append-only store; do not imply parity between the two.',
+  },
+];
+
+// sectorV2 (one defense statement, one regulated-finance statement; finance
+// carries the mandatory research-stage framing from architecture §11).
+const sectorV2: PublicClaim[] = [
+  {
+    id: 'sectorV2.defense',
+    wording:
+      'KRISEVA serves defense procurement with two systems: TAS for bidders, in pilot and demo evaluation, and EVALUATOR for evaluation committees, a working prototype.',
+    category: 'safe-with-care',
+    evidence: [
+      'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §5 item 4, §7',
+      'Reuses claim id: tas.status',
+      'Reuses claim id: evaluator.one-liner',
+      'Reuses claim id: evaluator.eval-status',
+    ],
+    surface: 'SectorPanels (index.astro), /defense',
+    caveat:
+      'Always render beside boundary.notClaimed ("No military or government endorsement claimed or implied"). No agency name, no tender identifier.',
+  },
+  {
+    id: 'sectorV2.finance',
+    wording:
+      'In regulated finance, ATTEST is a research-stage, human-reviewed prototype for evidence-first regulatory filing review, tested on synthetic demonstration data, and not connected to any regulator system.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1, line 5, lines 40-41)',
+      '00_CONTROL/STATUS.md (lines 26-27)',
+    ],
+    surface: 'SectorPanels (index.astro), /finance',
+    caveat:
+      'Mandatory maturity framing per architecture §11: research-stage, synthetic data, not connected to any regulator system, no customers or pilots claimed. No regulator name; default is to avoid entirely (architecture §11, §15 item 3b, see attestV2.regulator-name-pending).',
+  },
+];
+
+// portfolioV2 (per product, TAS, EVALUATOR, ATTEST): purpose sentence,
+// primary user, three capability bullets, maturity line. TAS and EVALUATOR
+// entries reuse existing registered wording verbatim rather than
+// re-inventing it; each is byte-identical to its source claim's wording.
+const portfolioV2: PublicClaim[] = [
+  // TAS
+  {
+    id: 'portfolioV2.tas-purpose',
+    wording: 'KRISEVA TAS is a bidder-side tender intelligence and bid-review system for defense MSMEs and defense-tech companies.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: tas.long-line'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of tas.long-line for the v2 portfolio card; do not paraphrase further.',
+  },
+  {
+    id: 'portfolioV2.tas-primary-user',
+    wording: 'Defense MSMEs and defense-tech bid teams.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: positioning.bidder-msme', 'Reuses claim id: tas.long-line'],
+    surface: 'PortfolioCards (index.astro)',
+  },
+  {
+    id: 'portfolioV2.tas-cap-1',
+    wording: 'Treats tenders as bundles of bid documents, specifications, BOQs, ATCs, corrigenda, annexures, and supporting files.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: tas.bundle-thesis'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of tas.bundle-thesis for a portfolio card bullet.',
+  },
+  {
+    id: 'portfolioV2.tas-cap-2',
+    wording: 'Parses PDF, DOCX, XLSX, TXT, and CSV tender files locally.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: tas.parsing'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of tas.parsing for a portfolio card bullet. Do not claim PPT/PPTX or legacy DOC/XLS.',
+  },
+  {
+    id: 'portfolioV2.tas-cap-3',
+    wording: 'Generates operator review briefs with BID, REVIEW, or SKIP recommendations.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: tas.recommendation'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of tas.recommendation for a portfolio card bullet. Recommendation only; no autonomous authority.',
+  },
+  {
+    id: 'portfolioV2.tas-maturity',
+    wording: 'TAS is in pilot and demo evaluation, not a production SaaS.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: tas.status'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of tas.status. Ratchet A4 applies: removing this wording requires a deployment audit on file.',
+  },
+  // EVALUATOR
+  {
+    id: 'portfolioV2.evaluator-purpose',
+    wording: 'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defence procurement organisations.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.one-liner'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat:
+      'Byte-identical reuse of evaluator.one-liner, including its original spelling. Never name the evaluating agency; no order, contract, or deployment-win claims.',
+  },
+  {
+    id: 'portfolioV2.evaluator-primary-user',
+    wording: 'Government and defense procurement evaluation committees.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.one-liner', 'Reuses claim id: evaluator.positioning'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'No agency name.',
+  },
+  {
+    id: 'portfolioV2.evaluator-cap-1',
+    wording: 'A six-state verdict model. The two uncertain states auto-route to a human; nothing is disqualified silently.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.six-state'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of evaluator.six-state for a portfolio card bullet.',
+  },
+  {
+    id: 'portfolioV2.evaluator-cap-2',
+    wording: 'Three-path convergence reasoning on every criterion.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.three-path'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of evaluator.three-path. No accuracy percentage without measurement evidence.',
+  },
+  {
+    id: 'portfolioV2.evaluator-cap-3',
+    wording: 'A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.audit-chain'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Byte-identical reuse of evaluator.audit-chain. Interactive demos must carry the "simulated for demonstration" disclosure.',
+  },
+  {
+    id: 'portfolioV2.evaluator-maturity',
+    wording: 'Working prototype. In active evaluation with a central armed police force.',
+    category: 'safe-with-care',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'Reuses claim id: evaluator.eval-status'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat:
+      'Combines the architecture §7 maturity-chip token "working prototype" with evaluator.eval-status reused verbatim. Does not add end-to-end or fully-demonstrated framing; see evaluatorV2.e2e-candidate (PENDING-FABLE).',
+  },
+  // ATTEST
+  {
+    id: 'portfolioV2.attest-purpose',
+    wording:
+      'ATTEST is a research-stage prototype that reviews regulatory filing evidence for regulated-finance compliance teams, sealing sources and surfacing conflicts for a named human to resolve.',
+    category: 'safe-with-care',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1)',
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
+    ],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Must always render with portfolioV2.attest-maturity immediately adjacent; never stand alone without the research-stage framing.',
+  },
+  {
+    id: 'portfolioV2.attest-primary-user',
+    wording: 'Compliance officers at regulated financial entities.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 11)'],
+    surface: 'PortfolioCards (index.astro)',
+    caveat: 'Generalized from the documented target user (Compliance Officer / Principal Officer at a Registered FME) without naming the regulatory regime or regulator.',
+  },
+  {
+    id: 'portfolioV2.attest-cap-1',
+    wording: 'Seals every source document on arrival and detects when the reporting template changes.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: 'PortfolioCards (index.astro)',
+  },
+  {
+    id: 'portfolioV2.attest-cap-2',
+    wording: 'Populates each filing value through three independent extraction paths and surfaces disagreement instead of resolving it silently.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: 'PortfolioCards (index.astro)',
+  },
+  {
+    id: 'portfolioV2.attest-cap-3',
+    wording: 'Binds every value in the filed return to the page and region that produced it, with a linked document reference.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: 'PortfolioCards (index.astro)',
+  },
+  {
+    id: 'portfolioV2.attest-maturity',
+    wording: 'Research-stage, human-reviewed prototype. Synthetic demonstration data. Not connected to any regulator system. No customers, no pilots.',
+    category: 'verified-and-safe',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1, line 5, lines 40-41)',
+      '00_CONTROL/STATUS.md (lines 26-27)',
+    ],
+    surface: 'PortfolioCards (index.astro), /attest, /finance',
+    caveat: 'Mandatory maturity statement per architecture §11; must always accompany any ATTEST capability claim.',
+  },
+];
+
+// attestV2 (full ATTEST claim set under architecture §11 rules). Derived
+// only from facts marked DOCUMENTED in the local ATTEST_EVALUATOR_FACTS.md
+// handoff; evidence pointers cite the underlying company docs it names.
+const attestV2: PublicClaim[] = [
+  {
+    id: 'attestV2.source-sealing',
+    wording: 'ATTEST seals every source document on arrival and detects when the regulator’s reporting template changes.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: '/attest',
+    caveat: 'Generic "the regulator" wording; no regulator name, per architecture §11 default.',
+  },
+  {
+    id: 'attestV2.three-path',
+    wording:
+      'ATTEST populates each filing value through three independent extraction paths and surfaces any disagreement between them rather than resolving it silently.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: '/attest',
+  },
+  {
+    id: 'attestV2.provenance',
+    wording: 'Every cell in the filed return is bound to the page and region that produced it, with a linked document reference.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: '/attest',
+  },
+  {
+    id: 'attestV2.human-review',
+    wording: 'Every exception, conflicting evidence, an unsupported claim, or a missing source, routes to a named human who states a reason in the interface.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: '/attest',
+  },
+  {
+    id: 'attestV2.non-interpretive',
+    wording:
+      'ATTEST does not interpret regulation, state what a rule requires, give legal or regulatory advice, or claim a number is correct. It surfaces evidence; a named human decides.',
+    category: 'verified-and-safe',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)'],
+    surface: '/attest',
+  },
+  {
+    id: 'attestV2.demo-hub',
+    wording: 'A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow.',
+    category: 'verified-and-safe',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 7-8)'],
+    surface: '/attest, ProofRow (index.astro)',
+    caveat: 'Link target: ayushtiwary-ops.github.io/kriseva-attest. Always render with the synthetic-data label.',
+  },
+  {
+    id: 'attestV2.maturity-research-stage',
+    wording: 'ATTEST is a research-stage, human-reviewed prototype.',
+    category: 'verified-and-safe',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1)'],
+    surface: '/attest, /finance, PortfolioCards (index.astro)',
+  },
+  {
+    id: 'attestV2.maturity-synthetic-data',
+    wording: 'ATTEST demonstrations run on synthetic demonstration data, not real filings or real customer data.',
+    category: 'verified-and-safe',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 5)'],
+    surface: '/attest, /finance, PortfolioCards (index.astro)',
+  },
+  {
+    id: 'attestV2.maturity-no-regulator-connection',
+    wording: 'ATTEST is not connected to any regulator system.',
+    category: 'verified-and-safe',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 40-41)'],
+    surface: '/attest, /finance, PortfolioCards (index.astro)',
+  },
+  {
+    id: 'attestV2.maturity-no-customers',
+    wording: 'ATTEST has no customers and no pilots.',
+    category: 'verified-and-safe',
+    evidence: ['00_CONTROL/STATUS.md (lines 26-27)'],
+    surface: '/attest, /finance, PortfolioCards (index.astro)',
+  },
+  {
+    id: 'attestV2.do-not-publish-enforcement-stat',
+    wording: '(Reserved. The excluded IFSCA enforcement-trend statistic is not for publication on any v2 surface.)',
+    category: 'do-not-publish',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §11'],
+    surface: ' · never appears on any public page · ',
+    caveat: 'Tripwire entry. Architecture §11: the enforcement-trend statistic stays off the site (unverified for publication).',
+  },
+  {
+    id: 'attestV2.regulator-name-pending',
+    wording: '(Reserved. No regulator name is used in any ATTEST v2 public claim.)',
+    category: 'do-not-publish',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §11', 'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §15 item 3(b)'],
+    surface: ' · not used on any public page · ',
+    caveat:
+      'PENDING-FABLE adjudication. Architecture §15 item 3(b) asks whether any regulator name may appear on /finance or /attest. Default per §11 is to avoid entirely; every attestV2 and sectorV2.finance claim in this extension follows that default. This id reserves the decision point for Fable.',
+  },
+];
+
+// evaluatorV2 (maturity update claims). Hard constraints: no agency names,
+// no tender identifiers, no stakeholder roles or identities, no test
+// counts, no percentages (Phase 2 work order).
+const evaluatorV2: PublicClaim[] = [
+  {
+    id: 'evaluatorV2.functional-verified',
+    wording:
+      'The core evaluation components of EVALUATOR, document ingestion, the hash-chained audit log, the pattern-intelligence layer, the committee-triggered external-verification stack, and the recommendation memorandum generator, are built and functionally verified.',
+    category: 'safe-with-care',
+    evidence: ['01_PRODUCTS/evaluator/README.md (§9, Functional components verified)'],
+    surface: '/evaluator, /capabilities',
+    caveat:
+      'Component-level verification only. Does not claim end-to-end deployment, customer readiness, or a completed full-tender demonstration; see evaluatorV2.e2e-candidate (PENDING-FABLE).',
+  },
+  {
+    id: 'evaluatorV2.roadmap-boundary',
+    wording: 'Multi-tender breadth, cross-tender bidder identity, and production authentication are wired or planned, not yet demonstrated end to end.',
+    category: 'verified-and-safe',
+    evidence: ['01_PRODUCTS/evaluator/README.md (§9 wired section, §9 PLANNED section)'],
+    surface: '/evaluator (boundaries section)',
+  },
+  {
+    id: 'evaluatorV2.maturity-working-prototype',
+    wording: 'EVALUATOR is a working prototype.',
+    category: 'safe-with-care',
+    evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §5 item 4'],
+    surface: '/evaluator, /defense, /capabilities',
+    caveat:
+      'Maturity-chip token per architecture §7. Pairs with evaluatorV2.functional-verified and evaluatorV2.roadmap-boundary for the full maturity picture; never combined with end-to-end or demonstrated language without Fable clearance (see evaluatorV2.e2e-candidate).',
+  },
+  {
+    id: 'evaluatorV2.e2e-candidate',
+    wording: 'EVALUATOR has completed a full, end-to-end evaluation cycle on a real defense-sector tender, with all six verdict states demonstrated.',
+    category: 'do-not-publish',
+    evidence: ['01_PRODUCTS/evaluator/README.md (§9 shipping list)', 'COMPLETION_SUMMARY.md'],
+    surface: ' · not used on any public page yet · ',
+    caveat:
+      'PENDING-FABLE adjudication. Architecture §15 item 3(a): what "working prototype, demonstrated end-to-end" may say publicly without naming any agency or tender identifier. This candidate strips the agency name, the tender identifier, and all counts required by the Phase 2 hard constraints; Fable must confirm whether the stripped claim remains an accurate, non-misleading representation of a single-tender demonstration, or whether it overstates "end-to-end" once the specifics are removed.',
+  },
+];
+
+// trustV2 (four trust-pillar sentences, architecture §12). Local-first and
+// audit-record pillars reuse existing registered wording (claims 15-17 and
+// evaluator.audit-chain) rather than inventing new security language.
+const trustV2: PublicClaim[] = [
+  {
+    id: 'trustV2.local-first',
+    wording: 'Designed for local-first tender processing, with local database, local file storage, and local model routes where configured.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: security.local-first', 'Reuses claim id: security.local-routes', 'Reuses claim id: security.boundary'],
+    surface: 'TrustStrip (index.astro), /security',
+    caveat:
+      'Byte-identical reuse of security.local-first (register claims 15-17 territory). Portal calls and model downloads may use network when configured; avoid absolute "no-egress" framing.',
+  },
+  {
+    id: 'trustV2.audit-records',
+    wording: 'A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: evaluator.audit-chain'],
+    surface: 'TrustStrip (index.astro), /security',
+    caveat: 'Byte-identical reuse of evaluator.audit-chain. Interactive demos must carry the "simulated for demonstration" disclosure.',
+  },
+  {
+    id: 'trustV2.human-in-command',
+    wording: 'Recommendations, never autonomous authority. Every material decision is made and recorded by a named human.',
+    category: 'safe-with-care',
+    evidence: [
+      'Reuses claim id: tas.recommendation',
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)',
+      '01_PRODUCTS/evaluator/README.md (lines 3-4)',
+    ],
+    surface: 'TrustStrip (index.astro), /security',
+    caveat: 'Recommendation and evidence-surfacing only; never claim autonomous authority or that the system itself decides.',
+  },
+  {
+    id: 'trustV2.claims-discipline',
+    wording: 'Every material public claim on this site is registered, evidence-mapped, and checked by an automated lint gate before it can publish.',
+    category: 'verified-and-safe',
+    evidence: ['docs/PUBLIC_CLAIMS_REGISTER.md (golden rule)', 'website/scripts/check-public-copy.mjs'],
+    surface: 'TrustStrip (index.astro), ProofRow (index.astro), /company, /evidence',
+  },
+];
+
+// proofV2 (homepage Selected Proof row, architecture §5 item 7). Reuses
+// trustV2 and existing registered wording rather than inventing new claims.
+const proofV2: PublicClaim[] = [
+  {
+    id: 'proofV2.claims-discipline',
+    wording: 'Every material public claim on this site is registered, evidence-mapped, and checked by an automated lint gate before it can publish.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: trustV2.claims-discipline'],
+    surface: 'ProofRow (index.astro)',
+    caveat: 'Byte-identical reuse of trustV2.claims-discipline; separate id because ProofRow (§5 item 7) is a distinct homepage component from the Trust Architecture tile (§5 item 6).',
+  },
+  {
+    id: 'proofV2.attest-hub',
+    wording: 'A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow.',
+    category: 'verified-and-safe',
+    evidence: ['Reuses claim id: attestV2.demo-hub'],
+    surface: 'ProofRow (index.astro)',
+    caveat:
+      'Byte-identical reuse of attestV2.demo-hub for the homepage Selected Proof row. Always display with the synthetic-data label (validation.synthetic-data / attestV2.maturity-synthetic-data).',
+  },
+  {
+    id: 'proofV2.tas-status',
+    wording: 'TAS is in pilot and demo evaluation, not a production SaaS.',
+    category: 'safe-with-care',
+    evidence: ['Reuses claim id: tas.status'],
+    surface: 'ProofRow (index.astro)',
+    caveat: 'Byte-identical reuse of tas.status (ratchet A4 applies) for the homepage Selected Proof row. No test counts on the homepage per register discipline A3.',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────────
 // Aggregate
 // ─────────────────────────────────────────────────────────────────────────
 export const publicClaims: PublicClaim[] = [
@@ -555,6 +1097,14 @@ export const publicClaims: PublicClaim[] = [
   ...founder,
   ...boundaries,
   ...storyV7,
+  ...companyV2,
+  ...capabilityV2,
+  ...sectorV2,
+  ...portfolioV2,
+  ...attestV2,
+  ...evaluatorV2,
+  ...trustV2,
+  ...proofV2,
 ];
 
 export const claimsByCategory = publicClaims.reduce<Record<ClaimCategory, PublicClaim[]>>(
