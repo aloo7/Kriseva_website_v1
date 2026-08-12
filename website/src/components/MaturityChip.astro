@@ -1,0 +1,41 @@
+---
+// MaturityChip.astro
+//
+// Renders the three maturity states identically everywhere the site uses
+// them (architecture §7): brass outline, IBM Plex Mono label, one
+// vocabulary, no synonyms. Labels are fixed per the maturity-chip token
+// spec, not sourced from Maturity value formatting, so a future fourth
+// state can't silently reuse a wrong label.
+
+import type { Maturity } from '../data/company';
+
+interface Props {
+  maturity: Maturity;
+}
+
+const { maturity } = Astro.props;
+
+const LABELS: Record<Maturity, string> = {
+  pilot: 'In pilot',
+  'working-prototype': 'Working prototype',
+  'research-prototype': 'Research prototype',
+};
+---
+<span class="maturity-chip" data-maturity={maturity}>{LABELS[maturity]}</span>
+
+<style>
+  .maturity-chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-primary);
+    border: 1px solid var(--accent-line);
+    border-radius: var(--radius-badge);
+    padding: 4px 10px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+</style>

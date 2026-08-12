@@ -1,5 +1,5 @@
 ---
-import { footerSitemap } from '../data/navigation';
+import { footerGroups } from '../data/navigation';
 import { site } from '../data/site';
 import { routes } from '../data/routes';
 
@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__cols">
-      <div>
+      <div class="footer__brand">
         <img
           src="/assets/brand/kriseva-lockup-horizontal-light.svg"
           alt={site.name}
@@ -20,16 +20,20 @@ const year = new Date().getFullYear();
         <p class="footer__legal">{site.legalName}</p>
       </div>
 
-      <div>
-        <p class="footer__heading">Pages</p>
-        <ul class="footer__list">
-          {footerSitemap.map(({ href, label }) => (
-            <li><a href={href}>{label}</a></li>
-          ))}
-        </ul>
+      <div class="footer__nav-groups">
+        {footerGroups.map((group) => (
+          <div class="footer__group">
+            <p class="footer__heading">{group.heading}</p>
+            <ul class="footer__list">
+              {group.items.map(({ href, label }) => (
+                <li><a href={href}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
 
-      <div>
+      <div class="footer__contact">
         <p class="footer__heading">Contact</p>
         <ul class="footer__list">
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
@@ -77,15 +81,26 @@ const year = new Date().getFullYear();
   .footer__inner { padding: 64px 0 32px; }
   .footer__cols {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1.4fr 3fr 1fr;
     gap: 48px;
     align-items: start;
   }
+  .footer__nav-groups {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .footer__cols { grid-template-columns: 1fr 2fr 1fr; gap: 36px; }
+    .footer__nav-groups { grid-template-columns: repeat(2, 1fr); gap: 24px 32px; }
+  }
   @media (max-width: 768px) {
     .footer__cols { grid-template-columns: 1fr 1fr; gap: 36px; }
+    .footer__nav-groups { grid-column: 1 / -1; grid-template-columns: repeat(4, 1fr); }
   }
   @media (max-width: 480px) {
     .footer__cols { grid-template-columns: 1fr; }
+    .footer__nav-groups { grid-template-columns: repeat(2, 1fr); }
   }
   .footer__tag {
     font-family: var(--font-mono);

@@ -87,7 +87,7 @@ const { id = 'vsim' } = Astro.props;
   };
   const ORDER = ['v', 'q', 'd', 'i', 'm', 'f'];
 
-  function resolve(doc, ev, demo) {
+  function resolve(doc: string, ev: string, demo: string): keyof typeof STATES {
     if (doc === 'absent') return 'm';
     if (ev === 'contradicts') return 'f';
     if (ev === 'unclear') return 'i';
@@ -95,21 +95,25 @@ const { id = 'vsim' } = Astro.props;
     return ev === 'caveat' ? 'q' : 'v';
   }
 
-  document.querySelectorAll('[data-vsim]').forEach((root) => {
-    const pill = root.querySelector('[data-out="pill"]');
-    const why = root.querySelector('[data-out="why"]');
-    const route = root.querySelector('[data-out="route"]');
-    const states = root.querySelector('[data-out="states"]');
-    states.innerHTML = ORDER.map((k) => `<i data-k="${k}" style="background:${STATES[k].c}"></i>`).join('');
+  document.querySelectorAll<HTMLElement>('[data-vsim]').forEach((root) => {
+    const pill = root.querySelector<HTMLElement>('[data-out="pill"]');
+    const why = root.querySelector<HTMLElement>('[data-out="why"]');
+    const route = root.querySelector<HTMLElement>('[data-out="route"]');
+    const states = root.querySelector<HTMLElement>('[data-out="states"]');
+    if (!pill || !why || !route || !states) return;
+    states.innerHTML = ORDER.map((k) => `<i data-k="${k}" style="background:${STATES[k as keyof typeof STATES].c}"></i>`).join('');
 
-    function val(q) {
-      const el = root.querySelector(`.vs-f[data-q="${q}"] input:checked`);
+    function val(q: string) {
+      const el = root.querySelector<HTMLInputElement>(`.vs-f[data-q="${q}"] input:checked`);
       return el ? el.value : '';
     }
     function update() {
+      if (!pill || !why || !route || !states) return;
       const doc = val('doc'), ev = val('ev'), demo = val('demo');
-      root.querySelector('.vs-f[data-q="ev"]').dataset.disabled = String(doc === 'absent');
-      root.querySelector('.vs-f[data-q="demo"]').dataset.disabled = String(doc === 'absent' || ev === 'contradicts' || ev === 'unclear');
+      const evField = root.querySelector<HTMLElement>('.vs-f[data-q="ev"]');
+      const demoField = root.querySelector<HTMLElement>('.vs-f[data-q="demo"]');
+      if (evField) evField.dataset.disabled = String(doc === 'absent');
+      if (demoField) demoField.dataset.disabled = String(doc === 'absent' || ev === 'contradicts' || ev === 'unclear');
       const k = resolve(doc, ev, demo);
       const s = STATES[k];
       pill.textContent = s.name;
