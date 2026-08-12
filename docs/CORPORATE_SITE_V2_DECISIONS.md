@@ -76,6 +76,21 @@ Evidence: Audit §9 (6.7 MB public dir, 1.6 MB founder photo, 589 KB three.js).
 Alternatives rejected: No numeric budgets (unenforceable).
 Reversal condition: A Gate finding that a budget blocks a justified design element; adjust by decision, not silently.
 
+D-011
+Question: May EVALUATOR publicly claim an end-to-end demonstration (register item A7, claim evaluatorV2.e2e-candidate)?
+Decision: Yes, only in this approved wording: "EVALUATOR has run a complete evaluation cycle on a real, publicly issued defense-sector tender using synthetic bidder submissions, with all six verdict states demonstrated." Category safe-with-care. Binding caveats: the synthetic-bidder qualifier is inseparable from the claim; no agency name, tender identifier, page count, bidder count, or criterion count may ever accompany it; permitted surfaces are evaluator.astro and the /evidence page only, never the homepage or sector pages.
+Reason: The candidate wording without the qualifier would imply real submissions were evaluated, which is false and hostile to an evidence-first brand. With the qualifier the claim is documented, honest, and materially stronger than silence.
+Evidence: docs/v2-handoffs/ATTEST_EVALUATOR_FACTS.md (untracked), EVALUATOR maturity section.
+Alternatives rejected: Publishing the workers candidate wording as drafted (omits synthetic-bidder fact); suppressing the claim entirely (undersells a real, documented capability).
+Reversal condition: A real-bidder evaluation on record would allow a stronger registered claim through normal re-classification.
+
+D-012
+Question: Do regulator names appear anywhere on v2 launch surfaces (register item A8)?
+Decision: No. A8 stays reserved. All finance and ATTEST surfaces use generic phrasing ("the regulator", "any regulator system"). Additionally, the pre-existing British spelling inside evaluator.one-liner ("defence", "organisations") is authorized for re-classification to US spelling as a recorded wording revision, applied at W08, so the site carries one spelling standard.
+Reason: Regulator naming without a documented relationship invites an implied-endorsement reading that the ratchet exists to prevent. The spelling revision is a consistency fix that changes no claim substance.
+Evidence: Architecture §11; register A8; claims worker receipt.
+Reversal condition: Written, documented regulator engagement on record reopens A8 through human approval.
+
 D-010
 Question: Does claim governance extend or get rebuilt?
 Decision: Extend. publicClaims.ts and the register gain company/sector/ATTEST/EVALUATOR-maturity claim groups before homepage copy is implemented (Phase 2 precedes W03). Lint deny-list untouched. Ratchet items A1-A6 remain locked. New public strings in components must reference claim ids.
