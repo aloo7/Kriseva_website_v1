@@ -22,5 +22,12 @@ const Tag = as;
   }
   .section-label--brass { color: var(--brass); }
   .section-label--muted { color: var(--slate-600); }
-  .section--paper .section-label--brass { color: var(--brass-soft); }
+  /* Contrast fix (Phase 5): --brass-soft (same hex as --accent-soft)
+     measures ~2.87-3.11:1 on --surface-paper/--surface-paper-rise -
+     below the 4.5:1 floor. This is the default eyebrow on nearly every
+     route page (defense/finance/attest/capabilities all use
+     <SectionLabel> with no tone override), so the fix here covers every
+     paper-section instance sitewide. AA-safe brass cut, same family as
+     the N2 MaturityChip/EvidenceCard correction. */
+  .section--paper .section-label--brass { color: var(--accent-text-safe, #91601c); }
 </style>

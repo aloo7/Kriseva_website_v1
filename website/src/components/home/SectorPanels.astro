@@ -147,12 +147,15 @@ const financeSystems = financeSector.systems.map((id) => portfolio.find((p) => p
     border-right: 1px solid var(--accent-primary);
   }
 
+  /* Contrast fix (Phase 5): --accent-soft measures ~3.11:1 on this
+     panel's --surface-paper-rise background. AA-safe brass cut, same
+     family as the N2 MaturityChip/EvidenceCard correction. */
   .sector-panel__kicker {
     font-family: var(--font-mono);
     font-size: var(--text-discipline);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     margin-bottom: 14px;
   }
   .sector-panel__name {
@@ -201,6 +204,14 @@ const financeSystems = financeSector.systems.map((id) => portfolio.find((p) => p
     line-height: 1.5;
     color: var(--ink-quiet);
   }
+  /* Contrast fix (Phase 5): raw --accent-soft measured 2.87:1 on this
+     card's --surface-paper background - below the 4.5:1 floor. Matches
+     the house treatment already established for prose links in
+     global.css (.section--paper a:not(.btn), commit 97b3532): keep the
+     link readable in warm ink and mark it as a link with a brass
+     underline instead of tinting the label text itself. Hover deepens
+     the underline to the AA-safe brass cut rather than shifting the
+     label to brass. */
   .sector-system__link {
     display: inline-flex;
     align-items: center;
@@ -209,7 +220,15 @@ const financeSystems = financeSector.systems.map((id) => portfolio.find((p) => p
     font-family: var(--font-mono);
     font-size: var(--text-meta);
     letter-spacing: 0.06em;
-    color: var(--accent-soft);
+    color: var(--ink-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-primary);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
+  .sector-system__link:hover {
+    text-decoration-color: var(--accent-text-safe, #91601c);
+    text-decoration-thickness: 2px;
   }
   .sector-system__link span { transition: transform var(--motion-precise); }
   .sector-system__link:hover span { transform: translateX(3px); }

@@ -71,7 +71,11 @@ const tasStatus = claim('proofV2.tas-status');
     color: var(--ink-primary);
     border-top: var(--rule-paper);
   }
-  .proof-row__eyebrow { color: var(--accent-soft); }
+  /* Contrast fix (Phase 5): same as EvidenceThesis - this section isn't
+     .section--paper, so the shared paper-safe .mono-eyebrow override
+     doesn't reach it. AA-safe brass cut, same family as the N2
+     MaturityChip/EvidenceCard correction. */
+  .proof-row__eyebrow { color: var(--accent-text-safe, #91601c); }
 
   .proof-row__grid {
     margin-top: clamp(24px, 3vw, 36px);
@@ -90,12 +94,14 @@ const tasStatus = claim('proofV2.tas-status');
   }
   .proof-item:last-child { border-right: none; }
 
+  /* Contrast fix (Phase 5): --accent-soft measures ~3.11:1 on this
+     grid's --surface-paper-rise background. */
   .proof-item__label {
     font-family: var(--font-mono);
     font-size: var(--text-meta);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     margin-bottom: 10px;
   }
   .proof-item__body {

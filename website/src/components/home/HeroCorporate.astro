@@ -50,7 +50,13 @@ const sentence = claim('companyV2.sentence');
       </div>
     </div>
 
-    <aside class="hero-corporate__plate" aria-label="Company identity plate">
+    <!-- a11y fix (Phase 5): was <aside>, which axe's
+         landmark-complementary-is-top-level flags when a complementary
+         landmark is nested inside another landmark (this plate sits
+         inside <main>). Plain <div> keeps the identical box, styling and
+         reading position; the card was never a page-level region on its
+         own. -->
+    <div class="hero-corporate__plate" aria-label="Company identity plate">
       <p class="hero-corporate__plate-kicker">In one sentence</p>
       <p class="hero-corporate__plate-sentence">{sentence}</p>
       <div class="hero-corporate__plate-rule" aria-hidden="true"></div>
@@ -58,7 +64,7 @@ const sentence = claim('companyV2.sentence');
         {site.legalName}<br />
         {site.domain}
       </p>
-    </aside>
+    </div>
   </div>
 </section>
 
@@ -168,12 +174,17 @@ const sentence = claim('companyV2.sentence');
     border-bottom: 1px solid var(--accent-primary);
     border-right: 1px solid var(--accent-primary);
   }
+  /* Contrast fix (Phase 5): --accent-soft measured 3.11:1 on this card's
+     --surface-paper-rise background. --accent-text-safe is the same
+     AA-safe brass cut (~5.1:1 on paper-rise) used sitewide for
+     non-link brass UI chrome (MaturityChip, EvidenceCard dot; see
+     global.css N2 correction). */
   .hero-corporate__plate-kicker {
     font-family: var(--font-mono);
     font-size: var(--text-discipline);
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     margin-bottom: 14px;
   }
   .hero-corporate__plate-sentence {

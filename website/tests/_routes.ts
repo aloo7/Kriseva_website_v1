@@ -1,11 +1,27 @@
 // Single source of truth for the routes Stage 7 QA exercises.
+//
+// Phase 5 fix: previously listed 9 paths carried over from the v8 site,
+// including two retired routes (/workflow, /validation) whose page files
+// are now archived (src/pages/_workflow_archive.astro,
+// _validation_archive.astro - the leading underscore excludes them from
+// Astro's routing), and missing six routes the v2 sitemap added
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §4: /company, /capabilities,
+// /defense, /finance, /attest, /evidence). qa-static.spec.ts already
+// carries the correct 13-route list independently (its own comment
+// documents why: reconciling this file was out of W12's touch-file
+// scope). This is that same 13-route list, now the actual source of
+// truth for a11y/visual/responsive too.
 export const routes: { path: string; label: string }[] = [
   { path: '/',                label: 'home' },
+  { path: '/company',         label: 'company' },
+  { path: '/capabilities',    label: 'capabilities' },
+  { path: '/defense',         label: 'defense' },
+  { path: '/finance',         label: 'finance' },
   { path: '/tas',             label: 'tas' },
-  { path: '/workflow',        label: 'workflow' },
-  { path: '/security',        label: 'security' },
   { path: '/evaluator',       label: 'evaluator' },
-  { path: '/validation',      label: 'validation' },
+  { path: '/attest',          label: 'attest' },
+  { path: '/security',        label: 'security' },
+  { path: '/evidence',        label: 'evidence' },
   { path: '/founder',         label: 'founder' },
   { path: '/contact',         label: 'contact' },
   { path: '/404',             label: '404' },

@@ -18,7 +18,12 @@ const { step, title, source } = Astro.props;
     <span class="evidence-card__dot">{step}</span>
   </div>
   <div class="evidence-card__body">
-    <h4>{title}</h4>
+    {/* a11y fix (Phase 5): was <h4>. Every current consumer
+        (defense/finance/attest) places this card directly under an <h2>
+        section heading with nothing at h3 in between, so axe's
+        heading-order flagged the h2 -> h4 jump. <h3> is the correct next
+        level and matches every consumer's actual heading tree. */}
+    <h3>{title}</h3>
     {source && <p class="evidence-card__source">{source}</p>}
     <div class="evidence-card__detail">
       <slot />
@@ -74,7 +79,7 @@ const { step, title, source } = Astro.props;
       color var(--motion-precise),
       box-shadow var(--motion-precise);
   }
-  .evidence-card__body h4 {
+  .evidence-card__body h3 {
     font-family: var(--font-sans);
     font-weight: 600;
     color: var(--text-primary);
@@ -93,7 +98,7 @@ const { step, title, source } = Astro.props;
     color: var(--text-quiet);
     line-height: var(--leading-prose);
   }
-  .section--paper .evidence-card__body h4 { color: var(--surface-deep); }
+  .section--paper .evidence-card__body h3 { color: var(--surface-deep); }
   .section--paper .evidence-card__detail { color: var(--ink-secondary); }
   .section--paper .evidence-card { border-bottom-color: rgba(16, 35, 59, 0.12); }
   /* .evidence-card__dot's paper-context color override lives in

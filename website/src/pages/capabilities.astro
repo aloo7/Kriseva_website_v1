@@ -190,12 +190,16 @@ const description = sentence + ' One architecture, six checkpoints: source, evid
     text-transform: uppercase;
     color: var(--surface-deep);
   }
+  /* Contrast fix (Phase 5): --accent-soft measures ~3.11:1 on this
+     #annotations section's --surface-paper background. AA-safe brass
+     cut, same family as the N2 MaturityChip/EvidenceCard correction;
+     border keeps --accent-line (3:1 UI-chrome floor, unaffected). */
   .annotation-row__product {
     font-family: var(--font-mono);
     font-size: 0.68rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     border: 1px solid var(--accent-line);
     border-radius: var(--radius-badge);
     padding: 3px 8px;
@@ -219,6 +223,11 @@ const description = sentence + ' One architecture, six checkpoints: source, evid
     background: rgba(10, 31, 68, 0.55);
     border-color: rgba(193, 138, 62, 0.2);
   }
+  /* Contrast fix (Phase 5): CapabilityGrid's own --ink-quiet default is a
+     paper-context color (2.95:1 on this navy fill). --text-secondary
+     matches the description/elaboration overrides just below and clears
+     4.5:1 comfortably. */
+  .grid-wrap :global(.capability-tile__index) { color: var(--text-secondary); }
   .grid-wrap :global(.capability-tile__title) { color: var(--text-primary); }
   .grid-wrap :global(.capability-tile__description),
   .grid-wrap :global(.capability-tile__elaboration p) { color: var(--text-secondary); }

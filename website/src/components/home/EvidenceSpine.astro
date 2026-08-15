@@ -262,6 +262,12 @@ const sectorRows = [
     border-top: var(--rule-paper);
   }
 
+  /* Contrast fix (Phase 5): this section is not .section--paper, so the
+     shared .mono-eyebrow default (--accent-primary, ~2.6:1 here) applies
+     unscoped instead of the paper-safe override. Scope directly to this
+     component's own eyebrow with the AA-safe brass cut (~4.7:1 on
+     --surface-paper). */
+  .evidence-spine__head .mono-eyebrow { color: var(--accent-text-safe, #91601c); }
   .evidence-spine__head { max-width: 62ch; }
   .evidence-spine__headline {
     font-family: var(--font-serif);
@@ -413,7 +419,10 @@ const sectorRows = [
 
   /* ---------- sector instantiation strip ---------- */
   .spine-instantiation { margin-top: clamp(52px, 6vw, 84px); }
-  .spine-instantiation__kicker { color: var(--accent-soft); }
+  /* Contrast fix (Phase 5): --accent-soft measured 2.87:1 on
+     --surface-paper here. AA-safe brass cut, same family as the N2
+     MaturityChip/EvidenceCard correction. */
+  .spine-instantiation__kicker { color: var(--accent-text-safe, #91601c); }
   .spine-instantiation__row {
     display: flex;
     flex-wrap: wrap;
@@ -442,7 +451,10 @@ const sectorRows = [
     border-radius: var(--radius-badge);
     padding: 6px 11px;
   }
-  .spine-instantiation__bound--out { color: var(--accent-soft); border-color: var(--accent-line); }
+  /* Contrast fix (Phase 5): --accent-soft measured 2.87:1 on
+     --surface-paper here. Border keeps its existing --accent-line
+     (3:1 UI-chrome floor, unaffected). */
+  .spine-instantiation__bound--out { color: var(--accent-text-safe, #91601c); border-color: var(--accent-line); }
   .spine-instantiation__mid {
     display: flex;
     flex-wrap: wrap;

@@ -124,10 +124,13 @@ import MaturityChip from '../MaturityChip.astro';
     letter-spacing: 0.04em;
     color: var(--ink-quiet);
   }
+  /* Contrast fix (Phase 5): --accent-soft measures ~3.11:1 on this
+     card's --surface-paper-rise background. AA-safe brass cut, same
+     family as the N2 MaturityChip/EvidenceCard correction. */
   .portfolio-card__user-label {
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
   }
 
   .portfolio-card__caps {
@@ -148,6 +151,14 @@ import MaturityChip from '../MaturityChip.astro';
     color: var(--ink-secondary);
   }
 
+  /* Contrast fix (Phase 5): raw --accent-soft measured 3.11:1 on this
+     card's --surface-paper-rise background - below the 4.5:1 floor.
+     Matches the house treatment established for prose links in
+     global.css (.section--paper a:not(.btn), commit 97b3532): keep the
+     link readable in warm ink and mark it as a link with a brass
+     underline instead of tinting the label text itself. Hover deepens
+     the underline to the AA-safe brass cut rather than shifting the
+     label to brass. */
   .portfolio-card__link {
     margin-top: 18px;
     display: inline-flex;
@@ -156,7 +167,15 @@ import MaturityChip from '../MaturityChip.astro';
     font-family: var(--font-mono);
     font-size: var(--text-meta);
     letter-spacing: 0.06em;
-    color: var(--accent-soft);
+    color: var(--ink-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-primary);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 2px;
+  }
+  .portfolio-card__link:hover {
+    text-decoration-color: var(--accent-text-safe, #91601c);
+    text-decoration-thickness: 2px;
   }
   .portfolio-card__link span { transition: transform var(--motion-precise); }
   .portfolio-card__link:hover span { transform: translateX(3px); }

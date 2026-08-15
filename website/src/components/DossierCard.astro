@@ -88,7 +88,10 @@ const { label, title, meta, surface = 'navy' } = Astro.props;
     background: currentColor;
     flex-shrink: 0;
   }
-  .dossier-card--paper .dossier-card__label { color: var(--accent-soft); }
+  /* Contrast fix (Phase 5): --accent-soft measured 3.11:1 on
+     --surface-paper-rise. AA-safe brass cut, same family as the N2
+     MaturityChip/EvidenceCard correction. */
+  .dossier-card--paper .dossier-card__label { color: var(--accent-text-safe, #91601c); }
   .dossier-card__title {
     font-family: var(--font-serif);
     font-size: 1.18rem;
@@ -97,9 +100,16 @@ const { label, title, meta, surface = 'navy' } = Astro.props;
     letter-spacing: var(--tracking-subhead);
   }
   .dossier-card--navy .dossier-card__title { color: var(--text-primary); }
+  /* Contrast fix (Phase 5): --text-quiet is --slate-600, the same hex as
+     --ink-quiet (tokens.css) - correct as dark text on paper, but that
+     value does not read light enough on the navy variant's
+     rgba(navy, .55) fill (~2.95:1 measured). --text-secondary
+     (--paper-mute) is the token layer's own "secondary text on navy"
+     role and measures well clear of 4.5:1 there; the paper variant below
+     keeps its own already-compliant --ink-secondary override. */
   .dossier-card__body {
     font-size: 0.92rem;
-    color: var(--text-quiet);
+    color: var(--text-secondary);
     line-height: var(--leading-prose);
   }
   .dossier-card--paper .dossier-card__body { color: var(--ink-secondary); }
@@ -113,8 +123,11 @@ const { label, title, meta, surface = 'navy' } = Astro.props;
     padding-top: 12px;
     border-top: 1px solid rgba(193, 138, 62, 0.18);
   }
+  /* Contrast fix (Phase 5): --accent-soft measured 3.11:1 on
+     --surface-paper-rise. AA-safe brass cut, same family as the N2
+     MaturityChip/EvidenceCard correction. */
   .dossier-card--paper .dossier-card__meta {
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     border-top-color: rgba(16, 35, 59, 0.12);
   }
 </style>

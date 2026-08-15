@@ -200,10 +200,13 @@ const auditBlocks = [
           </div>
           <p class="disclose">Simulated for demonstration: synthetic events, not a real evaluation.</p>
         </div>
-        <aside class="chainaside">
+        <!-- a11y fix (Phase 5): was <aside>, nested inside <main>, which
+             trips axe's landmark-complementary-is-top-level. Plain <div>
+             keeps the identical box and position. -->
+        <div class="chainaside">
           <p>{auditChain} Not a screenshot, not a summary. A vigilance officer can walk it end to end.</p>
           <p class="trust">append-only<br />sha-256-chained<br />mutation-blocked at the database</p>
-        </aside>
+        </div>
       </div>
     </div>
   </section>
@@ -268,8 +271,11 @@ const auditBlocks = [
 .path .pno{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
 .path h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2vw,1.9rem);letter-spacing:-0.01em;margin-top:10px}
 .path p{margin-top:10px;font-size:.92rem;line-height:1.55;color:var(--ink-sec)}
+/* Contrast fix (Phase 5): raw --brass measured 3.52:1 on --paper-raised.
+   --brass-deep is the AA-safe darker brass cut used sitewide for
+   chrome/text on this surface. */
 .path .ptag{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--brass);border:1px solid var(--rule);border-radius:2px;padding:4px 9px}
+  text-transform:uppercase;color:var(--brass-deep);border:1px solid var(--rule);border-radius:2px;padding:4px 9px}
 .converge{display:flex;align-items:center;gap:14px;margin:clamp(22px,3vw,38px) auto;max-width:520px}
 .converge .cv-line{flex:1;height:1px;background:var(--ink-sec)}
 .converge .cv-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-sec)}
@@ -285,9 +291,13 @@ const auditBlocks = [
 .vcard .vhead{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .vcard .vname{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
 .vcard p{font-size:.9rem;line-height:1.55;color:var(--ink-sec)}
+/* Contrast fix (Phase 5): raw --brass measured 3.52:1 on --paper-raised;
+   --ink-quiet measured 3.26:1 on the same surface. --brass-deep /
+   --ink-sec are the AA-safe cuts already used for this pairing
+   elsewhere on this page (.path .ptag / .path p). */
 .vcard .vroute{display:block;margin-top:12px;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--brass)}
-.vcard .vroute.quiet{color:var(--ink-quiet)}
+  text-transform:uppercase;color:var(--brass-deep)}
+.vcard .vroute.quiet{color:var(--ink-sec)}
 .t-v{color:var(--vt-verified)}.t-q{color:var(--vt-qualified)}.t-i{color:var(--vt-insufficient)}
 .t-m{color:var(--vt-missing)}.t-d{color:var(--vt-demo)}.t-f{color:var(--vt-failed)}
 @media (max-width:860px){.vgrid{grid-template-columns:1fr}}

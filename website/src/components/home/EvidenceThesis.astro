@@ -88,7 +88,13 @@ const sentence = claim('companyV2.sentence');
     border-left: var(--rule-paper);
     padding-left: clamp(24px, 3vw, 36px);
   }
-  .evidence-thesis__vocab-kicker { color: var(--accent-soft); }
+  /* Contrast fix (Phase 5): this element also carries .mono-eyebrow, but
+     the section here is not .section--paper (class="evidence-thesis"),
+     so the shared paper-safe override doesn't reach it and this
+     component-scoped rule's --accent-soft (~3.11:1 on --surface-paper)
+     is what actually renders. AA-safe brass cut, same family as the N2
+     MaturityChip/EvidenceCard correction. */
+  .evidence-thesis__vocab-kicker { color: var(--accent-text-safe, #91601c); }
   .evidence-thesis__vocab-lede {
     font-size: 0.98rem;
     line-height: 1.6;
@@ -111,11 +117,13 @@ const sentence = claim('companyV2.sentence');
     color: var(--ink-quiet);
     white-space: nowrap;
   }
+  /* Contrast fix (Phase 5): same --accent-soft-on-paper defect as the
+     kicker above. */
   .evidence-thesis__stations li:not(:last-child)::after {
     content: "\2192";
     display: inline-block;
     margin: 0 9px;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
   }
 
   @media (max-width: 900px) {

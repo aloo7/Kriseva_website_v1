@@ -157,12 +157,15 @@ const description = sector.summary;
     gap: clamp(20px, 3vw, 44px);
     margin-top: 8px;
   }
+  /* Contrast fix (Phase 5): --accent-soft measures ~3.11:1 on this
+     #problem section's --surface-paper background. AA-safe brass cut,
+     same family as the N2 MaturityChip/EvidenceCard correction. */
   .room-label {
     font-family: var(--font-mono);
     font-size: var(--text-meta);
     letter-spacing: var(--tracking-meta);
     text-transform: uppercase;
-    color: var(--accent-soft);
+    color: var(--accent-text-safe, #91601c);
     margin-bottom: 10px;
   }
   .room h3 { margin-bottom: 10px; }

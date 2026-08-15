@@ -67,7 +67,10 @@ const description = 'If you run a tender workflow on the bidder side, sit on the
         </form>
       </div>
 
-      <aside class="fcard regmark rv" aria-label="Founder">
+      <!-- a11y fix (Phase 5): was <aside>, nested inside <main>, which
+           trips axe's landmark-complementary-is-top-level. Plain <div>
+           keeps the identical box and position. -->
+      <div class="fcard regmark rv" aria-label="Founder">
         <div class="fph"><img src="/assets/v6/founder_ayush.jpg" width="900" height="1125" alt="Ayush Tiwary, founder of KRISEVA AI" loading="lazy" /></div>
         <b>Ayush Tiwary</b>
         <div class="fmeta">
@@ -76,7 +79,7 @@ const description = 'If you run a tender workflow on the bidder side, sit on the
           <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a><br />
           <a href="/founder">The founder dossier →</a>
         </div>
-      </aside>
+      </div>
     </div>
   </section>
 

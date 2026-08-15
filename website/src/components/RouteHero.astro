@@ -63,11 +63,15 @@ const {
     line-height: 1.7;
     max-width: 720px;
   }
+  /* Contrast fix (Phase 5): --slate-600 measured 3.41:1 on this
+     component's navy/dark/deep surfaces (RouteHero has no paper
+     variant). --paper-mute matches .route-hero__subtitle just above and
+     clears 4.5:1 comfortably on every dark surface this renders on. */
   .route-hero__meta {
     margin-top: 12px;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--slate-600);
+    color: var(--paper-mute);
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }

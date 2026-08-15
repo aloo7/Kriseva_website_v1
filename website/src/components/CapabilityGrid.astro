@@ -39,8 +39,13 @@ const stationLabel = new Map(spineStations.map((s) => [s.id, s.label]));
 <div class="capability-grid" role="list">
   {capabilities.map((cap, i) => {
     const elaboration = elaborations[cap.id];
+    // a11y fix (Phase 5): was <article role="listitem">; axe's
+    // aria-allowed-role flags "listitem" as not permitted on <article>
+    // (its own strong native semantics conflict with the ARIA in HTML
+    // mapping). A plain <div> hosts any role and renders identically -
+    // no default article styling was in play.
     return (
-      <article class="capability-tile" role="listitem" data-station={cap.station}>
+      <div class="capability-tile" role="listitem" data-station={cap.station}>
         <div class="capability-tile__head">
           <span class="capability-tile__index">{String(i + 1).padStart(2, '0')}</span>
           <span class="capability-tile__station">{stationLabel.get(cap.station)}</span>
@@ -53,7 +58,7 @@ const stationLabel = new Map(spineStations.map((s) => [s.id, s.label]));
             <p>{elaboration.text}</p>
           </div>
         )}
-      </article>
+      </div>
     );
   })}
 </div>
