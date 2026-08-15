@@ -253,3 +253,7 @@ Verdict: PASS with one bounded correction batch (1 BLOCKER, 5 MAJOR, 4 MINOR, 1 
 - docs/v2-handoffs/ is gitignored. Worker receipts, internal facts, and baseline screenshots live there and are never committed. The repository is public.
 - No real tender identifiers, no stakeholder names or identifying roles, no internal infrastructure details, no unreleased program details in any tracked file or public surface.
 - Product screenshots on public surfaces carry the existing "Repo-owned capture · seeded demo data" label and the A6 sanitization review stands before any deploy.
+
+## 18C. Gate 3 outcome and release candidate (2026-08-16)
+
+RELEASE CANDIDATE APPROVED at commit 312eb3e on site/v9-corporate. Independent review produced 1 BLOCKER (V6Layout nav fork, fixed at shared-component level) and 3 MAJOR findings (2 fixed, 1 rejected with rationale in D register). Final suite: check 0 errors, lint:css clean, qa clean, qa:static 13/13, qa:motion 17/17, qa:a11y 13/13, visual 15/15, responsive 130/130. Hidden-content defect class closed permanently by D-013 (transform-only reveals). Full-page desktop captures show a dark band at the spine pin-spacer position; this is a stitched-capture artifact of ScrollTrigger pinning, not user-facing (mobile capture continuous; scrub stills show the pinned spine in that segment). NOT DEPLOYED. Deploy is founder-only, after the A6 sensitive-screenshot review and one human live-scroll pass of the spine.
