@@ -29,6 +29,9 @@ const status = getClaim('tas.status')!.wording;
 const boundaryList = getClaim('boundary.list')!.wording;
 const metadataClaim = getClaim('tas.metadata')!.wording;
 const recommendationClaim = getClaim('tas.recommendation')!.wording;
+// Gate 1 correction M2: one locked caption, rendered from the claim id, on
+// every screenshot / media embed on this page (was ~9 ad-hoc variants).
+const screenshotCaption = getClaim('validation.screenshot-caption')!.wording;
 
 const title = 'KRISEVA · TAS · Bidder-side tender intelligence for defense MSMEs';
 const description = oneLiner + ' Deterministic pipeline, evidence-linked extraction, BID / REVIEW / SKIP briefs the operator signs.';
@@ -178,9 +181,9 @@ const after = [
           <source src="/assets/media/tas-console-loop.mp4" type="video/mp4" />
         </video>
       </div>
-      <figcaption class="pcap"><span>Home, decision list, approval brief, in one loop</span><span>Synthetic demo data · repo-owned local instance</span></figcaption>
+      <figcaption class="pcap"><span>Home, decision list, approval brief, in one loop</span><span>{screenshotCaption}</span></figcaption>
     </figure>
-    <p class="disclose wrap">Working loop · 14s · muted · synthetic / seeded demo data, not a real tender.</p>
+    <p class="disclose wrap">Working loop · 14s · muted · {screenshotCaption}</p>
   </section>
 
   <!-- ============ BUNDLE TRACE ============ -->
@@ -199,9 +202,9 @@ const after = [
           <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" /></svg>
           <span class="bbox-label">bid-details table · p.1 · traced</span>
         </div>
-        <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>Synthetic demo bundle · captured 2026-05-20</span></figcaption>
+        <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>{screenshotCaption}</span></figcaption>
       </figure>
-      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+      <p class="disclose">{screenshotCaption}</p>
     </div>
   </section>
 
@@ -225,7 +228,7 @@ const after = [
           </div>
         ))}
       </div>
-      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+      <p class="disclose">{screenshotCaption}</p>
     </div>
   </section>
 
@@ -240,21 +243,21 @@ const after = [
         <Plate kicker="TAS" head="00 · Home" meta="queue · sources · scanners"
           src="/assets/v6/console_home.jpg" width={1700} height={1200}
           alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"
-          capLeft="The operator's morning: a queue, not a search box" />
+          capLeft="The operator's morning: a queue, not a search box" capRight={screenshotCaption} />
         <Plate kicker="TAS" head="01 · GeM live scanner" meta="streaming"
           src="/assets/v6/console_gem_scanner.jpg" width={1700} height={1208}
           alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"
-          capLeft="9 discovered → acquired → extracted → scored" />
+          capLeft="9 discovered → acquired → extracted → scored" capRight={screenshotCaption} />
         <Plate kicker="TAS" head="05 · Decisions" meta="signed ledger"
           src="/assets/v6/console_decisions.jpg" width={1190} height={1230}
           alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"
-          capLeft="Recommendation beside signature; disagreement is recorded" />
+          capLeft="Recommendation beside signature; disagreement is recorded" capRight={screenshotCaption} />
         <Plate kicker="TAS" head="06 · The Boundary · Zone II" meta="disclosure"
           src="/assets/v6/console_boundary_zones.jpg" width={1352} height={480}
           alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"
-          capLeft="Zone II: refused at the architecture, listed in the product" />
+          capLeft="Zone II: refused at the architecture, listed in the product" capRight={screenshotCaption} />
       </div>
-      <p class="disclose">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender.</p>
+      <p class="disclose">{screenshotCaption}</p>
     </div>
   </section>
 
@@ -329,10 +332,33 @@ const after = [
 .pdetail b{color:var(--ink);font-weight:600}
 @media (max-width:760px){.psteps{grid-template-columns:repeat(3,1fr)}}
 
-/* the console - full-bleed media band */
-.bleed{width:100vw;position:relative;left:50%;transform:translateX(-50%)}
+/* the console - full-bleed media band.
+   Gate 1 correction M5: was width:100vw + left:50% + translateX(-50%), the
+   classic full-bleed escape-hatch for breaking an element out of a
+   max-width ancestor. Its one live use (.console-plate below) is a direct
+   child of #console, a section with no max-width/wrap constraint of its
+   own - already exactly viewport-width - so the escape hatch was doing
+   nothing but adding 100vw's scrollbar-gutter mismatch (100vw includes the
+   vertical scrollbar; window.innerWidth/clientWidth do not), which
+   reproduced as document.documentElement.scrollWidth 1px wider than
+   innerWidth at 390x844. width:100% matches the already-full-width parent
+   with no viewport-unit involved. */
+.bleed{width:100%}
 .console-sec{padding-block:0 clamp(46px,6vw,100px)}
-.console-plate{border-block:1px solid var(--ink);background:var(--paper-raised)}
+/* Gate 1 correction M5: .regmark (tokens-v6.css) adds corner-bracket
+   pseudo-elements that intentionally overhang their box by 1px on every
+   side (top:-1px/left:-1px/bottom:-1px/right:-1px) - invisible everywhere
+   else .regmark is used because those elements sit inside a padded .wrap.
+   .console-plate is the one .regmark instance that is also .bleed (full
+   viewport width, flush to both edges), so the right/bottom marks' 1px
+   overhang landed 1px past the true viewport edge, reproducing as
+   document.documentElement.scrollWidth 1px wider than innerWidth at
+   390x844. overflow:hidden here clips only that sub-pixel decorative
+   overhang (box-shadow is a paint effect on the element's own box and is
+   unaffected by overflow on that same element, so the plate's lift
+   shadow on hover is untouched); the image itself already clips via
+   .pimg's own overflow:hidden. */
+.console-plate{border-block:1px solid var(--ink);background:var(--paper-raised);overflow:hidden}
 .console-plate .ph,.console-plate .pcap{max-width:var(--wrap);margin-inline:auto;padding:10px var(--pad)}
 .console-plate .pimg video{width:100%;height:auto;display:block}
 

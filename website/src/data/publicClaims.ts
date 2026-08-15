@@ -240,7 +240,7 @@ const evaluator: PublicClaim[] = [
     wording: 'Three-path convergence reasoning on every criterion.',
     category: 'safe-with-care',
     evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
-    surface: 'evaluator.astro, index.astro (vol II caps)',
+    surface: 'evaluator.astro, index.astro (vol II caps), /capabilities',
     caveat: 'Describe as system architecture; no accuracy percentage without measurement evidence.',
   },
   {
@@ -249,7 +249,7 @@ const evaluator: PublicClaim[] = [
       'A six-state verdict model. The two uncertain states auto-route to a human; nothing is disqualified silently.',
     category: 'safe-with-care',
     evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
-    surface: 'evaluator.astro, index.astro (vol II caps, matrix)',
+    surface: 'evaluator.astro, index.astro (vol II caps, matrix), /capabilities',
     caveat: 'States: Verified · Qualified · Insufficient · Missing · Requires demonstration · Failed.',
   },
   {
@@ -258,7 +258,7 @@ const evaluator: PublicClaim[] = [
       'A hash-chained, append-only audit log. A single edited verdict breaks the chain; tamper is visible.',
     category: 'safe-with-care',
     evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
-    surface: 'evaluator.astro, index.astro (audit section)',
+    surface: 'evaluator.astro, index.astro (audit section), /capabilities',
     caveat: 'Interactive demos must carry the "simulated for demonstration" disclosure.',
   },
   {
@@ -381,7 +381,23 @@ const validation: PublicClaim[] = [
       'Public-safe TAS captures sourced from a repo-owned local instance. Tender data shown is synthetic / demo content; no real tender data is exposed.',
     category: 'verified-and-safe',
     evidence: ['project/uploads/SCREENSHOT_INVENTORY.md'],
-    surface: 'validation.astro, tas.astro screenshot disclosures',
+    surface: 'validation.astro, /evidence (synthetic-data policy statement)',
+  },
+  {
+    // Gate 1 correction M2: docs/PUBLIC_CLAIMS_REGISTER.md row 26 registers
+    // this exact short-label wording for "every screenshot" on tas.astro /
+    // validation.astro, but no stable claim id ever carried it into code -
+    // tas.astro instead accreted ~9 ad-hoc, differently-worded disclosure
+    // variants (CLAIM_AUDIT_V2.md §1(b) finding 2). This id restores row
+    // 26's already-approved wording with a stable id so every screenshot
+    // caption on tas.astro renders one locked string. Deliberately separate
+    // from validation.synthetic-data (the longer policy-statement sentence
+    // used on /evidence, which stays untouched).
+    id: 'validation.screenshot-caption',
+    wording: 'Repo-owned capture · seeded demo data',
+    category: 'verified-and-safe',
+    evidence: ['docs/PUBLIC_CLAIMS_REGISTER.md (row 26)', 'project/uploads/SCREENSHOT_INVENTORY.md'],
+    surface: 'tas.astro (every screenshot / media embed caption)',
   },
 ];
 
@@ -395,21 +411,21 @@ const fieldRecord: PublicClaim[] = [
     wording: 'Pan IIT "AI for Bharat" Grand Finalist, from 13,500+ teams.',
     category: 'verified-and-safe',
     evidence: ['Founder-signed v6 homepage (df836d4)', 'public Pan IIT result'],
-    surface: 'index.astro (cred band, field record), validation.astro',
+    surface: 'index.astro (cred band, field record), validation.astro, /company',
   },
   {
     id: 'record.udyam',
     wording: 'Udyam-registered MSME, on government record.',
     category: 'verified-and-safe',
     evidence: ['Founder-signed v6 homepage (df836d4)', 'Udyam registration record'],
-    surface: 'index.astro (field record), validation.astro',
+    surface: 'index.astro (field record), validation.astro, /company',
   },
   {
     id: 'record.dpiit',
     wording: 'DPIIT Startup-India recognition, in process.',
     category: 'safe-with-care',
     evidence: ['Founder-signed v6 homepage (df836d4)'],
-    surface: 'index.astro (field record), validation.astro',
+    surface: 'index.astro (field record), validation.astro, /company',
     caveat: 'Always labelled "in process" until the certificate is on record.',
   },
   {
@@ -417,7 +433,7 @@ const fieldRecord: PublicClaim[] = [
     wording: 'Incubated at IIT Gandhinagar · IIEC.',
     category: 'verified-and-safe',
     evidence: ['Founder-signed v6 homepage (df836d4)', 'IIEC incubation record'],
-    surface: 'index.astro (cred band, field record), validation.astro, founder.astro',
+    surface: 'index.astro (cred band, field record), validation.astro, founder.astro, /company',
   },
 ];
 
@@ -454,7 +470,7 @@ const founder: PublicClaim[] = [
     wording: 'IIT Gandhinagar · AI/ML & agentic AI context.',
     category: 'verified-and-safe',
     evidence: ['Stage 6 brief · founder details', 'site.ts'],
-    surface: 'founder.astro, site.ts',
+    surface: 'founder.astro, site.ts, /contact',
   },
   {
     id: 'founder.prior-work',
@@ -516,7 +532,7 @@ const storyV7: PublicClaim[] = [
     wording: 'Two rooms, one problem: trust in what the documents claim.',
     category: 'verified-and-safe',
     evidence: ['Founder story mandate (KRISEVA_SITE_V7_MASTER_PROMPT.md)', 'EXECUTIVE_SUMMARY.md problem framing'],
-    surface: 'index.astro (Act 2 merge line)',
+    surface: 'index.astro (Act 2 merge line), /company, /defense',
   },
   {
     id: 'dossier.discovery-interviews',
@@ -534,7 +550,7 @@ const storyV7: PublicClaim[] = [
       'We build so that an honest bid from a small company is not lost to one missed clause, and a committee can defend every verdict, years later, page by page.',
     category: 'safe-with-care',
     evidence: ['Founder story mandate (KRISEVA_SITE_V7_MASTER_PROMPT.md)'],
-    surface: 'index.astro (Act 7 mission rows)',
+    surface: 'index.astro (Act 7 mission rows), /company',
     caveat:
       'Commitment framing only ("we build so that..."). Never restate as an achieved outcome, a national-impact statistic, or a government endorsement.',
   },
@@ -763,7 +779,7 @@ const portfolioV2: PublicClaim[] = [
     wording: 'TAS is in pilot and demo evaluation, not a production SaaS.',
     category: 'safe-with-care',
     evidence: ['Reuses claim id: tas.status'],
-    surface: 'PortfolioCards (index.astro)',
+    surface: 'PortfolioCards (index.astro), /company',
     caveat: 'Byte-identical reuse of tas.status. Ratchet A4 applies: removing this wording requires a deployment audit on file.',
   },
   // EVALUATOR
@@ -827,7 +843,7 @@ const portfolioV2: PublicClaim[] = [
       '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1)',
       '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
     ],
-    surface: 'PortfolioCards (index.astro)',
+    surface: 'PortfolioCards (index.astro), /attest, /finance, /capabilities',
     caveat: 'Must always render with portfolioV2.attest-maturity immediately adjacent; never stand alone without the research-stage framing.',
   },
   {
@@ -881,7 +897,7 @@ const attestV2: PublicClaim[] = [
     wording: 'ATTEST seals every source document on arrival and detects when the regulator’s reporting template changes.',
     category: 'safe-with-care',
     evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
-    surface: '/attest',
+    surface: '/attest, /capabilities',
     caveat: 'Generic "the regulator" wording; no regulator name, per architecture §11 default.',
   },
   {
@@ -904,7 +920,7 @@ const attestV2: PublicClaim[] = [
     wording: 'Every exception, conflicting evidence, an unsupported claim, or a missing source, routes to a named human who states a reason in the interface.',
     category: 'safe-with-care',
     evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
-    surface: '/attest',
+    surface: '/attest, /capabilities',
   },
   {
     id: 'attestV2.non-interpretive',
@@ -912,14 +928,14 @@ const attestV2: PublicClaim[] = [
       'ATTEST does not interpret regulation, state what a rule requires, give legal or regulatory advice, or claim a number is correct. It surfaces evidence; a named human decides.',
     category: 'verified-and-safe',
     evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)'],
-    surface: '/attest',
+    surface: '/attest, /capabilities',
   },
   {
     id: 'attestV2.demo-hub',
     wording: 'A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow.',
     category: 'verified-and-safe',
     evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 7-8)'],
-    surface: '/attest, ProofRow (index.astro)',
+    surface: '/attest, ProofRow (index.astro), /evidence',
     caveat: 'Link target: ayushtiwary-ops.github.io/kriseva-attest. Always render with the synthetic-data label.',
   },
   {
@@ -927,28 +943,28 @@ const attestV2: PublicClaim[] = [
     wording: 'ATTEST is a research-stage, human-reviewed prototype.',
     category: 'verified-and-safe',
     evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 1)'],
-    surface: '/attest, /finance, PortfolioCards (index.astro)',
+    surface: '/attest, /finance, PortfolioCards (index.astro), /company',
   },
   {
     id: 'attestV2.maturity-synthetic-data',
     wording: 'ATTEST demonstrations run on synthetic demonstration data, not real filings or real customer data.',
     category: 'verified-and-safe',
     evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (line 5)'],
-    surface: '/attest, /finance, PortfolioCards (index.astro)',
+    surface: '/attest, /finance, PortfolioCards (index.astro), /evidence',
   },
   {
     id: 'attestV2.maturity-no-regulator-connection',
     wording: 'ATTEST is not connected to any regulator system.',
     category: 'verified-and-safe',
     evidence: ['10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 40-41)'],
-    surface: '/attest, /finance, PortfolioCards (index.astro)',
+    surface: '/attest, /finance, PortfolioCards (index.astro), /evidence',
   },
   {
     id: 'attestV2.maturity-no-customers',
     wording: 'ATTEST has no customers and no pilots.',
     category: 'verified-and-safe',
     evidence: ['00_CONTROL/STATUS.md (lines 26-27)'],
-    surface: '/attest, /finance, PortfolioCards (index.astro)',
+    surface: '/attest, /finance, PortfolioCards (index.astro), /evidence',
   },
   {
     id: 'attestV2.do-not-publish-enforcement-stat',
@@ -1030,7 +1046,7 @@ const evaluatorV2: PublicClaim[] = [
     wording: 'EVALUATOR is a working prototype.',
     category: 'safe-with-care',
     evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §5 item 4'],
-    surface: '/evaluator, /defense, /capabilities',
+    surface: '/evaluator, /defense, /capabilities, /company',
     caveat:
       'Maturity-chip token per architecture §7. Pairs with evaluatorV2.functional-verified and evaluatorV2.roadmap-boundary for the full maturity picture; never combined with end-to-end or demonstrated language beyond the adjudicated evaluatorV2.e2e-candidate wording (D-011).',
   },
@@ -1059,7 +1075,7 @@ const trustV2: PublicClaim[] = [
     wording: 'Designed for local-first tender processing, with local database, local file storage, and local model routes where configured.',
     category: 'safe-with-care',
     evidence: ['Reuses claim id: security.local-first', 'Reuses claim id: security.local-routes', 'Reuses claim id: security.boundary'],
-    surface: 'TrustStrip (index.astro), /security',
+    surface: 'TrustStrip (index.astro), /security, /company',
     caveat:
       'Byte-identical reuse of security.local-first (register claims 15-17 territory). Portal calls and model downloads may use network when configured; avoid absolute "no-egress" framing.',
   },
@@ -1080,7 +1096,7 @@ const trustV2: PublicClaim[] = [
       '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)',
       '01_PRODUCTS/evaluator/README.md (lines 3-4)',
     ],
-    surface: 'TrustStrip (index.astro), /security',
+    surface: 'TrustStrip (index.astro), /security, /company',
     caveat: 'Recommendation and evidence-surfacing only; never claim autonomous authority or that the system itself decides.',
   },
   {
