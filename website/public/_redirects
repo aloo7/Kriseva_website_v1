@@ -17,3 +17,7 @@
 # ─── Page renames ──────────────────────────────────────────────────────
 # Issuer-side promoted from roadmap to product (founder ruling 2026-06-09).
 /issuer-roadmap /evaluator 301
+
+# v2 route retirements (2026-08-16): Pages-native mirrors of worker/index.ts.
+/workflow /capabilities 301
+/validation /evidence 301

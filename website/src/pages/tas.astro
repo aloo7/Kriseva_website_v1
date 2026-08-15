@@ -1,11 +1,11 @@
 ---
 // /tas - KRISEVA TAS product page (bidder-side, Vol. I). Restructured at W08
 // (CORPORATE_SITE_V2_ARCHITECTURE.md §10, §16): hero, capability ledger,
-// pipeline, console video (moved here from the retired homepage archive),
-// bundle trace, bidability, field-evidence filmstrip, a condensed workflow
+// pipeline, bidability, boundary disclosure, a condensed workflow
 // before/after (absorbed from the retired /workflow route), boundaries,
-// pilot status, CTA. Approved tas_* focal crops (assets/v6/console_*.jpg)
-// shown whole in Plate frames. Claim-bearing wording: publicClaims.ts
+// pilot status, CTA. Console captures and the working-loop video are
+// quarantined pending re-capture on a fully synthetic fixture (A6 review,
+// D-014); only the data-free boundary-zones capture ships. Claim-bearing wording: publicClaims.ts
 // (tas.*, boundary.*) and the founder-signed v6 homepage corpus.
 //
 // Zero-JS discipline (W08): every section renders its default content via
@@ -129,7 +129,7 @@ const after = [
   <!-- ============ CAPABILITY LEDGER ============ -->
   <section class="sec-pad" id="capabilities" style="padding-top:clamp(30px,4vw,56px)">
     <div class="wrap">
-      <SectionHead eyebrow="The capability ledger · register-sourced" folio="§01 / 09"
+      <SectionHead eyebrow="The capability ledger · register-sourced" folio="§01 / 07"
         dek="Each line below is the approved claim wording from the public claims register, with its working register tag. No paraphrase, no inflation.">
         What it does, <em class="em-brass">on the record.</em>
       </SectionHead>
@@ -144,7 +144,7 @@ const after = [
   <!-- ============ PIPELINE ============ -->
   <section class="sec-pad sec-sunk" id="pipeline">
     <div class="wrap">
-      <SectionHead eyebrow="The pipeline · six deterministic stages" folio="§02 / 09"
+      <SectionHead eyebrow="The pipeline · six deterministic stages" folio="§02 / 07"
         dek="Discover, score, acquire, bundle, extract, brief. Each stage is deterministic and inspectable; nothing decides in the dark.">
         Six stages. <em class="em-brass">No black box.</em>
       </SectionHead>
@@ -164,54 +164,9 @@ const after = [
   </section>
 
   <!-- ============ THE CONSOLE (field evidence) ============ -->
-  <section class="console-sec" id="console">
-    <div class="wrap">
-      <SectionHead eyebrow="Field evidence · the console" folio="§03 / 09"
-        dek="Not a mockup: a fourteen-second working loop of the console itself, captured from a repo-owned local instance.">
-        The operator's <em class="em-brass">working surface.</em>
-      </SectionHead>
-    </div>
-    <figure class="plate console-plate bleed regmark" style="border-inline:none">
-      <div class="ph"><span><b>TAS</b> · Working loop · operator console</span><span>On-premise · Local LLM · Demo fixture</span></div>
-      <div class="pimg">
-        <video id="consoleLoop" muted loop playsinline autoplay preload="metadata" width="1280" height="888"
-          poster="/assets/media/tas-console-loop-poster.jpg"
-          aria-label="A fourteen second muted working loop of the TAS console: the operator home, the decision working list, then the approval brief. Captured from a repo-owned local instance, synthetic data.">
-          <source src="/assets/media/tas-console-loop.webm" type="video/webm" />
-          <source src="/assets/media/tas-console-loop.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <figcaption class="pcap"><span>Home, decision list, approval brief, in one loop</span><span>{screenshotCaption}</span></figcaption>
-    </figure>
-    <p class="disclose wrap">Working loop · 14s · muted · {screenshotCaption}</p>
-  </section>
-
-  <!-- ============ BUNDLE TRACE ============ -->
-  <section class="sec-pad" id="bundletrace">
-    <div class="wrap">
-      <SectionHead eyebrow="TAS · From verdict to page" folio="§04 / 09"
-        dek="Nothing to operate here. Just look: the brass box marks the exact region of the exact page a verdict cites.">
-        The verdict points <em class="em-brass">to a page.</em>
-      </SectionHead>
-      <p class="bt-claim">{metadataClaim}</p>
-      <figure class="plate bundle-plate regmark" style="max-width:720px;margin-inline:auto">
-        <div class="ph"><span><b>TAS</b> · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
-        <div class="pimg">
-          <img src="/assets/v6/console_bundle.jpg" width="1400" height="1570" loading="lazy"
-            alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows" />
-          <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" /></svg>
-          <span class="bbox-label">bid-details table · p.1 · traced</span>
-        </div>
-        <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>{screenshotCaption}</span></figcaption>
-      </figure>
-      <p class="disclose">{screenshotCaption}</p>
-    </div>
-  </section>
-
-  <!-- ============ BIDABILITY ============ -->
   <section class="sec-pad sec-sunk" id="bidability">
     <div class="wrap">
-      <SectionHead eyebrow="TAS · Bidability" folio="§05 / 09"
+      <SectionHead eyebrow="TAS · Bidability" folio="§03 / 07"
         dek="Before a team spends weeks on a bid, this shows whether the bid is worth it. The operator decides; TAS shows its work.">
         Why a bid may <em class="em-brass">win, or lose.</em>
       </SectionHead>
@@ -235,23 +190,11 @@ const after = [
   <!-- ============ FIELD EVIDENCE FILMSTRIP ============ -->
   <section class="sec-pad" id="surfaces">
     <div class="wrap">
-      <SectionHead eyebrow="Field evidence · working surfaces" folio="§06 / 09"
-        dek="Captures from a repo-owned local instance, shown whole at native aspect, in the order an operator meets them. Synthetic demo data throughout.">
+      <SectionHead eyebrow="Field evidence · working surfaces" folio="§04 / 07"
+        dek="Interface captures are being re-captured on a fully synthetic demonstration fixture. The product's own boundary disclosure ships unchanged.">
         Walk the product.
       </SectionHead>
       <div class="pgrid">
-        <Plate kicker="TAS" head="00 · Home" meta="queue · sources · scanners"
-          src="/assets/v6/console_home.jpg" width={1700} height={1200}
-          alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"
-          capLeft="The operator's morning: a queue, not a search box" capRight={screenshotCaption} />
-        <Plate kicker="TAS" head="01 · GeM live scanner" meta="streaming"
-          src="/assets/v6/console_gem_scanner.jpg" width={1700} height={1208}
-          alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"
-          capLeft="9 discovered → acquired → extracted → scored" capRight={screenshotCaption} />
-        <Plate kicker="TAS" head="05 · Decisions" meta="signed ledger"
-          src="/assets/v6/console_decisions.jpg" width={1190} height={1230}
-          alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"
-          capLeft="Recommendation beside signature; disagreement is recorded" capRight={screenshotCaption} />
         <Plate kicker="TAS" head="06 · The Boundary · Zone II" meta="disclosure"
           src="/assets/v6/console_boundary_zones.jpg" width={1352} height={480}
           alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"
@@ -264,7 +207,7 @@ const after = [
   <!-- ============ WORKFLOW · WHAT CHANGES ============ -->
   <section class="sec-pad sec-sunk" id="workflow">
     <div class="wrap">
-      <SectionHead eyebrow="The workflow · what changes" folio="§07 / 09"
+      <SectionHead eyebrow="The workflow · what changes" folio="§05 / 07"
         dek="Portal-and-Excel discipline does the work but leaves no reviewable artifact. The workflow change produces the artifact alongside the decision.">
         Before. <em class="em-brass">After.</em>
       </SectionHead>
@@ -284,7 +227,7 @@ const after = [
   <!-- ============ BOUNDARIES ============ -->
   <section class="sec-pad" id="boundaries">
     <div class="wrap">
-      <SectionHead eyebrow="Boundaries · what TAS does not claim" folio="§08 / 09"
+      <SectionHead eyebrow="Boundaries · what TAS does not claim" folio="§06 / 07"
         dek="The register keeps an explicit anti-claims list. It ships on this page, unabridged.">
         Read the <em class="em-brass">refusals.</em>
       </SectionHead>
@@ -301,7 +244,7 @@ const after = [
   <!-- ============ CTA ============ -->
   <section class="sec-pad sec-navy" id="cta">
     <div class="wrap">
-      <SectionHead eyebrow="Next step" folio="§09 / 09"
+      <SectionHead eyebrow="Next step" folio="§07 / 07"
         dek="If your team bids on GeM or DefProc tenders, the conversation is direct and founder-led.">
         See it on your <em class="em-brass">own tenders.</em>
       </SectionHead>

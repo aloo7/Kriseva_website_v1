@@ -106,3 +106,11 @@ Reason: Four instances of the hidden-content class survived three fixes (static 
 Evidence: docs/v2-handoffs/final-screens/home-1440.png (post-fix JS-on capture still showing blank section bands); MISTAKE_LEDGER entries for the class.
 Alternatives rejected: A third repair of the from-state machinery (same class, new path); removing Tier 2 reveals entirely (loses warranted motion texture).
 Reversal condition: None while the site uses scroll reveals.
+
+D-014
+Question: What ships from the TAS console media set after the A6 pre-deploy image review (2026-08-16)?
+Decision: Quarantine all console captures and the working-loop video pending re-capture on a fully synthetic fixture: the GeM scanner, home, decisions, and bundle captures showed real tender identifiers, real buyer organisations (including armed forces), a real bid document page, and KRISEVA's actual bid/skip verdicts against real entities, contradicting their seeded-demo captions. Only the data-free boundary-zones capture and the dossier PDF ship. Three unreferenced legacy screenshots removed from public/. The same review authorizes deploying v2, which replaces the equally-exposed v8 production wholesale.
+Reason: The no-real-tender-data rule is absolute, and the class is systemic to every capture of a console fed by live GeM discovery; selective pixel redaction is unreliable and looks worse than honest absence.
+Evidence: A6 visual review of every shipped raster (control plane, this date); quarantine set in docs/v2-handoffs/quarantine/ (untracked).
+Alternatives rejected: Redacting regions per image (residual-leak risk, visible patches); delaying deploy until re-capture (leaves the same data live on v8 production longer).
+Reversal condition: Re-captured exhibits from a verified synthetic fixture pass A6 and restore the media sections.
