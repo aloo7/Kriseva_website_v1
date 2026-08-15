@@ -40,29 +40,65 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
         );
       })}
       <li class="nav__cta">
-        <a href={routes.contact} class="btn btn--primary btn--sm">Contact Founder</a>
+        <a href={routes.contact} class="nav__cta-link">Contact Founder</a>
       </li>
     </ul>
   </div>
 </header>
 
 <style>
+  /* Gate 3 blocker fix: this component now also renders inside V6Layout
+     (tokens-v6.css), which does not define tokens.css's role-name
+     variables at all (--rule-edge, --micro, --ease-out, etc; the one
+     exception, --paper, exists in tokens-v6.css too but with a different
+     value, so it is avoided below rather than chained). Every var() below
+     is a one-level fallback chain ending in the literal value tokens.css
+     resolves to today, so this header renders byte-identical regardless
+     of which token file the page loaded (MaturityChip.astro precedent:
+     see that component's header note). Purely additive: none of these
+     literal fallbacks change anything on the existing tokens.css/
+     BaseLayout routes, where the real variable always resolves first. */
+  .container {
+    max-width: var(--max-w, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--gutter, 32px);
+  }
+  @media (max-width: 1024px) {
+    .container { padding: 0 var(--gutter, 28px); }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 var(--gutter, 18px); }
+  }
+
   .nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    background: rgba(6, 16, 31, 0.78);
+    /* Gate 3 fix (qa:a11y): this was rgba(6, 16, 31, 0.78). On BaseLayout
+       routes the hero directly behind the fixed header is dark (navy), so
+       the semi-transparent blend stayed dark enough for the brass
+       .is-active link to clear 4.5:1. V6Layout routes' .ihero is the paper
+       background instead; blended at 0.78 alpha the effective backdrop
+       measured ~#363c44, only 3.69:1 against brass #c18a3e (axe: serious,
+       /company, /evidence, /founder - the three V6 routes whose own label
+       is also a header link, so aria-current="page" applies). V6Nav never
+       hit this because its active-link color was ink, not brass. Raised to
+       the same 0.94 this header already uses for its .is-scrolled state
+       (reused value, not a new one) - at that alpha even the lightest
+       realistic backdrop (paper) still resolves to ~5.7:1. .is-scrolled
+       goes slightly higher again so the settle transition still reads. */
+    background: rgba(6, 16, 31, 0.94);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid rgba(193, 138, 62, 0.14);
     transition:
-      background 240ms var(--ease-out),
-      border-color 240ms var(--ease-out),
-      box-shadow 240ms var(--ease-out);
+      background 240ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1)),
+      border-color 240ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1)),
+      box-shadow 240ms var(--ease-out, cubic-bezier(0.2, 0.7, 0.2, 1));
   }
   /* Settled appearance once the user has scrolled past the hero. */
   .nav.is-scrolled {
-    background: rgba(6, 16, 31, 0.94);
+    background: rgba(6, 16, 31, 0.98);
     border-bottom-color: rgba(193, 138, 62, 0.24);
     box-shadow: 0 8px 24px rgba(3, 10, 20, 0.28);
   }
@@ -75,20 +111,20 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
   .nav__brand {
     display: inline-flex;
     align-items: center;
-    border-radius: var(--radius-control);
+    border-radius: var(--radius-control, 6px);
   }
   .nav__brand img { display: block; }
   .nav__toggle {
     display: none;
     background: transparent;
     border: none;
-    color: var(--paper);
+    color: var(--text-primary, #f4efe1);
     font-size: 1.4rem;
     cursor: pointer;
     padding: 8px 10px;
     line-height: 1;
-    border-radius: var(--radius-control);
-    transition: background var(--micro);
+    border-radius: var(--radius-control, 6px);
+    transition: background var(--micro, 140ms ease-out);
   }
   .nav__toggle:hover { background: rgba(193, 138, 62, 0.08); }
 
@@ -98,35 +134,81 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
     gap: 28px;
   }
   .nav__links li { display: inline-flex; align-items: center; }
-  .nav__links a:not(.btn) {
+  .nav__links a:not(.nav__cta-link) {
     position: relative;
     display: inline-block;
-    font-family: var(--font-sans);
+    font-family: var(--font-sans, "IBM Plex Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
     font-size: 0.86rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--text-secondary, #e5dcc9);
     letter-spacing: 0.01em;
     padding: 6px 0;
-    transition: color var(--micro);
+    transition: color var(--micro, 140ms ease-out);
   }
   /* Brass underline-on-hover/active. Grows from the left, 220ms. */
-  .nav__links a:not(.btn)::after {
+  .nav__links a:not(.nav__cta-link)::after {
     content: "";
     position: absolute;
     left: 0;
     bottom: 0;
     height: 1px;
     width: 100%;
-    background: var(--accent-primary);
+    background: var(--accent-primary, #c18a3e);
     transform: scaleX(0);
     transform-origin: left center;
-    transition: transform var(--motion-precise);
+    transition: transform var(--motion-precise, 220ms cubic-bezier(0.2, 0.7, 0.2, 1));
   }
-  .nav__links a:not(.btn):hover { color: var(--accent-primary); }
-  .nav__links a:not(.btn):hover::after,
+  .nav__links a:not(.nav__cta-link):hover { color: var(--accent-primary, #c18a3e); }
+  .nav__links a:not(.nav__cta-link):hover::after,
   .nav__links a.is-active::after { transform: scaleX(1); }
-  .nav__links a.is-active { color: var(--accent-primary); }
-  .nav__cta a { padding: 9px 18px; font-size: 0.72rem; }
+  .nav__links a.is-active { color: var(--accent-primary, #c18a3e); }
+
+  /* Gate 3 blocker fix (revision): this used to be <PrimaryButton>, sharing
+     BaseLayout's global .btn/.btn--primary/.btn--sm classes. That collided
+     with tokens-v6.css's OWN pre-existing, unrelated .btn/.btn-fill/.btn-line
+     classes (single-dash, used throughout every V6 page's native buttons -
+     "Request a demo", "Speak with the founder", etc.) - both stylesheets
+     define a bare .btn selector, and loading both on the same V6Layout page
+     let PrimaryButton's global .btn color/background/border rules win the
+     cascade over v6's own button styling wherever it appeared on the page,
+     not just in the header (caught by qa:a11y: color-contrast failures on
+     /company, /tas, /evaluator, /founder, /contact, /404). Fixed by giving
+     the header CTA its own scoped class instead of reusing the shared .btn
+     family at all - self-contained, cannot collide with anything on either
+     layout. Visual is unchanged: same brass-fill/small-button look as
+     .btn.btn--primary.btn--sm, values from PrimaryButton.astro's own
+     literal-fallback chain. */
+  .nav__cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono, "IBM Plex Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border-radius: var(--radius-control, 6px);
+    border: 1px solid var(--accent-primary, #c18a3e);
+    background: var(--accent-primary, #c18a3e);
+    color: var(--surface-base, #06101f);
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+    transition:
+      background var(--micro, 140ms ease-out),
+      border-color var(--micro, 140ms ease-out),
+      color var(--micro, 140ms ease-out),
+      transform var(--micro, 140ms ease-out),
+      box-shadow var(--micro, 140ms ease-out);
+  }
+  .nav__cta-link:hover {
+    background: var(--accent-soft, #b78437);
+    border-color: var(--accent-soft, #b78437);
+    color: var(--surface-base, #06101f);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-quiet, 0 4px 12px rgba(3, 10, 20, 0.18));
+  }
+  .nav__cta-link:active { transform: translateY(0); box-shadow: none; }
 
   @media (max-width: 920px) {
     .nav__toggle { display: inline-flex; }
@@ -136,26 +218,24 @@ const current = Astro.url.pathname.replace(/\/$/, '') || '/';
       top: 64px; left: 0; right: 0;
       flex-direction: column;
       gap: 14px;
-      padding: 22px var(--gutter) 26px;
+      padding: 22px var(--gutter, 18px) 26px;
       background: rgba(6, 16, 31, 0.97);
-      border-bottom: var(--rule-edge);
+      border-bottom: var(--rule-edge, 1px solid rgba(193, 138, 62, 0.34));
     }
     .nav__links.is-open { display: flex; }
-    .nav__cta a { width: 100%; justify-content: center; }
+    .nav__cta-link { width: 100%; justify-content: center; }
     /* Mobile drawer: drop the underline-from-left treatment so the row taps
        feel like buttons, not editorial links. */
-    .nav__links a:not(.btn)::after { display: none; }
+    .nav__links a:not(.nav__cta-link)::after { display: none; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .nav,
     .nav__toggle,
-    .nav__links a:not(.btn)::after { transition: none; }
-  }
-
-  /* Spacer below the fixed header so page content starts cleanly. */
-  :global(main) {
-    padding-top: 64px;
+    .nav__cta-link,
+    .nav__cta-link:hover,
+    .nav__cta-link:active,
+    .nav__links a:not(.nav__cta-link)::after { transform: none; transition: none; }
   }
 </style>
 

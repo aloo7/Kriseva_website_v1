@@ -123,5 +123,18 @@ const organizationSchema = getOrganizationSchema();
         els.forEach((el) => el.classList.add('is-visible'));
       }
     </script>
+
+    <style>
+      /* Spacer below Header's fixed nav so page content starts cleanly.
+         Gate 3: relocated here from Header.astro's own <style> (which used
+         to target `main` with :global) because Header now also renders
+         inside V6Layout, whose pages already carry their own top clearance
+         calibrated to their fixed nav (.ihero's own padding-top, 140-210px)
+         - adding this 64px there would stack on top of it instead of
+         replacing it. Scoped to BaseLayout's own <main> only. */
+      main {
+        padding-top: 64px;
+      }
+    </style>
   </body>
 </html>

@@ -13,36 +13,41 @@ const { href, size = 'md', class: className = '', ariaLabel } = Astro.props;
 </a>
 
 <style is:global>
+  /* Gate 3 blocker fix: is:global, so this ships wherever PrimaryButton is
+     rendered - now including Header.astro's nav CTA, which V6Layout pages
+     also use. tokens-v6.css defines none of these role names, so every
+     var() below carries a literal fallback matching tokens.css's resolved
+     value (MaturityChip.astro precedent; see Header.astro's own note). */
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: var(--font-mono);
+    font-family: var(--font-mono, "IBM Plex Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace);
     font-size: 0.78rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 14px 28px;
-    border-radius: var(--radius-control);
-    border: 1px solid var(--accent-primary);
-    color: var(--text-primary);
+    border-radius: var(--radius-control, 6px);
+    border: 1px solid var(--accent-primary, #c18a3e);
+    color: var(--text-primary, #f4efe1);
     background: transparent;
     cursor: pointer;
     transition:
-      background var(--micro),
-      color var(--micro),
-      border-color var(--micro),
-      transform var(--micro),
-      box-shadow var(--micro);
+      background var(--micro, 140ms ease-out),
+      color var(--micro, 140ms ease-out),
+      border-color var(--micro, 140ms ease-out),
+      transform var(--micro, 140ms ease-out),
+      box-shadow var(--micro, 140ms ease-out);
     text-decoration: none;
     white-space: nowrap;
     line-height: 1;
     will-change: transform;
   }
   .btn:hover {
-    background: var(--accent-primary);
-    color: var(--surface-base);
+    background: var(--accent-primary, #c18a3e);
+    color: var(--surface-base, #06101f);
     transform: translateY(-1px);
-    box-shadow: var(--shadow-quiet);
+    box-shadow: var(--shadow-quiet, 0 4px 12px rgba(3, 10, 20, 0.18));
   }
   .btn:active {
     transform: translateY(0);
@@ -51,30 +56,30 @@ const { href, size = 'md', class: className = '', ariaLabel } = Astro.props;
   .btn--sm { padding: 9px 18px; font-size: 0.7rem; gap: 8px; }
 
   .btn--primary {
-    background: var(--accent-primary);
-    color: var(--surface-base);
-    border-color: var(--accent-primary);
+    background: var(--accent-primary, #c18a3e);
+    color: var(--surface-base, #06101f);
+    border-color: var(--accent-primary, #c18a3e);
   }
   .btn--primary:hover {
-    background: var(--accent-soft);
-    border-color: var(--accent-soft);
+    background: var(--accent-soft, #b78437);
+    border-color: var(--accent-soft, #b78437);
     /* Gate 1 correction N2: --text-primary (paper, light) on --accent-soft
        (brass-soft, a mid-tone) measured ~2.87:1, below the 4.5:1 floor.
        --surface-base (navy-dark, what the resting state already uses)
        keeps the label dark on this brass fill, ~5.8:1, staying inside the
        brass/ink palette instead of introducing a new color role. */
-    color: var(--surface-base);
+    color: var(--surface-base, #06101f);
     box-shadow: 0 10px 22px rgba(193, 138, 62, 0.22);
   }
 
   .btn--ghost-paper {
     border-color: rgba(16, 35, 59, 0.32);
-    color: var(--surface-deep);
+    color: var(--surface-deep, #04112a);
   }
   .btn--ghost-paper:hover {
-    background: var(--surface-deep);
-    color: var(--text-primary);
-    border-color: var(--surface-deep);
+    background: var(--surface-deep, #04112a);
+    color: var(--text-primary, #f4efe1);
+    border-color: var(--surface-deep, #04112a);
     box-shadow: 0 10px 22px rgba(16, 35, 59, 0.18);
   }
 
@@ -84,7 +89,7 @@ const { href, size = 'md', class: className = '', ariaLabel } = Astro.props;
     content: "→";
     display: inline-block;
     margin-left: 2px;
-    transition: transform var(--motion-precise);
+    transition: transform var(--motion-precise, 220ms cubic-bezier(0.2, 0.7, 0.2, 1));
   }
   .btn[data-arrow]:hover::after { transform: translateX(4px); }
 

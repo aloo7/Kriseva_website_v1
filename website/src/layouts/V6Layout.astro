@@ -1,12 +1,31 @@
 ---
-// V6Layout.astro - thin composition of V6Head + V6Nav + V6Footer around a
+// V6Layout.astro - thin composition of V6Head + Header + Footer around a
 // <main> slot, plus the shared reveal observer. All v6 inner pages use this;
 // the homepage stays self-contained by design.
+//
+// Gate 3 blocker fix (docs/v2-handoffs/INDEPENDENT_REVIEW_V2.md Blocker 1):
+// this used to render V6Nav.astro/V6Footer.astro, a hardcoded pre-v2 nav
+// disconnected from src/data/navigation.ts (product-first link order, old
+// CTA copy, old tokens-v6.css palette) and a differently-grouped footer.
+// Now renders the SAME Header.astro/Footer.astro BaseLayout uses, so all 13
+// routes carry one nav/footer sourced from navigation.ts, matching
+// architecture §4. Header.astro and Footer.astro were given literal-
+// fallback CSS variable chains for the role names they need (MaturityChip.
+// astro precedent - see each component's own header note) so they render
+// identically here without tokens.css, which this layout still does not
+// load: tokens-v6.css and every V6 page's own styling are untouched.
+// Header's CTA is styled with its own scoped .nav__cta-link class rather
+// than the shared PrimaryButton/.btn family, specifically because
+// tokens-v6.css already defines an unrelated .btn class used throughout
+// every V6 page's native buttons - reusing PrimaryButton here collided
+// with it (caught by qa:a11y color-contrast failures; see Header.astro's
+// own note). V6Nav.astro and V6Footer.astro are now unused; left in place,
+// not deleted, in case of rollback.
 
 import '../styles/tokens-v6.css';
 import V6Head from '../components/v6/V6Head.astro';
-import V6Nav from '../components/v6/V6Nav.astro';
-import V6Footer from '../components/v6/V6Footer.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 import { publicClaims } from '../data/publicClaims';
 
 interface Props {
@@ -31,11 +50,11 @@ const claimRegistry = Object.fromEntries(
     <V6Head title={title} description={description} path={path} schema={schema} />
   </head>
   <body>
-    <V6Nav current={path} />
+    <Header />
     <main id="main">
       <slot />
     </main>
-    <V6Footer />
+    <Footer />
     <script is:inline>
       // Reveal-on-scroll: IntersectionObserver only, no library. Elements are
       // visible by default without JS; reduced-motion neutralises the
