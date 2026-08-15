@@ -141,3 +141,62 @@ test.describe('motion · spine scrub (motion allowed, desktop)', () => {
     expect(consoleErrors, 'no console/page errors during spine scrub').toEqual([]);
   });
 });
+
+// ---------------------------------------------------------------------
+// Gate 3 regression (2026-08-15): IntersectionObserver only fires on a
+// threshold CROSSING. An instant programmatic scroll straight to the bottom
+// and back skips the intermediate positions entirely for mid-page sections,
+// so it never crosses the threshold for them — they were left permanently
+// in their from-state (opacity 0) with JS fully enabled, violating §18A
+// item 7 ("any failure leaves the page readable"; motion only ever adds).
+// reveal.ts now backstops IO with a viewport-bounds check on scroll/scrollend
+// and a "reached the true bottom once → reveal everything still pending"
+// rule, converging on the same data-reveal-marked elements this test checks.
+// ---------------------------------------------------------------------
+test.describe('motion · tier 2 reveal fail-open (Gate 3 regression)', () => {
+  test.use({
+    contextOptions: { reducedMotion: 'no-preference' },
+    viewport: { width: 1440, height: 900 },
+  });
+
+  test('reveal elements are not stuck hidden after instant scroll-to-bottom-and-back', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // The exact repro from Gate 3: an instant jump to the bottom, a pause,
+    // then an instant jump back to the top — no intermediate frames, so no
+    // IO threshold crossing ever occurs for mid-page sections.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(1000);
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    // Let the fail-open paths (bounds check, bottom-reached, debounce) settle.
+    await page.waitForTimeout(300);
+
+    const states = await page.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]')).map((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          identity: el.className || el.tagName,
+          mark: el.getAttribute('data-reveal'),
+          opacity: parseFloat(cs.opacity),
+        };
+      })
+    );
+
+    expect(states.length, 'expected at least one [data-reveal] element to be tracked on the homepage').toBeGreaterThan(
+      0
+    );
+    for (const s of states) {
+      expect(
+        s.opacity,
+        `"${s.identity}" (data-reveal="${s.mark}") stuck below opacity 1 after scroll-to-bottom-and-back`
+      ).toBeGreaterThanOrEqual(0.99);
+    }
+
+    // Same evidence the coordinator's Gate 3 report used: a full-page,
+    // JS-enabled capture at the exact handoff path, overwritten here so a
+    // green test run always leaves current proof behind it.
+    await page.screenshot({ path: 'docs/v2-handoffs/final-screens/home-1440.png', fullPage: true });
+  });
+});
