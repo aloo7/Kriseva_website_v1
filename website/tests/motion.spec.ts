@@ -143,37 +143,35 @@ test.describe('motion · spine scrub (motion allowed, desktop)', () => {
 });
 
 // ---------------------------------------------------------------------
-// Gate 3 regression (2026-08-15): IntersectionObserver only fires on a
-// threshold CROSSING. An instant programmatic scroll straight to the bottom
-// and back skips the intermediate positions entirely for mid-page sections,
-// so it never crosses the threshold for them — they were left permanently
-// in their from-state (opacity 0) with JS fully enabled, violating §18A
-// item 7 ("any failure leaves the page readable"; motion only ever adds).
-// reveal.ts now backstops IO with a viewport-bounds check on scroll/scrollend
-// and a "reached the true bottom once → reveal everything still pending"
-// rule, converging on the same data-reveal-marked elements this test checks.
+// D-013 (control-plane decision, docs/CORPORATE_SITE_V2_DECISIONS.md,
+// 2026-08-16): Tier 2 reveals are now transform-only (reveal.ts writes no
+// `opacity` on any path), so "stuck invisible" cannot occur structurally —
+// these tests assert that invariant directly rather than reproducing a
+// specific timing bug. The primary test below is deliberately the simplest
+// possible case (fresh load, zero scrolling): the Gate 3 failure showed the
+// assertions and the screenshot running down different code paths, so this
+// test's own screenshot IS its own evidence, taken in the same run as the
+// assertions that must pass first.
 // ---------------------------------------------------------------------
-test.describe('motion · tier 2 reveal fail-open (Gate 3 regression)', () => {
+test.describe('motion · tier 2 reveal visibility (D-013)', () => {
   test.use({
     contextOptions: { reducedMotion: 'no-preference' },
     viewport: { width: 1440, height: 900 },
   });
 
-  test('reveal elements are not stuck hidden after instant scroll-to-bottom-and-back', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+  async function assertFullyVisible(page: import('playwright/test').Page) {
+    const sectionStates = await page.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLElement>('section')).map((el) => {
+        const cs = getComputedStyle(el);
+        return { identity: el.id || el.className || el.tagName, opacity: parseFloat(cs.opacity) };
+      })
+    );
+    expect(sectionStates.length, 'expected at least one <section> on the homepage').toBeGreaterThan(0);
+    for (const s of sectionStates) {
+      expect(s.opacity, `<section> "${s.identity}" not at opacity 1`).toBeGreaterThanOrEqual(0.99);
+    }
 
-    // The exact repro from Gate 3: an instant jump to the bottom, a pause,
-    // then an instant jump back to the top — no intermediate frames, so no
-    // IO threshold crossing ever occurs for mid-page sections.
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(1000);
-    await page.evaluate(() => window.scrollTo(0, 0));
-
-    // Let the fail-open paths (bounds check, bottom-reached, debounce) settle.
-    await page.waitForTimeout(300);
-
-    const states = await page.evaluate(() =>
+    const revealStates = await page.evaluate(() =>
       Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]')).map((el) => {
         const cs = getComputedStyle(el);
         return {
@@ -183,20 +181,42 @@ test.describe('motion · tier 2 reveal fail-open (Gate 3 regression)', () => {
         };
       })
     );
-
-    expect(states.length, 'expected at least one [data-reveal] element to be tracked on the homepage').toBeGreaterThan(
-      0
-    );
-    for (const s of states) {
-      expect(
-        s.opacity,
-        `"${s.identity}" (data-reveal="${s.mark}") stuck below opacity 1 after scroll-to-bottom-and-back`
-      ).toBeGreaterThanOrEqual(0.99);
+    expect(revealStates.length, 'expected at least one [data-reveal] element to be tracked').toBeGreaterThan(0);
+    for (const s of revealStates) {
+      expect(s.opacity, `[data-reveal="${s.mark}"] "${s.identity}" not at opacity 1`).toBeGreaterThanOrEqual(0.99);
     }
+  }
 
-    // Same evidence the coordinator's Gate 3 report used: a full-page,
-    // JS-enabled capture at the exact handoff path, overwritten here so a
-    // green test run always leaves current proof behind it.
+  test('fresh load, no scrolling: every section and reveal element is opacity 1', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    // Deliberately no scrollTo of any kind — this is the exact case the
+    // Gate 3 capture used, and the one most likely to catch any future
+    // reintroduction of an opacity from-state.
+    await page.waitForTimeout(500);
+
+    await assertFullyVisible(page);
+
+    // This screenshot is the canonical evidence: taken in the same run,
+    // immediately after the assertions above passed, at the exact handoff
+    // path — no separate capture step that could drift from what the test
+    // actually checked.
     await page.screenshot({ path: 'docs/v2-handoffs/final-screens/home-1440.png', fullPage: true });
+  });
+
+  test('reveal elements stay visible after instant scroll-to-bottom-and-back', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // The original Gate 3 repro: an instant jump to the bottom, a pause,
+    // then an instant jump back to the top — no intermediate frames. Kept as
+    // a second, harder case now that it no longer needs a fail-open backstop
+    // to pass (transform-only has nothing for this sequence to break).
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(1000);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+
+    await assertFullyVisible(page);
   });
 });
