@@ -40,7 +40,7 @@ const threePath = getClaim('evaluator.three-path')!.wording;
 const e2eClaim = getClaim('evaluatorV2.e2e-candidate')!.wording;
 const notClaimed = getClaim('boundary.notClaimed')!.wording;
 
-const title = 'Kriseva Evaluator · Committee-assist bid evaluation, on-premise';
+const title = 'KRISEVA · Evaluator · Committee-assist bid evaluation, on-premise';
 const description = oneLiner + ' Three-path convergence, a six-state verdict model, and a hash-chained audit log.';
 
 const schema = [
@@ -328,7 +328,7 @@ const auditBlocks = [
 // Audit chain: verify / tamper / reset. The three blocks already render via
 // SSR above (see auditBlocks in the frontmatter); render() below keeps that
 // same default state in JS so verify/tamper/reset can mutate it, then
-// re-renders identically on load (idempotent — no visible change until a
+// re-renders identically on load (idempotent, no visible change until a
 // button is used). Synthetic events, simulated for demonstration.
 (function () {
   var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -10,7 +10,7 @@ import { getClaim } from '../data/publicClaims';
 
 const education = getClaim('founder.education')!.wording;
 
-const title = 'Contact · Speak directly with the founder';
+const title = 'KRISEVA · Contact, speak directly with the founder';
 const description = 'If you run a tender workflow on the bidder side, sit on the evaluation side, or are evaluating Kriseva seriously, the conversation is direct and founder-led.';
 ---
 <V6Layout title={title} description={description} path="/contact">
@@ -41,6 +41,7 @@ const description = 'If you run a tender workflow on the bidder side, sit on the
             <select id="lf-intent" name="intent">
               <option value="bidder">Bidder-side · MSME or defence-tech team</option>
               <option value="evaluation">Evaluation side · committee or procurement cell</option>
+              <option value="attest">Research collaboration (ATTEST)</option>
               <option value="institutional">Institutional · incubator, grant, press</option>
               <option value="other">Other</option>
             </select>

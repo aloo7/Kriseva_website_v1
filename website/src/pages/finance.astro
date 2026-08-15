@@ -14,6 +14,11 @@
 // "Join Pilot", which would contradict attestV2.maturity-no-customers ("no
 // customers and no pilots"). A minimal, ATTEST-appropriate closing block is
 // built inline instead. See W09-W10 receipt.
+//
+// W11b: renders attestV2.evidence-states (registered surface now includes
+// /finance) directly beside the MaturityChip in the ATTEST card, so the
+// research-prototype context stays visible next to the claim per that
+// claim's caveat.
 
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RouteHero from '../components/RouteHero.astro';
@@ -33,9 +38,10 @@ const researchStage = getClaim('attestV2.maturity-research-stage')!.wording;
 const syntheticData = getClaim('attestV2.maturity-synthetic-data')!.wording;
 const noRegulator = getClaim('attestV2.maturity-no-regulator-connection')!.wording;
 const noCustomers = getClaim('attestV2.maturity-no-customers')!.wording;
+const evidenceStates = getClaim('attestV2.evidence-states')!.wording;
 
 const heroTitle = 'One system. <span class="brass">Tested honestly.</span>';
-const title = 'Regulated finance';
+const title = 'KRISEVA · Regulated finance';
 const description = sector.summary;
 ---
 <BaseLayout title={title} description={description}>
@@ -48,7 +54,7 @@ const description = sector.summary;
     surface="deep"
   >
     <Fragment slot="cta">
-      <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+      <PrimaryButton href={routes.contactWithIntent('attest')}>Contact the founder</PrimaryButton>
       <MaturityChip maturity={attest.maturity} />
     </Fragment>
   </RouteHero>
@@ -85,6 +91,7 @@ const description = sector.summary;
               <li><span class="dot-brass" aria-hidden="true"></span>{c}</li>
             ))}
           </ul>
+          <p class="evidence-states-note">{evidenceStates}</p>
           <div class="card-foot">
             <MaturityChip maturity={attest.maturity} />
             <a class="card-link" href={routes.attest}>Read the full page →</a>
@@ -137,7 +144,7 @@ const description = sector.summary;
     <div class="container closing-cta">
       <h2>Questions about the research.</h2>
       <p>ATTEST is a research-stage prototype with no customers and no pilots. If you work in regulated finance and want to talk about the approach, the conversation is direct and founder-led.</p>
-      <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+      <PrimaryButton href={routes.contactWithIntent('attest')}>Contact the founder</PrimaryButton>
     </div>
   </section>
 
@@ -156,6 +163,14 @@ const description = sector.summary;
     gap: 10px;
     font-size: 0.9rem;
     line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .evidence-states-note {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(193, 138, 62, 0.22);
+    font-size: 0.88rem;
+    line-height: 1.55;
     color: var(--text-secondary);
   }
   .card-foot {

@@ -1,10 +1,18 @@
 ---
+// Note (W11b, 2026-08-15): this component is not currently imported by
+// src/pages/contact.astro, which implements its own inline <select> intent
+// field (id="lf-intent") wired to the real /api/lead POST endpoint. This
+// component appears to predate that build and is currently dead code.
+// Updated here for consistency with the live contact page (both now carry
+// the "Research collaboration (ATTEST)" intent), not restored to use;
+// flagged for the architecture owner to either wire in or remove.
 import { site } from '../data/site';
 
 const intents: { value: string; label: string; meta: string }[] = [
   { value: 'demo', label: 'Book Demo', meta: 'Walk through TAS with the founder.' },
   { value: 'pilot', label: 'Join Pilot', meta: 'Explore a pilot deployment.' },
   { value: 'issuer', label: 'Issuer-side discussion', meta: 'Procurement-side roadmap conversation.' },
+  { value: 'attest', label: 'Research collaboration (ATTEST)', meta: 'A research conversation about ATTEST.' },
   { value: 'partnership', label: 'Partnership', meta: 'Strategic / channel introduction.' },
   { value: 'other', label: 'Other', meta: 'Anything else worth a conversation.' },
 ];
@@ -276,6 +284,7 @@ const intents: { value: string; label: string; meta: string }[] = [
         demo: 'Book Demo',
         pilot: 'Join Pilot',
         issuer: 'Issuer-side discussion',
+        attest: 'Research collaboration (ATTEST)',
         partnership: 'Partnership',
         other: 'KRISEVA inquiry',
       };

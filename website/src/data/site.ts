@@ -9,7 +9,11 @@ export const site = {
   // fixed and a canonical host is chosen.
   url: 'https://www.kriseva.in',
   positioning: 'Procurement intelligence for India’s defense ecosystem.',
-  shortPositioning: 'Tender intelligence for defense procurement.',
+  // v2 (W11b): footer tagline updated to the registered companyV2.hero-headline
+  // wording (docs/PUBLIC_CLAIMS_REGISTER.md V2-2) so the sitewide footer and
+  // og:image:alt / twitter:image:alt text (BaseLayout.astro) match the v2
+  // company-first positioning instead of the retired TAS-only v1 framing.
+  shortPositioning: 'The evidence layer for high-stakes institutional decisions.',
   email: 'ayush@kriseva.in',
   contactSubjectDefault: 'KRISEVA Inquiry',
   twitter: '',
@@ -29,9 +33,14 @@ export const site = {
   },
   thesis: 'A tender is not a PDF. It is a decision system hidden inside a document bundle.',
   defaults: {
-    title: 'KRISEVA AI · Procurement Intelligence for India’s Defense Ecosystem',
-    description:
-      'KRISEVA AI builds procurement intelligence systems for India’s defense ecosystem. KRISEVA TAS helps defense MSMEs discover, parse, score, and review tender opportunities.',
+    // v2 (W11b, 2026-08-15): brand-first "KRISEVA · <role>" title pattern,
+    // wording from the registered companyV2.hero-headline /
+    // companyV2.sentence claims (docs/PUBLIC_CLAIMS_REGISTER.md V2-2,
+    // V2-1). Every route currently passes its own explicit title/description
+    // to BaseLayout, so these are fallback values only, kept in the same
+    // pattern for consistency and safety if a future page omits the props.
+    title: 'KRISEVA · The evidence layer for high-stakes institutional decisions.',
+    description: 'KRISEVA AI builds evidence-first AI systems for high-stakes institutional decisions.',
     ogImage: '/assets/brand/kriseva-og.png',
     favicon: '/assets/brand/kriseva-favicon.svg',
     locale: 'en_IN',

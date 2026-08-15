@@ -164,14 +164,19 @@ New ids use the `<groupV2>.<name>` pattern (e.g. `companyV2.sentence`, matching 
 
 ### capabilityV2 (six Evidence Spine tiles, architecture §6, capability claims only)
 
+Page / section column extended at W11b (2026-08-15) to add `/defense` and
+`/finance`: both sector pages render `spineStations` (`src/data/company.ts`),
+which reads its six descriptions from these same six claim ids, so the
+registered surface now matches where the wording actually renders.
+
 | # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
 |---|---|---|---|---|---|---|---|
-| V2-6 | `capabilityV2.source` (SOURCE) | EvidenceSpine, CapabilityGrid | "Every source document is sealed on arrival, and any change to the expected reporting template is detected automatically." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (ATTEST-documented; do not extend to EVALUATOR as identical) | No |
-| V2-7 | `capabilityV2.evidence` (EVIDENCE) | EvidenceSpine, CapabilityGrid | "Every value is checked through three independent extraction paths, and confidence comes from where they agree, not from any single path." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§172-184) | Medium | No |
-| V2-8 | `capabilityV2.conflict` (CONFLICT) | EvidenceSpine, CapabilityGrid | "When the extraction paths disagree, the system surfaces the conflict instead of resolving it silently." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (line 22, §111-123) | Medium | No |
-| V2-9 | `capabilityV2.human-review` (HUMAN REVIEW) | EvidenceSpine, CapabilityGrid | "Every exception routes to a named human, who records a stated reason before the record moves forward." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§115-124) | Medium | No |
-| V2-10 | `capabilityV2.decision` (DECISION) | EvidenceSpine, CapabilityGrid | "The system recommends. A named human makes and records the decision; the system does not hold decision authority." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (lines 24-25); evaluator README (lines 3-4) | Medium | No |
-| V2-11 | `capabilityV2.retained-record` (RETAINED RECORD) | EvidenceSpine, CapabilityGrid | "Every decision is written to an append-only record that cannot be edited after the fact." | Safe with care | evaluator README (§2.3); reuses `evaluator.audit-chain`; attest-public-export/README.md (lines 34-39) | Medium (EVALUATOR is DB-trigger-verified; ATTEST is a demonstration export, not production-hardened) | No |
+| V2-6 | `capabilityV2.source` (SOURCE) | EvidenceSpine, CapabilityGrid, /defense, /finance | "Every source document is sealed on arrival, and any change to the expected reporting template is detected automatically." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (ATTEST-documented; do not extend to EVALUATOR as identical) | No |
+| V2-7 | `capabilityV2.evidence` (EVIDENCE) | EvidenceSpine, CapabilityGrid, /defense, /finance | "Every value is checked through three independent extraction paths, and confidence comes from where they agree, not from any single path." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§172-184) | Medium | No |
+| V2-8 | `capabilityV2.conflict` (CONFLICT) | EvidenceSpine, CapabilityGrid, /defense, /finance | "When the extraction paths disagree, the system surfaces the conflict instead of resolving it silently." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (line 22, §111-123) | Medium | No |
+| V2-9 | `capabilityV2.human-review` (HUMAN REVIEW) | EvidenceSpine, CapabilityGrid, /defense, /finance | "Every exception routes to a named human, who records a stated reason before the record moves forward." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22); evaluator README (§115-124) | Medium | No |
+| V2-10 | `capabilityV2.decision` (DECISION) | EvidenceSpine, CapabilityGrid, /defense, /finance | "The system recommends. A named human makes and records the decision; the system does not hold decision authority." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (lines 24-25); evaluator README (lines 3-4) | Medium | No |
+| V2-11 | `capabilityV2.retained-record` (RETAINED RECORD) | EvidenceSpine, CapabilityGrid, /defense, /finance | "Every decision is written to an append-only record that cannot be edited after the fact." | Safe with care | evaluator README (§2.3); reuses `evaluator.audit-chain`; attest-public-export/README.md (lines 34-39) | Medium (EVALUATOR is DB-trigger-verified; ATTEST is a demonstration export, not production-hardened) | No |
 
 ### sectorV2 (one defense statement, one regulated-finance statement)
 
@@ -249,6 +254,19 @@ Hard constraints applied: no agency names, no tender identifiers, no stakeholder
 | V2-52 | `proofV2.claims-discipline` | ProofRow | "Every material public claim on this site is registered, evidence-mapped, and checked by an automated lint gate before it can publish." | Verified and safe | Reuses `trustV2.claims-discipline` | Low | No |
 | V2-53 | `proofV2.attest-hub` | ProofRow | "A public demonstration hub is live, published 12 August 2026, built on synthetic demo data with a deterministic review workflow." | Verified and safe | Reuses `attestV2.demo-hub` | Low (pair with synthetic-data label) | No |
 | V2-54 | `proofV2.tas-status` | ProofRow | "TAS is in pilot and demo evaluation, not a production SaaS." | Safe with care | Reuses `tas.status` (ratchet A4) | Medium | No |
+
+### W11b claims addition (2026-08-15)
+
+Mechanical registration of two claims the W09-W10 receipt (`docs/v2-handoffs/W09-W10-receipt.md`, untracked) flagged as gaps: no registered claim named ATTEST's three-state evidence vocabulary directly, and `attest.astro`'s "not claimed" list used `trustV2.human-in-command` (a sitewide trust-pillar claim, not an ATTEST-specific boundary statement) as a stand-in. Both claims are adjudicated by the control plane per this work order, applied mechanically. Nothing above this section is modified; existing claims, ids, and wording stay byte-identical.
+
+| # | Claim id | Page / section | Approved wording | Category | Evidence | Risk | Human approval? |
+|---|---|---|---|---|---|---|---|
+| V2-55 | `attestV2.evidence-states` | /attest, /finance | "ATTEST classifies every populated field as supported, conflicting, or unsupported, and routes conflicts to a named human for resolution." | Safe with care | ATTEST_PROBLEM_STATEMENT.md (line 22) | Medium (caveat: research-prototype context, e.g. the research-prototype MaturityChip or maturity-research-stage wording, must be visible on the same rendering surface; never render in isolation) | No |
+| V2-56 | `attestV2.not-claimed` | /attest | "ATTEST does not interpret regulation, determine compliance, submit filings, or connect to any regulator system. No customers, no pilots, no accuracy claims." | Verified and safe | ATTEST_PROBLEM_STATEMENT.md (lines 24-25); attest-public-export/README.md (lines 40-41); 00_CONTROL/STATUS.md (lines 26-27) | Low (a boundary statement) | No |
+
+`attest.astro`'s not-claimed list now cites `attestV2.not-claimed` in place of the `trustV2.human-in-command` stand-in. The demonstration list on the same page splits its former five-item merge back into six items now that "evidence states" (`attestV2.evidence-states`) and "named-human resolution" (`attestV2.human-review`) are two distinct registered claims.
+
+**Claim count update.** `publicClaims.ts` held 105 registered claims before this addition (per the V2 extension total above). This addition registers 2 more claims, both in the `attestV2` group. **Total registered claims after this addition: 107.**
 
 ### V2 claims requiring human approval before publish (appended to A1–A6; those items are unchanged)
 

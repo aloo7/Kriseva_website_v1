@@ -41,7 +41,10 @@ function claim(id: string): string {
   return c.wording;
 }
 
-const title = claim('companyV2.hero-headline');
+// v2 (W11b SEO pass): "KRISEVA · <page role>" title pattern, page role
+// here is the registered hero headline claim itself (companyV2.hero-headline),
+// exact wording, no paraphrase.
+const title = `KRISEVA · ${claim('companyV2.hero-headline')}`;
 const description = claim('companyV2.sentence');
 ---
 

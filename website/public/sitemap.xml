@@ -1,54 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Host: www.kriseva.in (the apex DNS is dead per the 2026-06-12 audit).
      TODO(founder): regenerate against the chosen canonical host once apex
-     DNS is fixed. lastmod reflects the v6 full-site rebuild. -->
+     DNS is fixed. lastmod reflects the v2 corporate site rebuild
+     (CORPORATE_SITE_V2_ARCHITECTURE.md §4, work order W11b).
+     12 indexable routes: the 13 buildable pages under website/src/pages/
+     minus /404 (an error page, deliberately excluded from the sitemap;
+     see the W11b receipt for the reasoning). Archived _*_archive.astro
+     files are excluded from routing by Astro (underscore-prefixed) and
+     are not listed here. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.kriseva.in/</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://www.kriseva.in/tas</loc>
-    <lastmod>2026-06-12</lastmod>
+    <loc>https://www.kriseva.in/company</loc>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.kriseva.in/capabilities</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.kriseva.in/defense</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.kriseva.in/finance</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.kriseva.in/tas</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.kriseva.in/evaluator</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.kriseva.in/workflow</loc>
-    <lastmod>2026-06-12</lastmod>
+    <loc>https://www.kriseva.in/attest</loc>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.kriseva.in/security</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.kriseva.in/validation</loc>
-    <lastmod>2026-06-12</lastmod>
+    <loc>https://www.kriseva.in/evidence</loc>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.kriseva.in/founder</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.kriseva.in/contact</loc>
-    <lastmod>2026-06-12</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
 </urlset>

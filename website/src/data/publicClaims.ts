@@ -612,7 +612,7 @@ const capabilityV2: PublicClaim[] = [
       'Every source document is sealed on arrival, and any change to the expected reporting template is detected automatically.',
     category: 'safe-with-care',
     evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat:
       'Documented and demonstrated in ATTEST. EVALUATOR ingestion (two-tier document router) is analogous but sealing / template-change detection specifically is an ATTEST-documented capability; do not extend to claim identical EVALUATOR implementation.',
   },
@@ -625,7 +625,7 @@ const capabilityV2: PublicClaim[] = [
       '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
       'KRISEVA_EVALUATOR/README.md (§172-184)',
     ],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat: 'Shared three-path language across ATTEST and EVALUATOR (architecture §6). No accuracy percentage without measurement evidence.',
   },
   {
@@ -637,7 +637,7 @@ const capabilityV2: PublicClaim[] = [
       '01_PRODUCTS/evaluator/README.md (line 22)',
       'KRISEVA_EVALUATOR/README.md (§111-123)',
     ],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat:
       'EVALUATOR expresses this architecturally: two of six verdict states route to human review by construction, so silent disqualification is not possible.',
   },
@@ -649,7 +649,7 @@ const capabilityV2: PublicClaim[] = [
       '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)',
       'KRISEVA_EVALUATOR/README.md (§115-124)',
     ],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat:
       'Human review is a recommendation-routing mechanism, not a claim that any output is pre-approved or validated beyond the stated reason.',
   },
@@ -661,7 +661,7 @@ const capabilityV2: PublicClaim[] = [
       '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)',
       '01_PRODUCTS/evaluator/README.md (lines 3-4)',
     ],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat:
       'Reuses the recommendation-only framing already registered for TAS (tas.recommendation) and EVALUATOR (evaluator.positioning); no autonomous authority is ever claimed.',
   },
@@ -674,7 +674,7 @@ const capabilityV2: PublicClaim[] = [
       'Reuses claim id: evaluator.audit-chain',
       '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 34-39)',
     ],
-    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities)',
+    surface: 'EvidenceSpine (index.astro), CapabilityGrid (/capabilities), spineStations (/defense, /finance)',
     caveat:
       'Verified at the database layer for EVALUATOR (Postgres trigger blocks UPDATE/DELETE). The ATTEST retained record at this stage is a demonstration export (JSON/HTML) from a research prototype, not a production-hardened append-only store; do not imply parity between the two.',
   },
@@ -966,6 +966,35 @@ const attestV2: PublicClaim[] = [
     surface: ' · not used on any public page · ',
     caveat:
       'PENDING-FABLE adjudication. Architecture §15 item 3(b) asks whether any regulator name may appear on /finance or /attest. Default per §11 is to avoid entirely; every attestV2 and sectorV2.finance claim in this extension follows that default. This id reserves the decision point for Fable.',
+  },
+  // W11b addition (2026-08-15): mechanical registration of two claims the
+  // W09-W10 receipt flagged as gaps. attestV2.evidence-states names the
+  // three-state vocabulary directly (previously only implied through
+  // attestV2.human-review). attestV2.not-claimed is a single boundary
+  // sentence to replace the trustV2.human-in-command stand-in that page was
+  // using on its "not claimed" list (trustV2.human-in-command is a general
+  // trust-pillar claim, not an ATTEST-specific boundary statement).
+  {
+    id: 'attestV2.evidence-states',
+    wording:
+      'ATTEST classifies every populated field as supported, conflicting, or unsupported, and routes conflicts to a named human for resolution.',
+    category: 'safe-with-care',
+    evidence: ['10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (line 22)'],
+    surface: '/attest, /finance',
+    caveat:
+      'Research-prototype context must be visible on the rendering surface wherever this claim appears (e.g. the research-prototype MaturityChip or the maturity-research-stage claim in the same view); never render this claim in isolation from that context.',
+  },
+  {
+    id: 'attestV2.not-claimed',
+    wording:
+      'ATTEST does not interpret regulation, determine compliance, submit filings, or connect to any regulator system. No customers, no pilots, no accuracy claims.',
+    category: 'verified-and-safe',
+    evidence: [
+      '10_GIFT_CITY/05_PRODUCT/problem_statement/ATTEST_PROBLEM_STATEMENT.md (lines 24-25)',
+      '10_GIFT_CITY/05_PRODUCT/prototype/attest-public-export/README.md (lines 40-41)',
+      '00_CONTROL/STATUS.md (lines 26-27)',
+    ],
+    surface: '/attest',
   },
 ];
 

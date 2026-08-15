@@ -47,6 +47,9 @@ function claim(id: string): string {
 }
 
 const sentence = claim('companyV2.sentence');
+// v2 (W11b SEO pass): description built from the registered claim verbatim
+// plus a neutral connective naming the six spine stations (structural
+// section labels already on this page, architecture §6, not a new claim).
 
 // Per-station elaboration: which product demonstrates that checkpoint today,
 // in that product's own already-registered wording. Order matches
@@ -65,8 +68,8 @@ const evaluator = portfolio.find((p) => p.id === 'evaluator')!;
 const attest = portfolio.find((p) => p.id === 'attest')!;
 
 const heroTitle = 'One architecture. <span class="brass">Six checkpoints.</span>';
-const title = 'Capabilities';
-const description = sentence;
+const title = 'KRISEVA · Capabilities';
+const description = sentence + ' One architecture, six checkpoints: source, evidence, conflict, human review, decision, retained record.';
 ---
 <BaseLayout title={title} description={description}>
 
@@ -250,19 +253,4 @@ const description = sentence;
   .closing-cta h2 { margin-bottom: 14px; }
   .closing-cta p { color: var(--text-secondary); margin-bottom: 26px; }
   .closing-cta__buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-
-  /* RouteHero wraps its content in a shared `.reveal` div (global.css), which
-     renders at opacity:0 until BaseLayout's IntersectionObserver script adds
-     `.is-visible` -- the same pre-existing pattern fixed on FounderCTA for
-     this work order (a no-JS visitor would otherwise see an empty hero).
-     RouteHero.astro itself is a shared component out of this work order's
-     touch scope (defense.astro/finance.astro/attest.astro carry the same
-     condition and are not this page to fix), so the neutralization is
-     scoped to this page only via :global(), matching the FounderCTA fix's
-     reasoning: render statically now, scroll-in motion is Phase 4 / W12
-     scope (D-008). See docs/v2-handoffs/W05-W06-receipt.md. */
-  :global(.route-hero .reveal) {
-    opacity: 1;
-    transform: none;
-  }
 </style>

@@ -30,7 +30,9 @@ export const routes = {
   // page (founder ruling 2026-06-09). Kept so archived pages still compile;
   // worker/index.ts 301s the old URL.
   issuerRoadmap: '/evaluator',
-  contactWithIntent: (intent: 'demo' | 'pilot' | 'partnership' | 'issuer') =>
+  // 'attest' added at W11b: contact.astro's intent select (src/pages/contact.astro)
+  // gained a "Research collaboration (ATTEST)" option with the matching value.
+  contactWithIntent: (intent: 'demo' | 'pilot' | 'partnership' | 'issuer' | 'attest') =>
     `/contact?intent=${intent}` as const,
 } as const;
 

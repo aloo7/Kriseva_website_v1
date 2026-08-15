@@ -5,6 +5,8 @@
 //
 // The homepage stays self-contained; keep this in lockstep with its head.
 
+import { getOrganizationSchema } from '../../data/organizationSchema';
+
 interface Props {
   title: string;
   description: string;
@@ -28,25 +30,7 @@ const canonical = SITE + (path === '/' ? '/' : path);
 const slug = path === '/' ? '' : path.replace(/^\//, '').replace(/\//g, '-');
 const ogImage = SITE + (slug ? `/og/${slug}.png` : '/og.png');
 
-const organization = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'KRISEVA AI Private Limited',
-  alternateName: 'KRISEVA',
-  url: SITE + '/',
-  email: 'ayush@kriseva.in',
-  description:
-    'Deterministic, auditable procurement intelligence for India’s defence ecosystem. Two products on one evidence engine: KRISEVA TAS (bidder-side tender intelligence for defence MSMEs) and Kriseva Evaluator (issuer-side, committee-assist bid evaluation).',
-  founder: {
-    '@type': 'Person',
-    name: 'Ayush Tiwary',
-    jobTitle: 'Founder',
-    alumniOf: 'IIT Gandhinagar',
-    email: 'ayush@kriseva.in',
-  },
-  knowsAbout: ['defence procurement', 'tender automation', 'bid evaluation', 'GeM', 'DefProc', 'audit logging'],
-  slogan: 'A tender is not a PDF. It is a decision system hidden inside a document bundle.',
-};
+const organization = getOrganizationSchema();
 
 const blocks = [organization, ...schema];
 ---

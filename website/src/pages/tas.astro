@@ -30,7 +30,7 @@ const boundaryList = getClaim('boundary.list')!.wording;
 const metadataClaim = getClaim('tas.metadata')!.wording;
 const recommendationClaim = getClaim('tas.recommendation')!.wording;
 
-const title = 'KRISEVA TAS · Bidder-side tender intelligence for defense MSMEs';
+const title = 'KRISEVA · TAS · Bidder-side tender intelligence for defense MSMEs';
 const description = oneLiner + ' Deterministic pipeline, evidence-linked extraction, BID / REVIEW / SKIP briefs the operator signs.';
 
 const schema = [
@@ -218,7 +218,7 @@ const after = [
           <div class="rec" role="listitem">
             <span class="date">{String(i + 1).padStart(2, '0')} · {d.v}/100</span>
             <span class="what">
-              <b>{d.n}</b> — {d.w} <span class="src-note">[{d.ref}]</span>
+              <b>{d.n}:</b> {d.w} <span class="src-note">[{d.ref}]</span>
               {d.risk && <span class="riskline">⚠ {d.risk}</span>}
             </span>
             <span class="tag">{d.risk ? 'risk' : 'evidence'}</span>
