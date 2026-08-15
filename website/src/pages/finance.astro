@@ -109,7 +109,7 @@ const description = sector.summary;
       <p class="spine-intro">ATTEST runs the same evidence architecture shared across KRISEVA's systems. Source records enter at SOURCE; a reviewed, retained filing record leaves at RETAINED RECORD.</p>
       <div class="spine-list">
         {spineStations.map((s, i) => (
-          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source="Evidence Spine · shared architecture">
+          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source={`Register entry capabilityV2.${s.id} · safe-with-care`}>
             {s.description}
           </EvidenceCard>
         ))}
