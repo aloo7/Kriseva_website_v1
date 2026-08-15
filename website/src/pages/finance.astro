@@ -25,7 +25,6 @@ import RouteHero from '../components/RouteHero.astro';
 import SectionLabel from '../components/SectionLabel.astro';
 import DossierCard from '../components/DossierCard.astro';
 import MaturityChip from '../components/MaturityChip.astro';
-import EvidenceCard from '../components/EvidenceCard.astro';
 import PrimaryButton from '../components/PrimaryButton.astro';
 import { getClaim } from '../data/publicClaims';
 import { portfolio, sectors, spineStations } from '../data/company';
@@ -102,17 +101,26 @@ const description = sector.summary;
   </section>
 
   <!-- ============ EVIDENCE SPINE · SOURCE RECORDS → FILED RETURN ============ -->
+  <!-- Gate 3 fix (docs/v2-handoffs/INDEPENDENT_REVIEW_V2.md Major 3): the
+       six-station prose paragraphs repeated near-verbatim across home,
+       /capabilities, /defense, and /finance. Control-plane ruling: home and
+       /capabilities keep the full treatment; /defense and /finance compress
+       to the instantiation strip only - station labels in sequence plus the
+       sector's input/output framing and at most one introductory sentence.
+       Full station-by-station explanation now lives at /capabilities only. -->
   <section class="section section--paper" id="spine">
     <div class="container">
       <SectionLabel>The Evidence Spine · source records → filed return</SectionLabel>
       <h2>The same six stations, applied to a filing.</h2>
-      <p class="spine-intro">ATTEST runs the same evidence architecture shared across KRISEVA's systems. Source records enter at SOURCE; a reviewed, retained filing record leaves at RETAINED RECORD.</p>
-      <div class="spine-list">
-        {spineStations.map((s, i) => (
-          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source={`Register entry capabilityV2.${s.id} · safe-with-care`}>
-            {s.description}
-          </EvidenceCard>
-        ))}
+      <p class="spine-intro">ATTEST runs the same evidence architecture shared across KRISEVA's systems; full walkthrough of each station at <a href={routes.capabilities}>/capabilities</a>.</p>
+      <div class="spine-strip">
+        <span class="spine-bound">Source records</span>
+        <ol class="spine-mid">
+          {spineStations.map((s) => (
+            <li>{s.label}</li>
+          ))}
+        </ol>
+        <span class="spine-bound spine-bound--out">Filed return</span>
       </div>
     </div>
   </section>
@@ -186,7 +194,55 @@ const description = sector.summary;
   .card-link { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.06em; }
 
   .spine-intro { max-width: 66ch; color: var(--ink-secondary); margin-bottom: clamp(20px, 3vw, 32px); }
-  .spine-list { display: flex; flex-direction: column; }
+  .spine-intro a { color: var(--accent-text-safe, #91601c); }
+
+  /* Instantiation strip (Gate 3 compression): station labels only, no
+     per-station prose. Adapted from EvidenceSpine.astro's own
+     .spine-instantiation row (homepage), same paper-surface token set. */
+  .spine-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 4px;
+  }
+  .spine-bound {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-primary);
+    border: 1px solid rgba(16, 35, 59, 0.28);
+    border-radius: var(--radius-badge);
+    padding: 6px 11px;
+  }
+  .spine-bound--out { color: var(--accent-text-safe, #91601c); border-color: var(--accent-line); }
+  .spine-mid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-width: 220px;
+  }
+  .spine-mid li {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-quiet);
+    white-space: nowrap;
+  }
+  .spine-mid li:not(:last-child)::after {
+    content: "\2192";
+    display: inline-block;
+    margin: 0 6px;
+    color: var(--ink-quiet);
+    opacity: 0.6;
+  }
+  @media (max-width: 640px) {
+    .spine-mid { min-width: 0; }
+  }
 
   .maturity-list { display: flex; flex-direction: column; gap: 14px; max-width: 68ch; }
   .maturity-list li {

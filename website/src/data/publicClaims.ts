@@ -276,7 +276,17 @@ const evaluator: PublicClaim[] = [
     wording: 'In active evaluation with a central armed police force.',
     category: 'safe-with-care',
     evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'notes/founder-log/FOUNDER_LOG.md'],
-    surface: 'evaluator.astro, index.astro (cred band, field record), validation.astro',
+    // Gate 3 correction (docs/v2-handoffs/INDEPENDENT_REVIEW_V2.md Major 2):
+    // this was pointing at index.astro's pre-v2 "cred band" (removed in the
+    // v2 homepage rebuild) and validation.astro (now the archived
+    // _validation_archive.astro, not a live route). Corrected to the two
+    // routes that actually call getClaim('evaluator.eval-status') today:
+    // evaluator.astro and evidence.astro. Verified absent from company.astro
+    // (renders evaluatorV2.maturity-working-prototype instead, which does
+    // not carry this sentence) and from every other live route by grep.
+    // Control-plane ruling: exactly once on /evaluator, exactly once on
+    // /evidence, never on /company.
+    surface: 'evaluator.astro, evidence.astro',
     caveat:
       'Agency stays unnamed until explicit written consent is on record; no order claimed, no endorsement implied, no unit or bid specifics.',
   },
@@ -829,7 +839,14 @@ const portfolioV2: PublicClaim[] = [
     wording: 'Working prototype. In active evaluation with a central armed police force.',
     category: 'safe-with-care',
     evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'Reuses claim id: evaluator.eval-status'],
-    surface: 'PortfolioCards (index.astro)',
+    // Gate 3 correction (docs/v2-handoffs/INDEPENDENT_REVIEW_V2.md Major 2):
+    // was stated as 'PortfolioCards (index.astro)', which is false -
+    // PortfolioCards.astro reads product.maturity plus the atomic
+    // portfolioV2.evaluator-purpose/primary-user/cap-* claims via
+    // src/data/company.ts and never calls getClaim on this id. Corrected to
+    // match docs/PUBLIC_CLAIMS_REGISTER.md row V2-25, which already
+    // documented this accurately. Not a live surface on any route.
+    surface: 'Not currently rendered on any route (see PUBLIC_CLAIMS_REGISTER.md V2-25)',
     caveat:
       'Combines the architecture §7 maturity-chip token "working prototype" with evaluator.eval-status reused verbatim. Does not add end-to-end or fully-demonstrated framing; evaluatorV2.e2e-candidate is adjudicated (D-011) but restricted to evaluator.astro and /evidence only, never PortfolioCards or the homepage.',
   },

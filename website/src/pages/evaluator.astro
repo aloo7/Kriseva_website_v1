@@ -86,9 +86,17 @@ const auditBlocks = [
         <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
         <a class="btn btn-line" href="#audit">Walk the audit chain</a>
       </div>
+      <!-- Gate 3 fix (docs/v2-handoffs/INDEPENDENT_REVIEW_V2.md Major 2):
+           evaluator.eval-status used to render here too, immediately beside
+           the working-prototype MaturityChip. Control-plane ruling caps it
+           at one appearance on this page; kept at the Field Status section
+           below ("On the record", §06) instead of here, since pairing it
+           directly against the maturity chip in the hero was the exact
+           amplification the review flagged ("working prototype" plus a
+           named government security-force category reading as stronger
+           validation than either states alone). -->
       <div class="ihero-meta" aria-label="Product status">
         <MaturityChip maturity="working-prototype" />
-        <span><b>{evalStatus.replace(/\.$/, '')}</b></span>
         <span>Committee-assist · the committee signs</span>
       </div>
     </div>
