@@ -34,3 +34,4 @@ pnpm-debug.log*
 
 # v2 program worker receipts: may contain sensitive internal references. Never commit.
 docs/v2-handoffs/
+website/docs/v2-handoffs/
