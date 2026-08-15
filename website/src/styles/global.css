@@ -247,15 +247,30 @@ textarea:focus-visible {
    (#b78437), which measures ~2.9:1 on --surface-paper and ~3.1:1 on
    --surface-paper-rise (the DossierCard paper fill the capabilities
    #instantiation links actually sit on) - below the 4.5:1 floor for the
-   0.76rem mono links this rule paints. --accent-text-safe is the same
-   AA-safe brass cut the chip/dot overrides above already use: 4.7:1 on
-   paper, 5.1:1 on paper-rise. Hover already resolves to --surface-deep
-   (16:1+) and is unchanged. */
+   0.76rem mono links this rule paints.
+
+   Art-direction pass: rather than tint the link text itself brass (which
+   reads as body copy that merely happens to be brass-colored), prose
+   links keep the surrounding warm-ink body tone - --ink-secondary,
+   ~12.8:1 on --surface-paper, ~13.9:1 on --surface-paper-rise, nowhere
+   near the 4.5:1 floor - and are marked as links by a brass underline
+   instead, the site's existing accent language. Raw --accent-primary
+   text still measures ~2.6:1 on paper (N2's original finding), so hover
+   does not shift the label to brass; it deepens the underline instead
+   (thicker, and to --accent-text-safe, the same AA-safe brass cut the
+   chip/dot overrides above use, in case a UA ever renders underline
+   color as text-like contrast-checked chrome). */
 .section--paper a:not(.btn) {
-  color: var(--accent-text-safe, #91601c);
+  color: var(--ink-secondary);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-primary);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
 }
 .section--paper a:not(.btn):hover {
-  color: var(--surface-deep);
+  color: var(--ink-secondary);
+  text-decoration-color: var(--accent-text-safe, #91601c);
+  text-decoration-thickness: 2px;
 }
 
 /* Hairline divider */
