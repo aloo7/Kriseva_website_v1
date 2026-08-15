@@ -57,4 +57,30 @@ const description = claim('companyV2.sentence');
   <TrustStrip />
   <ProofRow />
   <FounderCTA />
+
+  {/* Motion wiring (CORPORATE_SITE_V2_ARCHITECTURE.md §18A, W12). The gate
+      below is evaluated BEFORE either module is requested: reduced-motion
+      visitors trigger neither dynamic import, so they fetch zero motion
+      bytes (Tier 2's reveal.ts and Tier 1's homeMotion.ts, plus its vendor
+      bundle, all stay unrequested). Tier 2 (reveal.ts) additionally runs on
+      mobile widths per item 6 ("Tier 2 reveals only" below 1024px); Tier 1
+      (homeMotion.ts: the spine scrub + Lenis) is desktop + fine-pointer
+      only. Both are plain dynamic import() calls so Vite code-splits them
+      into separate chunks that are only fetched when actually imported —
+      this script block itself is the only thing every visitor downloads,
+      and it contains no vendor or motion logic, only the gate. */}
+  <script>
+    const reduceOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    const desktopOK =
+      reduceOK &&
+      window.matchMedia('(min-width: 1024px)').matches &&
+      window.matchMedia('(pointer: fine)').matches;
+
+    if (reduceOK) {
+      import('../scripts/reveal').then((m) => m.initHomepageReveal());
+    }
+    if (desktopOK) {
+      import('../scripts/homeMotion').then((m) => m.initHomeMotion());
+    }
+  </script>
 </BaseLayout>

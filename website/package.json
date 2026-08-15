@@ -17,7 +17,8 @@
     "qa:a11y": "playwright test tests/a11y.spec.ts",
     "qa:responsive": "playwright test tests/responsive.spec.ts",
     "qa:motion": "playwright test tests/motion.spec.ts",
-    "qa:stage7": "npm run lint:css && npm run qa && npm run qa:a11y && npm run qa:visual && npm run qa:responsive && npm run qa:motion",
+    "qa:static": "playwright test tests/qa-static.spec.ts",
+    "qa:stage7": "npm run lint:css && npm run qa && npm run qa:a11y && npm run qa:visual && npm run qa:responsive && npm run qa:motion && npm run qa:static",
     "optimize:screenshots": "node scripts/optimize-screenshots.mjs",
     "optimize:screenshots:revert": "node scripts/optimize-screenshots.mjs --revert"
   },
