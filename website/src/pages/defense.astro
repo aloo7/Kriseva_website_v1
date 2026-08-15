@@ -119,7 +119,7 @@ const description = sector.summary;
       <p class="spine-intro">Both systems in this sector run the same evidence architecture. A tender bundle enters at SOURCE; a signed bid decision leaves at RETAINED RECORD.</p>
       <div class="spine-list">
         {spineStations.map((s, i) => (
-          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source="Evidence Spine · shared architecture">
+          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source={`Register entry capabilityV2.${s.id} · safe-with-care`}>
             {s.description}
           </EvidenceCard>
         ))}

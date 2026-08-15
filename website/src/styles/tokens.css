@@ -82,6 +82,13 @@
   --accent-line:         rgba(193, 138, 62, 0.34);
   --accent-line-soft:    rgba(193, 138, 62, 0.16);
   --accent-glow:         rgba(193, 138, 62, 0.06);
+  /* Gate 1 correction N2: raw --brass/--brass-soft measure ~2.6:1 as small
+     text or a UI-chrome outline on paper surfaces, below the 4.5:1 (text)
+     and 3:1 (chrome) floor architecture §14 requires. tokens-v6.css already
+     carries this exact AA-safe cut (--brass-text: #91601C, ~4.7:1 on
+     --surface-paper); mirrored here so BaseLayout pages (defense, finance,
+     attest, capabilities, index) have the same safe value available. */
+  --accent-text-safe:    #91601c;
 
   /* State backgrounds (anti-claim cards, before/after columns) */
   --state-warn-bg:       rgba(154, 53, 44, 0.06);

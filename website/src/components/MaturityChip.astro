@@ -48,4 +48,10 @@ const LABELS: Record<Maturity, string> = {
     line-height: 1;
     white-space: nowrap;
   }
+  /* Paper-context color override lives in global.css (.maturity-chip is
+     used across component boundaries, and Astro's scoped-style compiler
+     drops ancestor selectors like ".section--paper" that it can't
+     attribute to this component's own template, silently turning an
+     intended ".section--paper .maturity-chip" rule into an unconditional
+     one - see Gate 1 correction N2 note in global.css). */
 </style>

@@ -1,19 +1,25 @@
 ---
+// Gate 1 correction N3: `source` is now optional so callers with a
+// monotonous, identical eyebrow on every card (the same source string
+// repeated per item) can drop it in favor of a single label above the
+// list, or replace it with a per-item claim id. The rail marker used to
+// render the step number as a separate label ABOVE an empty decorative
+// circle; the circle itself carried no glyph. It now carries the step
+// number directly, so the marker is meaningful on its own.
 interface Props {
   step: string;
   title: string;
-  source: string;
+  source?: string;
 }
 const { step, title, source } = Astro.props;
 ---
 <div class="evidence-card">
   <div class="evidence-card__rail">
-    <span class="evidence-card__step">{step}</span>
-    <span class="evidence-card__dot" />
+    <span class="evidence-card__dot">{step}</span>
   </div>
   <div class="evidence-card__body">
     <h4>{title}</h4>
-    <p class="evidence-card__source">{source}</p>
+    {source && <p class="evidence-card__source">{source}</p>}
     <div class="evidence-card__detail">
       <slot />
     </div>
@@ -35,6 +41,7 @@ const { step, title, source } = Astro.props;
   }
   .evidence-card:hover .evidence-card__dot {
     background: var(--accent-primary);
+    color: var(--surface-deep);
     box-shadow: 0 0 0 4px rgba(193, 138, 62, 0.18);
   }
   @media (prefers-reduced-motion: reduce) {
@@ -47,23 +54,24 @@ const { step, title, source } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
     padding-top: 4px;
   }
-  .evidence-card__step {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.16em;
-    color: var(--accent-primary);
-    text-transform: uppercase;
-  }
   .evidence-card__dot {
-    width: 12px; height: 12px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 50%;
-    border: 2px solid var(--accent-primary);
+    border: 1.5px solid var(--accent-primary);
     background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: var(--accent-primary);
     transition:
       background var(--motion-precise),
+      color var(--motion-precise),
       box-shadow var(--motion-precise);
   }
   .evidence-card__body h4 {
@@ -88,4 +96,10 @@ const { step, title, source } = Astro.props;
   .section--paper .evidence-card__body h4 { color: var(--surface-deep); }
   .section--paper .evidence-card__detail { color: var(--ink-secondary); }
   .section--paper .evidence-card { border-bottom-color: rgba(16, 35, 59, 0.12); }
+  /* .evidence-card__dot's paper-context color override lives in
+     global.css, not here - see the Gate 1 correction N2 note in
+     MaturityChip.astro/global.css: Astro's scoped-style compiler drops
+     ancestor selectors it can't attribute to this component's own
+     template, so an intended ".section--paper .evidence-card__dot" rule
+     written in this file compiles to an unconditional one instead. */
 </style>

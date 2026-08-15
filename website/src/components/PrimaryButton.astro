@@ -58,7 +58,12 @@ const { href, size = 'md', class: className = '', ariaLabel } = Astro.props;
   .btn--primary:hover {
     background: var(--accent-soft);
     border-color: var(--accent-soft);
-    color: var(--text-primary);
+    /* Gate 1 correction N2: --text-primary (paper, light) on --accent-soft
+       (brass-soft, a mid-tone) measured ~2.87:1, below the 4.5:1 floor.
+       --surface-base (navy-dark, what the resting state already uses)
+       keeps the label dark on this brass fill, ~5.8:1, staying inside the
+       brass/ink palette instead of introducing a new color role. */
+    color: var(--surface-base);
     box-shadow: 0 10px 22px rgba(193, 138, 62, 0.22);
   }
 

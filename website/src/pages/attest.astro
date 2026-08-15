@@ -52,13 +52,20 @@ const notClaimedBoundary = getClaim('attestV2.not-claimed')!.wording;
 // "named-human resolution" (attestV2.human-review) are now two distinct
 // registered claims (W11b), so they render as two cards instead of the
 // five-card merge the W09-W10 receipt used while only one claim existed.
+//
+// Gate 1 correction N3: the identical "ATTEST · registered claim" eyebrow
+// on every card was replaced with the item's own claim id in mono type
+// (the src-note convention already used elsewhere on this site, e.g.
+// evaluator.astro's "Register entry evaluatorV2.e2e-candidate ·
+// safe-with-care"), so each card states which specific registered claim it
+// renders instead of repeating a generic label six times.
 const demonstrates = [
-  { title: 'Sealed sources', body: sourceSealing },
-  { title: 'Three extraction paths', body: threePath },
-  { title: 'Evidence states', body: evidenceStates },
-  { title: 'Named-human resolution', body: humanReview },
-  { title: 'Retained evidence manifests', body: provenance },
-  { title: 'Non-interpretive boundary', body: nonInterpretive },
+  { title: 'Sealed sources', body: sourceSealing, source: 'Register entry attestV2.source-sealing · safe-with-care' },
+  { title: 'Three extraction paths', body: threePath, source: 'Register entry attestV2.three-path · safe-with-care' },
+  { title: 'Evidence states', body: evidenceStates, source: 'Register entry attestV2.evidence-states · safe-with-care' },
+  { title: 'Named-human resolution', body: humanReview, source: 'Register entry attestV2.human-review · safe-with-care' },
+  { title: 'Retained evidence manifests', body: provenance, source: 'Register entry attestV2.provenance · safe-with-care' },
+  { title: 'Non-interpretive boundary', body: nonInterpretive, source: 'Register entry attestV2.non-interpretive · verified-and-safe' },
 ];
 
 const title = 'KRISEVA · Attest · Research prototype';
@@ -88,7 +95,7 @@ const HUB_URL = 'https://ayushtiwary-ops.github.io/kriseva-attest/';
       <h2>What the demonstration walks through.</h2>
       <div class="demo-list">
         {demonstrates.map((d, i) => (
-          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={d.title} source="ATTEST · registered claim">
+          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={d.title} source={d.source}>
             {d.body}
           </EvidenceCard>
         ))}
@@ -97,7 +104,13 @@ const HUB_URL = 'https://ayushtiwary-ops.github.io/kriseva-attest/';
   </section>
 
   <!-- ============ THE PUBLIC DEMONSTRATION HUB ============ -->
-  <section class="section section--navy" id="hub">
+  <!-- Gate 1 correction N1: was section--navy, breaking the page rhythm
+       (navy hero -> cream -> navy -> dark -> cream). Navy is reserved for
+       trust/audit content per architecture §7; this section is product
+       proof, not trust/audit, so it takes the paper/cream treatment like
+       its neighbors. Rhythm is now hero (navy) -> cream -> cream -> dark
+       (not-claimed) -> cream. -->
+  <section class="section section--paper" id="hub">
     <div class="container">
       <SectionLabel>The public demonstration</SectionLabel>
       <h2>A synthetic-data demonstration hub, published and public.</h2>
@@ -148,6 +161,11 @@ const HUB_URL = 'https://ayushtiwary-ops.github.io/kriseva-attest/';
     text-transform: uppercase;
     color: var(--text-faint);
   }
+  /* Gate 1 correction N1: #hub moved from section--navy to section--paper;
+     the two rules above were tuned for text-on-navy and read near-invisible
+     on the paper surface, so give them their paper-context counterparts. */
+  .section--paper .hub-copy { color: var(--ink-secondary); }
+  .section--paper .hub-note { color: var(--ink-quiet); }
 
   .not-claimed-list {
     display: flex;

@@ -187,10 +187,65 @@ textarea:focus-visible {
 .section--paper h4 {
   color: var(--surface-deep);
 }
-.section--paper a {
+/* Gate 1 correction N2: MaturityChip and EvidenceCard's rail marker use
+   --accent-primary (raw brass, #c18a3e) for text and border. On a paper
+   background that measures ~2.6:1 - below the 4.5:1 text floor and the
+   3:1 UI-chrome floor (architecture §14). It stays fine on navy (~5.4-
+   6.2:1), so this needs to be paper-context-scoped, not a blanket swap.
+   These two components' own scoped <style> blocks cannot express that:
+   Astro's scoped-style compiler drops ancestor selectors (like
+   ".section--paper") it cannot attribute to the component's own
+   template, silently turning an intended ".section--paper .maturity-chip"
+   rule into an unconditional one. Written here instead, as ordinary
+   global CSS, so the ancestor condition is real. Covers both known paper
+   contexts: the shared .section--paper utility and PortfolioCards' own
+   .portfolio-cards class (same --surface-paper background, its own
+   component-scoped class name). --accent-text-safe (tokens.css) is the
+   same AA-safe darker brass cut (~4.7:1) V6 pages already carry as
+   --brass-text (tokens-v6.css).
+
+   Specificity note: MaturityChip's own compiled rule is
+   ".maturity-chip[data-astro-cid-xxx]" - one class plus one attribute
+   selector, (0,2,0). A plain ".section--paper .maturity-chip" is also
+   (0,2,0) (two classes), an exact tie decided by cascade order alone -
+   and Astro/Vite's per-page CSS chunking loads this shared global.css
+   chunk before the page-specific chunk carrying the component's own
+   compiled rule on some pages (index, capabilities), so the tie was
+   losing there. The selectors below repeat the target class
+   (".foo.foo") to add specificity (0,3,0 / 0,4,0), so the override wins
+   deterministically regardless of chunk load order, without !important. */
+.section--paper .maturity-chip.maturity-chip,
+.portfolio-cards .maturity-chip.maturity-chip,
+.sector-panels .maturity-chip.maturity-chip {
+  color: var(--accent-text-safe, #91601c);
+  border-color: var(--accent-text-safe, #91601c);
+}
+.section--paper .evidence-card__dot.evidence-card__dot,
+.portfolio-cards .evidence-card__dot.evidence-card__dot {
+  color: var(--accent-text-safe, #91601c);
+  border-color: var(--accent-text-safe, #91601c);
+}
+/* The hover-filled state (brass background) always wants dark text,
+   regardless of section - one more repeated class keeps this above the
+   two rules it must win against. */
+.section--paper .evidence-card:hover .evidence-card__dot.evidence-card__dot,
+.portfolio-cards .evidence-card:hover .evidence-card__dot.evidence-card__dot {
+  color: var(--surface-deep);
+}
+
+/* Gate 1 correction N2: :not(.btn) added. .section--paper a (0,1,1) was
+   beating PrimaryButton/SecondaryButton's own .btn/.btn--primary color
+   rules (0,1,0) whenever a button sits inside a paper section - the actual
+   cause of the "/attest and /defense closing CTA" brass-on-brass button
+   label found ~1.1:1 (accent-soft #b78437 text on accent-primary #c18a3e
+   fill). Scoping this rule to prose links only restores each button
+   component's own already-compliant color logic (measured ~6.3:1 rest /
+   ~5.8:1 hover after the PrimaryButton hover fix below) on every
+   section--paper section sitewide, not only the two named pages. */
+.section--paper a:not(.btn) {
   color: var(--accent-soft);
 }
-.section--paper a:hover {
+.section--paper a:not(.btn):hover {
   color: var(--surface-deep);
 }
 
