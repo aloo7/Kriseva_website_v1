@@ -1,0 +1,173 @@
+---
+// /company - the institution. New in v2 (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §4/§15, work order W07). Company thesis, operating principles, maturity
+// discipline, claims governance made visible, legal identity, and the
+// registered no-endorsement boundary line. Absorbs the mission / record
+// spirit of the old homepage where a registered claim exists for it.
+//
+// Every claim-bearing line comes from publicClaims.ts; nothing here is
+// free-typed material claim wording. MaturityChip was built against the
+// pre-v6 tokens.css variable names (--font-mono, --accent-primary,
+// --accent-line, --radius-badge, --text-meta); this page is a v6/
+// tokens-v6.css page like its siblings, so the .maturity-lockup wrapper
+// below aliases those variable names onto the v6 token set locally instead
+// of editing the shared component or forking it.
+
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import MaturityChip from '../components/MaturityChip.astro';
+import { getClaim } from '../data/publicClaims';
+import { site } from '../data/site';
+
+const companySentence = getClaim('companyV2.sentence')!.wording;
+const twoRooms = getClaim('act2.two-rooms')!.wording;
+const mission = getClaim('act7.mission')!.wording;
+const humanInCommand = getClaim('trustV2.human-in-command')!.wording;
+const localFirst = getClaim('trustV2.local-first')!.wording;
+const claimsDiscipline = getClaim('trustV2.claims-discipline')!.wording;
+const tasMaturityLine = getClaim('portfolioV2.tas-maturity')!.wording;
+const evaluatorMaturityLine = getClaim('evaluatorV2.maturity-working-prototype')!.wording;
+const attestMaturityLine = getClaim('attestV2.maturity-research-stage')!.wording;
+const panIit = getClaim('record.pan-iit')!.wording;
+const udyam = getClaim('record.udyam')!.wording;
+const dpiit = getClaim('record.dpiit')!.wording;
+const iiec = getClaim('record.iiec')!.wording;
+const notClaimed = getClaim('boundary.notClaimed')!.wording;
+
+const title = 'Company · KRISEVA AI · the institution behind the systems';
+const description = companySentence;
+---
+<V6Layout title={title} description={description} path="/company">
+
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Company">
+    <div class="wrap">
+      <p class="eyebrow">Company · the institution</p>
+      <h1 class="display">The institution <em class="em-brass">behind the systems.</em></h1>
+      <p class="dek">{companySentence}</p>
+      <div class="ihero-meta" aria-label="On this page">
+        <span>Thesis · principles · maturity · governance · identity</span>
+        <span>Product depth lives at <b>/tas</b>, <b>/evaluator</b>, <b>/attest</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THESIS ============ -->
+  <section class="sec-pad" id="thesis" style="padding-top:clamp(30px,4vw,56px)">
+    <div class="wrap">
+      <SectionHead eyebrow="The thesis · one architecture, two sectors" folio="§01 / 05"
+        dek="KRISEVA is not three products competing for attention. It is one evidence architecture, instantiated for the institutions that carry the highest cost of being wrong.">
+        One thesis. <em class="em-brass">Two sectors.</em>
+      </SectionHead>
+      <p class="tprose">{twoRooms} Defense procurement and regulated finance sit on opposite sides of the country's institutional decision-making, and both run on the same failure mode: a document bundle arrives, and someone has to decide what it actually proves. KRISEVA TAS and KRISEVA Evaluator sit on the two sides of a defense tender. KRISEVA Attest sits inside a regulated filing. The depth of each system lives on its own page; this page is about the architecture underneath all three.</p>
+      <blockquote class="cquote">{mission}</blockquote>
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px">
+        <a class="btn btn-line" href="/capabilities">The six-station architecture <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/defense">Defense sector</a>
+        <a class="btn btn-line" href="/finance">Finance sector</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OPERATING PRINCIPLES ============ -->
+  <section class="sec-pad" id="principles">
+    <div class="wrap">
+      <SectionHead eyebrow="Operating principles · what does not change" folio="§02 / 05"
+        dek="Three rules apply to every system KRISEVA ships, regardless of sector or maturity stage.">
+        What holds <em class="em-brass">across all three.</em>
+      </SectionHead>
+      <div class="record">
+        <div class="rec"><span class="date">Authority</span><span class="what">{humanInCommand}</span><span class="tag">safe-with-care</span></div>
+        <div class="rec"><span class="date">Deployment</span><span class="what">{localFirst}</span><span class="tag">safe-with-care</span></div>
+        <div class="rec"><span class="date">Publishing</span><span class="what">{claimsDiscipline}</span><span class="tag">verified-and-safe</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MATURITY DISCIPLINE ============ -->
+  <section class="sec-pad" id="maturity">
+    <div class="wrap">
+      <SectionHead eyebrow="Maturity discipline · one vocabulary, no synonyms" folio="§03 / 05"
+        dek="Every system on this site carries exactly one of three maturity states, rendered identically wherever it appears. The label is a constraint on what the surrounding copy is allowed to say, not a marketing tier.">
+        Three states. <em class="em-brass">No synonyms.</em>
+      </SectionHead>
+      <div class="maturity-lockup mgrid">
+        <div class="mcard regmark">
+          <MaturityChip maturity="pilot" />
+          <p>{tasMaturityLine}</p>
+          <span class="src-note">KRISEVA TAS</span>
+        </div>
+        <div class="mcard regmark">
+          <MaturityChip maturity="working-prototype" />
+          <p>{evaluatorMaturityLine}</p>
+          <span class="src-note">KRISEVA Evaluator</span>
+        </div>
+        <div class="mcard regmark">
+          <MaturityChip maturity="research-prototype" />
+          <p>{attestMaturityLine}</p>
+          <span class="src-note">KRISEVA Attest</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLAIMS GOVERNANCE, MADE VISIBLE ============ -->
+  <section class="sec-pad sec-sunk" id="governance">
+    <div class="wrap">
+      <SectionHead eyebrow="Claims governance · made visible" folio="§04 / 05"
+        dek="Not a policy statement. A description of a build step that runs on every page, including this one.">
+        The register <em class="em-brass">is the product.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{claimsDiscipline}</p>
+        <span class="src-note">Register entry trustV2.claims-discipline · verified-and-safe</span>
+      </div>
+      <p class="tprose" style="margin-top:28px">The mechanism: every claim-bearing sentence on this site is written once, in the public claims register, with a category, an evidence pointer, and, where the wording needs care, a caveat that ships in the same paragraph as the claim. Pages read the same wording by id at build time; a page cannot invent its own company, product, or performance wording. A lint step scans every deployable page, component, and data file for a fixed list of forbidden phrases before the site builds; a small number of flagged phrases still require a human to check each occurrence, but the hard-fail list stops the build outright. As of this build, the register holds 105 claims. See <a href="/evidence">/evidence</a> for how a claim moves from unpublishable to on the record.</p>
+    </div>
+  </section>
+
+  <!-- ============ LEGAL IDENTITY + BOUNDARY ============ -->
+  <section class="sec-pad" id="identity">
+    <div class="wrap">
+      <SectionHead eyebrow="On the record · legal identity and field record" folio="§05 / 05"
+        dek="The public entity behind the systems, and the recognitions that are independently verifiable.">
+        On file, <em class="em-brass">not on faith.</em>
+      </SectionHead>
+      <div class="record">
+        <div class="rec"><span class="date">Entity</span><span class="what">{site.legalName}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">2026 · May</span><span class="what">{panIit}</span><span class="tag">Validated</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{udyam}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{dpiit}</span><span class="tag">In process</span></div>
+        <div class="rec"><span class="date">Origin</span><span class="what">{iiec}</span><span class="tag">On record</span></div>
+      </div>
+      <p class="disclose">{notClaimed}</p>
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:28px">
+        <a class="btn btn-fill" href="/contact">Speak with the founder <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/evidence">Proof and measurement discipline</a>
+        <a class="btn btn-line" href="/security">Trust architecture</a>
+      </div>
+    </div>
+  </section>
+
+</V6Layout>
+
+<style is:global>
+/* /company page-specific */
+.tprose{font-size:1.02rem;line-height:1.75;max-width:74ch;color:var(--ink-sec)}
+.cquote{font-family:var(--serif);font-weight:400;font-size:clamp(1.4rem,2.6vw,2.15rem);
+  line-height:1.32;letter-spacing:-.01em;text-wrap:balance;max-width:36ch;margin:26px 0 32px}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mcard{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(18px,2.4vw,26px);display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.mcard p{font-size:.96rem;line-height:1.6;color:var(--ink-sec)}
+/* Bridges MaturityChip's tokens.css-named custom properties onto the v6
+   token set for this page only; MaturityChip.astro itself is unmodified. */
+.maturity-lockup{
+  --font-mono: var(--mono);
+  --text-meta: .66rem;
+  --accent-primary: var(--brass-deep);
+  --accent-line: rgba(168,114,41,.4);
+  --radius-badge: 3px;
+}
+@media (max-width:900px){.mgrid{grid-template-columns:1fr}}
+</style>

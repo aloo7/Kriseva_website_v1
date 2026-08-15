@@ -815,7 +815,7 @@ const portfolioV2: PublicClaim[] = [
     evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'Reuses claim id: evaluator.eval-status'],
     surface: 'PortfolioCards (index.astro)',
     caveat:
-      'Combines the architecture §7 maturity-chip token "working prototype" with evaluator.eval-status reused verbatim. Does not add end-to-end or fully-demonstrated framing; see evaluatorV2.e2e-candidate (PENDING-FABLE).',
+      'Combines the architecture §7 maturity-chip token "working prototype" with evaluator.eval-status reused verbatim. Does not add end-to-end or fully-demonstrated framing; evaluatorV2.e2e-candidate is adjudicated (D-011) but restricted to evaluator.astro and /evidence only, never PortfolioCards or the homepage.',
   },
   // ATTEST
   {
@@ -972,6 +972,12 @@ const attestV2: PublicClaim[] = [
 // evaluatorV2 (maturity update claims). Hard constraints: no agency names,
 // no tender identifiers, no stakeholder roles or identities, no test
 // counts, no percentages (Phase 2 work order).
+//
+// evaluatorV2.e2e-candidate adjudicated 2026-08-13 (D-011, W07 claims
+// adjudication step): the synthetic-bidder-qualified wording below is
+// cleared to safe-with-care for evaluator.astro and /evidence only. See the
+// claim's own caveat and docs/PUBLIC_CLAIMS_REGISTER.md A7 for the full
+// ruling.
 const evaluatorV2: PublicClaim[] = [
   {
     id: 'evaluatorV2.functional-verified',
@@ -981,7 +987,7 @@ const evaluatorV2: PublicClaim[] = [
     evidence: ['01_PRODUCTS/evaluator/README.md (§9, Functional components verified)'],
     surface: '/evaluator, /capabilities',
     caveat:
-      'Component-level verification only. Does not claim end-to-end deployment, customer readiness, or a completed full-tender demonstration; see evaluatorV2.e2e-candidate (PENDING-FABLE).',
+      'Component-level verification only. Does not claim end-to-end deployment, customer readiness, or a completed full-tender demonstration; see evaluatorV2.e2e-candidate (adjudicated D-011, synthetic-bidder qualifier mandatory).',
   },
   {
     id: 'evaluatorV2.roadmap-boundary',
@@ -997,16 +1003,21 @@ const evaluatorV2: PublicClaim[] = [
     evidence: ['docs/CORPORATE_SITE_V2_ARCHITECTURE.md §7', 'docs/CORPORATE_SITE_V2_ARCHITECTURE.md §5 item 4'],
     surface: '/evaluator, /defense, /capabilities',
     caveat:
-      'Maturity-chip token per architecture §7. Pairs with evaluatorV2.functional-verified and evaluatorV2.roadmap-boundary for the full maturity picture; never combined with end-to-end or demonstrated language without Fable clearance (see evaluatorV2.e2e-candidate).',
+      'Maturity-chip token per architecture §7. Pairs with evaluatorV2.functional-verified and evaluatorV2.roadmap-boundary for the full maturity picture; never combined with end-to-end or demonstrated language beyond the adjudicated evaluatorV2.e2e-candidate wording (D-011).',
   },
   {
     id: 'evaluatorV2.e2e-candidate',
-    wording: 'EVALUATOR has completed a full, end-to-end evaluation cycle on a real defense-sector tender, with all six verdict states demonstrated.',
-    category: 'do-not-publish',
-    evidence: ['01_PRODUCTS/evaluator/README.md (§9 shipping list)', 'COMPLETION_SUMMARY.md'],
-    surface: ' · not used on any public page yet · ',
+    wording:
+      'EVALUATOR has run a complete evaluation cycle on a real, publicly issued defense-sector tender using synthetic bidder submissions, with all six verdict states demonstrated.',
+    category: 'safe-with-care',
+    evidence: [
+      '01_PRODUCTS/evaluator/README.md (§9 shipping list)',
+      'COMPLETION_SUMMARY.md',
+      'docs/CORPORATE_SITE_V2_DECISIONS.md (D-011)',
+    ],
+    surface: '/evaluator, /evidence',
     caveat:
-      'PENDING-FABLE adjudication. Architecture §15 item 3(a): what "working prototype, demonstrated end-to-end" may say publicly without naming any agency or tender identifier. This candidate strips the agency name, the tender identifier, and all counts required by the Phase 2 hard constraints; Fable must confirm whether the stripped claim remains an accurate, non-misleading representation of a single-tender demonstration, or whether it overstates "end-to-end" once the specifics are removed.',
+      'ADJUDICATED 2026-08-13 (D-011). The synthetic-bidder qualifier is inseparable from this claim and must never be dropped or paraphrased away. No agency name, tender identifier, page count, bidder count, or criterion count may ever accompany it. Permitted surfaces are evaluator.astro and the /evidence page only; never the homepage or sector pages.',
   },
 ];
 

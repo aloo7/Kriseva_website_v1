@@ -1,0 +1,192 @@
+---
+// /evidence - proof and measurement discipline. Absorbs /validation
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §4, work order W07); worker/index.ts
+// already 301s /validation here, and validation.astro is renamed to
+// _validation_archive.astro so the static route does not shadow the
+// redirect. Every registered claim below is reused byte-identically,
+// including the test-count claim with its full caveat paragraph in the
+// same paragraph (register #25 / A3: never condensed).
+//
+// Structure: what is claimed, what is deliberately not claimed, how a
+// claim gets promoted (measurement). Adds the ATTEST demonstration hub
+// receipt and the D-011 EVALUATOR end-to-end claim, both newly authorized
+// for this surface.
+//
+// Static composition only: no .rv reveal classes are used on this page, so
+// every section renders fully visible with zero JavaScript.
+
+import V6Layout from '../layouts/V6Layout.astro';
+import SectionHead from '../components/v6/SectionHead.astro';
+import { getClaim } from '../data/publicClaims';
+
+const panIit = getClaim('record.pan-iit')!.wording;
+const udyam = getClaim('record.udyam')!.wording;
+const dpiit = getClaim('record.dpiit')!.wording;
+const iiec = getClaim('record.iiec')!.wording;
+const evalStatus = getClaim('evaluator.eval-status')!.wording;
+const tier2 = getClaim('stakeholder.tier-2-validation')!.wording;
+const bilateral = getClaim('stakeholder.tier-2-bilateral')!.wording;
+const tier2Issuer = getClaim('stakeholder.tier-2-issuer')!.wording;
+const testCount = getClaim('validation.test-count')!.wording;
+const syntheticData = getClaim('validation.synthetic-data')!.wording;
+const notClaimed = getClaim('boundary.notClaimed')!.wording;
+const attestHub = getClaim('attestV2.demo-hub')!.wording;
+const attestSynthetic = getClaim('attestV2.maturity-synthetic-data')!.wording;
+const attestNoRegulator = getClaim('attestV2.maturity-no-regulator-connection')!.wording;
+const attestNoCustomers = getClaim('attestV2.maturity-no-customers')!.wording;
+const evaluatorE2e = getClaim('evaluatorV2.e2e-candidate')!.wording;
+const claimsDiscipline = getClaim('trustV2.claims-discipline')!.wording;
+
+const VERDICT_STATES = [
+  { k: 'v', name: 'Verified' },
+  { k: 'q', name: 'Qualified' },
+  { k: 'i', name: 'Insufficient' },
+  { k: 'm', name: 'Missing' },
+  { k: 'd', name: 'Requires demonstration' },
+  { k: 'f', name: 'Failed' },
+];
+
+const title = 'Evidence · KRISEVA AI · proof and measurement discipline';
+const description = 'What is on the record: public recognitions, anonymized stakeholder discovery, careful test status, the ATTEST demonstration hub, the EVALUATOR end-to-end record, and how a claim gets promoted through measurement.';
+---
+<V6Layout title={title} description={description} path="/evidence">
+
+  <!-- ============ HERO ============ -->
+  <section class="ihero" aria-label="Evidence">
+    <div class="wrap">
+      <p class="eyebrow">Evidence · proof without hype</p>
+      <h1 class="display">What is <em class="em-brass">on the record.</em></h1>
+      <p class="dek">A working dossier of what is observed, what is validated, what is in evaluation, and what is still in process. No fake metrics, no fake logos, no testimonial carousel. Named relationships appear with consent.</p>
+      <div class="ihero-meta" aria-label="On this page">
+        <span>What is claimed <b>·</b> what is not claimed <b>·</b> how a claim is promoted</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IS CLAIMED · FIELD RECORD ============ -->
+  <section class="sec-pad" id="record" style="padding-top:clamp(30px,4vw,56px)">
+    <div class="wrap">
+      <SectionHead eyebrow="What is claimed · the field record" folio="§01 / 06"
+        dek="Each entry carries a status tag. Public recognitions only; the evaluating agency stays unnamed until written consent is on record.">
+        The ledger.
+      </SectionHead>
+      <div class="record">
+        <div class="rec"><span class="date">2026 · May</span><span class="what">{panIit}</span><span class="tag">Validated</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{udyam}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">2026</span><span class="what">{dpiit}</span><span class="tag">In process</span></div>
+        <div class="rec"><span class="date">Origin</span><span class="what">{iiec}</span><span class="tag">On record</span></div>
+        <div class="rec"><span class="date">Active</span><span class="what">{evalStatus}</span><span class="tag">In evaluation</span></div>
+      </div>
+      <p class="disclose">{notClaimed}</p>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IS CLAIMED · STAKEHOLDER DISCOVERY ============ -->
+  <section class="sec-pad sec-navy" id="stakeholder">
+    <div class="wrap">
+      <SectionHead eyebrow="What is claimed · stakeholder discovery, anonymized" folio="§02 / 06"
+        dek="Discovery findings are anonymized unless explicit written permission is on record. The findings feed product spec, not marketing.">
+        Who the problem was <em class="em-brass">checked with.</em>
+      </SectionHead>
+      <ul class="caps caps-navy" aria-label="Stakeholder findings">
+        <li><span>{tier2}</span><span class="ref">anonymized</span></li>
+        <li><span>{bilateral}</span><span class="ref">both sides</span></li>
+        <li><span>{tier2Issuer}</span><span class="ref">names withheld</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ WHAT IS CLAIMED · ATTEST HUB + EVALUATOR RECORD ============ -->
+  <section class="sec-pad" id="demonstrations">
+    <div class="wrap">
+      <SectionHead eyebrow="What is claimed · the ATTEST hub and the Evaluator record" folio="§03 / 06"
+        dek="Two demonstrated capabilities, each with its qualifier carried in the same paragraph as the claim.">
+        Demonstrated, <em class="em-brass">with the qualifier attached.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{attestHub}</p>
+        <p style="margin-top:12px">{attestSynthetic} {attestNoRegulator} {attestNoCustomers}</p>
+        <span class="src-note">Register entries attestV2.demo-hub, attestV2.maturity-synthetic-data · verified-and-safe</span>
+      </div>
+      <div class="teststatus regmark" style="margin-top:24px">
+        <p>{evaluatorE2e}</p>
+        <div class="vstates" aria-label="Six verdict states">
+          {VERDICT_STATES.map((s) => (
+            <span class="vchip"><span class={`sq ${s.k}`} aria-hidden="true"></span>{s.name}</span>
+          ))}
+        </div>
+        <span class="src-note">Register entry evaluatorV2.e2e-candidate · safe-with-care · adjudicated D-011 (2026-08-13)</span>
+        <p class="teststatus-caveat">The synthetic-bidder qualifier above is inseparable from this claim. No agency name, tender identifier, page count, bidder count, or criterion count accompanies it, on this page or anywhere else. It appears only on this page and on /evaluator.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOT CLAIMED · TEST STATUS ============ -->
+  <section class="sec-pad" id="tests">
+    <div class="wrap">
+      <SectionHead eyebrow="What is deliberately not claimed · the number, with its caveat" folio="§04 / 06"
+        dek="One number, published only with its caveat in the same paragraph. The register forbids condensing it.">
+        The number, <em class="em-brass">with its caveat.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{testCount}</p>
+        <span class="src-note">Register entry validation.test-count · safe-with-care · never condensed</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOT CLAIMED · SYNTHETIC DATA STATEMENT ============ -->
+  <section class="sec-pad sec-sunk" id="synthetic">
+    <div class="wrap">
+      <SectionHead eyebrow="What is deliberately not claimed · the data statement" folio="§05 / 06"
+        dek="Every product visual on this site carries the same line. It is repeated here as policy, not caption.">
+        No real tender data. <em class="em-brass">Anywhere.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{syntheticData}</p>
+        <span class="src-note">Applies to every capture, plate, demo and fixture on this site</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW A CLAIM GETS PROMOTED ============ -->
+  <section class="sec-pad" id="promotion">
+    <div class="wrap">
+      <SectionHead eyebrow="How claims get promoted · measurement discipline" folio="§06 / 06"
+        dek="The register carries four categories. A claim moves between them only when the underlying evidence changes, never by rewording.">
+        From unpublishable <em class="em-brass">to on the record.</em>
+      </SectionHead>
+      <div class="record">
+        <div class="rec"><span class="date">Category 1</span><span class="what">Verified and safe to publish. Wording is fixed; the register forbids paraphrase.</span><span class="tag">Publishable</span></div>
+        <div class="rec"><span class="date">Category 2</span><span class="what">Safe with careful wording. Publishable only with the exact wording and caveat committed in the register.</span><span class="tag">Publishable with care</span></div>
+        <div class="rec"><span class="date">Category 3</span><span class="what">Needs measurement. A numerical or performance claim that has no benchmark on file stays unpublished until one exists.</span><span class="tag">Not publishable yet</span></div>
+        <div class="rec"><span class="date">Category 4</span><span class="what">Do not publish. Legal-risk language and tripwire phrasing; never published, kept as a record so the same wording is not proposed twice.</span><span class="tag">Never publishable</span></div>
+      </div>
+      <p class="tprose" style="margin-top:28px">A fixed-percentage performance number, an accuracy figure, or a time-savings claim ships only once a measurement exists in the repository; none exists yet, so none of those figures appear anywhere on this site. The test-count line above is the standing example of category 2 done correctly: the number is real, and it ships only inside the same paragraph as the sentence explaining what it does not yet prove. The EVALUATOR end-to-end claim above is the newest example: it moved from unpublishable to category 2 only after its qualifying fact, synthetic bidder submissions rather than real ones, was written into the approved wording itself rather than left implicit.</p>
+      <p class="tprose" style="margin-top:18px">{claimsDiscipline}</p>
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:28px">
+        <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line" href="/company">Claims governance on /company</a>
+        <a class="btn btn-line" href="/security">Trust architecture</a>
+      </div>
+    </div>
+  </section>
+
+</V6Layout>
+
+<style is:global>
+/* /evidence page-specific */
+.teststatus{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(20px,3vw,34px)}
+.teststatus p{font-size:1.06rem;line-height:1.75;max-width:72ch}
+.teststatus .src-note{display:block;margin-top:14px}
+.teststatus-caveat{margin-top:14px;font-size:.92rem;line-height:1.65;color:var(--ink-sec);max-width:70ch}
+.caps-navy li{border-bottom-color:rgba(233,226,210,.18)}
+.caps-navy{border-top-color:rgba(233,226,210,.3)}
+.caps-navy li span:first-child{color:var(--on-navy)}
+.caps-navy .ref{color:var(--brass-lt)}
+.vstates{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:16px;padding-top:14px;border-top:1px solid var(--rule)}
+.vchip{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-sec)}
+.tprose{font-size:1.02rem;line-height:1.75;max-width:74ch;color:var(--ink-sec)}
+</style>

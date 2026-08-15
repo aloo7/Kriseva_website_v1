@@ -1,67 +1,122 @@
 ---
-// /security - "The Boundary". Local-first posture, Zone I / Zone II
-// interactive (ported from the v6 homepage), boundary capture plate.
-// Careful wording only: the approved line is "Local-first. Zero silent
-// egress." No absolute-security claims (register security.do-not-claim).
+// /security - Trust Architecture. Rewritten for v2
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §12, work order W07) around four
+// pillars: local-first deployment, deterministic append-only audit
+// records, human-in-command, and public claims discipline. Keeps the Zone
+// I / Zone II interactive and SecurityBoundaryDiagram (previously unused;
+// wired in here) and every registered claim already on this page
+// byte-identically (claims 15-17: security.local-first, security.local-routes,
+// security.boundary). Generalizes the tas.astro NOT-list pattern into a
+// site-level "what we refuse to claim" boundary strip that renders register
+// categories, never the literal banned-phrase list maintained by the lint
+// script.
+//
+// SecurityBoundaryDiagram.astro was built against the pre-v6 tokens.css
+// variable names (--font-mono, --accent-primary, --text-quiet,
+// --surface-base, --surface-edge, --radius-frame, --shadow-lift,
+// --shadow-card-hover, --motion-precise). This is a v6/tokens-v6.css page
+// like its siblings, so .diagram-lockup below aliases those variable names
+// onto the v6 token set locally instead of editing the shared component.
+//
+// Static composition only: no .rv reveal classes are used on this page, so
+// every section renders fully visible with zero JavaScript.
 
 import V6Layout from '../layouts/V6Layout.astro';
 import SectionHead from '../components/v6/SectionHead.astro';
 import Plate from '../components/v6/Plate.astro';
+import SecurityBoundaryDiagram from '../components/SecurityBoundaryDiagram.astro';
 import { getClaim } from '../data/publicClaims';
 
 const localFirst = getClaim('security.local-first')!.wording;
 const localRoutes = getClaim('security.local-routes')!.wording;
 const boundaryReview = getClaim('security.boundary')!.wording;
+const auditRecords = getClaim('trustV2.audit-records')!.wording;
+const humanInCommand = getClaim('trustV2.human-in-command')!.wording;
+const claimsDiscipline = getClaim('trustV2.claims-discipline')!.wording;
 
-const title = 'The Boundary · Local-first. Zero silent egress.';
+// Zone I / Zone II asset list, ported from the v6 homepage (founder-signed
+// corpus, unchanged wording). Rendered server-side so the full list reads
+// without JavaScript; the inline script below only adds the click-to-select
+// detail panel on top of content that already exists in the DOM.
+const boundaryAssets = {
+  inside: [
+    { n: 'Tender bundles', d: 'Stored in the local database and filesystem inside the deployment. Contents never leave.' },
+    { n: 'Document parsing', d: 'PDF / DOCX / XLSX parsing and OCR run locally; no document is sent to a third party.' },
+    { n: 'LLM inference', d: 'On-premise, local model routes. No cloud LLM, no foreign-hosted inference.' },
+    { n: 'Audit log', d: 'The hash-chained event log lives in the local database, mutation-blocked at the database.' },
+    { n: 'Company profile', d: 'The capability profile is local to the customer. It is the moat, not a shared asset.' },
+  ],
+  outside: [
+    { n: 'Portal access', d: 'Operator-triggered access to GeM and DefProc: disclosed, logged, and crossable by explicit action only. Dashed by design.' },
+    { n: 'Deployment connectors', d: 'Any calendar, email or SSO connector is deployment-specific and reviewed at the boundary, per environment.' },
+  ],
+};
+
+const title = 'Trust Architecture · KRISEVA AI · The Boundary';
 const description = localFirst + ' The deployment boundary is documented, not assumed.';
 ---
 <V6Layout title={title} description={description} path="/security">
 
   <!-- ============ HERO ============ -->
-  <section class="ihero" aria-label="The Boundary">
+  <section class="ihero" aria-label="Trust Architecture">
     <div class="wrap">
-      <p class="eyebrow">The Boundary · sovereign by design</p>
+      <p class="eyebrow">Trust Architecture · sovereign by design</p>
       <h1 class="display">Local-first.<br /><em class="em-brass">Zero silent egress.</em></h1>
       <p class="dek">{localFirst}</p>
       <div class="ihero-meta" aria-label="Posture">
-        <span>Boundaries <b>documented</b>, not assumed</span>
+        <span>Four pillars <b>·</b> boundaries <b>documented</b>, not assumed</span>
         <span>No absolute-security claims</span>
         <span>Dashed means crossable, by design</span>
       </div>
     </div>
   </section>
 
-  <!-- ============ ZONE I / ZONE II ============ -->
-  <section class="sec-pad" id="zones" style="padding-top:clamp(30px,4vw,56px)">
+  <!-- ============ PILLAR 1 · LOCAL-FIRST DEPLOYMENT ============ -->
+  <section class="sec-pad" id="local-first" style="padding-top:clamp(30px,4vw,56px)">
     <div class="wrap">
-      <SectionHead eyebrow="The map · select an asset" folio="§01 / 04"
+      <SectionHead eyebrow="Pillar 1 of 4 · local-first deployment" folio="§01 / 06"
         dek="Select any asset to see whether it stays inside the deployment, or crosses an explicit, documented, operator-triggered boundary. Dashed means crossable. Tender contents never leave.">
         Two zones. <em class="em-brass">One line.</em>
       </SectionHead>
-      <div class="bgrid rv">
+      <div class="bgrid">
         <div>
           <div class="zone regmark">
             <div class="zh">Zone I · inside the customer network</div>
-            <div class="assets" id="assetsIn"></div>
+            <div class="assets" id="assetsIn">
+              {boundaryAssets.inside.map((a) => (
+                <button type="button" class="asset" aria-pressed="false" data-name={a.n} data-detail={a.d}>{a.n}</button>
+              ))}
+            </div>
           </div>
           <div class="zone zone-egress">
             <div class="zh">Across the line · explicit, documented egress</div>
-            <div class="assets" id="assetsOut"></div>
+            <div class="assets" id="assetsOut">
+              {boundaryAssets.outside.map((a) => (
+                <button type="button" class="asset" aria-pressed="false" data-name={a.n} data-detail={a.d}>{a.n}</button>
+              ))}
+            </div>
           </div>
         </div>
         <div class="bdetail" id="bdetail" aria-live="polite">
           <span class="tag inside">Inside the boundary</span>
-          <p>Select an asset to see exactly where it lives, and whether anything about it crosses the line.</p>
+          <p>Every item in both lists is named above; select one to read exactly where it lives, and whether anything about it crosses the line.</p>
         </div>
+      </div>
+      <div class="diagram-lockup" style="max-width:640px;margin-top:34px">
+        <SecurityBoundaryDiagram caption={boundaryReview} />
+      </div>
+      <div class="record" style="margin-top:34px">
+        <div class="rec"><span class="date">Posture</span><span class="what">{localFirst}</span><span class="tag">safe-with-care</span></div>
+        <div class="rec"><span class="date">Models</span><span class="what">{localRoutes}</span><span class="tag">safe-with-care</span></div>
+        <div class="rec"><span class="date">Review</span><span class="what">{boundaryReview}</span><span class="tag">per deployment</span></div>
       </div>
     </div>
   </section>
 
-  <!-- ============ BOUNDARY PLATE ============ -->
+  <!-- ============ PILLAR 1 EVIDENCE · FIELD PLATE ============ -->
   <section class="sec-pad sec-navy" id="plate">
     <div class="wrap">
-      <SectionHead eyebrow="Field evidence · the product says it itself" folio="§02 / 04"
+      <SectionHead eyebrow="Field evidence · the product says it itself" folio="§02 / 06"
         dek="The Boundary is a page inside the product, not a paragraph on a website. Zone II refusals are listed where the operator works.">
         Refused at the <em class="em-brass">architecture.</em>
       </SectionHead>
@@ -69,41 +124,78 @@ const description = localFirst + ' The deployment boundary is documented, not as
         <Plate kicker="TAS" head="06 · The Boundary · Zone II" meta="disclosure"
           src="/assets/v6/console_boundary_zones.jpg" width={1352} height={480}
           alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"
-          capLeft="Zone II: refused at the architecture, listed in the product" class="rv" />
+          capLeft="Zone II: refused at the architecture, listed in the product" />
       </div>
       <p class="disclose wrap" style="text-align:center">Synthetic / seeded demo data, not a real tender.</p>
     </div>
   </section>
 
-  <!-- ============ THE CAREFUL WORDING ============ -->
-  <section class="sec-pad" id="wording">
+  <!-- ============ PILLAR 2 · DETERMINISTIC AUDIT RECORDS ============ -->
+  <section class="sec-pad" id="audit">
     <div class="wrap">
-      <SectionHead eyebrow="The careful wording · on the record" folio="§03 / 04"
-        dek="Security wording on this site comes from a maintained claims register. The careful lines ship exactly as approved; the absolutes are refused.">
+      <SectionHead eyebrow="Pillar 2 of 4 · deterministic, append-only audit records" folio="§03 / 06"
+        dek="Every decision the system routes to a human leaves a record that cannot be quietly edited afterward.">
+        The chain <em class="em-brass">does not bend.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{auditRecords}</p>
+        <span class="src-note">Register entry trustV2.audit-records · safe-with-care · reuses evaluator.audit-chain</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PILLAR 3 · HUMAN-IN-COMMAND ============ -->
+  <section class="sec-pad sec-sunk" id="human-in-command">
+    <div class="wrap">
+      <SectionHead eyebrow="Pillar 3 of 4 · human-in-command" folio="§04 / 06"
+        dek="The system recommends. It does not hold decision authority, on any system, in any deployment.">
+        Recommendations. <em class="em-brass">Never authority.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <p>{humanInCommand}</p>
+        <span class="src-note">Register entry trustV2.human-in-command · safe-with-care</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PILLAR 4 · PUBLIC CLAIMS DISCIPLINE ============ -->
+  <section class="sec-pad" id="claims-discipline">
+    <div class="wrap">
+      <SectionHead eyebrow="Pillar 4 of 4 · public claims discipline" folio="§05 / 06"
+        dek="Security wording on this site comes from the same maintained register as every other claim. The careful lines ship exactly as approved; the absolutes are refused.">
         No absolutes. <em class="em-brass">On purpose.</em>
       </SectionHead>
-      <div class="record rv">
-        <div class="rec"><span class="date">Posture</span><span class="what">{localFirst}</span><span class="tag">safe-with-care</span></div>
-        <div class="rec"><span class="date">Models</span><span class="what">{localRoutes}</span><span class="tag">safe-with-care</span></div>
-        <div class="rec"><span class="date">Review</span><span class="what">{boundaryReview}</span><span class="tag">per deployment</span></div>
+      <div class="teststatus regmark">
+        <p>{claimsDiscipline}</p>
+        <span class="src-note">Register entry trustV2.claims-discipline · verified-and-safe</span>
       </div>
-      <div class="refusals rv regmark">
-        <span class="eyebrow">What this page will not say</span>
-        <p>Absolute-security framing of any kind. The claims register maintains a literal banned-phrase list and the build fails if one ships. A security page that overclaims is a security risk of its own.</p>
+
+      <div class="refusals" style="margin-top:34px">
+        <span class="eyebrow">What this site refuses to claim</span>
+        <p class="lead">Categories, not phrases. The register maintains the literal banned-phrase list; the build fails if one ships. This page names what each category protects against instead of quoting the list.</p>
+        <div class="record" style="margin-top:18px">
+          <div class="rec"><span class="date">Endorsement</span><span class="what">Government, military, or agency endorsement, approval, or validation language, unless a named, written permission is on record.</span><span class="tag">do-not-publish</span></div>
+          <div class="rec"><span class="date">Absolutes</span><span class="what">Absolute-security framing of any kind: total-isolation claims, unconditional no-connectivity claims, or any similar all-or-nothing security language.</span><span class="tag">do-not-publish</span></div>
+          <div class="rec"><span class="date">Performance</span><span class="what">A fixed percentage, an accuracy figure, or a time-savings number that has no measurement on file.</span><span class="tag">needs-measurement</span></div>
+          <div class="rec"><span class="date">Identity</span><span class="what">A stakeholder or agency name, published without written, on-record permission.</span><span class="tag">A1 · do-not-publish</span></div>
+          <div class="rec"><span class="date">Regulator</span><span class="what">A regulator name on a finance or research-stage surface, absent documented engagement. The default is to avoid entirely.</span><span class="tag">A8 · adjudicated D-012</span></div>
+          <div class="rec"><span class="date">Qualifiers</span><span class="what">Any registered claim published with its qualifying fact dropped or paraphrased away.</span><span class="tag">A7 · adjudicated D-011</span></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============ CTA ============ -->
-  <section class="sec-pad sec-sunk" id="cta">
+  <section class="sec-pad sec-navy" id="cta">
     <div class="wrap">
-      <SectionHead eyebrow="Next step" folio="§04 / 04"
+      <SectionHead eyebrow="Next step" folio="§06 / 06"
         dek="Deployment boundaries are reviewed per environment, with your security team in the room.">
         Review the boundary <em class="em-brass">with us.</em>
       </SectionHead>
-      <div class="acts rv" style="display:flex;flex-wrap:wrap;gap:14px">
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px">
         <a class="btn btn-fill" href="/contact">Speak with the founder <span class="arr">→</span></a>
         <a class="btn btn-line" href="/evaluator">The Evaluator posture</a>
+        <a class="btn btn-line" href="/evidence">Proof and measurement discipline</a>
       </div>
     </div>
   </section>
@@ -136,42 +228,47 @@ const description = localFirst + ' The deployment boundary is documented, not as
 .bdetail b{color:var(--ink);font-weight:600}
 @media (max-width:1080px){.bgrid{grid-template-columns:1fr}.bdetail{position:static}}
 
-.refusals{margin-top:34px;border:1px dashed var(--ink-sec);border-radius:2px;padding:clamp(18px,2.6vw,28px);
+.teststatus{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(20px,3vw,34px)}
+.teststatus p{font-size:1.06rem;line-height:1.75;max-width:72ch}
+.teststatus .src-note{display:block;margin-top:14px}
+
+.refusals{border:1px dashed var(--ink-sec);border-radius:2px;padding:clamp(18px,2.6vw,28px);
   background:transparent}
-.refusals p{margin-top:10px;font-size:.96rem;line-height:1.7;color:var(--ink-sec);max-width:68ch}
+.refusals .lead{margin-top:10px;font-size:.96rem;line-height:1.7;color:var(--ink-sec);max-width:68ch}
+
+/* Bridges SecurityBoundaryDiagram's tokens.css-named custom properties onto
+   the v6 token set for this page only; the component itself is unmodified. */
+.diagram-lockup{
+  --radius-frame: 2px;
+  --shadow-lift: 0 24px 50px -28px rgba(15,14,11,.45);
+  --shadow-card-hover: 0 34px 64px -30px rgba(15,14,11,.55);
+  --surface-base: var(--paper-raised);
+  --surface-edge: var(--paper-sunk);
+  --accent-primary: var(--brass-deep);
+  --font-mono: var(--mono);
+  --text-quiet: var(--ink-sec);
+  --motion-precise: .35s ease;
+}
 </style>
 
 <script is:inline>
-// The Boundary: Zone I / Zone II selector. Ported from the v6 homepage;
-// asset wording is the founder-signed corpus.
+// Trust Architecture, Pillar 1: Zone I / Zone II selector. The asset
+// buttons themselves are server-rendered (visible with zero JavaScript);
+// this script only wires the click-to-detail panel on top of them.
 (function () {
-  var inside = [
-    { n: 'Tender bundles', d: 'Stored in the local database and filesystem inside the deployment. Contents never leave.' },
-    { n: 'Document parsing', d: 'PDF / DOCX / XLSX parsing and OCR run locally; no document is sent to a third party.' },
-    { n: 'LLM inference', d: 'On-premise, local model routes. No cloud LLM, no foreign-hosted inference.' },
-    { n: 'Audit log', d: 'The hash-chained event log lives in the local database, mutation-blocked at the database.' },
-    { n: 'Company profile', d: 'The capability profile is local to the customer. It is the moat, not a shared asset.' }
-  ];
-  var outside = [
-    { n: 'Portal access', d: 'Operator-triggered access to GeM and DefProc: disclosed, logged, and crossable by explicit action only. Dashed by design.' },
-    { n: 'Deployment connectors', d: 'Any calendar, email or SSO connector is deployment-specific and reviewed at the boundary, per environment.' }
-  ];
-  var boxIn = document.getElementById('assetsIn'), boxOut = document.getElementById('assetsOut'),
+  var boxOut = document.getElementById('assetsOut'),
       det = document.getElementById('bdetail');
-  if (!boxIn) return;
-  function add(box, a, egress) {
-    var b = document.createElement('button');
-    b.className = 'asset'; b.textContent = a.n; b.setAttribute('aria-pressed', 'false');
+  if (!boxOut) return;
+  document.querySelectorAll('.asset').forEach(function (b) {
+    var egress = boxOut.contains(b);
     b.addEventListener('click', function () {
       document.querySelectorAll('.asset').forEach(function (n) { n.setAttribute('aria-pressed', 'false'); });
       b.setAttribute('aria-pressed', 'true');
       det.innerHTML = '<span class="tag ' + (egress ? 'out' : 'inside') + '">' +
         (egress ? 'Explicit egress · documented and crossable' : 'Inside the boundary · never crosses') +
-        '</span><p><b>' + a.n + '</b> · ' + a.d + '</p>';
+        '</span><p><b>' + b.dataset.name + '</b> · ' + b.dataset.detail + '</p>';
     });
-    box.appendChild(b);
-  }
-  inside.forEach(function (a) { add(boxIn, a, false); });
-  outside.forEach(function (a) { add(boxOut, a, true); });
+  });
 })();
 </script>
