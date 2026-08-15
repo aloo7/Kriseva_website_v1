@@ -1,0 +1,20 @@
+name: sovereignty-scan
+
+# Deterministic guard for the sovereignty hard rule and the banned-word brand
+# rule. Runs the same script the local pre-commit hook runs, in full-tree mode,
+# so pull-request merges cannot bypass the local hook. Pattern shapes only; the
+# founder's local real-names denylist is gitignored and never present here.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Full-tree sovereignty scan
+        run: bash scripts/sovereignty-scan.sh --all
