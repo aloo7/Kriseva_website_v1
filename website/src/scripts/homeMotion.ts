@@ -135,6 +135,7 @@ function clearSpineInlineStyles(spineSection: HTMLElement): void {
   plates.forEach((p) => {
     p.style.removeProperty('opacity');
     p.style.removeProperty('transform');
+    p.style.removeProperty('border-color');
   });
   spineSection.querySelectorAll<HTMLElement>('.spine__connector-arrow').forEach((c) => {
     c.style.removeProperty('opacity');
@@ -177,7 +178,21 @@ function initSpineScrub(gsap: GsapStatic): void {
     // the scrub is wired — architecture §18A item 3's rule, extended here to
     // the Tier 1 spine as well as Tier 2, so a JS-disabled or reduced-motion
     // render is pixel-identical to the shipped static build.
-    plates.forEach((plate) => gsap.set(plate, { y: 8, opacity: 0.55 }));
+    //
+    // Contrast fix (Gate 3): whole-plate opacity 0.55 blended .spine__index /
+    // .spine__mono-note text down to ~3.17:1 against the section's paper
+    // background - below the 4.5:1 floor, both at scrub position 0 (every
+    // not-yet-reached plate sits here on load) and mid-scrub (a plate stays
+    // in this state until its own station window opens). Dim floor raised to
+    // 0.86 (measured with axe against the real render, not by eye — 0.8
+    // still landed at 4.4:1, just short) to clear 4.5:1. Pending vs. active
+    // stays visually distinct via border-color alone (unchanged by opacity),
+    // faint here and restored to full strength in the settle tween below —
+    // that channel doesn't touch text-color math, so it can carry the extra
+    // dimmed/active contrast without re-breaking text contrast.
+    plates.forEach((plate) =>
+      gsap.set(plate, { y: 8, opacity: 0.86, borderColor: 'rgba(16, 35, 59, 0.08)' })
+    );
     connectorArrows.forEach((arrow) =>
       gsap.set(arrow, { opacity: 0.3, scaleX: 0, transformOrigin: 'left center' })
     );
@@ -206,7 +221,11 @@ function initSpineScrub(gsap: GsapStatic): void {
       'font-size:0.66rem',
       'letter-spacing:0.08em',
       'text-transform:uppercase',
-      'color:var(--surface-paper, #F3EDE0)',
+      // Contrast fix (Gate 3): cream text on brass measured ~2.62:1 here -
+      // below the 4.5:1 floor (motion context, so axe caught it mid-scrub).
+      // Dark ink on brass instead, same chip idiom as MaturityChip's
+      // brass-family badges; ~5.9:1 on --accent-primary.
+      'color:var(--ink-primary, #111827)',
       'background:var(--accent-primary, #A87229)',
       'border-radius:var(--radius-badge, 999px)',
       'padding:3px 9px',
@@ -267,7 +286,17 @@ function initSpineScrub(gsap: GsapStatic): void {
     stationEls.forEach((_, i) => {
       const center = i * step;
       const winStart = Math.max(0, center - 0.15);
-      tl.to(plates[i], { y: 0, opacity: 1, ease: 'none', duration: Math.max(0.001, center - winStart) }, winStart);
+      tl.to(
+        plates[i],
+        {
+          y: 0,
+          opacity: 1,
+          borderColor: 'rgba(16, 35, 59, 0.16)',
+          ease: 'none',
+          duration: Math.max(0.001, center - winStart),
+        },
+        winStart
+      );
     });
 
     connectorArrows.forEach((arrow, i) => {

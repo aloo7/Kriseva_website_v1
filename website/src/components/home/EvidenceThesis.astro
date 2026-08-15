@@ -64,6 +64,13 @@ const sentence = claim('companyV2.sentence');
     gap: clamp(40px, 5vw, 80px);
     align-items: start;
   }
+  /* Contrast fix (Gate 3 sweep): this section is not .section--paper (class=
+     "evidence-thesis"), so the shared paper-safe .mono-eyebrow override in
+     global.css doesn't reach the lede's bare eyebrow either - the
+     .evidence-thesis__vocab-kicker fix below only covered the second
+     eyebrow instance in this file, not this one. Raw --accent-primary,
+     ~2.62:1 on --surface-paper. Same AA-safe brass cut. */
+  .evidence-thesis__lede .mono-eyebrow { color: var(--accent-text-safe, #91601c); }
 
   .evidence-thesis__headline {
     font-family: var(--font-serif);

@@ -86,7 +86,11 @@ const sentence = claim('companyV2.sentence');
     align-items: start;
   }
 
-  .hero-corporate__eyebrow { color: var(--accent-soft); margin-bottom: clamp(20px, 3vw, 32px); }
+  /* Contrast fix (Gate 3 sweep): --accent-soft measures ~2.87:1 on
+     --surface-paper (this section's background) - below the 4.5:1 text
+     floor, same bug family as the Phase 5 .mono-eyebrow fix in global.css.
+     AA-safe brass cut instead. */
+  .hero-corporate__eyebrow { color: var(--accent-text-safe, #91601c); margin-bottom: clamp(20px, 3vw, 32px); }
 
   .hero-corporate__headline {
     font-family: var(--font-serif);

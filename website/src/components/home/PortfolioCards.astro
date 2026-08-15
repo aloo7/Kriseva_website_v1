@@ -60,6 +60,13 @@ import MaturityChip from '../MaturityChip.astro';
     border-top: var(--rule-paper);
   }
 
+  /* Contrast fix (Gate 3): this section is not .section--paper (class=
+     "portfolio-cards"), so the shared paper-safe .mono-eyebrow override in
+     global.css doesn't reach it and the unscoped default (--accent-primary,
+     raw brass, ~2.62:1 on --surface-paper) is what actually renders. Same
+     fix family as EvidenceSpine's .evidence-spine__head .mono-eyebrow
+     (Phase 5): AA-safe brass cut, ~4.7:1 on --surface-paper. */
+  .portfolio-cards__head .mono-eyebrow { color: var(--accent-text-safe, #91601c); }
   .portfolio-cards__head { max-width: 62ch; }
   .portfolio-cards__headline {
     font-family: var(--font-serif);
