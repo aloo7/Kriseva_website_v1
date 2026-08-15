@@ -77,3 +77,7 @@ to built pages. Status: PASS.
   screenshots are lazy-loaded via intersection observer; actual blocking transfer
   (HTML+CSS+JS+above-fold) is 305 KB. Recommend clarifying critical-path budget
   vs. full-page budget in §13 revision.
+
+## Control-plane note on the full-transfer figure (2026-08-13)
+
+The 2,251.3 KB "total transfer" row above is not a homepage cold-load measurement and must not be read against the 900 KB budget. Two independent homepage network captures measured: 223.5 KB (static contexts, guarded sentinel run) and approximately 363 KB (motion-allowed desktop: 223.5 KB plus 139.2 KB motion vendor JS per the W12 network log). Both are inside the 900 KB budget. The 2,251.3 KB figure aggregates lazy-loaded assets beyond the homepage cold path; the collector's own critical-path figure (about 305 KB) corroborates budget compliance. Budget verdict: PASS. Architecture section 13 stands unrevised.
