@@ -19,7 +19,7 @@ const {
 ---
 <section class:list={['route-hero', 'section', `section--${surface}`]}>
   <div class="container">
-    <div class="reveal">
+    <div class="route-hero__content">
       <SectionLabel>{eyebrow}</SectionLabel>
       <h1 class="route-hero__title" set:html={title} />
       {subtitle && <p class="route-hero__subtitle">{subtitle}</p>}
@@ -31,7 +31,7 @@ const {
       )}
     </div>
     {Astro.slots.has('aside') && (
-      <aside class="route-hero__aside reveal">
+      <aside class="route-hero__aside">
         <slot name="aside" />
       </aside>
     )}

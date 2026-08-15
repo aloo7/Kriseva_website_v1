@@ -1,21 +1,36 @@
 ---
-// /tas - KRISEVA TAS product page (bidder-side, Vol. I).
-// Approved tas_* focal crops (assets/v6/console_*.jpg) shown whole in Plate
-// frames; six-stage pipeline rail; capability ledger from register strings.
-// Claim-bearing wording: src/data/publicClaims.ts (tas.*, boundary.*) and the
-// founder-signed v6 homepage corpus.
+// /tas - KRISEVA TAS product page (bidder-side, Vol. I). Restructured at W08
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §10, §16): hero, capability ledger,
+// pipeline, console video (moved here from the retired homepage archive),
+// bundle trace, bidability, field-evidence filmstrip, a condensed workflow
+// before/after (absorbed from the retired /workflow route), boundaries,
+// pilot status, CTA. Approved tas_* focal crops (assets/v6/console_*.jpg)
+// shown whole in Plate frames. Claim-bearing wording: publicClaims.ts
+// (tas.*, boundary.*) and the founder-signed v6 homepage corpus.
+//
+// Zero-JS discipline (W08): every section renders its default content via
+// SSR. The pipeline, three-path-style exhibits elsewhere on the product
+// pages, and this page's own instruments are built so JS only enhances an
+// already-complete view, never populates an empty one. The pre-existing
+// "bundle anatomy" exhibit (an exploded document-stack SVG built entirely by
+// client script, leaving an empty region without JS) was dropped for this
+// reason; its concept is already covered by the tas.bundle-thesis capability
+// line and the new static bundle-trace exhibit below.
 
 import V6Layout from '../layouts/V6Layout.astro';
 import SectionHead from '../components/v6/SectionHead.astro';
 import Plate from '../components/v6/Plate.astro';
+import MaturityChip from '../components/MaturityChip.astro';
 import { getClaim } from '../data/publicClaims';
 
 const longLine = getClaim('tas.long-line')!.wording;
 const oneLiner = getClaim('tas.one-liner')!.wording;
 const status = getClaim('tas.status')!.wording;
 const boundaryList = getClaim('boundary.list')!.wording;
+const metadataClaim = getClaim('tas.metadata')!.wording;
+const recommendationClaim = getClaim('tas.recommendation')!.wording;
 
-const title = 'KRISEVA TAS · Bidder-side tender intelligence for defence MSMEs';
+const title = 'KRISEVA TAS · Bidder-side tender intelligence for defense MSMEs';
 const description = oneLiner + ' Deterministic pipeline, evidence-linked extraction, BID / REVIEW / SKIP briefs the operator signs.';
 
 const schema = [
@@ -42,6 +57,51 @@ const caps = [
   { id: 'tas.defproc', ref: 'operator-gated' },
   { id: 'tas.recommendation', ref: 'committee-assist' },
 ].map((c) => ({ w: getClaim(c.id)!.wording, ref: c.ref }));
+
+// Pipeline: six deterministic stages. Rendered server-side (stage 01
+// selected by default) so the instrument is complete before any script
+// runs; the inline script below only wires stage switching on top of it.
+const stages = [
+  { n: '01', t: 'Discover', d: '<b>Discover.</b> Live GeM discovery and DefProc public discovery surface candidate tenders; no manual portal-watching. Protected documents route through operator-assisted flows.' },
+  { n: '02', t: 'Score', d: '<b>Score.</b> Each tender is scored for relevance against the company capability context, with the reasoning shown rather than a black-box number.' },
+  { n: '03', t: 'Acquire', d: '<b>Acquire.</b> The full bundle is pulled or ingested locally. Live acquisition fails closed and routes to a human rather than guessing.' },
+  { n: '04', t: 'Bundle', d: '<b>Bundle.</b> Bid documents, specs, BOQs, ATCs, corrigenda and annexures are organized as one decision artifact, not loose files.' },
+  { n: '05', t: 'Extract', d: '<b>Extract.</b> Requirements, eligibility signals, dates, EMD/ePBG and compliance clauses are extracted with provenance to clause and page.' },
+  { n: '06', t: 'Brief', d: '<b>Brief.</b> A management-ready BID / REVIEW / SKIP brief, every claim linked to its source. The operator signs.' },
+];
+
+// Bidability: six illustrative dimensions on a synthetic demo fixture, not a
+// company performance claim. Ported from the retired homepage archive as a
+// static evidence ledger (the archive's client-drawn SVG radar is dropped;
+// this reuses the page's existing .record/.rec row idiom so the exhibit
+// renders fully via SSR, matching the static-first, no-scroll-scrub brief).
+const dims = [
+  { n: 'Technical fit', v: 90, w: 'Spec map clears 9 of 10 mandatory lines; one needs a datasheet revision.', ref: 'SPEC §2-§4' },
+  { n: 'Financial eligibility', v: 78, w: '3-yr average turnover clears the floor; net-worth margin is thin.', ref: 'FIN-2 · p.11' },
+  { n: 'Certification', v: 85, w: 'ISO and Udyam current; one OEM authorization expires inside the bid window.', ref: 'ANNEX-C · p.41' },
+  { n: 'Past performance', v: 60, w: 'Two comparable supplies on record; a third would strengthen the case.', ref: 'BID-DOC · p.06' },
+  { n: 'Delivery capacity', v: 72, w: 'Within stated lead time at 80% utilization; little slack for slippage.', ref: 'SPEC §6.1' },
+  { n: 'Disqualification risk', v: 40, w: 'EMD instrument not yet located in the bundle.', ref: 'FIN-1 · p.02', risk: 'Single biggest rejection risk; resolve before bidding.' },
+];
+
+// Workflow before/after: condensed from the retired /workflow route (D-002
+// redirect /workflow -> /capabilities is live in worker/index.ts; this is
+// the content absorption, architecture §10). Process description, not
+// capability inflation, per the source page's own established framing.
+const before = [
+  'Manual portal search across GeM, DefProc public, DPSU sites.',
+  'Scattered downloads: RFP, BOQ, ATCs, corrigenda each in a different folder.',
+  'Excel tracking with manual status columns.',
+  'Compliance reconstructed from memory and a tab-switching pass.',
+  'Bid / no-bid decisioning lives in a person, not a record.',
+];
+const after = [
+  'Supported import / search flows for GeM and DefProc public discovery.',
+  'Tender represented as a bundle, not isolated files.',
+  'Extracted key clauses and fields with clause + page citations.',
+  'Compliance requirements with source evidence where available.',
+  'Operator records the decision and rationale against the bundle.',
+];
 ---
 <V6Layout title={title} description={description} path="/tas" schema={schema}>
 
@@ -56,69 +116,21 @@ const caps = [
         <a class="btn btn-line" href="#pipeline">Walk the pipeline</a>
       </div>
       <div class="ihero-meta" aria-label="Product status">
+        <MaturityChip maturity="pilot" />
         <span><b>{status}</b></span>
         <span>Recommendation only · the operator signs</span>
       </div>
     </div>
   </section>
 
-  <!-- ============ BUNDLE ANATOMY (instrument) ============ -->
-  <section class="sec-pad" id="anatomy" style="padding-top:clamp(30px,4vw,56px);padding-bottom:clamp(40px,5vw,80px)">
-    <div class="wrap">
-      <SectionHead eyebrow="The bundle · anatomy of a tender" folio="exhibit"
-        dek="A tender arrives as a stack of documents, each carrying clauses that can win the bid or end it. Select a leaf to read its role.">
-        Six documents. <em class="em-brass">One decision system.</em>
-      </SectionHead>
-      <div class="bna rv regmark">
-        <div class="bna-stage">
-          <svg id="bnaSvg" viewBox="0 0 560 480" role="img"
-            aria-label="An exploded tender bundle: bid document, specification, BOQ, ATC, corrigendum and annexures drawn as stacked paper leaves">
-            <g id="bnaLeaves"></g>
-          </svg>
-        </div>
-        <div class="bna-ledger" role="tablist" aria-label="Bundle documents" id="bnaLedger"></div>
-      </div>
-      <div class="bna-detail rv" id="bnaDetail" aria-live="polite"></div>
-    </div>
-  </section>
-
-  <!-- ============ THE BRIEFING (hero plate) ============ -->
-  <section id="briefing" style="padding-bottom:clamp(40px,5vw,80px)">
-    <div class="wrap">
-      <Plate kicker="TAS" head="02 · Briefing · GEM/2026/B/7281746" meta="On-premise · Local LLM · Demo fixture"
-        src="/assets/v6/console_briefing.jpg" width={2360} height={1392}
-        alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous"
-        capLeft="The operator signs; TAS retains the decision until signature"
-        capRight="Synthetic demo data · captured 2026-05-20 · repo-owned local instance"
-        loading="eager" class="rv" />
-      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
-    </div>
-  </section>
-
-  <!-- ============ PIPELINE ============ -->
-  <section class="sec-pad sec-sunk" id="pipeline">
-    <div class="wrap">
-      <SectionHead eyebrow="The pipeline · six deterministic stages" folio="§01 / 05"
-        dek="Discover, score, acquire, bundle, extract, brief. Each stage is deterministic and inspectable; nothing decides in the dark.">
-        Six stages. <em class="em-brass">No black box.</em>
-      </SectionHead>
-      <div class="pipe rv" id="pipe">
-        <div class="ptitle"><span>Select a stage</span><span class="folio tabular" id="pipeCount">01 / 06</span></div>
-        <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill"></div></div>
-        <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
-        <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
-      </div>
-    </div>
-  </section>
-
   <!-- ============ CAPABILITY LEDGER ============ -->
-  <section class="sec-pad" id="capabilities">
+  <section class="sec-pad" id="capabilities" style="padding-top:clamp(30px,4vw,56px)">
     <div class="wrap">
-      <SectionHead eyebrow="The capability ledger · register-sourced" folio="§02 / 05"
+      <SectionHead eyebrow="The capability ledger · register-sourced" folio="§01 / 09"
         dek="Each line below is the approved claim wording from the public claims register, with its working register tag. No paraphrase, no inflation.">
         What it does, <em class="em-brass">on the record.</em>
       </SectionHead>
-      <ul class="caps rv" aria-label="TAS capabilities">
+      <ul class="caps" aria-label="TAS capabilities">
         {caps.map((c) => (
           <li><span>{c.w}</span><span class="ref">{c.ref}</span></li>
         ))}
@@ -126,46 +138,161 @@ const caps = [
     </div>
   </section>
 
-  <!-- ============ WORKING SURFACES ============ -->
-  <section class="sec-pad sec-sunk" id="surfaces">
+  <!-- ============ PIPELINE ============ -->
+  <section class="sec-pad sec-sunk" id="pipeline">
     <div class="wrap">
-      <SectionHead eyebrow="Field evidence · working surfaces" folio="§03 / 05"
-        dek="Captures from a repo-owned local instance, shown whole at native aspect. Synthetic demo data throughout.">
+      <SectionHead eyebrow="The pipeline · six deterministic stages" folio="§02 / 09"
+        dek="Discover, score, acquire, bundle, extract, brief. Each stage is deterministic and inspectable; nothing decides in the dark.">
+        Six stages. <em class="em-brass">No black box.</em>
+      </SectionHead>
+      <div class="pipe" id="pipe">
+        <div class="ptitle"><span>Select a stage</span><span class="folio tabular" id="pipeCount">01 / 06</span></div>
+        <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill" style="width:16.6667%"></div></div>
+        <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps">
+          {stages.map((s, i) => (
+            <button type="button" class="pstep" role="tab" data-i={i} aria-selected={i === 0 ? 'true' : 'false'}>
+              <span class="pn">{s.n}</span><span class="pt">{s.t}</span>
+            </button>
+          ))}
+        </div>
+        <div class="pdetail" id="pipeDetail" aria-live="polite" set:html={stages[0].d} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE CONSOLE (field evidence) ============ -->
+  <section class="console-sec" id="console">
+    <div class="wrap">
+      <SectionHead eyebrow="Field evidence · the console" folio="§03 / 09"
+        dek="Not a mockup: a fourteen-second working loop of the console itself, captured from a repo-owned local instance.">
+        The operator's <em class="em-brass">working surface.</em>
+      </SectionHead>
+    </div>
+    <figure class="plate console-plate bleed regmark" style="border-inline:none">
+      <div class="ph"><span><b>TAS</b> · Working loop · operator console</span><span>On-premise · Local LLM · Demo fixture</span></div>
+      <div class="pimg">
+        <video id="consoleLoop" muted loop playsinline autoplay preload="metadata" width="1280" height="888"
+          poster="/assets/media/tas-console-loop-poster.jpg"
+          aria-label="A fourteen second muted working loop of the TAS console: the operator home, the decision working list, then the approval brief. Captured from a repo-owned local instance, synthetic data.">
+          <source src="/assets/media/tas-console-loop.webm" type="video/webm" />
+          <source src="/assets/media/tas-console-loop.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <figcaption class="pcap"><span>Home, decision list, approval brief, in one loop</span><span>Synthetic demo data · repo-owned local instance</span></figcaption>
+    </figure>
+    <p class="disclose wrap">Working loop · 14s · muted · synthetic / seeded demo data, not a real tender.</p>
+  </section>
+
+  <!-- ============ BUNDLE TRACE ============ -->
+  <section class="sec-pad" id="bundletrace">
+    <div class="wrap">
+      <SectionHead eyebrow="TAS · From verdict to page" folio="§04 / 09"
+        dek="Nothing to operate here. Just look: the brass box marks the exact region of the exact page a verdict cites.">
+        The verdict points <em class="em-brass">to a page.</em>
+      </SectionHead>
+      <p class="bt-claim">{metadataClaim}</p>
+      <figure class="plate bundle-plate regmark" style="max-width:720px;margin-inline:auto">
+        <div class="ph"><span><b>TAS</b> · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
+        <div class="pimg">
+          <img src="/assets/v6/console_bundle.jpg" width="1400" height="1570" loading="lazy"
+            alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows" />
+          <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" /></svg>
+          <span class="bbox-label">bid-details table · p.1 · traced</span>
+        </div>
+        <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>Synthetic demo bundle · captured 2026-05-20</span></figcaption>
+      </figure>
+      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
+
+  <!-- ============ BIDABILITY ============ -->
+  <section class="sec-pad sec-sunk" id="bidability">
+    <div class="wrap">
+      <SectionHead eyebrow="TAS · Bidability" folio="§05 / 09"
+        dek="Before a team spends weeks on a bid, this shows whether the bid is worth it. The operator decides; TAS shows its work.">
+        Why a bid may <em class="em-brass">win, or lose.</em>
+      </SectionHead>
+      <p class="bt-claim">{recommendationClaim}</p>
+      <div class="record" role="list" aria-label="Bidability dimensions, synthetic demo fixture">
+        {dims.map((d, i) => (
+          <div class="rec" role="listitem">
+            <span class="date">{String(i + 1).padStart(2, '0')} · {d.v}/100</span>
+            <span class="what">
+              <b>{d.n}</b> — {d.w} <span class="src-note">[{d.ref}]</span>
+              {d.risk && <span class="riskline">⚠ {d.risk}</span>}
+            </span>
+            <span class="tag">{d.risk ? 'risk' : 'evidence'}</span>
+          </div>
+        ))}
+      </div>
+      <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
+
+  <!-- ============ FIELD EVIDENCE FILMSTRIP ============ -->
+  <section class="sec-pad" id="surfaces">
+    <div class="wrap">
+      <SectionHead eyebrow="Field evidence · working surfaces" folio="§06 / 09"
+        dek="Captures from a repo-owned local instance, shown whole at native aspect, in the order an operator meets them. Synthetic demo data throughout.">
         Walk the product.
       </SectionHead>
       <div class="pgrid">
+        <Plate kicker="TAS" head="00 · Home" meta="queue · sources · scanners"
+          src="/assets/v6/console_home.jpg" width={1700} height={1200}
+          alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"
+          capLeft="The operator's morning: a queue, not a search box" />
         <Plate kicker="TAS" head="01 · GeM live scanner" meta="streaming"
           src="/assets/v6/console_gem_scanner.jpg" width={1700} height={1208}
           alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"
-          capLeft="9 discovered → acquired → extracted → scored" class="rv" />
+          capLeft="9 discovered → acquired → extracted → scored" />
         <Plate kicker="TAS" head="02 · Score breakdown" meta="exhibit"
           src="/assets/v6/console_score_drawer.jpg" width={940} height={695}
           alt="KRISEVA TAS score breakdown drawer: a synthetic C-UAS detector and jammer fixture scored 13.5 out of 100, with the INSUFFICIENT DATA banner"
-          capLeft="13.5/100 · INSUFFICIENT DATA · it fails loudly" class="rv" />
-        <Plate kicker="TAS" head="03 · Bundle" meta="evidence"
-          src="/assets/v6/console_bundle.jpg" width={1400} height={1570}
-          alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows"
-          capLeft="From verdict to page: every claim resolves to a region" class="rv" />
+          capLeft="13.5/100 · INSUFFICIENT DATA · it fails loudly" />
         <Plate kicker="TAS" head="05 · Decisions" meta="signed ledger"
           src="/assets/v6/console_decisions.jpg" width={1190} height={1230}
           alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"
-          capLeft="Recommendation beside signature; disagreement is recorded" class="rv" />
+          capLeft="Recommendation beside signature; disagreement is recorded" />
+        <Plate kicker="TAS" head="06 · The Boundary · Zone II" meta="disclosure"
+          src="/assets/v6/console_boundary_zones.jpg" width={1352} height={480}
+          alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"
+          capLeft="Zone II: refused at the architecture, listed in the product" />
       </div>
       <p class="disclose">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender.</p>
+    </div>
+  </section>
+
+  <!-- ============ WORKFLOW · WHAT CHANGES ============ -->
+  <section class="sec-pad sec-sunk" id="workflow">
+    <div class="wrap">
+      <SectionHead eyebrow="The workflow · what changes" folio="§07 / 09"
+        dek="Portal-and-Excel discipline does the work but leaves no reviewable artifact. The workflow change produces the artifact alongside the decision.">
+        Before. <em class="em-brass">After.</em>
+      </SectionHead>
+      <div class="ba">
+        <div class="ba-col regmark">
+          <div class="ba-h">Before · manual discipline</div>
+          <ul>{before.map((b) => <li>{b}</li>)}</ul>
+        </div>
+        <div class="ba-col ba-after regmark">
+          <div class="ba-h">After · evidence-linked workflow</div>
+          <ul>{after.map((a) => <li>{a}</li>)}</ul>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ============ BOUNDARIES ============ -->
   <section class="sec-pad" id="boundaries">
     <div class="wrap">
-      <SectionHead eyebrow="Boundaries · what TAS does not claim" folio="§04 / 05"
+      <SectionHead eyebrow="Boundaries · what TAS does not claim" folio="§08 / 09"
         dek="The register keeps an explicit anti-claims list. It ships on this page, unabridged.">
         Read the <em class="em-brass">refusals.</em>
       </SectionHead>
-      <div class="bclaims rv regmark">
+      <div class="bclaims regmark">
         <p>{boundaryList}</p>
       </div>
-      <div class="record rv" style="margin-top:34px">
+      <div class="record" style="margin-top:34px">
         <div class="rec"><span class="date">Status</span><span class="what">{status}</span><span class="tag">Honest label</span></div>
         <div class="rec"><span class="date">Posture</span><span class="what">Local-first processing; the deployment boundary is documented on its own page.</span><a class="tag" href="/security" style="text-decoration:none">The Boundary →</a></div>
       </div>
@@ -175,13 +302,13 @@ const caps = [
   <!-- ============ CTA ============ -->
   <section class="sec-pad sec-navy" id="cta">
     <div class="wrap">
-      <SectionHead eyebrow="Next step" folio="§05 / 05"
+      <SectionHead eyebrow="Next step" folio="§09 / 09"
         dek="If your team bids on GeM or DefProc tenders, the conversation is direct and founder-led.">
         See it on your <em class="em-brass">own tenders.</em>
       </SectionHead>
-      <div class="acts rv" style="display:flex;flex-wrap:wrap;gap:14px">
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px">
         <a class="btn btn-fill" href="/contact">Request a demo <span class="arr">→</span></a>
-        <a class="btn btn-line" href="/workflow">How the workflow runs</a>
+        <a class="btn btn-line" href="/defense">The sector this serves</a>
       </div>
     </div>
   </section>
@@ -189,38 +316,13 @@ const caps = [
 </V6Layout>
 
 <style is:global>
-/* /tas page-specific - bundle anatomy instrument */
-.bna{display:grid;grid-template-columns:minmax(0,6fr) minmax(280px,5fr);gap:clamp(20px,3vw,44px);
-  align-items:center;background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
-  padding:clamp(16px,2.4vw,30px)}
-.bna-stage svg{width:100%;height:auto}
-.bna-leaf{cursor:pointer}
-.bna-leaf rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.4;
-  transition:transform .35s ease,stroke .25s ease}
-.bna-leaf .rule-ln{stroke:var(--ink-sec);stroke-width:1;opacity:.45}
-.bna-leaf text{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;fill:var(--ink-sec);text-transform:uppercase}
-.bna-leaf.sel rect{stroke:var(--brass);stroke-width:2.2;transform:translateY(-8px)}
-.bna-leaf.sel text{fill:var(--ink)}
-.bna-ledger{display:flex;flex-direction:column;border-top:1px solid var(--rule)}
-.bna-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;text-align:left;
-  padding:12px 4px;border-bottom:1px solid var(--rule);transition:background .2s;touch-action:manipulation}
-.bna-row:hover{background:rgba(15,14,11,.04)}
-.bna-row[aria-selected="true"]{background:var(--paper);box-shadow:inset 2px 0 0 var(--brass)}
-.bna-row .nm{font-weight:600;font-size:.92rem}
-.bna-row .code{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
-.bna-detail{margin-top:14px;padding:16px 18px;background:var(--paper-raised);border:1px solid var(--rule);
-  border-radius:2px;font-size:.94rem;line-height:1.6;color:var(--ink-sec);min-height:84px;max-width:none}
-.bna-detail b{color:var(--ink);font-weight:600}
-.bna-detail .riskline{display:block;margin-top:8px;font-family:var(--mono);font-size:.6rem;
-  letter-spacing:.12em;text-transform:uppercase;color:var(--brass-text)}
-@media (max-width:900px){.bna{grid-template-columns:1fr}}
-@media (prefers-reduced-motion: reduce){.bna-leaf rect{transition:none}.bna-leaf.sel rect{transform:none}}
+/* /tas page-specific */
 
 /* pipeline */
 .pipe .ptitle{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink-sec);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
 .prail{position:relative;height:2px;background:var(--rule);margin:30px 6px 16px}
-.prail .pfill{position:absolute;inset:0;width:0%;background:var(--ink);transition:width .2s linear}
+.prail .pfill{position:absolute;inset:0;width:16.6667%;background:var(--ink);transition:width .2s linear}
 .psteps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .pstep{text-align:left;padding:10px 8px 12px;border:1px solid transparent;border-radius:2px;transition:border-color .25s,background .25s}
 .pstep .pn{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;color:var(--ink-quiet)}
@@ -231,82 +333,59 @@ const caps = [
 .pdetail b{color:var(--ink);font-weight:600}
 @media (max-width:760px){.psteps{grid-template-columns:repeat(3,1fr)}}
 
+/* the console - full-bleed media band */
+.bleed{width:100vw;position:relative;left:50%;transform:translateX(-50%)}
+.console-sec{padding-block:0 clamp(46px,6vw,100px)}
+.console-plate{border-block:1px solid var(--ink);background:var(--paper-raised)}
+.console-plate .ph,.console-plate .pcap{max-width:var(--wrap);margin-inline:auto;padding:10px var(--pad)}
+.console-plate .pimg video{width:100%;height:auto;display:block}
+
+/* bundle trace + bidability claim line */
+.bt-claim{font-size:1rem;line-height:1.75;color:var(--ink-sec);max-width:70ch;margin-top:-6px;margin-bottom:clamp(20px,3vw,32px)}
+.bundle-plate .pimg svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.bbox-label{position:absolute;top:17%;left:40%;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#FFF8EC;background:var(--brass);padding:3px 9px;border-radius:2px}
+.riskline{display:block;margin-top:6px;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--brass-text)}
+
 .pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(18px,2.6vw,36px);align-items:start}
 @media (max-width:900px){.pgrid{grid-template-columns:1fr}}
 
 .bclaims{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
   padding:clamp(18px,2.6vw,30px)}
 .bclaims p{font-size:1rem;line-height:1.8;max-width:72ch}
+
+/* workflow before/after */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.4vw,34px)}
+.ba-col{border:1px dashed var(--ink-sec);border-radius:2px;background:transparent;padding:clamp(16px,2.2vw,26px)}
+.ba-col.ba-after{border-style:solid;border-color:var(--ink);background:var(--paper-raised)}
+.ba-h{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.ba-col ul{list-style:none}
+.ba-col li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:.92rem;line-height:1.5;color:var(--ink-sec)}
+.ba-col.ba-after li{color:var(--ink)}
+.ba-col li:last-child{border-bottom:none}
+@media (max-width:860px){.ba{grid-template-columns:1fr}}
 </style>
 
 <script is:inline>
-// Bundle anatomy: exploded document stack; leaf and ledger row select in both
-// directions. Document roles are domain description, not capability claims.
-(function () {
-  var svg = document.getElementById('bnaSvg'), leaves = document.getElementById('bnaLeaves'),
-      ledger = document.getElementById('bnaLedger'), detail = document.getElementById('bnaDetail');
-  if (!svg) return;
-  var docs = [
-    { code: 'BID-DOC', nm: 'Bid document', d: 'The cover of the decision system: issuing authority, dates, EMD and ePBG instruments, bid value. Buyer fields set eligibility before page one is read.', risk: 'eligibility starts here' },
-    { code: 'SPEC', nm: 'Specification', d: 'Technical clauses, line by line. SPEC §3.2 is where a Make-in-India content threshold lives. Each clause can win the bid or end it.', risk: 'one clause can end the bid' },
-    { code: 'BOQ', nm: 'Bill of quantities', d: 'Quantities, line items and rates: the commercial shape of the bid, cross-checked against the specification.', risk: 'must reconcile with SPEC' },
-    { code: 'ATC', nm: 'Additional terms', d: 'Additional terms and conditions. The quiet annex where hard non-compliance most often hides, clause by clause.', risk: 'where failures hide' },
-    { code: 'CORR', nm: 'Corrigenda', d: 'Amendments issued after publication. They silently rewrite earlier clauses; a bundle read without them is the wrong bundle.', risk: 'rewrites the rest' },
-    { code: 'ANNEX', nm: 'Annexures', d: 'Formats, declarations and certificates the bid must furnish, by clause and annex. The checklist the committee reads first.', risk: 'furnish by clause + annex' },
-  ];
-  var W = 360, H = 64, X0 = 60, Y0 = 36, STEP = 70;
-  docs.forEach(function (doc, i) {
-    var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('class', 'bna-leaf');
-    g.setAttribute('data-i', i);
-    var x = X0 + (i % 2) * 16, y = Y0 + i * STEP;
-    var skew = (i % 2 === 0) ? -1.2 : 1.2;
-    g.innerHTML =
-      '<rect x="' + x + '" y="' + y + '" width="' + W + '" height="' + H + '" rx="1" transform="rotate(' + skew + ' ' + (x + W / 2) + ' ' + (y + H / 2) + ')"/>' +
-      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 24) + '" x2="' + (x + W - 26) + '" y2="' + (y + 24) + '"/>' +
-      '<line class="rule-ln" x1="' + (x + 70) + '" y1="' + (y + 40) + '" x2="' + (x + W - 70) + '" y2="' + (y + 40) + '"/>' +
-      '<text x="' + (x + 14) + '" y="' + (y + 28) + '">' + doc.code + '</text>';
-    g.addEventListener('click', function () { select(i); });
-    leaves.appendChild(g);
-    var b = document.createElement('button');
-    b.className = 'bna-row'; b.setAttribute('role', 'tab'); b.dataset.i = i;
-    b.setAttribute('aria-selected', 'false');
-    b.innerHTML = '<span class="nm">' + doc.nm + '</span><span class="code">' + doc.code + '</span>';
-    b.addEventListener('click', function () { select(i); });
-    b.addEventListener('mouseover', function () { select(i); });
-    ledger.appendChild(b);
-  });
-  function select(i) {
-    leaves.querySelectorAll('.bna-leaf').forEach(function (n) { n.classList.toggle('sel', +n.getAttribute('data-i') === i); });
-    ledger.querySelectorAll('.bna-row').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
-    var doc = docs[i];
-    detail.innerHTML = '<b>' + doc.nm + ' · ' + doc.code + '</b> · ' + doc.d +
-      '<span class="riskline">⚠ ' + doc.risk + '</span>';
-  }
-  select(1);
-})();
-
-// Pipeline module: click-driven stage selector. Stage wording mirrors the
-// founder-signed v6 homepage pipeline.
+// Pipeline module: click-driven stage selector enhancing SSR-rendered
+// buttons (stage 01's detail already renders server-side; this only wires
+// switching between the six already-present stages).
 (function () {
   var stages = [
-    { n: '01', t: 'Discover', d: '<b>Discover.</b> Live GeM discovery and DefProc public discovery surface candidate tenders; no manual portal-watching. Protected documents route through operator-assisted flows.' },
-    { n: '02', t: 'Score', d: '<b>Score.</b> Each tender is scored for relevance against the company capability context, with the reasoning shown rather than a black-box number.' },
-    { n: '03', t: 'Acquire', d: '<b>Acquire.</b> The full bundle is pulled or ingested locally. Live acquisition fails closed and routes to a human rather than guessing.' },
-    { n: '04', t: 'Bundle', d: '<b>Bundle.</b> Bid documents, specs, BOQs, ATCs, corrigenda and annexures are organised as one decision artifact, not loose files.' },
-    { n: '05', t: 'Extract', d: '<b>Extract.</b> Requirements, eligibility signals, dates, EMD/ePBG and compliance clauses are extracted with provenance to clause and page.' },
-    { n: '06', t: 'Brief', d: '<b>Brief.</b> A management-ready BID / REVIEW / SKIP brief, every claim linked to its source. The operator signs.' }
+    { n: '01', d: '<b>Discover.</b> Live GeM discovery and DefProc public discovery surface candidate tenders; no manual portal-watching. Protected documents route through operator-assisted flows.' },
+    { n: '02', d: '<b>Score.</b> Each tender is scored for relevance against the company capability context, with the reasoning shown rather than a black-box number.' },
+    { n: '03', d: '<b>Acquire.</b> The full bundle is pulled or ingested locally. Live acquisition fails closed and routes to a human rather than guessing.' },
+    { n: '04', d: '<b>Bundle.</b> Bid documents, specs, BOQs, ATCs, corrigenda and annexures are organized as one decision artifact, not loose files.' },
+    { n: '05', d: '<b>Extract.</b> Requirements, eligibility signals, dates, EMD/ePBG and compliance clauses are extracted with provenance to clause and page.' },
+    { n: '06', d: '<b>Brief.</b> A management-ready BID / REVIEW / SKIP brief, every claim linked to its source. The operator signs.' }
   ];
   var box = document.getElementById('pipeSteps'), det = document.getElementById('pipeDetail'),
       fill = document.getElementById('pipeFill'), count = document.getElementById('pipeCount');
   if (!box) return;
-  stages.forEach(function (s, i) {
-    var b = document.createElement('button');
-    b.className = 'pstep'; b.setAttribute('role', 'tab'); b.dataset.i = i;
-    b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
-    b.innerHTML = '<span class="pn">' + s.n + '</span><span class="pt">' + s.t + '</span>';
-    b.addEventListener('click', function () { show(i); });
-    box.appendChild(b);
+  box.querySelectorAll('.pstep').forEach(function (b) {
+    b.addEventListener('click', function () { show(+b.dataset.i); });
   });
   function show(i) {
     box.querySelectorAll('.pstep').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
@@ -314,6 +393,16 @@ const caps = [
     count.textContent = stages[i].n + ' / 06';
     fill.style.width = ((i + 1) / 6 * 100) + '%';
   }
-  show(0);
+})();
+
+// Console loop: a static poster is the zero-JS state; this only respects
+// reduced-motion by not autoplaying (the poster frame remains visible).
+(function () {
+  var v = document.getElementById('consoleLoop');
+  if (!v) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    v.removeAttribute('autoplay');
+    v.pause();
+  }
 })();
 </script>

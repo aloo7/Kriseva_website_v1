@@ -100,7 +100,7 @@ const product: PublicClaim[] = [
     wording: 'Parses PDF, DOCX, XLSX, TXT, and CSV tender files locally.',
     category: 'verified-and-safe',
     evidence: ['project/uploads/CLAIM_REGISTER.md (row 4) · extractor audit'],
-    surface: 'index.astro, tas.astro, workflow.astro',
+    surface: 'index.astro, tas.astro',
     caveat: 'Do not claim PPT/PPTX or legacy DOC/XLS.',
   },
   {
@@ -117,7 +117,7 @@ const product: PublicClaim[] = [
     wording: 'Extracts and structures compliance requirements for human review.',
     category: 'safe-with-care',
     evidence: ['project/uploads/CLAIM_REGISTER.md (row 9)'],
-    surface: 'tas.astro, workflow.astro, claims.compliance',
+    surface: 'tas.astro, claims.compliance',
     caveat: 'Avoid absolute-compliance framing.',
   },
   {
@@ -125,7 +125,7 @@ const product: PublicClaim[] = [
     wording: 'Generates operator review briefs with BID, REVIEW, or SKIP recommendations.',
     category: 'safe-with-care',
     evidence: ['project/uploads/CLAIM_REGISTER.md (row 10)'],
-    surface: 'index.astro, tas.astro, workflow.astro, claims.recommendation',
+    surface: 'index.astro, tas.astro, claims.recommendation',
     caveat: 'Recommendation only; no autonomous authority.',
   },
   {
@@ -134,7 +134,7 @@ const product: PublicClaim[] = [
       'Includes local OCR support for scanned or low-text PDFs, with OCR quality under active evaluation.',
     category: 'safe-with-care',
     evidence: ['project/uploads/CLAIM_REGISTER.md (row 11)'],
-    surface: 'tas.astro, workflow.astro, claims.ocr',
+    surface: 'tas.astro, claims.ocr',
     caveat: 'WER/CER and table-fidelity metrics required before any stronger claim.',
   },
   {
@@ -151,7 +151,7 @@ const product: PublicClaim[] = [
       'Includes DefProc public discovery and operator-assisted flows for protected documents.',
     category: 'safe-with-care',
     evidence: ['project/uploads/CLAIM_REGISTER.md (row 6)'],
-    surface: 'tas.astro, workflow.astro, claims.defproc',
+    surface: 'tas.astro, claims.defproc',
     caveat: 'Never imply CAPTCHA bypass or autonomous protected download.',
   },
   {
@@ -219,12 +219,12 @@ const evaluator: PublicClaim[] = [
   {
     id: 'evaluator.one-liner',
     wording:
-      'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defence procurement organisations.',
+      'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defense procurement organizations.',
     category: 'safe-with-care',
-    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo'],
+    evidence: ['Founder ruling 2026-06-09 (two co-equal products)', 'KRISEVA_EVALUATOR repo', 'docs/CORPORATE_SITE_V2_DECISIONS.md (D-012)'],
     surface: 'evaluator.astro, index.astro (vol II)',
     caveat:
-      'Committee-assist framing only; never name the evaluating agency; no order, contract, or deployment-win claims.',
+      'Committee-assist framing only; never name the evaluating agency; no order, contract, or deployment-win claims. Wording revised 2026-08-15 (W08) from British to US spelling ("defence"->"defense", "organisations"->"organizations") per D-012; no change to claim substance.',
   },
   {
     id: 'evaluator.positioning',
@@ -769,12 +769,12 @@ const portfolioV2: PublicClaim[] = [
   // EVALUATOR
   {
     id: 'portfolioV2.evaluator-purpose',
-    wording: 'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defence procurement organisations.',
+    wording: 'Kriseva Evaluator is an issuer-side, committee-assist bid evaluation system for government and defense procurement organizations.',
     category: 'safe-with-care',
-    evidence: ['Reuses claim id: evaluator.one-liner'],
+    evidence: ['Reuses claim id: evaluator.one-liner', 'docs/CORPORATE_SITE_V2_DECISIONS.md (D-012)'],
     surface: 'PortfolioCards (index.astro)',
     caveat:
-      'Byte-identical reuse of evaluator.one-liner, including its original spelling. Never name the evaluating agency; no order, contract, or deployment-win claims.',
+      'Byte-identical reuse of evaluator.one-liner. Never name the evaluating agency; no order, contract, or deployment-win claims. Wording revised 2026-08-15 (W08) to US spelling to stay byte-identical with evaluator.one-liner per D-012; no change to claim substance.',
   },
   {
     id: 'portfolioV2.evaluator-primary-user',

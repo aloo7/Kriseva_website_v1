@@ -1,4 +1,15 @@
 ---
+// SecurityBoundaryDiagram.astro
+//
+// Token compatibility (W08 shared-component repair): rewritten against the
+// tokens-v6.css custom properties actually used by sibling v6 components
+// (.plate's frame/shadow/surface treatment) instead of the dead pre-v6
+// tokens.css names (--radius-frame, --shadow-lift, --shadow-card-hover,
+// --surface-base, --surface-edge, --accent-primary, --font-mono,
+// --text-quiet, --motion-precise) it previously referenced. This component
+// is used only on security.astro (a V6Layout/tokens-v6.css page), so no
+// cross-token-system fallback chain is needed here (contrast MaturityChip,
+// which is shared across both token systems).
 interface Props {
   caption?: string;
 }
@@ -18,37 +29,37 @@ const { caption } = Astro.props;
 <style>
   .security-boundary {
     position: relative;
-    border-radius: var(--radius-frame);
+    border-radius: 2px;
     overflow: hidden;
     border: 1px solid rgba(193, 138, 62, 0.32);
-    box-shadow: var(--shadow-lift);
-    background: var(--surface-base);
+    box-shadow: 0 24px 50px -28px rgba(15, 14, 11, 0.45);
+    background: var(--paper-raised);
     margin: 0;
-    transition: box-shadow var(--motion-precise);
+    transition: box-shadow 0.35s ease;
   }
   .security-boundary::before {
     content: "LOCAL-FIRST BOUNDARY";
     position: absolute;
     top: 12px;
     left: 14px;
-    font-family: var(--font-mono);
+    font-family: var(--mono);
     font-size: 0.58rem;
     letter-spacing: 0.18em;
-    color: var(--accent-primary);
+    color: var(--brass-deep);
     pointer-events: none;
     z-index: 2;
   }
-  .security-boundary:hover { box-shadow: var(--shadow-card-hover); }
+  .security-boundary:hover { box-shadow: 0 34px 64px -30px rgba(15, 14, 11, 0.55); }
   .security-boundary img { width: 100%; display: block; }
   figcaption {
     padding: 14px 18px;
     border-top: 1px solid rgba(193, 138, 62, 0.16);
     border-left: 2px dashed rgba(193, 138, 62, 0.55);
-    font-family: var(--font-mono);
+    font-family: var(--mono);
     font-size: 0.7rem;
     letter-spacing: 0.08em;
-    color: var(--text-quiet);
-    background: var(--surface-edge);
+    color: var(--ink-sec);
+    background: var(--paper-sunk);
   }
   @media (prefers-reduced-motion: reduce) {
     .security-boundary,

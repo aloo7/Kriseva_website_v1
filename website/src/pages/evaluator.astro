@@ -1,15 +1,33 @@
 ---
 // /evaluator - Kriseva Evaluator product page (issuer-side, Vol. II).
-// Promoted from "issuer roadmap" to shipped co-equal product per founder
-// ruling 2026-06-09. No Evaluator product screenshots on this page (the
-// captures carry protected fixtures); the six-state verdict system and
-// typographic exhibits are the visuals.
-// Claim-bearing wording: src/data/publicClaims.ts (evaluator.*) and the
-// founder-signed v6 homepage corpus.
+// Restructured at W08 (CORPORATE_SITE_V2_ARCHITECTURE.md §10, §16): keeps
+// the six-state model, the three-path convergence explanation, the audit
+// chain, and the committee-assist framing (load-bearing: the system
+// recommends, committees decide). Adds the D-011-adjudicated
+// evaluatorV2.e2e-candidate claim in its exact registered wording, paired
+// with the working-prototype MaturityChip. Sector-level framing (why
+// defense procurement needs this, how it relates to TAS) now lives on
+// /defense; this page links out rather than repeating it.
+//
+// The interactive SVG "convergence instrument" (a client-script-drawn
+// diagram whose findings text and verdict chip were empty without JS) and
+// VerdictSimulator (free-typed exhibit copy, not sourced from a registered
+// claim id, whose output panel also rendered blank without JS) are both
+// dropped from this page: the former in favor of the three static path
+// cards below, which explain the same convergence architecture fully via
+// SSR; the latter per this work order's own carve-out ("keep VerdictSimulator
+// if its copy is registered and it renders statically; otherwise archive its
+// usage"). See the W08 receipt in docs/v2-handoffs/ for the full reasoning.
+// The audit chain below is kept (explicitly required) with its default
+// three-block state now server-rendered so the exhibit is complete before
+// any script runs; the inline script only adds verify / tamper / reset.
+//
+// Claim-bearing wording: src/data/publicClaims.ts (evaluator.*, evaluatorV2.*)
+// and the founder-signed v6 homepage corpus.
 
 import V6Layout from '../layouts/V6Layout.astro';
 import SectionHead from '../components/v6/SectionHead.astro';
-import VerdictSimulator from '../components/v6/VerdictSimulator.astro';
+import MaturityChip from '../components/MaturityChip.astro';
 import { getClaim } from '../data/publicClaims';
 
 const positioning = getClaim('evaluator.positioning')!.wording;
@@ -19,6 +37,7 @@ const sovereign = getClaim('evaluator.sovereign')!.wording;
 const sixState = getClaim('evaluator.six-state')!.wording;
 const auditChain = getClaim('evaluator.audit-chain')!.wording;
 const threePath = getClaim('evaluator.three-path')!.wording;
+const e2eClaim = getClaim('evaluatorV2.e2e-candidate')!.wording;
 const notClaimed = getClaim('boundary.notClaimed')!.wording;
 
 const title = 'Kriseva Evaluator · Committee-assist bid evaluation, on-premise';
@@ -46,6 +65,14 @@ const states = [
   { k: 'm', name: 'Missing', text: 'No instrument or document located in the bundle.', hitl: true },
   { k: 'f', name: 'Failed', text: 'Evidence present and clearly non-compliant. Never silent.', hitl: false },
 ];
+
+// Audit chain: three-block demonstration, rendered server-side so the
+// exhibit is complete before the verify/tamper/reset script runs.
+const auditBlocks = [
+  { id: '0148', ev: 'verdict_signed', ts: '14:22:07 IST', h: '9f3a…c1d2', p: '4e58…a907', b: 'Criterion 31 · Verified · member B' },
+  { id: '0149', ev: 'clarification', ts: '14:26:41 IST', h: 'b70e…44af', p: '9f3a…c1d2', b: 'Criterion 47 · clarification requested' },
+  { id: '0150', ev: 'recommendation', ts: '15:03:12 IST', h: 'c2d8…91b6', p: 'b70e…44af', b: 'Tender recommendation sealed' },
+];
 ---
 <V6Layout title={title} description={description} path="/evaluator" schema={schema}>
 
@@ -60,71 +87,21 @@ const states = [
         <a class="btn btn-line" href="#audit">Walk the audit chain</a>
       </div>
       <div class="ihero-meta" aria-label="Product status">
+        <MaturityChip maturity="working-prototype" />
         <span><b>{evalStatus.replace(/\.$/, '')}</b></span>
-        <span>On-premise · local LLM</span>
         <span>Committee-assist · the committee signs</span>
       </div>
     </div>
   </section>
 
   <!-- ============ THREE-PATH CONVERGENCE ============ -->
-  <section class="sec-pad" id="threepath">
+  <section class="sec-pad" id="threepath" style="padding-top:clamp(30px,4vw,56px)">
     <div class="wrap">
-      <SectionHead eyebrow="The reasoning · three paths, one criterion" folio="§01 / 05"
-        dek="Every criterion is evaluated three independent ways. The paths must converge; disagreement is surfaced to the committee, never averaged away. Select a criterion and watch the instrument resolve it.">
+      <SectionHead eyebrow="The reasoning · three paths, one criterion" folio="§01 / 07"
+        dek="Every criterion is evaluated three independent ways. The paths must converge; disagreement is surfaced to the committee, never averaged away.">
         Three paths to <em class="em-brass">one verdict.</em>
       </SectionHead>
-
-      <!-- ============ CONVERGENCE INSTRUMENT ============ -->
-      <div class="cvi rv regmark">
-        <div class="cvi-head">
-          <span class="eyebrow">Convergence instrument · synthetic criterion trace</span>
-          <div class="cvi-toggle" role="tablist" aria-label="Choose a criterion">
-            <button class="cvi-btn" id="cviA" role="tab" aria-selected="true">SPEC §3.2 · Make-in-India ≥ 50%</button>
-            <button class="cvi-btn" id="cviB" role="tab" aria-selected="false">FIN-2 · Turnover threshold</button>
-          </div>
-        </div>
-        <div class="cvi-stage">
-          <svg id="cviSvg" viewBox="0 0 960 340" role="img"
-            aria-label="Three reasoning paths, deterministic rules, retrieval evidence and local-model judgment, flowing toward a convergence point that resolves to a verdict or routes to human review">
-            <!-- path labels -->
-            <g class="cvi-lab" font-size="11" letter-spacing="1.5">
-              <text x="18" y="64">PATH 01 · DETERMINISTIC</text>
-              <text x="18" y="164">PATH 02 · RETRIEVAL</text>
-              <text x="18" y="264">PATH 03 · LOCAL MODEL</text>
-            </g>
-            <!-- strands -->
-            <g fill="none" stroke-width="2">
-              <path class="strand" id="st1" d="M20 80 C 260 80, 380 150, 560 166" pathLength="100"/>
-              <path class="strand" id="st2" d="M20 180 C 240 180, 400 176, 560 176" pathLength="100"/>
-              <path class="strand st2-split" id="st2b" d="M20 180 C 200 180, 300 184, 420 220" pathLength="100"/>
-              <path class="strand" id="st3" d="M20 280 C 260 280, 380 210, 560 186" pathLength="100"/>
-            </g>
-            <!-- per-path findings -->
-            <g class="cvi-find" font-size="11" letter-spacing="1">
-              <text id="f1" x="250" y="64"></text>
-              <text id="f2" x="250" y="158"></text>
-              <text id="f3" x="250" y="296"></text>
-            </g>
-            <!-- divergence break (split mode) -->
-            <g id="cviBreak" opacity="0">
-              <circle cx="430" cy="222" r="7" fill="none" stroke-width="2"/>
-              <text x="300" y="248" font-size="11" letter-spacing="1">EVIDENCE NOT LOCATED · PATH STOPS</text>
-            </g>
-            <!-- convergence node -->
-            <circle id="cviNode" cx="572" cy="176" r="9" fill="none" stroke-width="2"/>
-            <text id="cviNodeLab" x="572" y="146" text-anchor="middle" font-size="11" letter-spacing="2">CONVERGENCE</text>
-            <!-- output -->
-            <path class="strand" id="stOut" d="M584 176 L 760 176" pathLength="100"/>
-            <path class="strand strand-dash" id="stOutH" d="M584 176 C 660 176, 700 230, 760 244" pathLength="100"/>
-          </svg>
-          <div class="cvi-chip" id="cviChip" role="status" aria-live="polite"></div>
-        </div>
-        <p class="cvi-why" id="cviWhy" aria-live="polite"></p>
-        <p class="disclose">Illustrative instrument · synthetic criterion trace, not a real evaluation</p>
-      </div>
-
-      <div class="paths rv" role="list" aria-label={threePath} style="margin-top:clamp(24px,3.4vw,44px)">
+      <div class="paths" role="list" aria-label={threePath}>
         <div class="path regmark" role="listitem">
           <span class="pno">Path 01</span>
           <h3>Deterministic</h3>
@@ -144,10 +121,10 @@ const states = [
           <span class="ptag">sovereign-by-design</span>
         </div>
       </div>
-      <div class="converge rv" aria-hidden="true">
+      <div class="converge" aria-hidden="true">
         <span class="cv-line"></span><span class="cv-label">convergence</span><span class="cv-line"></span>
       </div>
-      <div class="verdict-out rv regmark">
+      <div class="verdict-out regmark">
         <span class="eyebrow">The output</span>
         <p>One of six states, with the source clause beside it. {sixState}</p>
       </div>
@@ -157,11 +134,11 @@ const states = [
   <!-- ============ SIX-STATE VERDICT MODEL ============ -->
   <section class="sec-pad sec-sunk" id="verdicts">
     <div class="wrap">
-      <SectionHead eyebrow="The verdict model · six states, none silent" folio="§02 / 05"
+      <SectionHead eyebrow="The verdict model · six states, none silent" folio="§02 / 07"
         dek="Saturated pass/fail hides judgment. Six desaturated states carry it: what is met, what is qualified, what needs a human, and what failed, each with its clause.">
         Six states. <em class="em-brass">Nothing silent.</em>
       </SectionHead>
-      <div class="vgrid rv" role="list">
+      <div class="vgrid" role="list">
         {states.map((s) => (
           <div class={`vcard regmark${s.hitl ? ' hitl' : ''}`} role="listitem">
             <div class="vhead"><span class={`sq ${s.k}`} aria-hidden="true"></span><b class={`vname t-${s.k}`}>{s.name}</b></div>
@@ -172,8 +149,22 @@ const states = [
         ))}
       </div>
       <p class="disclose">Verdict vocabulary as shipped · the two uncertain states always reach a human</p>
-      <div style="margin-top:clamp(28px,4vw,52px)">
-        <VerdictSimulator id="vsim-eval" />
+    </div>
+  </section>
+
+  <!-- ============ DEMONSTRATED END TO END ============ -->
+  <section class="sec-pad" id="e2e">
+    <div class="wrap">
+      <SectionHead eyebrow="Demonstrated · end to end" folio="§03 / 07"
+        dek="The six-state model above is not only a design. It has run a full cycle, start to finish, against a real tender bundle.">
+        One tender, <em class="em-brass">all six states.</em>
+      </SectionHead>
+      <div class="teststatus regmark">
+        <div class="teststatus-row">
+          <p>{e2eClaim}</p>
+          <MaturityChip maturity="working-prototype" />
+        </div>
+        <span class="src-note">Register entry evaluatorV2.e2e-candidate · safe-with-care · adjudicated D-011 · full wording, no paraphrase</span>
       </div>
     </div>
   </section>
@@ -181,13 +172,26 @@ const states = [
   <!-- ============ AUDIT CHAIN (interactive) ============ -->
   <section class="sec-pad sec-navy" id="audit">
     <div class="wrap">
-      <SectionHead eyebrow="The audit chain · append-only" folio="§03 / 05"
+      <SectionHead eyebrow="The audit chain · append-only" folio="§04 / 07"
         dek="Every event is hash-chained to the last. Verify the chain, then tamper with a block and watch the break propagate. The database enforces this; the demo simulates it.">
         A record that cannot<br />be quietly edited.
       </SectionHead>
-      <div class="chaingrid rv">
+      <div class="chaingrid">
         <div>
-          <div class="chain" id="chain" aria-label="Hash-chained audit log demonstration"></div>
+          <div class="chain" id="chain" aria-label="Hash-chained audit log demonstration">
+            {auditBlocks.map((bl, i) => (
+              <>
+                {i > 0 && <div class="clink"></div>}
+                <div class="cblock">
+                  <div class="bh"><span>Block {bl.id} · {bl.ev}</span><span>{bl.ts}</span></div>
+                  <div class="hash">{bl.h} ← {bl.p}</div>
+                  <div class="bbody">{bl.b}</div>
+                  <div class="flag ok">✓ hash matches previous block</div>
+                  <div class="flag bad">✕ hash mismatch · tamper detected</div>
+                </div>
+              </>
+            ))}
+          </div>
           <p class="chain-status" id="chainStatus" aria-live="polite">Chain unverified. Run a verification pass.</p>
           <div class="chain-controls">
             <button class="btn btn-line btn-sm" id="verifyBtn">Verify chain</button>
@@ -207,17 +211,17 @@ const states = [
   <!-- ============ SOVEREIGN POSTURE ============ -->
   <section class="sec-pad" id="posture">
     <div class="wrap">
-      <SectionHead eyebrow="Deployment posture · inside the building" folio="§04 / 05"
+      <SectionHead eyebrow="Deployment posture · inside the building" folio="§05 / 07"
         dek="Built for evaluation networks where documents do not leave the room, let alone the country.">
         The network is the <em class="em-brass">perimeter.</em>
       </SectionHead>
-      <ul class="caps rv" aria-label="Deployment posture">
+      <ul class="caps" aria-label="Deployment posture">
         <li><span><b>{sovereign}</b></span><span class="ref">sovereign-by-design</span></li>
         <li><span>Bid documents, verdicts and the audit log live in the customer deployment. Nothing routes through a vendor cloud.</span><span class="ref">on-premise</span></li>
         <li><span>{threePath} The reasoning is shown, not summarised away.</span><span class="ref">reproducible</span></li>
         <li><span>Committee-assist only. The system recommends; <b>the committee signs.</b></span><span class="ref">committee-assist</span></li>
       </ul>
-      <div class="acts rv" style="margin-top:34px">
+      <div class="acts" style="margin-top:34px">
         <a class="btn btn-line" href="/security">Read the boundary <span class="arr">→</span></a>
       </div>
     </div>
@@ -226,15 +230,28 @@ const states = [
   <!-- ============ ON THE RECORD ============ -->
   <section class="sec-pad sec-sunk" id="status">
     <div class="wrap">
-      <SectionHead eyebrow="Field status" folio="§05 / 05"
-        dek="Status-labelled, no hype. Named relationships appear with consent.">
+      <SectionHead eyebrow="Field status" folio="§06 / 07"
+        dek="Status-labelled, no hype. Named relationships appear with consent. This system is one of two KRISEVA runs in defense procurement; the sector page covers how bidder-side and evaluation-side connect.">
         On the record.
       </SectionHead>
-      <div class="record rv">
+      <div class="record">
         <div class="rec"><span class="date">Active</span><span class="what">{evalStatus}</span><span class="tag">In evaluation</span></div>
         <div class="rec"><span class="date">Standing</span><span class="what">{notClaimed}</span><span class="tag">Boundary</span></div>
       </div>
-      <div class="acts rv" style="margin-top:40px">
+      <div class="acts" style="margin-top:40px">
+        <a class="btn btn-line" href="/defense">The sector this serves <span class="arr">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="sec-pad sec-navy" id="cta">
+    <div class="wrap">
+      <SectionHead eyebrow="Next step" folio="§07 / 07"
+        dek="If your committee evaluates GeM or DefProc tenders, the conversation is direct and founder-led.">
+        See it on your <em class="em-brass">own evaluations.</em>
+      </SectionHead>
+      <div class="acts" style="display:flex;flex-wrap:wrap;gap:14px">
         <a class="btn btn-fill" href="/contact">Speak with the founder <span class="arr">→</span></a>
       </div>
     </div>
@@ -243,39 +260,7 @@ const states = [
 </V6Layout>
 
 <style is:global>
-/* /evaluator page-specific - convergence instrument */
-.cvi{background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
-  padding:clamp(16px,2.4vw,28px)}
-.cvi-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
-  padding-bottom:14px;border-bottom:1px solid var(--rule);margin-bottom:8px}
-.cvi-toggle{display:flex;flex-wrap:wrap;gap:8px}
-.cvi-btn{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
-  padding:9px 13px;border:1px solid var(--rule);border-radius:2px;background:var(--paper);
-  transition:border-color .2s,background .2s;touch-action:manipulation}
-.cvi-btn:hover{border-color:var(--ink)}
-.cvi-btn[aria-selected="true"]{background:var(--ink);color:var(--paper-raised);border-color:var(--ink)}
-.cvi-stage{position:relative}
-.cvi-stage svg{width:100%;height:auto}
-.cvi-lab text,.cvi-find text,#cviNodeLab,#cviBreak text{font-family:var(--mono);fill:var(--ink-sec);text-transform:uppercase}
-.cvi-find text{fill:var(--ink)}
-.strand{fill:none;stroke:var(--ink);stroke-dasharray:100;stroke-dashoffset:0;
-  transition:stroke-dashoffset .9s ease,opacity .4s ease}
-.strand-dash{stroke-dasharray:4 4}
-#cviNode,#cviBreak circle{stroke:var(--brass)}
-#cviBreak{transition:opacity .4s ease}
-.cvi-chip{position:absolute;right:1.5%;top:42%;transform:translateY(-50%);
-  font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
-  padding:8px 12px;border:1px solid;border-radius:2px;background:var(--paper-raised);
-  display:inline-flex;align-items:center;gap:8px;max-width:21%;text-align:left}
-.cvi-chip .sq{flex:none}
-.cvi-why{margin-top:12px;font-size:.92rem;line-height:1.55;color:var(--ink-sec);min-height:2.6em;max-width:72ch}
-.cvi-why b{color:var(--ink);font-weight:600}
-@media (max-width:760px){
-  .cvi-chip{position:static;transform:none;max-width:none;margin-top:10px}
-}
-@media (prefers-reduced-motion: reduce){
-  .strand,#cviBreak{transition:none}
-}
+/* /evaluator page-specific */
 
 /* three-path exhibit */
 .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.4vw,34px)}
@@ -307,6 +292,13 @@ const states = [
 .t-m{color:var(--vt-missing)}.t-d{color:var(--vt-demo)}.t-f{color:var(--vt-failed)}
 @media (max-width:860px){.vgrid{grid-template-columns:1fr}}
 
+/* demonstrated end-to-end callout */
+.teststatus{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);
+  padding:clamp(20px,3vw,34px)}
+.teststatus-row{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:flex-start;justify-content:space-between}
+.teststatus p{font-size:1.06rem;line-height:1.75;max-width:64ch;margin:0}
+.teststatus .src-note{display:block;margin-top:14px}
+
 /* audit chain (ported from the v6 homepage) */
 .chaingrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(260px,4fr);gap:clamp(24px,4vw,64px);align-items:start}
 .chain{display:flex;flex-direction:column;gap:0}
@@ -333,64 +325,11 @@ const states = [
 </style>
 
 <script is:inline>
-// Convergence instrument: two synthetic criteria; one converges, one splits
-// and routes to a human. Wording from the founder-signed matrix corpus.
-(function () {
-  var svg = document.getElementById('cviSvg');
-  if (!svg) return;
-  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var el = function (id) { return document.getElementById(id); };
-  var modes = {
-    A: {
-      findings: ['RULE: MET AS DECLARED', 'EVIDENCE: CERT · P.18', 'MODEL: MET'],
-      node: 'CONVERGENCE', split: false,
-      chip: '<span class="sq v" aria-hidden="true"></span>Verified',
-      chipColor: 'var(--vt-verified)', chipBorder: 'var(--v-verified)',
-      why: '<b>Make-in-India content ≥ 50% · SPEC §3.2 · p.18.</b> All three paths reach the same finding independently; the verdict is recorded with its source. The committee signs.',
-    },
-    B: {
-      findings: ['RULE: THRESHOLD CHECK ONLY', 'EVIDENCE: NOT LOCATED', 'MODEL: INSUFFICIENT'],
-      node: 'NO CONVERGENCE', split: true,
-      chip: '<span class="sq i" aria-hidden="true"></span>→ Human review',
-      chipColor: 'var(--vt-insufficient)', chipBorder: 'var(--v-insufficient)',
-      why: '<b>Turnover threshold, 3-yr avg · FIN-2 · p.11.</b> The retrieval path cannot locate the instrument; the paths disagree. Disagreement is surfaced and auto-routed to a human, never averaged into a score.',
-    },
-  };
-  function redraw(strand) {
-    if (REDUCE) return;
-    strand.style.transition = 'none';
-    strand.style.strokeDashoffset = '100';
-    void strand.getBoundingClientRect();
-    strand.style.transition = '';
-    strand.style.strokeDashoffset = '0';
-  }
-  function show(key) {
-    var m = modes[key];
-    el('cviA').setAttribute('aria-selected', String(key === 'A'));
-    el('cviB').setAttribute('aria-selected', String(key === 'B'));
-    el('f1').textContent = m.findings[0];
-    el('f2').textContent = m.findings[1];
-    el('f3').textContent = m.findings[2];
-    el('cviNodeLab').textContent = m.node;
-    el('st2').style.opacity = m.split ? '0' : '1';
-    el('st2b').style.opacity = m.split ? '1' : '0';
-    el('cviBreak').style.opacity = m.split ? '1' : '0';
-    el('stOut').style.opacity = m.split ? '0' : '1';
-    el('stOutH').style.opacity = m.split ? '1' : '0';
-    [el('st1'), el('st3'), m.split ? el('st2b') : el('st2'), m.split ? el('stOutH') : el('stOut')].forEach(redraw);
-    var chip = el('cviChip');
-    chip.innerHTML = m.chip;
-    chip.style.color = m.chipColor;
-    chip.style.borderColor = m.chipBorder;
-    el('cviWhy').innerHTML = m.why;
-  }
-  el('cviA').addEventListener('click', function () { show('A'); });
-  el('cviB').addEventListener('click', function () { show('B'); });
-  show('A');
-})();
-
-// Audit chain: verify / tamper / reset. Ported from the v6 homepage module;
-// synthetic events, simulated for demonstration.
+// Audit chain: verify / tamper / reset. The three blocks already render via
+// SSR above (see auditBlocks in the frontmatter); render() below keeps that
+// same default state in JS so verify/tamper/reset can mutate it, then
+// re-renders identically on load (idempotent — no visible change until a
+// button is used). Synthetic events, simulated for demonstration.
 (function () {
   var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var blocks = [

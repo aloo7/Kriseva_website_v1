@@ -6,6 +6,16 @@
 // vocabulary, no synonyms. Labels are fixed per the maturity-chip token
 // spec, not sourced from Maturity value formatting, so a future fourth
 // state can't silently reuse a wrong label.
+//
+// Token compatibility (W08 shared-component repair): this component is used
+// on both tokens.css/BaseLayout pages (defense.astro, finance.astro,
+// attest.astro) and tokens-v6.css/V6Layout pages (company.astro, tas.astro,
+// evaluator.astro). The two token files use different custom-property names
+// for the same roles, so every value below is a fallback chain: the
+// tokens-v6 name (matching sibling v6 mono badges like .verdict-pill and
+// .em-brass) first, then the pre-v6 tokens.css name, then a literal
+// safety value. This renders correctly in both contexts without forking
+// the component or requiring a page-local CSS-variable bridge.
 
 import type { Maturity } from '../data/company';
 
@@ -27,13 +37,13 @@ const LABELS: Record<Maturity, string> = {
   .maturity-chip {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
+    font-family: var(--mono, var(--font-mono, 'IBM Plex Mono', 'SFMono-Regular', monospace));
+    font-size: var(--fs-meta, var(--text-meta, 0.66rem));
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent-primary);
-    border: 1px solid var(--accent-line);
-    border-radius: var(--radius-badge);
+    color: var(--brass-text, var(--accent-primary, #91601c));
+    border: 1px solid var(--accent-line, rgba(168, 114, 41, 0.4));
+    border-radius: var(--radius-badge, 3px);
     padding: 4px 10px;
     line-height: 1;
     white-space: nowrap;
