@@ -1,0 +1,2455 @@
+---
+// v7 story build. The page stays self-contained; this frontmatter only bakes
+// build-time facts. claimRegistry feeds the X1 provenance chips (wording,
+// category and evidence straight from publicClaims.ts); the build stamp
+// feeds the X5 footer audit strip. No runtime dependency on either.
+import { execSync } from 'node:child_process';
+import { getClaim } from '../data/publicClaims';
+import VerdictSimulator from '../components/v6/VerdictSimulator.astro';
+
+const CHIP_IDS = [
+  'positioning.thesis',
+  'tas.one-liner',
+  'evaluator.three-path',
+  'evaluator.six-state',
+  'evaluator.audit-chain',
+  'evaluator.sovereign',
+  'security.local-first',
+  'record.pan-iit',
+  'validation.synthetic-data',
+];
+const claimRegistry = Object.fromEntries(
+  CHIP_IDS.flatMap((id) => {
+    const c = getClaim(id);
+    return c ? [[id, { w: c.wording, cat: c.category, ev: c.evidence[0] }]] : [];
+  })
+);
+const git = (cmd: string) => {
+  try { return execSync(cmd).toString().trim(); } catch { return 'untracked'; }
+};
+const buildSha = git('git rev-parse --short HEAD');
+const claimsSha = git('git log -1 --format=%h -- src/data/publicClaims.ts');
+const buildDate = new Date().toISOString().slice(0, 10);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRISEVA · Deterministic, auditable procurement intelligence for India's defence ecosystem</title>
+<meta name="description" content="A tender is not a PDF. It is a decision system hidden inside a document bundle. KRISEVA builds deterministic, auditable procurement intelligence: TAS for the teams that bid, Kriseva Evaluator for the committees that evaluate. Every verdict linked to a clause and a page.">
+<meta name="theme-color" content="#DED6C9">
+<!-- TODO(founder): apex DNS dead (audit 2026-06-12); flip host here when fixed -->
+<link rel="canonical" href="https://www.kriseva.in/">
+<!-- note: no image preload here; the console plate is below the fold and a
+     high-priority image fetch starves the font preloads on slow links (CLS) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KRISEVA AI">
+<meta property="og:title" content="KRISEVA: A tender is not a PDF. It is a decision system.">
+<meta property="og:description" content="Deterministic, auditable procurement intelligence for India's defence ecosystem. Every verdict linked to a clause and a page.">
+<meta property="og:url" content="https://www.kriseva.in/">
+<meta property="og:image" content="https://www.kriseva.in/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KRISEVA: A tender is not a PDF. It is a decision system.">
+<meta name="twitter:description" content="Deterministic, auditable procurement intelligence for India's defence ecosystem.">
+<meta name="twitter:image" content="https://www.kriseva.in/og.png">
+<link rel="icon" type="image/svg+xml" href="/assets/v6/favicon.svg">
+<script is:inline type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "KRISEVA AI Private Limited",
+  "alternateName": "KRISEVA",
+  "url": "https://www.kriseva.in/",
+  "email": "ayush@kriseva.in",
+  "description": "Deterministic, auditable procurement intelligence for India's defence ecosystem. Two products on one evidence engine: KRISEVA TAS (bidder-side tender intelligence for defence MSMEs) and Kriseva Evaluator (issuer-side, committee-assist bid evaluation).",
+  "founder": {
+    "@type": "Person",
+    "name": "Ayush Tiwary",
+    "jobTitle": "Founder",
+    "alumniOf": "IIT Gandhinagar",
+    "email": "ayush@kriseva.in"
+  },
+  "knowsAbout": ["defence procurement", "tender automation", "bid evaluation", "GeM", "DefProc", "audit logging"],
+  "slogan": "A tender is not a PDF. It is a decision system hidden inside a document bundle."
+}
+</script>
+<!-- Fonts: self-hosted, three faces (Instrument Serif / IBM Plex Sans /
+     IBM Plex Mono), woff2 latin. Zero third-party font hosts. @font-face is
+     inlined (no render-blocking stylesheet request) and every above-the-fold
+     cut is preloaded so first paint lands directly in the webfont (LCP/CLS). -->
+<link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-serif-latin-400-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/instrument-serif-latin-400-italic.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-mono-latin-500-normal.woff2" crossorigin>
+<style is:inline>
+@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/instrument-serif-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/instrument-serif-latin-400-italic.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2')}
+</style>
+<script is:inline>document.documentElement.classList.remove('no-js');document.documentElement.classList.add('js');try{history.scrollRestoration='manual'}catch(e){}
+/* decide the hero path before first paint: devices that can never take the
+   WebGL route get the static plate immediately (no late layout shift) */
+try{var mm=window.matchMedia;if(mm('(prefers-reduced-motion: reduce)').matches||!mm('(min-width: 761px)').matches||!mm('(pointer: fine)').matches){document.documentElement.classList.add('hero-fallback')}}catch(e){}</script>
+<style is:inline>
+/* ============================================================
+   KRISEVA v6 - "Evidential Cartography - the dossier, alive"
+   Palette, type and voice per KRISEVA_TAS_DESIGN_LANGUAGE.md
+   ============================================================ */
+:root{
+  --paper:#DED6C9; --paper-raised:#F3EDE0; --paper-sunk:#D4CBB6;
+  --ink:#0F0E0B; --ink-deep:#17130D; --ink-sec:#4E4838; --ink-quiet:#8C8268;
+  --rule:#C7BDA3;
+  --navy:#0A1F44;
+  --brass:#A87229; --brass-lt:#C89A4C;
+  /* AA siblings (Convention #11): brass fails 4.5:1 as small text / fill on paper */
+  --brass-deep:#8A5C16; --brass-text:#91601C;
+  /* verdict palette - exact, used ONLY on verdicts */
+  --v-verified:#3A7A5B; --v-qualified:#9A7322; --v-insufficient:#5F6A79;
+  --v-missing:#9C4F43; --v-demo:#41618C; --v-failed:#83332D;
+  /* AA text variants on paper (squares keep exact hues; text darkens to pass) */
+  --vt-verified:#2E6149; --vt-qualified:#6E520F; --vt-insufficient:#454F5D;
+  --vt-missing:#7E3A2F; --vt-demo:#324C6E; --vt-failed:#6E2B26;
+  --on-navy:#E9E2D2; --on-navy-dim:rgba(233,226,210,.72);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'IBM Plex Sans',-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  --wrap:1380px; --pad:clamp(20px,4vw,56px);
+  /* ──────────────────────────────────────────────────────────────
+     v8 READABLE TYPE SCALE (fluid, px-anchored clamp())
+     The v6/v7 page set ~60 labels at .54-.68rem (9-11px), unreadable
+     for the founder's stated reader (a 55-year-old reviewing officer).
+     These tokens set an absolute floor that never drops on any viewport:
+       fs-chip     interactive provenance citation marker  >=14px
+       fs-eyebrow  decorative tracked-mono micro-labels    >=13px
+       fs-meta     mono DATA a reader parses (counts,       >=14px
+                   scores, hashes, refs, button labels)
+       fs-caption  captions, table cells, secondary prose   >=14.75px
+       fs-body     primary reading                          >=17px
+     Applied via the "v8 readable type floor" override layer below.
+     ────────────────────────────────────────────────────────────── */
+  --fs-chip:    clamp(14px, 13.6px + 0.20vw, 15px);
+  /* eyebrow floored at 14px so even decorative tracked labels stay readable on
+     a 390px phone (the founder's reader is often older and on mobile) */
+  --fs-eyebrow: clamp(14px, 13.7px + 0.16vw, 14.75px);
+  --fs-meta:    clamp(14px, 13.5px + 0.24vw, 15.25px);
+  --fs-caption: clamp(14.75px, 14.2px + 0.30vw, 16.5px);
+  --fs-body:    clamp(17px, 16.3px + 0.42vw, 18.75px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-anchor:none}
+html.js.lenis-on{scroll-behavior:auto}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+/* paper grain - fractal noise at 5%, the archive feel */
+body::after{
+  content:""; position:fixed; inset:0; z-index:9990; pointer-events:none;
+  background-image:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="240" height="240" filter="url(%23n)" opacity="0.5"/></svg>');
+  opacity:.05; mix-blend-mode:multiply;
+}
+::selection{background:var(--navy);color:var(--on-navy)}
+img,svg,canvas{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad)}
+.mono{font-family:var(--mono)}
+.tabular{font-variant-numeric:tabular-nums}
+/* skip link */
+.skip{position:fixed;top:-48px;left:16px;z-index:10001;background:var(--ink);color:var(--paper-raised);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 16px;transition:top .2s}
+.skip:focus{top:12px}
+/* focus */
+:focus-visible{outline:2px solid var(--navy);outline-offset:3px;border-radius:1px}
+.sec-navy :focus-visible{outline-color:var(--brass-lt)}
+/* ---------- type ---------- */
+.display{font-family:var(--serif);font-weight:400;letter-spacing:-0.02em;line-height:1.04;text-wrap:balance}
+h1.display{font-size:clamp(2.5rem,5.4vw,5.6rem);line-height:1.05}
+@media (min-width:761px){.hero-content h1 .ln{white-space:nowrap}}
+h2.display{font-size:clamp(2.1rem,4.4vw,4.2rem)}
+h3{font-family:var(--sans);font-weight:600;font-size:1.06rem}
+.it{font-style:italic}
+.em-brass{font-style:italic;color:var(--brass-text)}
+.sec-navy .em-brass{color:var(--brass-lt)}
+.eyebrow{font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink-sec)}
+.folio{font-family:var(--mono);font-weight:400;font-size:.62rem;letter-spacing:.22em;color:var(--ink-sec)}
+.dek{font-size:clamp(1.02rem,1.4vw,1.22rem);line-height:1.6;color:var(--ink-sec);max-width:58ch;text-wrap:pretty}
+.src-note{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec)}
+/* masked line reveal (enabled only when anim libs are live) */
+.ln{display:block;overflow:hidden}
+.ln-in{display:block}
+.js-anim .ln-in{transform:translateY(112%)}
+.js-anim .rv{opacity:0;transform:translateY(26px)}
+/* ---------- header ---------- */
+header{position:fixed;inset-inline:0;top:0;z-index:1000;transition:background .35s,box-shadow .35s}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;
+  max-width:var(--wrap);margin-inline:auto;padding:22px var(--pad);transition:padding .35s}
+header.stuck{background:rgba(243,237,224,.94);box-shadow:0 1px 0 var(--rule)}
+header.stuck .nav{padding-block:12px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--sans);font-weight:600;
+  letter-spacing:.34em;font-size:.95rem;text-decoration:none}
+.brand .bmark{width:24px;height:24px;display:block}
+.nlinks{display:flex;gap:clamp(14px,2.6vw,36px)}
+.nlinks a{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-sec);text-decoration:none;padding:6px 2px;position:relative}
+.nlinks a::after{content:"";position:absolute;left:0;bottom:2px;height:1px;width:0;background:var(--ink);transition:width .3s}
+.nlinks a:hover::after{width:100%}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding:15px 26px;
+  border:1px solid var(--ink);border-radius:2px;transition:background .25s,color .25s;will-change:transform}
+.btn .arr{transition:transform .25s}
+.btn:hover .arr{transform:translateX(4px)}
+.btn-fill{background:var(--brass-deep);border-color:var(--brass-deep);color:#FFF8EC}
+.btn-fill:hover{background:var(--ink);border-color:var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--paper-raised)}
+.btn-sm{padding:10px 16px;font-size:.62rem}
+.sec-navy .btn-line{border-color:rgba(233,226,210,.5);color:var(--on-navy)}
+.sec-navy .btn-line:hover{background:var(--on-navy);color:var(--navy)}
+/* ---------- registration marks ---------- */
+.regmark{position:relative}
+.regmark::before,.regmark::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none;opacity:.5}
+.regmark::before{top:-1px;left:-1px;border-top:1px solid var(--ink);border-left:1px solid var(--ink)}
+.regmark::after{bottom:-1px;right:-1px;border-bottom:1px solid var(--ink);border-right:1px solid var(--ink)}
+.sec-navy .regmark::before{border-color:rgba(233,226,210,.6)}
+.sec-navy .regmark::after{border-color:rgba(233,226,210,.6)}
+/* ---------- sections ---------- */
+section{position:relative}
+.sec-pad{padding-block:clamp(76px,9vw,140px)}
+.sechead{margin-bottom:clamp(36px,5vw,72px)}
+.sechead .row{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  border-top:1px solid var(--rule);padding-top:14px;margin-bottom:26px}
+.sechead h2{max-width:18ch}
+.sechead .dek{margin-top:18px}
+.sec-navy{background:var(--navy);color:var(--on-navy)}
+.sec-navy .eyebrow{color:var(--brass-lt)}
+.sec-navy .folio{color:rgba(233,226,210,.62)}
+.sec-navy .dek{color:var(--on-navy-dim)}
+.sec-navy .sechead .row{border-top-color:rgba(233,226,210,.22)}
+.sec-sunk{background:var(--paper-sunk)}
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{height:100vh;height:100svh;min-height:640px;overflow:hidden}
+.hero-stage{position:relative;height:100%;width:100%}
+#webgl{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.hero-static{position:absolute;inset:0;z-index:1;display:none;align-items:center;justify-content:flex-end;
+  padding-right:clamp(8px,4vw,72px)}
+html.hero-fallback .hero-static{display:flex}
+html.hero-fallback #webgl{display:none}
+.hero-static svg{width:min(54vw,760px);height:auto;opacity:.96}
+.hero-labels{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden;display:none}
+.hero-labels.live{display:block}
+.node-label{position:absolute;top:0;left:0;will-change:transform;white-space:nowrap;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--ink-sec)}
+.node-label .clause{display:block;padding:3px 7px;background:rgba(243,237,224,.85);
+  border:1px solid var(--rule);border-radius:2px}
+.node-label .chip{display:none;margin-top:4px;padding:3px 7px;background:var(--paper-raised);
+  border:1px solid;border-radius:2px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.node-label.resolved .chip{display:inline-block}
+.hero-content{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;
+  justify-content:center;padding-top:64px}
+.hero-content .eyebrow{margin-bottom:clamp(18px,2.6vw,30px)}
+.hero-content h1{max-width:none}
+.hero-content .dek{margin-top:clamp(20px,2.6vw,30px)}
+.hero-acts{display:flex;flex-wrap:wrap;gap:14px;margin-top:clamp(26px,3.4vw,44px)}
+.cred{margin-top:clamp(30px,4.6vw,62px);border-top:1px solid var(--rule);padding-top:16px;
+  display:flex;flex-wrap:wrap;gap:10px 34px;max-width:920px}
+.cred span{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+.cred b{color:var(--ink);font-weight:600}
+.scroll-cue{position:absolute;z-index:3;bottom:26px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
+.scroll-cue .line{width:54px;height:1px;background:var(--ink-sec);transform-origin:left;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleX(.35)}50%{transform:scaleX(1)}}
+/* ============================================================
+   MARQUEE BAND - two opposing streams
+   ============================================================ */
+.mqband{border-block:1px solid var(--rule);background:var(--paper-raised);overflow:hidden}
+.mq{display:flex;width:max-content;gap:0;padding-block:13px}
+.mq+.mq{border-top:1px solid var(--rule)}
+.mq .set{display:flex;align-items:center;gap:3.2rem;padding-right:3.2rem}
+.mq span{font-family:var(--mono);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.mq .sq{width:8px;height:8px;display:inline-block;border-radius:1px}
+.mq-l{animation:mqL 46s linear infinite}
+.mq-r{animation:mqR 38s linear infinite}
+@keyframes mqL{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes mqR{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+/* ============================================================
+   VOLUMES (two products)
+   ============================================================ */
+.vols{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,44px)}
+.vol{border-top:2px solid var(--ink);padding-top:22px}
+.vol-tas{grid-column:1/8}
+.vol-eval{grid-column:8/13;margin-top:clamp(48px,7vw,120px)}
+.vol .vhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.vol .vno{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
+.vol h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.7rem,2.6vw,2.6rem);letter-spacing:-0.01em;line-height:1.1}
+.vol .vsub{margin-top:10px;color:var(--ink-sec);max-width:52ch;text-wrap:pretty}
+.caps{margin-top:26px;border-top:1px solid var(--rule)}
+.caps li{list-style:none;display:grid;grid-template-columns:1fr auto;gap:8px 18px;align-items:baseline;
+  padding:13px 2px;border-bottom:1px solid var(--rule);font-size:.94rem;line-height:1.5}
+.caps .ref{font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-sec);white-space:nowrap}
+.caps b{font-weight:600}
+/* very narrow phones: the readable-size ledger ref no longer fits beside the
+   term on one row, so stack it and let it wrap (no horizontal overflow) */
+@media (max-width:430px){
+  .caps li{grid-template-columns:1fr;gap:3px 0}
+  .caps .ref{white-space:normal;justify-self:start}
+}
+/* volume doors - each product volume opens its own page */
+.vol-door{display:inline-flex;align-items:center;gap:10px;margin-top:22px;
+  font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink);padding:12px 18px;border:1px solid var(--ink);border-radius:2px;
+  transition:background .25s,color .25s}
+.vol-door .arr{transition:transform .25s}
+.vol-door:hover{background:var(--ink);color:var(--paper-raised)}
+.vol-door:hover .arr{transform:translateX(4px)}
+/* pipeline rail inside TAS volume */
+.pipe{margin-top:30px}
+.pipe .ptitle{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.prail{position:relative;height:2px;background:var(--rule);margin:30px 6px 16px}
+.prail .pfill{position:absolute;inset:0;width:0%;background:var(--ink);transition:width .2s linear}
+.psteps{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.pstep{text-align:left;padding:10px 8px 12px;border:1px solid transparent;border-radius:2px;transition:border-color .25s,background .25s}
+.pstep .pn{font-family:var(--mono);font-size:.56rem;letter-spacing:.18em;color:var(--ink-quiet)}
+.pstep .pt{display:block;margin-top:5px;font-weight:600;font-size:.82rem}
+.pstep[aria-selected="true"]{border-color:var(--ink);background:var(--paper-raised)}
+.pdetail{margin-top:16px;min-height:84px;padding:16px 18px;background:var(--paper-raised);
+  border:1px solid var(--rule);border-radius:2px;font-size:.92rem;line-height:1.55;color:var(--ink-sec)}
+.pdetail b{color:var(--ink);font-weight:600}
+/* ============================================================
+   THESIS pull-quote
+   ============================================================ */
+.thesis{padding-block:clamp(88px,10vw,170px)}
+.thesis .tgrid{display:grid;grid-template-columns:minmax(0,1fr) clamp(150px,18vw,240px);gap:clamp(28px,4vw,64px)}
+.tquote{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,4vw,3.9rem);
+  line-height:1.16;letter-spacing:-0.015em;text-wrap:balance;max-width:21ch}
+.tmargin{border-left:1px solid var(--rule);padding-left:clamp(16px,2vw,28px);display:flex;flex-direction:column;gap:26px;align-self:center}
+.tnote .tn-k{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-text);display:block;margin-bottom:6px}
+.tnote p{font-size:.82rem;line-height:1.55;color:var(--ink-sec)}
+/* ============================================================
+   MATRIX
+   ============================================================ */
+.mxwrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(280px,5fr);gap:clamp(20px,3vw,44px);align-items:start}
+.mxwrap>*{min-width:0}
+.mxpanel{background:var(--paper-raised);border:1px solid var(--rule);border-radius:2px}
+.mxh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 12px;padding:12px 16px;border-bottom:1px solid var(--rule)}
+.mxh span{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-sec)}
+.mxh .live{display:inline-flex;align-items:center;gap:7px;color:var(--vt-verified)}
+.mxh .live i{width:7px;height:7px;border-radius:50%;background:var(--v-verified);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.mxscroll{overflow-x:auto}
+table.mx{width:100%;border-collapse:collapse}
+.mx th{font-family:var(--mono);font-weight:500;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-sec);text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule);background:var(--paper-sunk)}
+.mx td{border-bottom:1px solid var(--rule);vertical-align:middle}
+.mx td.crit{padding:13px 14px;font-size:.86rem;line-height:1.4;min-width:200px}
+.mx td.crit .s{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--ink-sec);margin-top:4px;text-transform:uppercase}
+.mcell{width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:16px 10px;
+  transition:background .2s;position:relative}
+.mcell:hover{background:rgba(15,14,11,.05)}
+.mcell[aria-pressed="true"]{background:rgba(15,14,11,.07);box-shadow:inset 0 0 0 1px var(--ink)}
+.sq{width:13px;height:13px;border-radius:1px;display:inline-block}
+.sq.v{background:var(--v-verified)}.sq.q{background:var(--v-qualified)}.sq.i{background:var(--v-insufficient)}
+.sq.m{background:var(--v-missing)}.sq.d{background:var(--v-demo)}.sq.f{background:var(--v-failed)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;padding:12px 16px;border-top:1px solid var(--rule)}
+.legend span{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-sec);display:inline-flex;align-items:center;gap:7px}
+/* verdict distribution ledger - computed from the same synthetic matrix */
+.mxdist{padding:14px 16px 16px;border-top:1px solid var(--rule)}
+.mxdist .mxd-t{font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:10px}
+.mxd-row{display:grid;grid-template-columns:13px 138px 1fr 2ch;gap:10px;align-items:center;padding:3px 0}
+.mxd-row .nm{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-sec)}
+.mxd-row .bar{height:8px;background:var(--paper-sunk);border-radius:1px;position:relative;overflow:hidden}
+.mxd-row .bar i{position:absolute;inset:0;width:0;border-radius:1px;transition:width .9s ease}
+.mxd-row .ct{font-family:var(--mono);font-size:.66rem;font-variant-numeric:tabular-nums;text-align:right}
+@media (prefers-reduced-motion: reduce){.mxd-row .bar i{transition:none}}
+.mxdetail{background:var(--ink-deep);color:#E7E1D0;border-radius:2px;padding:22px;min-height:240px;position:sticky;top:96px}
+.mxdetail .dt{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.verdict-pill{font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:600;padding:4px 10px;border:1px solid;border-radius:2px}
+.mxdetail .srcref{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(231,225,208,.62)}
+.mxdetail .body{font-size:.92rem;line-height:1.6;color:rgba(231,225,208,.85)}
+.mxdetail .body b{color:#F3EDE0;font-weight:600}
+.mxdetail .route{margin-top:14px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--brass-lt)}
+.disclose{margin-top:18px;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+.sec-navy .disclose{color:rgba(233,226,210,.55)}
+/* ============================================================
+   AUDIT CHAIN (navy)
+   ============================================================ */
+.chaingrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(260px,4fr);gap:clamp(24px,4vw,64px);align-items:start}
+.chain{display:flex;flex-direction:column;gap:0}
+.cblock{border:1px solid rgba(233,226,210,.28);background:rgba(233,226,210,.045);border-radius:2px;
+  padding:16px 18px;transition:border-color .3s,background .3s;position:relative}
+.clink{width:1px;height:26px;background:rgba(233,226,210,.3);margin-left:34px;position:relative}
+.clink::after{content:"⌄";position:absolute;left:-6px;bottom:-4px;color:rgba(233,226,210,.45);font-size:.7rem}
+.cblock .bh{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.14em;text-transform:uppercase;color:rgba(233,226,210,.65);margin-bottom:8px}
+.cblock .hash{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--brass-lt);margin-bottom:8px}
+.cblock .bbody{font-size:.9rem;color:var(--on-navy-dim)}
+.cblock .flag{display:none;margin-top:10px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em}
+.cblock.valid{border-color:rgba(122,200,160,.55)}
+.cblock.valid .flag.ok{display:block;color:#9CD3B4}
+.cblock.broken{border-color:rgba(220,120,105,.6);background:rgba(131,51,45,.16)}
+.cblock.broken .flag.bad{display:block;color:#E8A99C}
+.chain-status{margin-top:18px;font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  color:var(--on-navy-dim);min-height:2.6em}
+.chain-controls{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.chainaside p{color:var(--on-navy-dim);max-width:44ch;text-wrap:pretty}
+.chainaside .trust{margin-top:22px;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;
+  color:var(--brass-lt);line-height:2}
+/* ============================================================
+   BIDABILITY radar
+   ============================================================ */
+.bidgrid{display:grid;grid-template-columns:minmax(280px,5fr) minmax(0,6fr);gap:clamp(24px,4vw,64px);align-items:center}
+.radarbox{background:var(--paper-raised);border:1px solid var(--rule);border-radius:2px;padding:clamp(14px,2vw,30px)}
+.radar-svg{width:100%;height:auto}
+.dimlist{border-top:1px solid var(--rule)}
+.dimrow{width:100%;display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:13px 4px;border-bottom:1px solid var(--rule);text-align:left;transition:background .2s}
+.dimrow:hover{background:rgba(15,14,11,.04)}
+.dimrow[aria-selected="true"]{background:var(--paper-raised);box-shadow:inset 2px 0 0 var(--ink)}
+.dimrow .nm{font-weight:500;font-size:.94rem}
+.dimrow .sc{font-family:var(--mono);font-size:.92rem;font-variant-numeric:tabular-nums;color:var(--ink-sec)}
+.dimrow.risk .nm{color:var(--vt-failed)}
+.dimwhy{margin-top:18px;padding:16px 18px;background:var(--paper-raised);border:1px solid var(--rule);
+  border-radius:2px;font-size:.92rem;line-height:1.55;color:var(--ink-sec);min-height:84px}
+.dimwhy b{color:var(--ink);font-weight:600}
+.dimwhy .riskline{display:block;margin-top:8px;font-family:var(--mono);font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--vt-failed)}
+/* ============================================================
+   BOUNDARY
+   ============================================================ */
+.bgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(280px,5fr);gap:clamp(24px,4vw,64px);align-items:start}
+.zone{border:1px solid var(--ink);border-radius:2px;padding:clamp(16px,2.4vw,28px);background:var(--paper-raised)}
+.zone .zh{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-sec);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.zone .zh::before{content:"";width:8px;height:8px;background:var(--ink);border-radius:1px}
+.zone-egress{border-style:dashed;border-color:var(--ink-sec);background:transparent;margin-top:18px}
+.zone-egress .zh::before{background:none;border:1px dashed var(--ink-sec)}
+.assets{display:flex;flex-wrap:wrap;gap:10px}
+.asset{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:10px 14px;border:1px solid var(--rule);border-radius:2px;background:var(--paper);
+  transition:border-color .2s,background .2s;text-align:left}
+.asset:hover{border-color:var(--ink)}
+.asset[aria-pressed="true"]{background:var(--ink);color:var(--paper-raised);border-color:var(--ink)}
+.zone-egress .asset{border-style:dashed;background:transparent}
+.bdetail{padding:20px;border:1px solid var(--rule);border-radius:2px;background:var(--paper-raised);
+  min-height:170px;position:sticky;top:96px}
+.bdetail .tag{display:inline-block;font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;
+  text-transform:uppercase;font-weight:600;padding:4px 10px;border-radius:2px;margin-bottom:12px}
+.bdetail .tag.inside{background:rgba(58,122,91,.14);color:var(--vt-verified);border:1px solid rgba(58,122,91,.4)}
+.bdetail .tag.out{background:transparent;color:var(--ink-sec);border:1px dashed var(--ink-sec)}
+.bdetail p{font-size:.92rem;line-height:1.6;color:var(--ink-sec)}
+.bdetail b{color:var(--ink);font-weight:600}
+/* ============================================================
+   STATS
+   ============================================================ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);
+  border-radius:2px;background:var(--paper-raised)}
+.stat{padding:clamp(20px,3vw,40px);border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat .big{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,5.6vw,5.4rem);
+  line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.02em}
+.stat .lab{margin-top:10px;font-weight:500;font-size:.9rem}
+.stat .ssrc{margin-top:8px;font-family:var(--mono);font-size:.54rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-sec);line-height:1.8}
+/* ============================================================
+   FIELD RECORD
+   ============================================================ */
+.record{border-top:1px solid var(--ink)}
+.rec{display:grid;grid-template-columns:130px minmax(0,1fr) auto;gap:10px 26px;align-items:baseline;
+  padding:18px 2px;border-bottom:1px solid var(--rule)}
+.rec .date{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec)}
+.rec .what{font-size:1rem;line-height:1.5}
+.rec .what b{font-weight:600}
+.rec .tag{font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:4px 10px;border:1px solid var(--rule);border-radius:2px;color:var(--ink-sec);white-space:nowrap}
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact{background:var(--ink-deep);color:#E7E1D0}
+.contact .eyebrow{color:var(--brass-lt)}
+.contact h2{color:#F3EDE0}
+.contact .dek{color:rgba(231,225,208,.72)}
+.cgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(260px,4fr);gap:clamp(28px,4vw,72px);align-items:center}
+.founder-card{border:1px solid rgba(231,225,208,.25);border-radius:2px;padding:26px;position:relative}
+.founder-card .seal{position:absolute;top:22px;right:22px;width:10px;height:10px;border-radius:50%;background:var(--brass)}
+.founder-card b{display:block;font-family:var(--serif);font-weight:400;font-size:1.6rem;letter-spacing:-.01em;margin-bottom:6px}
+.founder-card .meta{font-size:.9rem;line-height:1.9;color:rgba(231,225,208,.75)}
+.founder-card a{color:var(--brass-lt);text-decoration:none;border-bottom:1px solid rgba(200,154,76,.4)}
+.founder-card a:hover{border-bottom-color:var(--brass-lt)}
+.contact .btn-line{border-color:rgba(231,225,208,.45);color:#E7E1D0}
+.contact .btn-line:hover{background:#E7E1D0;color:var(--ink-deep)}
+/* ---------- footer ---------- */
+footer{background:var(--ink-deep);color:rgba(231,225,208,.6);border-top:1px solid rgba(231,225,208,.15)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:14px 36px;
+  max-width:var(--wrap);margin-inline:auto;padding:30px var(--pad) 38px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;line-height:2}
+/* ---------- custom cursor ---------- */
+.cursor-dot,.cursor-ring{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;border-radius:50%;
+  transform:translate(-50%,-50%);mix-blend-mode:difference}
+.cursor-dot{width:6px;height:6px;background:#fff}
+.cursor-ring{width:38px;height:38px;border:1px solid rgba(255,255,255,.85);transition:width .25s,height .25s}
+.cursor-ring.grow{width:62px;height:62px}
+.cursor-label{position:fixed;top:0;left:0;z-index:9999;pointer-events:none;font-family:var(--mono);
+  font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;background:var(--ink);color:var(--paper-raised);
+  padding:3px 9px;border-radius:2px;opacity:0;transform:translate(14px,14px);transition:opacity .2s}
+.cursor-label.show{opacity:1}
+body.has-cursor,body.has-cursor a,body.has-cursor button{cursor:none}
+.cursor-dot,.cursor-ring,.cursor-label{display:none}
+body.has-cursor .cursor-dot,body.has-cursor .cursor-ring,body.has-cursor .cursor-label{display:block}
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .vols{grid-template-columns:1fr}
+  .vol-tas,.vol-eval{grid-column:1/-1;margin-top:0}
+  .vol-eval{margin-top:34px}
+  .mxwrap,.chaingrid,.bidgrid,.bgrid,.cgrid{grid-template-columns:1fr}
+  .mxdetail,.bdetail{position:static}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat:nth-child(2n){border-right:none}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+  .thesis .tgrid{grid-template-columns:1fr}
+  .tmargin{border-left:none;border-top:1px solid var(--rule);padding-left:0;padding-top:22px;
+    flex-direction:row;flex-wrap:wrap;gap:22px}
+  .tnote{flex:1 1 200px}
+}
+@media (max-width:760px){
+  .nlinks{display:none}
+  /* CWV: above-the-fold hero content paints immediately on mobile; the
+     masked-line choreography stays desktop-only (LCP, redteam D1) */
+  .js-anim .hero-content .ln-in{transform:none}
+  .js-anim .hero-content .rv{opacity:1;transform:none}
+  .hero{height:auto;min-height:100svh;padding-bottom:46px}
+  .hero-content{padding-top:110px;justify-content:flex-start}
+  .hero-static{position:relative;inset:auto;justify-content:center;padding:28px 0 0;margin-top:8px}
+  .hero-static svg{width:min(92vw,560px)}
+  .scroll-cue{display:none}
+  .psteps{grid-template-columns:repeat(3,1fr)}
+  .rec{grid-template-columns:1fr;gap:6px}
+  .rec .tag{justify-self:start}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--rule)}
+  .stat:last-child{border-bottom:none}
+}
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+  .mq-l,.mq-r{animation:none;transform:none}
+  .js-anim .ln-in{transform:none}
+  .js-anim .rv{opacity:1;transform:none}
+}
+
+/* ============================================================
+   FIELD EVIDENCE - real product plates, filmstrip, founder photo
+   ============================================================ */
+.plate{position:relative;background:var(--paper-raised);border:1px solid var(--ink);border-radius:2px;
+  box-shadow:0 24px 50px -28px rgba(15,14,11,.45);transition:transform .35s ease,box-shadow .35s ease}
+.plate:hover{transform:translateY(-4px);box-shadow:0 34px 64px -30px rgba(15,14,11,.55)}
+.plate .ph,.plate .pcap{display:flex;justify-content:space-between;gap:14px;align-items:center;
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-sec);
+  padding:9px 14px;flex-wrap:wrap}
+.plate .ph{border-bottom:1px solid var(--rule)}
+.plate .pcap{border-top:1px solid var(--rule)}
+.plate .ph b{color:var(--ink);font-weight:600}
+.plate .pimg{position:relative;overflow:hidden;background:var(--paper-sunk)}
+/* height:auto is load-bearing: without it the <img height> attribute survives
+   as a presentational hint, the box keeps the full native height while width
+   clamps to the column, and the default object-fit:fill squishes the shot.
+   With height:auto the box ratio tracks the image's intrinsic ratio (R2). */
+.plate .pimg img{width:100%;height:auto;display:block}
+.sec-navy .plate{border-color:rgba(233,226,210,.35);background:rgba(233,226,210,.04);box-shadow:0 24px 50px -28px rgba(0,0,0,.6)}
+.sec-navy .plate .ph,.sec-navy .plate .pcap{color:rgba(233,226,210,.65)}
+.sec-navy .plate .ph{border-bottom-color:rgba(233,226,210,.2)}
+.sec-navy .plate .pcap{border-top-color:rgba(233,226,210,.2)}
+/* the console - full-bleed media band */
+.bleed{width:100vw;position:relative;left:50%;transform:translateX(-50%)}
+.console-sec{padding-block:clamp(46px,6vw,100px) 0}
+.console-plate{border-block:1px solid var(--ink);background:var(--paper-raised)}
+.console-plate .ph,.console-plate .pcap{max-width:var(--wrap);margin-inline:auto;padding:10px var(--pad)}
+.console-plate .pimg img{width:100%;height:auto;display:block}
+.ann{position:absolute;z-index:3;font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#F3EDE0;background:rgba(23,19,13,.85);padding:8px 14px;border-left:2px solid var(--brass);border-radius:2px}
+.ann b{color:var(--brass-lt);font-weight:600}
+.ann1{right:6%;top:16%}
+.ann2{right:6%;top:30%}
+/* bundle plate + traced bbox */
+.bundle-plate{margin-top:clamp(26px,4vw,48px)}
+.bundle-plate .pimg svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.bbox-label{position:absolute;top:17%;left:40%;font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#FFF8EC;background:var(--brass);padding:3px 9px;border-radius:2px;opacity:0}
+.bbox-label.on{opacity:1;transition:opacity .4s}
+/* filmstrip */
+.strip-sec{overflow:hidden}
+.strip-stage{padding-block:clamp(40px,4.5vw,68px)}
+.stripwrap{margin-top:clamp(24px,3.4vw,42px)}
+.strip{display:flex;align-items:flex-start;gap:clamp(18px,2.4vw,34px);width:max-content;
+  padding-inline:max(calc((100vw - var(--wrap))/2 + var(--pad)),20px)}
+.strip .plate{flex:0 0 auto}
+.strip .pl-land{width:clamp(420px,44vw,620px)}
+.strip .pl-sq{width:clamp(340px,33vw,450px)}
+.strip .pl-port{width:clamp(270px,25vw,345px)}
+.striprail{height:2px;background:var(--rule);margin-top:20px;position:relative;max-width:420px}
+.striprail i{position:absolute;inset:0;width:0%;background:var(--ink);display:block}
+.strip-sec .disclose{margin-top:26px}
+.strip-hint{font-family:var(--mono);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-sec);margin-top:14px}
+/* founder photo */
+.fphoto{margin:-26px -26px 20px;overflow:hidden;border-bottom:1px solid rgba(231,225,208,.25);aspect-ratio:4/5}
+.fphoto img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92)}
+@media (max-width:1080px){
+  .strip .pl-land,.strip .pl-sq{width:min(72vw,540px)}.strip .pl-port{width:min(52vw,340px)}
+}
+@media (max-width:760px){
+  .strip{overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;width:auto;padding-inline:16px}
+  .strip .plate{scroll-snap-align:center}.strip .pl-land{width:84vw}.strip .pl-sq{width:74vw}.strip .pl-port{width:62vw}
+}
+@media (prefers-reduced-motion: reduce){
+  .plate,.plate:hover{transform:none}
+  .bbox-label{opacity:1}
+}
+/* ============================================================
+   v7 - THE STORY SPINE
+   Act breaks, the nation's clock, two rooms, the turn, mission,
+   and the X-factor panels. Primitives only: rules, ledger rows,
+   mono labels, verdict chips. Nothing decorative.
+   ============================================================ */
+/* ---------- act break: the chapter system ---------- */
+.act-break{padding-block:clamp(44px,6vw,92px) 0}
+.act-break .ab-row{display:flex;align-items:baseline;gap:18px;border-top:1px solid var(--ink);padding-top:12px}
+.act-break .ab-no{font-family:var(--mono);font-weight:600;font-size:.66rem;letter-spacing:.26em;color:var(--brass-text)}
+.act-break .ab-title{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec)}
+.act-break .ab-line{margin-top:16px;font-family:var(--serif);font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.22;letter-spacing:-.01em;max-width:36ch;text-wrap:balance}
+/* ---------- ACT 1: the nation's clock ---------- */
+.clock-stage{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding-block:clamp(60px,8vw,90px)}
+.clock-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(220px,4fr);gap:clamp(24px,4vw,64px);align-items:end}
+.clock-top .dek{max-width:52ch}
+.yearbox{text-align:right}
+.yearbox .yk{font-family:var(--mono);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-sec);display:block;margin-bottom:6px}
+.yearbox .yr{font-family:var(--serif);font-size:clamp(3.2rem,7vw,6.6rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.yearbox .yr i{font-style:normal;color:var(--brass-text)}
+/* the counter ages into a qualitative end-state instead of a literal "N":
+   the number climbs while the dot travels, then resolves to "Years later"
+   (no specific duration claimed · see the source note below the rail). */
+.yearbox .yr-aged{display:none;font-style:italic;font-size:clamp(1.8rem,3.4vw,3rem);color:var(--brass-text)}
+.yearbox.aged .yr-live{display:none}
+.yearbox.aged .yr-aged{display:inline}
+.cycle{margin-top:clamp(44px,6vw,76px)}
+.crail{position:relative;height:2px;background:var(--rule)}
+.crail .cfill{position:absolute;inset-block:0;left:0;width:0%;background:var(--brass)}
+.crail .cdot{position:absolute;top:50%;left:0;width:13px;height:13px;border-radius:50%;background:var(--brass);transform:translate(-50%,-50%);box-shadow:0 0 0 5px rgba(168,114,41,.16)}
+.cstations{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px;list-style:none;padding:0}
+.cst{padding-top:2px;min-width:0}
+.cst .tick{display:block;width:1px;height:14px;background:var(--ink-quiet);margin-bottom:9px}
+.cst .nm{display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-quiet);transition:color .3s}
+.cst .cap{display:block;font-size:.78rem;line-height:1.45;color:var(--ink-quiet);margin-top:6px;max-width:17ch;transition:color .3s;text-wrap:pretty}
+.cst.lit .tick{background:var(--ink)}
+.cst.lit .nm{color:var(--ink);font-weight:600}
+.cst.lit .cap{color:var(--ink-sec)}
+.clock-line{margin-top:clamp(40px,5.4vw,64px);font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.5rem);line-height:1.2;letter-spacing:-.012em;max-width:30ch;text-wrap:balance}
+.clock-line .em-brass{font-style:italic}
+.clock-src{margin-top:18px}
+@media (max-width:860px){
+  .clock-stage{min-height:0}
+  .clock-top{grid-template-columns:1fr}
+  .yearbox{text-align:left}
+  .cstations{grid-template-columns:1fr;gap:0;border-top:1px solid var(--rule);margin-top:22px}
+  .cst{display:grid;grid-template-columns:110px 1fr;gap:4px 16px;padding:12px 2px;border-bottom:1px solid var(--rule)}
+  .cst .tick{display:none}
+  .cst .cap{max-width:none;margin-top:0}
+  .crail{display:none}
+}
+/* ---------- ACT 2: two rooms ---------- */
+.rooms{display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,3vw,44px);align-items:stretch}
+.room{border:1px solid var(--ink);border-radius:2px;background:var(--paper-raised);padding:clamp(18px,2.6vw,32px);display:flex;flex-direction:column}
+.room .rh{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sec);margin-bottom:12px}
+.room h3{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.2vw,2.1rem);letter-spacing:-.01em;line-height:1.15}
+.room .rplain{margin-top:10px;color:var(--ink-sec);font-size:.95rem;max-width:46ch}
+.room .rfig{margin-block:clamp(18px,2.6vw,28px);flex:1;display:flex;align-items:center}
+.room .rfig svg{width:100%;height:auto}
+.room .pains{border-top:1px solid var(--rule)}
+.room .pains li{list-style:none;padding:11px 2px;border-bottom:1px solid var(--rule);font-size:.92rem;line-height:1.5}
+.room .pains b{font-weight:600}
+.room-b{background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+.room-b .rh{color:rgba(233,226,210,.65)}
+.room-b .rplain{color:var(--on-navy-dim)}
+.room-b .pains{border-top-color:rgba(233,226,210,.22)}
+.room-b .pains li{border-bottom-color:rgba(233,226,210,.22)}
+.rooms-merge{margin-top:clamp(34px,4.6vw,56px);text-align:center}
+.rooms-merge .rm-line{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.6rem);line-height:1.2;letter-spacing:-.012em;max-width:30ch;margin-inline:auto;text-wrap:balance}
+@media (max-width:860px){.rooms{grid-template-columns:1fr}}
+/* ---------- ACT 3: the turn ---------- */
+.turn{background:var(--paper-sunk);padding-block:clamp(92px,13vw,190px)}
+.turn .tline{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,5vw,4.7rem);line-height:1.1;letter-spacing:-.015em;max-width:22ch;text-wrap:balance}
+.turn .tline .em-brass{font-style:italic}
+/* ---------- ACT 5: simulator placement ---------- */
+.simwrap{margin-top:clamp(30px,4.4vw,56px)}
+/* ---------- ACT 6: X4 devtools panel ---------- */
+.x4{margin-top:clamp(28px,4vw,48px);border:1px dashed var(--ink-sec);border-radius:2px;padding:clamp(16px,2.4vw,26px);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px clamp(20px,3vw,44px);align-items:center}
+.x4 .big{font-family:var(--serif);font-size:clamp(2.8rem,4.6vw,4.4rem);line-height:1;font-variant-numeric:tabular-nums}
+.x4 .x4h{font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-sec);margin-bottom:8px}
+.x4 p{font-size:.92rem;line-height:1.55;color:var(--ink-sec);max-width:62ch}
+.x4 .origins{grid-column:1/-1;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;color:var(--ink-sec);min-height:1.4em}
+.x4 .origins b{color:var(--vt-verified);font-weight:600}
+.x4 .origins .bad{color:var(--vt-missing)}
+@media (max-width:760px){.x4{grid-template-columns:1fr}}
+/* ---------- ACT 7: mission ---------- */
+.mission .mlede{font-family:var(--serif);font-size:clamp(1.6rem,3.2vw,2.9rem);line-height:1.18;letter-spacing:-.012em;max-width:28ch;text-wrap:balance}
+.mrows{margin-top:clamp(28px,4vw,48px);border-top:1px solid var(--ink)}
+.mrow{display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px 26px;align-items:baseline;padding:16px 2px;border-bottom:1px solid var(--rule)}
+.mrow .mk{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass-text)}
+.mrow p{font-size:1rem;line-height:1.55}
+.mnote{margin-top:18px}
+@media (max-width:760px){.mrow{grid-template-columns:1fr;gap:5px}}
+/* ---------- X3: working loop inside the console plate ----------
+   The media box has a FIXED aspect (the still's ratio): swapping the
+   still for the loop must never change document height, or every
+   ScrollTrigger refreshes mid-scroll and the page visibly snaps back
+   (the "stuck at multiple phases" defect). The loop letterboxes. */
+.console-plate .pimg{aspect-ratio:2360/1392;background:var(--paper-sunk)}
+.console-plate .pimg img.pan{width:100%;height:100%;object-fit:contain}
+.console-plate .pimg video{width:auto;height:100%;margin-inline:auto;display:none}
+.console-plate.video-live .pimg video{display:block}
+.console-plate.video-live .pimg > img{display:none}
+.console-plate.video-live .ann{display:none}
+.vbadge{position:absolute;z-index:3;left:14px;bottom:14px;font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;
+  text-transform:uppercase;color:#F3EDE0;background:rgba(23,19,13,.85);padding:6px 11px;border-left:2px solid var(--brass);border-radius:2px;display:none}
+.console-plate.video-live .vbadge{display:block}
+/* ---------- X7: guided walk ---------- */
+.tourchip{position:fixed;z-index:10003;bottom:24px;left:50%;transform:translateX(-50%);width:min(640px,88vw);
+  background:var(--ink-deep);color:#EFE9DA;border:1px solid rgba(200,154,76,.55);border-radius:2px;
+  padding:14px 18px;display:none;box-shadow:0 18px 44px -18px rgba(15,14,11,.7)}
+.tourchip.on{display:block}
+.tourchip .tc-k{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono);font-size:.56rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--brass-lt);margin-bottom:7px}
+.tourchip .tc-s{font-family:var(--serif);font-size:1.08rem;line-height:1.4}
+/* ---------- X5: footer audit strip ---------- */
+.audit-strip{border-top:1px solid rgba(231,225,208,.15);padding-top:18px!important}
+.audit-strip span{overflow-wrap:anywhere}
+/* ---------- reduced motion for the spine ---------- */
+@media (prefers-reduced-motion: reduce){
+  .crail .cfill{width:100%}
+  .crail .cdot{left:100%}
+  .cst .nm,.cst .cap{color:var(--ink-sec)}
+  .cst .tick{background:var(--ink)}
+  .yearbox .yr{font-size:clamp(2rem,4vw,3rem)}
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   v8 READABLE TYPE FLOOR  (R1 / FIX A)
+   The v6/v7 page set ~60 labels at .54-.68rem (9-11px), unreadable for
+   the founder's stated reader. This layer re-points each of those to the
+   fluid scale tokens in :root, at the original selector's specificity.
+   It changes ONLY font-size; palette, spacing, tracking, motion are
+   untouched. Grouped by role so intent is auditable and revertible.
+   ══════════════════════════════════════════════════════════════════ */
+/* decorative tracked-mono micro-labels  >=13px */
+.skip,.eyebrow,.folio,.src-note,.disclose,
+.nlinks a,.cred span,.scroll-cue,.node-label,
+.mq span,.vol .vno,.vol-door,.caps .ref,.pipe .ptitle,.tnote .tn-k,
+.mxh span,.mx th,.mx td.crit .s,.legend span,.mxdist .mxd-t,.mxd-row .nm,
+.mxdetail .srcref,.mxdetail .route,.cblock .bh,.chainaside .trust,
+.dimwhy .riskline,.zone .zh,.asset,.bdetail .tag,.rec .date,.rec .tag,
+.foot,.strip-hint,.bbox-label,.vbadge,.tourchip .tc-k,.cursor-label,
+.act-break .ab-title,.yearbox .yk,.cst .nm,.room .rh,.x4 .x4h,.mrow .mk,
+.plate .ph{font-size:var(--fs-eyebrow)}
+/* mono DATA + interactive labels a reader parses  >=14px */
+.btn,.btn-sm,.act-break .ab-no,.verdict-pill,.mxd-row .ct,.cblock .hash,
+.dimrow .sc,.pstep .pn,.plate .pcap,.ann,.x4 .origins,.stat .ssrc{font-size:var(--fs-meta)}
+/* captions, table cells, list rows, secondary prose, step/station text  >=14.75px */
+.caps li,.pstep .pt,.pdetail,.tnote p,.mx td.crit,.dimrow .nm,
+.room .rplain,.room .pains li,.cst .cap,.stat .lab,.founder-card .meta,
+.mxdetail .body,.bdetail p,.cblock .bbody,.dimwhy,.chain-status{font-size:var(--fs-caption)}
+/* primary narrative reading  >=17px */
+.dek,.x4 p,.mrow p,.rec .what{font-size:var(--fs-body)}
+/* SVG infographic labels (A3): CSS font-size overrides the SVG presentation
+   attribute, enlarging the plain-language part labels and diagram titles to
+   the largest size the viewBox geometry allows without overflow. These render
+   smaller than the user-unit value once the viewBox scales, so they sit just
+   under the UI floor by design; they are data-labels, not UI chrome. */
+#bundleX text{font-size:13px}
+#checksFig text{font-size:12px}
+.radar-svg text{font-size:12.5px}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="cursor-ring" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-label" aria-hidden="true"></div>
+
+<header id="hdr">
+  <div class="nav">
+    <a class="brand" href="#top" aria-label="KRISEVA home"><img class="bmark" src="/assets/brand/kriseva-mark.svg" alt="" width="24" height="24">KRISEVA</a>
+    <nav class="nlinks" aria-label="Primary">
+      <a href="#platform">Platform</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#audit">Audit</a>
+      <a href="#sovereignty">Sovereignty</a>
+      <a href="/tas">TAS</a>
+      <a href="/evaluator">Evaluator</a>
+    </nav>
+    <a class="btn btn-fill btn-sm magnetic" href="/contact" data-cursor="write">Request a demo</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" aria-label="KRISEVA: a tender is a decision system">
+  <div class="hero-stage" id="heroStage" data-cursor="trace">
+    <canvas id="webgl" aria-hidden="true"></canvas>
+
+    <!-- Static plate: shown on mobile, reduced-motion, or when WebGL is unavailable -->
+    <div class="hero-static" aria-hidden="true">
+      <svg viewBox="0 0 760 560" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="An ink-drawn plate: a tender bundle on the left, brass evidence strands tracing to clause references that resolve into six verdict states">
+        <g stroke="#17130D" stroke-width="1.2" opacity=".9">
+          <rect x="46" y="180" width="150" height="208" fill="#F3EDE0" transform="rotate(-4 121 284)"/>
+          <rect x="56" y="172" width="150" height="208" fill="#F3EDE0" transform="rotate(-1 131 276)"/>
+          <rect x="66" y="164" width="150" height="208" fill="#F3EDE0" transform="rotate(2 141 268)"/>
+        </g>
+        <g stroke="#4E4838" stroke-width="1" opacity=".55">
+          <line x1="84" y1="196" x2="196" y2="200"/><line x1="84" y1="214" x2="186" y2="218"/>
+          <line x1="84" y1="232" x2="196" y2="236"/><line x1="84" y1="250" x2="176" y2="254"/>
+          <line x1="84" y1="286" x2="196" y2="290"/><line x1="84" y1="304" x2="186" y2="308"/>
+        </g>
+        <g stroke="#A87229" stroke-width="1.6" fill="none" opacity=".95">
+          <path d="M216 220 C 320 140, 420 120, 520 96"/>
+          <path d="M216 240 C 330 200, 430 178, 548 170"/>
+          <path d="M216 262 C 340 260, 440 248, 560 244"/>
+          <path d="M216 284 C 340 320, 440 314, 556 318"/>
+          <path d="M216 306 C 330 380, 430 386, 540 392"/>
+          <path d="M216 328 C 320 440, 410 456, 520 464"/>
+        </g>
+        <g font-family="IBM Plex Mono,monospace" font-size="11" letter-spacing="1">
+          <g><rect x="524" y="82" width="170" height="26" fill="#F3EDE0" stroke="#3A7A5B"/><text x="536" y="99" fill="#2E6149">SPEC §3.2 · VERIFIED</text></g>
+          <g><rect x="552" y="156" width="186" height="26" fill="#F3EDE0" stroke="#9A7322"/><text x="562" y="173" fill="#6E520F">ANNEX-C · QUALIFIED</text></g>
+          <g><rect x="564" y="230" width="170" height="26" fill="#F3EDE0" stroke="#41618C"/><text x="576" y="247" fill="#324C6E">BID-DOC · REQ-DEMO</text></g>
+          <g><rect x="560" y="304" width="186" height="26" fill="#F3EDE0" stroke="#5F6A79"/><text x="572" y="321" fill="#454F5D">FIN-2 · INSUFFICIENT</text></g>
+          <g><rect x="544" y="378" width="150" height="26" fill="#F3EDE0" stroke="#9C4F43"/><text x="556" y="395" fill="#7E3A2F">FIN-1 · MISSING</text></g>
+          <g><rect x="524" y="450" width="156" height="26" fill="#F3EDE0" stroke="#83332D"/><text x="536" y="467" fill="#6E2B26">ATC §7.1 · FAILED</text></g>
+        </g>
+        <g font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="#4E4838">
+          <text x="46" y="420">TENDER BUNDLE</text>
+          <text x="524" y="510">VERDICT LEDGER · EVERY STATE CARRIES ITS SOURCE</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="hero-labels" id="heroLabels" aria-hidden="true"></div>
+
+    <div class="wrap hero-content">
+      <p class="eyebrow">Kriseva AI · Procurement intelligence · India's defence ecosystem</p>
+      <h1 class="display" id="heroH1">
+        <span class="ln"><span class="ln-in">A tender is not a PDF.</span></span>
+        <span class="ln"><span class="ln-in">It is a <em class="em-brass">decision system</em></span></span>
+        <span class="ln"><span class="ln-in">hidden inside a document bundle.</span></span>
+      </h1>
+      <p class="dek rv">Deterministic, auditable procurement intelligence for the teams that <b>bid</b> and the committees that <b>evaluate</b>. Every verdict linked to a clause and a page. <button class="kchip-claim" type="button" data-claim="positioning.thesis" aria-label="Provenance: the thesis">c1</button></p>
+      <div class="hero-acts rv">
+        <a class="btn btn-fill magnetic" href="/contact" data-cursor="write">Request a demo <span class="arr">→</span></a>
+        <a class="btn btn-line magnetic" href="#evidence" data-cursor="inspect">See the evidence</a>
+        <button class="btn btn-line magnetic" id="tourStart" data-cursor="walk" hidden>Guided walk · press T</button>
+      </div>
+      <div class="cred rv" aria-label="Credibility record">
+        <span><b>Grand Finalist</b> · Pan IIT “AI for Bharat” · 13,500+ teams</span>
+        <span><b>Udyam</b>-registered MSME</span>
+        <span>Incubated at <b>IIT Gandhinagar</b> · IIEC</span>
+        <span>In active evaluation with <b>a central armed police force</b></span>
+      </div>
+    </div>
+
+    <div class="scroll-cue" id="scrollCue" aria-hidden="true"><span class="line"></span>Scroll to trace the evidence<span class="line"></span></div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 1 · THE NATION'S CLOCK ════════════ -->
+<div class="act-break wrap rv" data-act="1">
+  <div class="ab-row"><span class="ab-no">ACT 01</span><span class="ab-title">The nation's clock</span></div>
+  <p class="ab-line">India's modernization does not lack technology, capital, or talent. It waits on a cycle.</p>
+</div>
+
+<section class="clock-sec" id="clock" aria-label="The procurement cycle, in years">
+  <div class="clock-stage wrap" id="clockStage">
+    <div class="clock-top">
+      <div>
+        <p class="eyebrow rv" style="margin-bottom:16px">The problem · one acquisition, many stations</p>
+        <h2 class="display"><span class="ln"><span class="ln-in">The bottleneck</span></span><span class="ln"><span class="ln-in">is the <em class="em-brass">cycle.</em></span></span></h2>
+        <p class="dek rv" style="margin-top:18px">When the armed forces need new equipment, they cannot simply buy it. A request begins a journey through stations of approval, bidding and checking. Watch one acquisition travel, and watch the clock.</p>
+      </div>
+      <div class="yearbox rv" id="yearBox" aria-hidden="true">
+        <span class="yk">Elapsed</span>
+        <span class="yr"><span class="yr-live">YEAR <i id="yearN">1</i></span><span class="yr-aged">Years later</span></span>
+      </div>
+    </div>
+    <div class="cycle rv" id="cycle">
+      <div class="crail" aria-hidden="true"><div class="cfill" id="cycleFill"></div><div class="cdot" id="cycleDot"></div></div>
+      <ol class="cstations" id="cycleStations">
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">01 · Need</span><span class="cap">A unit states what it needs.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">02 · Approval</span><span class="cap">The need is examined and accepted: the <button class="kchip-gloss" type="button" data-gloss="aon">AoN</button>.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">03 · <button class="kchip-gloss" type="button" data-gloss="rfp">RFP</button></span><span class="cap">The request goes out to industry.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">04 · Bids</span><span class="cap">Companies answer with bundles of documents.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">05 · Evaluation</span><span class="cap">A committee checks every claim in every bid.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">06 · Re-evaluation</span><span class="cap">Queries and disputes restart the clock.</span></li>
+        <li class="cst"><span class="tick" aria-hidden="true"></span><span class="nm">07 · Award</span><span class="cap">Years later, a contract. The need has aged.</span></li>
+      </ol>
+    </div>
+    <p class="clock-line rv">The speed of modernization is set by the <em class="em-brass">speed of the cycle.</em></p>
+    <p class="src-note clock-src rv">Stage names follow <button class="kchip-gloss" type="button" data-gloss="dap">DAP 2020</button>, the public rulebook · qualitative by design: this page claims no specific duration</p>
+  </div>
+</section>
+
+<!-- ════════════ ACT 2 · TWO ROOMS, ONE PROBLEM ════════════ -->
+<div class="act-break wrap rv" data-act="2">
+  <div class="ab-row"><span class="ab-no">ACT 02</span><span class="ab-title">Two rooms, one problem</span></div>
+  <p class="ab-line">On one side of the table, a small team and a heavy bundle. On the other, a committee that must be right.</p>
+</div>
+
+<section class="sec-pad" id="rooms" style="padding-top:clamp(40px,5vw,70px)">
+  <div class="wrap">
+    <div class="rooms">
+      <article class="room room-a rv regmark" data-cursor="inspect">
+        <div class="rh"><span>Room A · the bidder</span><span>a defence <button class="kchip-gloss" type="button" data-gloss="msme">MSME</button> office</span></div>
+        <h3>The team that bids.</h3>
+        <p class="rplain">A small company finds a tender it could win. Then the bundle arrives.</p>
+        <div class="rfig" aria-hidden="true">
+          <svg viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" id="bundleX">
+            <g class="bx-leaf" data-fx="-190" data-fy="-10" data-fr="-7"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="244" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">BID DOC</text></g>
+            <g class="bx-leaf" data-fx="-112" data-fy="-58" data-fr="-3"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="252" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">SPECS</text></g>
+            <g class="bx-leaf" data-fx="-30" data-fy="-86" data-fr="2"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="262" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">BOQ</text></g>
+            <g class="bx-leaf" data-fx="52" data-fy="-86" data-fr="-2"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="262" y="155" font-family="IBM Plex Mono,monospace" font-size="10" letter-spacing="1" fill="#4E4838">ATC</text></g>
+            <g class="bx-leaf" data-fx="134" data-fy="-58" data-fr="4"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="240" y="155" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1" fill="#7E3A2F">CORRIGENDA</text></g>
+            <g class="bx-leaf" data-fx="212" data-fy="-10" data-fr="8"><rect x="230" y="80" width="104" height="140" fill="#F3EDE0" stroke="#17130D" stroke-width="1.2"/><text x="243" y="155" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="1" fill="#4E4838">ANNEXURES</text></g>
+            <text x="230" y="288" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="#4E4838">ONE TENDER · MANY PARTS</text>
+          </svg>
+        </div>
+        <ul class="pains">
+          <li><b>Hundreds of pages.</b> One deadline.</li>
+          <li>One missed clause can disqualify the whole bid.</li>
+          <li><button class="kchip-gloss" type="button" data-gloss="corrigenda">Corrigenda</button> change the rules while you read.</li>
+          <li>Weeks of work, decided in minutes of reading.</li>
+        </ul>
+      </article>
+      <article class="room room-b rv regmark" data-cursor="inspect">
+        <div class="rh"><span>Room B · the committee</span><span>an evaluation room</span></div>
+        <h3>The committee that judges.</h3>
+        <p class="rplain">Stacks of rival bids arrive. Every claim in each one must be checked, by hand.</p>
+        <div class="rfig" aria-hidden="true">
+          <svg viewBox="0 0 560 320" fill="none" xmlns="http://www.w3.org/2000/svg" id="checksFig">
+            <g stroke="#E9E2D2" stroke-width="1.2" opacity=".9">
+              <rect x="36" y="70" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+              <rect x="48" y="82" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+              <rect x="60" y="94" width="92" height="124" fill="rgba(233,226,210,.06)"/>
+            </g>
+            <text x="36" y="240" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="rgba(233,226,210,.6)">RIVAL BIDS</text>
+            <g id="checkGrid"></g>
+            <text x="220" y="240" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="rgba(233,226,210,.6)">EVERY CLAIM, CHECKED BY HAND</text>
+            <text x="220" y="288" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2" fill="#C89A4C">MUST SURVIVE AUDIT · YEARS LATER</text>
+          </svg>
+        </div>
+        <ul class="pains">
+          <li><b>Hundreds of claims,</b> cross-checked by hand.</li>
+          <li>Every verdict must be defensible, on paper, forever.</li>
+          <li>An audit can arrive years after the file is closed.</li>
+          <li>One quiet edit can poison the whole record.</li>
+        </ul>
+      </article>
+    </div>
+    <div class="rooms-merge rv">
+      <p class="rm-line">Two rooms, one problem: <em class="em-brass">trust in what the documents claim.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 3 · THE TURN ════════════ -->
+<div class="act-break wrap rv" data-act="3">
+  <div class="ab-row"><span class="ab-no">ACT 03</span><span class="ab-title">The turn</span></div>
+  <p class="ab-line">Kriseva's answer is not a faster reader. It is a stricter one.</p>
+</div>
+
+<section class="turn" id="turn">
+  <div class="wrap">
+    <p class="tline"><span class="ln"><span class="ln-in">What if every claim in the bundle</span></span><span class="ln"><span class="ln-in"><em class="em-brass">had to show its work?</em></span></span></p>
+  </div>
+</section>
+
+<!-- ============ THESIS (the answer, in words) ============ -->
+<section class="thesis" id="thesis">
+  <div class="wrap tgrid">
+    <blockquote class="tquote rv">The bundle is the interface. Specifications, <button class="kchip-gloss" type="button" data-gloss="boq">BOQs</button>, <button class="kchip-gloss" type="button" data-gloss="atc">ATCs</button>, corrigenda, annexures. Each carries a clause that can win the bid <em class="it">or end it.</em> Reading is not the work. Reconstruction is.</blockquote>
+    <aside class="tmargin rv" aria-label="Margin annotations">
+      <div class="tnote"><span class="tn-k">Document intelligence</span><p>The bundle is parsed locally, page by page, into structured requirements.</p></div>
+      <div class="tnote"><span class="tn-k">Compliance reconstruction</span><p>Eligibility, instruments and certifications are rebuilt as checkable claims.</p></div>
+      <div class="tnote"><span class="tn-k">Decision traceability</span><p>Every verdict carries its clause and page: at rest, not on hover.</p></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ TWO VOLUMES ============ -->
+<section class="sec-pad" id="platform">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">The platform · two volumes, one evidence engine</span><span class="folio">ACT 03 · THE PLATFORM</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Two sides of the same table.</span></span></h2>
+      <p class="dek rv">One product for the teams that bid. One for the committees that evaluate. Both run on the same engine: every claim traceable to a clause and a page.</p>
+    </div>
+    <div class="vols">
+      <article class="vol vol-tas rv regmark" data-cursor="inspect">
+        <div class="vhead"><span class="vno">Vol. I · Bidder-side</span><span class="folio">TAS</span></div>
+        <h3>KRISEVA TAS</h3>
+        <p class="vsub">Bidder-side tender intelligence and bid review for defence <button class="kchip-gloss" type="button" data-gloss="msme">MSMEs</button> and defence-tech teams. A scattered bundle becomes a defensible <b>BID / REVIEW / SKIP</b> decision. Recommendation only; the operator signs. <button class="kchip-claim" type="button" data-claim="tas.one-liner" aria-label="Provenance: TAS one-liner">c2</button></p>
+        <ul class="caps">
+          <li><span>Treats tenders as <b>bundles</b>: bid documents, specifications, BOQs, ATCs, corrigenda, annexures.</span><span class="ref">bundle-aware</span></li>
+          <li><span>Parses PDF, DOCX, XLSX, TXT and CSV tender files <b>locally</b>, with local OCR for scanned pages.</span><span class="ref">on-premise</span></li>
+          <li><span>Extracts metadata such as buyer fields, dates, values, <button class="kchip-gloss" type="button" data-gloss="emd">EMD</button>/<button class="kchip-gloss" type="button" data-gloss="epbg">ePBG</button> and eligibility signals, <b>with provenance</b>.</span><span class="ref">clause + page</span></li>
+          <li><span>Live <b><button class="kchip-gloss" type="button" data-gloss="gem">GeM</button></b> discovery and acquisition; <button class="kchip-gloss" type="button" data-gloss="defproc">DefProc</button> public discovery with operator-assisted flows for protected documents.</span><span class="ref">operator-gated</span></li>
+          <li><span>Operator review briefs with <b>BID / REVIEW / SKIP</b> recommendations. No autonomous authority.</span><span class="ref">committee-assist</span></li>
+        </ul>
+        <div class="pipe" id="pipe">
+          <div class="ptitle"><span>The pipeline · six deterministic stages</span><span class="folio" id="pipeCount">01 / 06</span></div>
+          <div class="prail" aria-hidden="true"><div class="pfill" id="pipeFill"></div></div>
+          <div class="psteps" role="tablist" aria-label="Pipeline stages" id="pipeSteps"></div>
+          <div class="pdetail" id="pipeDetail" aria-live="polite"></div>
+        </div>
+        <a class="vol-door" href="/tas" data-cursor="open">Open Vol. I · TAS <span class="arr">→</span></a>
+      </article>
+      <article class="vol vol-eval rv regmark" data-cursor="inspect">
+        <div class="vhead"><span class="vno">Vol. II · Issuer-side</span><span class="folio">EVALUATOR</span></div>
+        <h3>KRISEVA EVALUATOR</h3>
+        <p class="vsub">For evaluation committees. Committee-assist bid evaluation that shows its reasoning, routes uncertainty to humans, and leaves a record that cannot be quietly edited.</p>
+        <ul class="caps">
+          <li><span><b>Three-path convergence</b> reasoning on every criterion. <button class="kchip-claim" type="button" data-claim="evaluator.three-path" aria-label="Provenance: three-path convergence">c3</button></span><span class="ref">reproducible</span></li>
+          <li><span>A <b>six-state verdict model</b>. The two uncertain states auto-route to a human; nothing is disqualified silently. <button class="kchip-claim" type="button" data-claim="evaluator.six-state" aria-label="Provenance: six-state model">c4</button></span><span class="ref">HITL</span></li>
+          <li><span>A <b>hash-chained, append-only audit log</b>. A single edited verdict breaks the chain; tamper is visible.</span><span class="ref">sha-256</span></li>
+          <li><span><b>On-premise, local LLM, zero egress</b>, built for networks that do not leave the building. <button class="kchip-claim" type="button" data-claim="evaluator.sovereign" aria-label="Provenance: sovereign posture">c6</button></span><span class="ref">sovereign-by-design</span></li>
+        </ul>
+        <a class="vol-door" href="/evaluator" data-cursor="open">Open Vol. II · Evaluator <span class="arr">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 4 · THE BIDDER'S TOOL ════════════ -->
+<div class="act-break wrap rv" data-act="4">
+  <div class="ab-row"><span class="ab-no">ACT 04</span><span class="ab-title">The bidder's tool · KRISEVA TAS</span></div>
+  <p class="ab-line">The bundle goes in scattered. It comes out as a brief the team can sign.</p>
+</div>
+
+<!-- ============ THE CONSOLE (field evidence) ============ -->
+<section class="console-sec" id="console">
+  <div class="wrap">
+    <div class="sechead" style="margin-bottom:clamp(26px,3.4vw,48px)">
+      <div class="row"><span class="eyebrow">Field evidence · The console</span><span class="folio">ACT 04 · TAS</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Not a mockup. <em class="em-brass">The console.</em></span></span></h2>
+      <p class="dek rv">This is the brief the team signs. Every number on it points to a page. Below: the approval brief exactly as the operator signs it, and a working loop of the console itself.</p>
+    </div>
+  </div>
+  <figure class="plate console-plate bleed regmark" data-cursor="inspect" style="border-inline:none">
+    <div class="ph"><span><b>TAS</b> · 02 · Briefing · GEM/2026/B/7281746</span><span>On-premise · Local LLM · Demo fixture</span></div>
+    <div class="pimg">
+      <img class="pan" src="/assets/v6/console_briefing.jpg" width="2360" height="1392" alt="KRISEVA TAS approval brief: C-UAS Detector and Jammer demo fixture: authority, closing date, EMD and bid value fields, and the brass-ruled RECOMMENDED VERDICT panel reading REVIEW with six requirements gated and the counts two verified, one partial, seven missing, two ambiguous" loading="lazy">
+      <video id="consoleLoop" muted loop playsinline preload="none" width="1280" height="888" poster="/assets/media/tas-console-loop-poster.jpg" aria-label="A fourteen second muted working loop of the TAS console: the operator home, the decision working list, then the approval brief. Captured from a repo-owned local instance, synthetic data.">
+        <source data-src="/assets/media/tas-console-loop.webm" type="video/webm">
+        <source data-src="/assets/media/tas-console-loop.mp4" type="video/mp4">
+      </video>
+      <span class="vbadge">Working loop · 14s · muted · synthetic data</span>
+      <div class="ann ann1" data-cursor="inspect">Recommended: <b>REVIEW</b> · never an auto-bid</div>
+      <div class="ann ann2" data-cursor="inspect">2 verified · 1 partial · 7 missing · 2 ambiguous</div>
+    </div>
+    <figcaption class="pcap"><span>The operator signs; TAS retains the decision until signature</span><span>Synthetic demo data · captured 2026-05 · repo-owned local instance</span></figcaption>
+  </figure>
+</section>
+
+<!-- ============ MARQUEE BAND ============ -->
+<div class="mqband" aria-hidden="true">
+  <div class="mq mq-l" id="mq1">
+    <div class="set">
+      <span><i class="sq v"></i>Verified</span><span><i class="sq q"></i>Verified · with qualification</span>
+      <span><i class="sq i"></i>Insufficient → human review</span><span><i class="sq m"></i>Missing → human review</span>
+      <span><i class="sq d"></i>Requires demonstration</span><span><i class="sq f"></i>Failed · never silent</span>
+    </div>
+  </div>
+  <div class="mq mq-r" id="mq2">
+    <div class="set">
+      <span>Make-in-India</span><span>EMD / ePBG</span><span>GeM</span><span>DefProc</span>
+      <span>BOQ</span><span>ATC</span><span>Corrigenda</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BUNDLE TRACE (from verdict to page) ============ -->
+<section class="sec-pad" id="bundletrace">
+  <div class="wrap">
+    <div class="sechead" style="margin-bottom:clamp(22px,3vw,40px)">
+      <div class="row"><span class="eyebrow">TAS · From verdict to page</span><span class="folio">ACT 04 · TAS</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">The verdict points to a page.</span></span></h2>
+      <p class="dek rv">Nothing to operate here. Just watch: the brass box is the exact region of the exact page the verdict cites.</p>
+    </div>
+    <figure class="plate bundle-plate rv regmark" data-cursor="trace" style="max-width:720px;margin-inline:auto">
+      <div class="ph"><span><b>TAS</b> · 03 · Bundle · MAIN_BID.PDF · p.1 of 10</span><span>The page the verdict points to</span></div>
+      <div class="pimg">
+        <img src="/assets/v6/console_bundle.jpg" loading="lazy" width="1400" height="1570" alt="KRISEVA TAS bundle view: a synthetic GeM bid document page rendered in the in-product PDF viewer, bilingual bid-details table with ministry, department and item category rows">
+        <svg viewBox="0 0 1400 1570" aria-hidden="true"><rect id="bboxRect" x="552" y="330" width="808" height="1100" fill="none" stroke="#A87229" stroke-width="6" pathLength="100" style="stroke-dasharray:100;stroke-dashoffset:100"/></svg>
+        <span class="bbox-label" id="bboxLabel">bid-details table · p.1 · traced</span>
+      </div>
+      <figcaption class="pcap"><span>From verdict to page: every claim resolves to a region like this</span><span>Synthetic demo bundle · captured 2026-05-20</span></figcaption>
+    </figure>
+    <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+  </div>
+</section>
+
+<!-- ============ BIDABILITY ============ -->
+<section class="sec-pad" id="bidability">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">TAS · Bidability</span><span class="folio">ACT 04 · TAS</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Why you may win, or lose.</span></span><span class="ln"><span class="ln-in">With evidence.</span></span></h2>
+      <p class="dek rv">Before a team spends weeks on a bid, this shows whether the bid is worth it. Hover or tap a dimension to see why it reads that way. The operator decides; TAS shows its work.</p>
+    </div>
+    <div class="bidgrid rv">
+      <div class="radarbox regmark">
+        <svg class="radar-svg" id="radar" viewBox="0 0 340 340" role="img" aria-label="Bidability radar across six dimensions: technical fit 90, financial eligibility 78, certification 85, past performance 60, delivery capacity 72, disqualification risk 40"></svg>
+      </div>
+      <div>
+        <div class="dimlist" id="dims" role="tablist" aria-label="Bidability dimensions"></div>
+        <div class="dimwhy" id="dimWhy" aria-live="polite">Hover or select a dimension to see the reasoning and its evidence pointer.</div>
+        <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIELD EVIDENCE FILMSTRIP ============ -->
+<section class="strip-sec" id="fieldstrip">
+  <div class="strip-stage">
+    <div class="wrap">
+      <div class="sechead" style="margin-bottom:0"><div class="row"><span class="eyebrow">Field evidence · Working surfaces</span><span class="folio">ACT 04 · TAS</span></div></div>
+      <h2 class="display" style="margin-top:18px"><span class="ln"><span class="ln-in">Walk the product.</span></span></h2>
+      <p class="dek rv" style="margin-top:14px">These are real working screens, with practice data. Five surfaces, in the order an operator meets them.</p>
+      <p class="strip-hint" aria-hidden="true">Scroll · the reel advances ⟶</p>
+      <div style="display:flex;align-items:center;gap:18px"><div class="striprail" aria-hidden="true" style="flex:1"><i id="stripFill"></i></div><span class="folio tabular" id="stripCount">01 / 05</span></div>
+    </div>
+    <div class="stripwrap">
+      <div class="strip" id="strip">
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 00 · Home</span><span>queue · sources · scanners</span></div>
+          <div class="pimg"><img src="/assets/v6/console_home.jpg" loading="lazy" width="1700" height="1200" alt="KRISEVA TAS home: operator control surface with what-needs-action lanes: action 5, ready 3, waiting 2, blocked 1"></div>
+          <figcaption class="pcap"><span>The operator's morning: a queue, not a search box</span></figcaption>
+        </figure>
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 01 · GeM live scanner</span><span>streaming</span></div>
+          <div class="pimg"><img src="/assets/v6/console_gem_scanner.jpg" loading="lazy" width="1700" height="1208" alt="KRISEVA TAS GeM live scanner: scan controls, threshold slider and the live counters: nine discovered, then acquired, extracted, scored, persisted"></div>
+          <figcaption class="pcap"><span>9 discovered → acquired → extracted → scored, with the event log open</span></figcaption>
+        </figure>
+        <figure class="plate pl-sq" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 02 · Score breakdown</span><span>exhibit</span></div>
+          <div class="pimg"><img src="/assets/v6/console_score_drawer.jpg" loading="lazy" width="940" height="695" alt="KRISEVA TAS score breakdown drawer: a synthetic C-UAS detector and jammer fixture scored 13.5 out of 100, with the INSUFFICIENT DATA banner"></div>
+          <figcaption class="pcap"><span>13.5/100 · INSUFFICIENT DATA · it fails loudly</span></figcaption>
+        </figure>
+        <figure class="plate pl-sq" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 05 · Decisions</span><span>signed ledger</span></div>
+          <div class="pimg"><img src="/assets/v6/console_decisions.jpg" loading="lazy" width="1190" height="1230" alt="KRISEVA TAS decision history: a week of tenders with recommendation and signed verdict side by side, REVIEW beside BID, SKIP beside SKIP"></div>
+          <figcaption class="pcap"><span>Recommendation beside signature; disagreement is recorded</span></figcaption>
+        </figure>
+        <figure class="plate pl-land" data-cursor="inspect">
+          <div class="ph"><span><b>TAS</b> · 06 · The Boundary · Zone II</span><span>disclosure</span></div>
+          <div class="pimg"><img src="/assets/v6/console_boundary_zones.jpg" loading="lazy" width="1352" height="480" alt="KRISEVA TAS Boundary page, Zone II: refused at the architecture. The product's own refusal list: cloud LLM APIs, hosted vector databases, SaaS analytics and telemetry, foreign-hosted inference, telemetry beacons, and document contents leaving the network"></div>
+          <figcaption class="pcap"><span>Zone II: refused at the architecture, listed in the product</span></figcaption>
+        </figure>
+      </div>
+    </div>
+    <p class="disclose wrap">All captures from a repo-owned local instance · synthetic / seeded demo data, not a real tender. <button class="kchip-claim" type="button" data-claim="validation.synthetic-data" aria-label="Provenance: synthetic data statement">c9</button></p>
+  </div>
+</section>
+
+<!-- ════════════ ACT 5 · THE COMMITTEE'S TOOL ════════════ -->
+<div class="act-break wrap rv" data-act="5">
+  <div class="ab-row"><span class="ab-no">ACT 05</span><span class="ab-title">The committee's tool · KRISEVA EVALUATOR</span></div>
+  <p class="ab-line">The same strictness, handed to the other room. With a memory that cannot be quietly edited.</p>
+</div>
+
+<!-- ============ EVALUATION MATRIX ============ -->
+<section class="sec-pad" id="evidence">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">Evaluator · The evaluation matrix</span><span class="folio">ACT 05 · EVALUATOR</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Every verdict carries</span></span><span class="ln"><span class="ln-in">its source.</span></span></h2>
+      <p class="dek rv">Now the other room. This is the table where every bid is checked, one claim at a time. Click any cell to see the criterion, the clause it rests on, and why the system reached that state. Then run the verdict model yourself, below.</p>
+    </div>
+    <div class="mxwrap rv">
+      <div class="mxpanel regmark">
+        <div class="mxh"><span>Evaluator · Evaluation matrix · DEMO-2026-0148</span><span class="live"><i aria-hidden="true"></i>Live session</span></div>
+        <div class="mxscroll"><table class="mx" id="mx" aria-label="Evaluation matrix: criteria by bidder"></table></div>
+        <div class="legend" aria-hidden="true">
+          <span><i class="sq v"></i>Verified</span><span><i class="sq q"></i>Qualified</span><span><i class="sq d"></i>Req. demo</span>
+          <span><i class="sq i"></i>Insufficient</span><span><i class="sq m"></i>Missing</span><span><i class="sq f"></i>Failed</span>
+        </div>
+        <div class="mxdist" id="mxDist" aria-label="Verdict distribution across this synthetic session"></div>
+      </div>
+      <div class="mxdetail" id="mxd" aria-live="polite">
+        <div class="dt"><span class="verdict-pill" style="border-color:rgba(231,225,208,.4);color:rgba(231,225,208,.7)">Select a cell</span><span class="srcref">- · -</span></div>
+        <div class="body">The matrix is the committee's worktable. Each cell is one criterion, for one bidder, resolved to one of six states, with the source clause beside it, not behind it.</div>
+      </div>
+    </div>
+    <div class="simwrap rv">
+      <VerdictSimulator id="vsim-home" />
+    </div>
+    <p class="disclose">Synthetic / seeded demo data, not a real tender.</p>
+  </div>
+</section>
+
+<!-- ============ AUDIT CHAIN ============ -->
+<section class="sec-pad sec-navy" id="audit">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">Evaluator · The audit chain</span><span class="folio">ACT 05 · EVALUATOR</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">A record that cannot</span></span><span class="ln"><span class="ln-in">be quietly edited.</span></span></h2>
+      <p class="dek rv">If anyone edits the record afterwards, the seam shows. Every event is hash-chained to the last. Verify the chain, then tamper with a block and watch the break propagate. The database enforces this; the demo simulates it. <button class="kchip-claim" type="button" data-claim="evaluator.audit-chain" aria-label="Provenance: audit chain claim">c5</button></p>
+    </div>
+    <div class="chaingrid rv">
+      <div>
+        <div class="chain" id="chain" aria-label="Hash-chained audit log demonstration"></div>
+        <p class="chain-status" id="chainStatus" aria-live="polite">Chain unverified. Run a verification pass.</p>
+        <div class="chain-controls">
+          <button class="btn btn-line btn-sm" id="verifyBtn" data-cursor="verify">Verify chain</button>
+          <button class="btn btn-line btn-sm" id="tamperBtn" data-cursor="tamper">Tamper with block 0149</button>
+          <button class="btn btn-line btn-sm" id="resetBtn" data-cursor="reset">Reset</button>
+        </div>
+        <p class="disclose">Simulated for demonstration: synthetic events, not a real evaluation.</p>
+      </div>
+      <aside class="chainaside">
+        <p>The chain is the proof: not a screenshot, not a summary. A single altered verdict changes one block's hash, and every block after it no longer matches. A vigilance officer can walk it end to end.</p>
+        <p class="trust">append-only<br>sha-256-chained<br>mutation-blocked at the database</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 6 · NOTHING LEAVES THE BUILDING ════════════ -->
+<div class="act-break wrap rv" data-act="6">
+  <div class="ab-row"><span class="ab-no">ACT 06</span><span class="ab-title">Nothing leaves the building</span></div>
+  <p class="ab-line">Defence documents stay where they were born. Then verify that claim yourself, right now.</p>
+</div>
+
+<!-- ============ THE BOUNDARY ============ -->
+<section class="sec-pad sec-sunk" id="sovereignty">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">Sovereign by design · The Boundary</span><span class="folio">ACT 06 · BOUNDARY</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">Local-first.</span></span><span class="ln"><span class="ln-in">Zero silent egress.</span></span></h2>
+      <p class="dek rv">The product runs inside your building. What leaves is listed, and the list is short. Select any asset to see whether it stays inside the deployment, or crosses an explicit, documented, operator-triggered boundary. Dashed means crossable. Tender contents never leave. <button class="kchip-claim" type="button" data-claim="security.local-first" aria-label="Provenance: local-first claim">c7</button></p>
+    </div>
+    <div class="bgrid rv">
+      <div>
+        <div class="zone regmark">
+          <div class="zh">Zone I · inside the customer network</div>
+          <div class="assets" id="assetsIn"></div>
+        </div>
+        <div class="zone zone-egress">
+          <div class="zh">Across the line · explicit, documented egress</div>
+          <div class="assets" id="assetsOut"></div>
+        </div>
+      </div>
+      <div class="bdetail" id="bdetail" aria-live="polite">
+        <span class="tag inside">Inside the boundary</span>
+        <p>Select an asset to see exactly where it lives, and whether anything about it crosses the line.</p>
+      </div>
+    </div>
+    <div class="x4 rv regmark" id="x4">
+      <div class="big tabular" id="x4Count" aria-hidden="true">…</div>
+      <div>
+        <div class="x4h">Verify us in DevTools · this very page</div>
+        <p>This site practices what the product preaches. The number beside this text is a live count of third-party origins this page has contacted since you opened it, measured by your own browser. Open DevTools, watch the network panel, and check the claim yourself.</p>
+      </div>
+      <p class="origins" id="x4Origins">measuring in your browser…</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ ACT 7 · WHY THIS MATTERS ════════════ -->
+<div class="act-break wrap rv" data-act="7">
+  <div class="ab-row"><span class="ab-no">ACT 07</span><span class="ab-title">Why this matters</span></div>
+  <p class="ab-line">Faster honest cycles. Wider participation. That is the whole argument.</p>
+</div>
+
+<!-- ============ MISSION ============ -->
+<section class="sec-pad" id="mission">
+  <div class="wrap mission">
+    <div class="sechead" style="margin-bottom:clamp(22px,3vw,40px)">
+      <div class="row"><span class="eyebrow">The mission · stated plainly</span><span class="folio">ACT 07 · MISSION</span></div>
+    </div>
+    <p class="mlede rv">A procurement cycle that can show its work can afford to move faster. That is what we build for.</p>
+    <div class="mrows rv">
+      <div class="mrow"><span class="mk">We build so that</span><p>an honest bid from a small company is not lost to one missed clause.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>a committee can defend every verdict, years later, page by page.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>checking faster never means checking less. The cycle speeds up only where trust survives it.</p></div>
+      <div class="mrow"><span class="mk">We build so that</span><p>more <button class="kchip-gloss" type="button" data-gloss="msme">MSMEs</button> can take part in Make-in-India procurement, in practice and not just in principle.</p></div>
+    </div>
+    <p class="src-note mnote rv">Commitments about our own work. No claim of national outcome, no government endorsement implied, no invented statistics.</p>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="sec-pad" id="figures" aria-label="Key figures" style="padding-top:0">
+  <div class="wrap">
+    <div class="stats rv">
+      <div class="stat"><div class="big tabular" data-count="6">6</div><div class="lab">verdict states, none silent</div><div class="ssrc">Verified · Qualified · Insufficient · Missing · Req-demo · Failed</div></div>
+      <div class="stat"><div class="big tabular" data-count="2">2</div><div class="lab">products, one evidence engine</div><div class="ssrc">TAS bidder-side · Evaluator issuer-side</div></div>
+      <div class="stat"><div class="big tabular" data-count="0">0</div><div class="lab">silent network calls</div><div class="ssrc">local-first · on-premise model routes</div></div>
+      <div class="stat"><div class="big tabular" data-count="100" data-suffix="%">100%</div><div class="lab">of verdicts carry a source</div><div class="ssrc">clause + page · at rest, not on hover</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIELD RECORD ============ -->
+<section class="sec-pad sec-sunk" id="record">
+  <div class="wrap">
+    <div class="sechead">
+      <div class="row"><span class="eyebrow">Field record</span><span class="folio">ACT 07 · THE RECORD</span></div>
+      <h2 class="display"><span class="ln"><span class="ln-in">What is on the record.</span></span></h2>
+      <p class="dek rv">Proof of seriousness, not promises. Status-labelled, no hype. Public milestones only; named relationships appear with consent.</p>
+    </div>
+    <div class="record rv">
+      <div class="rec"><span class="date">2026 · May</span><span class="what">Pan IIT “AI for Bharat” <b>Grand Finalist</b>, from 13,500+ teams <button class="kchip-claim" type="button" data-claim="record.pan-iit" aria-label="Provenance: Pan IIT record">c8</button></span><span class="tag">Validated</span></div>
+      <div class="rec"><span class="date">2026</span><span class="what"><b>Udyam</b>-registered MSME, on government record</span><span class="tag">On record</span></div>
+      <div class="rec"><span class="date">2026</span><span class="what"><b>DPIIT</b> Startup-India recognition</span><span class="tag">In process</span></div>
+      <div class="rec"><span class="date">Origin</span><span class="what">Incubated at <b>IIT Gandhinagar</b> · IIEC</span><span class="tag">On record</span></div>
+      <!-- agency naming gated on written consent - keep unnamed -->
+      <div class="rec"><span class="date">Active</span><span class="what">In <b>active evaluation</b> with a central armed police force</span><span class="tag">In evaluation</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════ ACT 8 · THE DOOR ════════════ -->
+<div class="act-break wrap rv" data-act="8">
+  <div class="ab-row"><span class="ab-no">ACT 08</span><span class="ab-title">The door</span></div>
+  <p class="ab-line">If this matters to your work, the founder reads his own mail.</p>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<section class="sec-pad contact" id="contact">
+  <div class="wrap cgrid">
+    <div>
+      <p class="eyebrow">Speak directly</p>
+      <h2 class="display" style="margin-top:16px"><span class="ln"><span class="ln-in">Contact the founder.</span></span><span class="ln"><span class="ln-in"><em class="em-brass">No SDR funnel.</em></span></span></h2>
+      <p class="dek rv" style="margin-top:18px">If you run a tender workflow on the bidder side, sit on the evaluation side, or are evaluating Kriseva seriously, the conversation is direct and founder-led.</p>
+      <div class="hero-acts rv">
+        <a class="btn btn-fill magnetic" href="/contact" data-cursor="write">Request a demo <span class="arr">→</span></a>
+      </div>
+    </div>
+    <div class="founder-card rv regmark">
+      <span class="seal" aria-hidden="true"></span>
+      <div class="fphoto"><img src="/assets/v6/founder_ayush.jpg" loading="lazy" width="900" height="1125" alt="Ayush Tiwary, founder of KRISEVA AI"></div>
+      <b>Ayush Tiwary</b>
+      <div class="meta">Founder · KRISEVA AI<br>IIT Gandhinagar<br><a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a><br><a href="https://www.kriseva.in">www.kriseva.in</a></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot">
+    <span style="display:flex;align-items:center;gap:12px"><img src="/assets/brand/kriseva-mark-light.svg" alt="KRISEVA mark" width="30" height="30" loading="lazy">KRISEVA AI Private Limited</span>
+    <span>No military or government endorsement claimed or implied.<br>Product visuals are synthetic / seeded demo data, not a real tender.</span>
+    <span>Deterministic · Auditable · Evidence-linked · Sovereign-by-design<br>www.kriseva.in</span>
+  </div>
+  <div class="foot audit-strip">
+    <span>This site keeps its own ledger · build {buildDate} · commit {buildSha}</span>
+    <span>copy traces to publicClaims.ts @ {claimsSha}</span>
+    <span><a href="/dossier.pdf" style="text-decoration:none;border-bottom:1px solid rgba(231,225,208,.35)">Dossier · PDF · no email gate</a></span>
+  </div>
+  <nav class="foot" style="padding-top:0;gap:8px 26px" aria-label="Footer">
+    <span style="display:flex;flex-wrap:wrap;gap:8px 26px">
+      <a href="/tas" style="text-decoration:none">TAS</a>
+      <a href="/evaluator" style="text-decoration:none">Evaluator</a>
+      <a href="/workflow" style="text-decoration:none">Workflow</a>
+      <a href="/security" style="text-decoration:none">The Boundary</a>
+      <a href="/validation" style="text-decoration:none">Validation</a>
+      <a href="/founder" style="text-decoration:none">Founder</a>
+      <a href="/contact" style="text-decoration:none">Contact</a>
+    </span>
+  </nav>
+</footer>
+
+<!-- Libraries - pinned versions, vendored locally under /vendor (zero
+     third-party requests at runtime); every consumer is existence-guarded.
+     three.js loads only on devices that can take the WebGL hero path
+     (desktop + fine pointer + motion allowed); phones never pay for it. -->
+<script is:inline defer src="/vendor/gsap-3.12.5.min.js"></script>
+<script is:inline defer src="/vendor/ScrollTrigger-3.12.5.min.js"></script>
+<script is:inline defer src="/vendor/lenis-1.3.23.min.js"></script>
+<script is:inline>
+(function(){try{var mm=window.matchMedia;
+if(mm('(min-width: 761px)').matches&&mm('(pointer: fine)').matches&&!mm('(prefers-reduced-motion: reduce)').matches){
+var s=document.createElement('script');s.id='threeLoader';s.src='/vendor/three-r128.min.js';s.defer=true;document.head.appendChild(s);}}catch(e){}})();
+</script>
+
+<script is:inline>
+window.addEventListener('DOMContentLoaded', function () {
+'use strict';
+
+/* ---------- environment ---------- */
+var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var FINE   = window.matchMedia('(pointer: fine)').matches;
+var DESKTOP= window.matchMedia('(min-width: 761px)').matches;
+var hasGSAP = typeof window.gsap !== 'undefined';
+var hasST   = hasGSAP && typeof window.ScrollTrigger !== 'undefined';
+var hasLenis= typeof window.Lenis !== 'undefined';
+var hasThree= typeof window.THREE !== 'undefined';
+var ANIM = hasGSAP && !REDUCE;
+
+if (hasGSAP && hasST) gsap.registerPlugin(ScrollTrigger);
+if (ANIM) document.documentElement.classList.add('js-anim');
+
+/* ---------- verdict vocabulary (shared) ---------- */
+var V  = { v:'Verified', q:'Verified · qualified', i:'Insufficient', m:'Missing', d:'Requires demonstration', f:'Failed' };
+var VC = { v:'#3A7A5B', q:'#9A7322', i:'#5F6A79', m:'#9C4F43', d:'#41618C', f:'#83332D' };          /* exact swatches */
+var VT = { v:'#2E6149', q:'#6E520F', i:'#454F5D', m:'#7E3A2F', d:'#324C6E', f:'#6E2B26' };          /* AA text on paper */
+var VN = { v:'#8FC5A8', q:'#D9B45E', i:'#A8B3C2', m:'#D99284', d:'#9DB7DC', f:'#D98C82' };          /* AA text on near-black */
+
+/* ---------- Lenis smooth scroll ----------
+   Scroll-feel contract (v7.1): ONE damping system, Lenis lerp .1.
+   Lenis is pinned at 1.3.23: 1.1.14 misclassified its own scroll-write
+   echoes as user scrolling and kept cancelling its animation mid-flight
+   (measured: a wheel flick took ~1.25s to reach HALF its travel, with a
+   visible snap-back). Every scrubbed ScrollTrigger uses scrub:true
+   (direct) so nothing double-damps behind the already-smoothed scroll;
+   pins are short enough that the page never feels parked; and no
+   element may change document height mid-scroll (see the console
+   plate). autoRaf stays off: the GSAP ticker is the one clock. */
+var lenis = null;
+if (hasLenis && !REDUCE) {
+  lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, touchMultiplier: 1.4, autoRaf: false });
+  window.__lenis = lenis;
+  document.documentElement.classList.add('lenis-on');
+  if (hasST) lenis.on('scroll', ScrollTrigger.update);
+  if (hasGSAP) {
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+    gsap.ticker.lagSmoothing(0);
+  } else {
+    (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+  }
+}
+if (hasST) ScrollTrigger.config({ ignoreMobileResize: true });
+/* anchor navigation through Lenis */
+document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+  a.addEventListener('click', function (e) {
+    var id = a.getAttribute('href');
+    if (id.length < 2) return;
+    var el = document.querySelector(id);
+    if (!el) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(el, { offset: -60 });
+    else el.scrollIntoView({ behavior: REDUCE ? 'auto' : 'smooth' });
+  });
+});
+
+/* ---------- header condense ---------- */
+var hdr = document.getElementById('hdr');
+function onScrollHdr(){ hdr.classList.toggle('stuck', window.scrollY > 40); }
+onScrollHdr();
+window.addEventListener('scroll', onScrollHdr, { passive: true });
+
+/* ---------- reveals: scrubbed to the scroll position ----------
+   v7.1 feel contract: every reveal is a scrub window tied directly to
+   where the element sits in the viewport. Scroll down and it draws in;
+   scroll back up and it draws out, immediately. No one-shot tweens, no
+   late batching, no state that disagrees with the scrollbar. The hero
+   alone keeps a timed entrance: it is on screen before any scroll
+   exists. Hero text stays CSS-visible on mobile (LCP). */
+if (ANIM && hasST) {
+  if (DESKTOP) {
+    document.querySelectorAll('h1 .ln-in').forEach(function (el, i) {
+      gsap.to(el, { y: 0, duration: 1.1, ease: 'power4.out', delay: 0.25 + i * 0.13 });
+    });
+    gsap.utils.toArray('.hero-content .rv').forEach(function (el, i) {
+      gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', delay: 0.55 + i * 0.12 });
+    });
+  }
+  document.querySelectorAll('h2 .ln-in, .contact .ln-in, .tline .ln-in').forEach(function (el) {
+    gsap.fromTo(el, { y: '112%' }, { y: '0%', ease: 'none',
+      scrollTrigger: { trigger: el.closest('h2,.tline') || el, start: 'top 94%', end: 'top 74%', scrub: true } });
+  });
+  gsap.utils.toArray('.rv').filter(function (el) {
+    return !el.closest('.hero-content');
+  }).forEach(function (el) {
+    gsap.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top 97%', end: 'top 80%', scrub: true } });
+  });
+} else {
+  document.querySelectorAll('.ln-in').forEach(function(el){ el.style.transform = 'none'; });
+  document.querySelectorAll('.rv').forEach(function(el){ el.style.opacity = 1; el.style.transform = 'none'; });
+}
+
+/* ---------- marquees: duplicate sets, pause off-screen ---------- */
+[ 'mq1', 'mq2' ].forEach(function (id) {
+  var mq = document.getElementById(id);
+  if (!mq) return;
+  var set = mq.querySelector('.set');
+  mq.appendChild(set.cloneNode(true));
+  if (REDUCE) { mq.style.animation = 'none'; return; }
+  try {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { mq.style.animationPlayState = e.isIntersecting ? 'running' : 'paused'; });
+    }).observe(mq.parentElement);
+  } catch (e) {}
+});
+
+/* ---------- count-ups (tabular figures) ---------- */
+document.querySelectorAll('[data-count]').forEach(function (el) {
+  var target = parseInt(el.dataset.count, 10);
+  var suffix = el.dataset.suffix || '';
+  if (REDUCE || !('IntersectionObserver' in window) || target === 0) { el.textContent = target + suffix; return; }
+  el.textContent = '0' + suffix;
+  new IntersectionObserver(function (es, io) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      io.unobserve(el);
+      var t0 = performance.now(), dur = 1300;
+      (function tick(now) {
+        var p = Math.min(1, (now - t0) / dur);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      })(t0);
+    });
+  }, { threshold: 0.6 }).observe(el);
+});
+
+/* ---------- magnetic CTAs ---------- */
+if (FINE && ANIM) {
+  document.querySelectorAll('.magnetic').forEach(function (el) {
+    var qx = gsap.quickTo(el, 'x', { duration: 0.35, ease: 'power3.out' });
+    var qy = gsap.quickTo(el, 'y', { duration: 0.35, ease: 'power3.out' });
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      qx((e.clientX - r.left - r.width / 2) * 0.28);
+      qy((e.clientY - r.top - r.height / 2) * 0.34);
+    });
+    el.addEventListener('mouseleave', function () { qx(0); qy(0); });
+  });
+}
+
+/* ---------- custom cursor: dot + ring + contextual label ---------- */
+if (FINE && !REDUCE) {
+  document.body.classList.add('has-cursor');
+  var dot = document.querySelector('.cursor-dot'),
+      ring = document.querySelector('.cursor-ring'),
+      lab = document.querySelector('.cursor-label');
+  var mx = -200, my = -200, rx = -200, ry = -200;
+  document.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = 'translate(' + (mx - 3) + 'px,' + (my - 3) + 'px)';
+    lab.style.transform = 'translate(' + (mx + 18) + 'px,' + (my + 14) + 'px)';
+  }, { passive: true });
+  (function lerpRing() {
+    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+    ring.style.transform = 'translate(' + (rx - 19) + 'px,' + (ry - 19) + 'px)';
+    requestAnimationFrame(lerpRing);
+  })();
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target.closest('[data-cursor], a, button');
+    if (t) {
+      ring.classList.add('grow');
+      var txt = t.closest('[data-cursor]');
+      if (txt && txt.dataset.cursor) { lab.textContent = txt.dataset.cursor; lab.classList.add('show'); }
+      else lab.classList.remove('show');
+    } else { ring.classList.remove('grow'); lab.classList.remove('show'); }
+  }, { passive: true });
+}
+
+/* ============================================================
+   MODULE - pipeline (scroll-scrubbed, click fallback)
+   ============================================================ */
+(function () {
+  var stages = [
+    { n:'01', t:'Discover', d:'<b>Discover.</b> Live GeM discovery and DefProc public discovery surface candidate tenders; no manual portal-watching. Protected documents route through operator-assisted flows.' },
+    { n:'02', t:'Score',    d:'<b>Score.</b> Each tender is scored for relevance against the company capability context, with the reasoning shown rather than a black-box number.' },
+    { n:'03', t:'Acquire',  d:'<b>Acquire.</b> The full bundle is pulled or ingested locally. Live acquisition fails closed and routes to a human rather than guessing.' },
+    { n:'04', t:'Bundle',   d:'<b>Bundle.</b> Bid documents, specs, BOQs, ATCs, corrigenda and annexures are organised as one decision artifact, not loose files.' },
+    { n:'05', t:'Extract',  d:'<b>Extract.</b> Requirements, eligibility signals, dates, EMD/ePBG and compliance clauses are extracted with provenance to clause and page.' },
+    { n:'06', t:'Brief',    d:'<b>Brief.</b> A management-ready BID / REVIEW / SKIP brief, every claim linked to its source. The operator signs.' }
+  ];
+  var box = document.getElementById('pipeSteps'), det = document.getElementById('pipeDetail'),
+      fill = document.getElementById('pipeFill'), count = document.getElementById('pipeCount');
+  if (!box) return;
+  stages.forEach(function (s, i) {
+    var b = document.createElement('button');
+    b.className = 'pstep'; b.setAttribute('role', 'tab'); b.dataset.i = i;
+    b.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    b.innerHTML = '<span class="pn">' + s.n + '</span><span class="pt">' + s.t + '</span>';
+    b.addEventListener('click', function () { show(i); });
+    box.appendChild(b);
+  });
+  function show(i) {
+    box.querySelectorAll('.pstep').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
+    det.innerHTML = stages[i].d;
+    count.textContent = stages[i].n + ' / 06';
+    fill.style.width = ((i + 1) / 6 * 100) + '%';
+  }
+  show(0);
+  if (ANIM && hasST) {
+    ScrollTrigger.create({
+      trigger: '#pipe', start: 'top 75%', end: 'bottom 35%', scrub: true,
+      onUpdate: function (self) { show(Math.min(5, Math.floor(self.progress * 6))); }
+    });
+  }
+})();
+
+/* ============================================================
+   MODULE - evaluation matrix
+   ============================================================ */
+(function () {
+  var crit = [
+    { c:'Make-in-India content ≥ 50%',   s:'SPEC §3.2 · p.18' },
+    { c:'ISO 9001 quality system',        s:'ANNEX-C · p.41' },
+    { c:'Prior supply, comparable scale', s:'BID-DOC · p.06' },
+    { c:'Turnover threshold, 3-yr avg',   s:'FIN-2 · p.11' },
+    { c:'EMD / ePBG instrument',          s:'FIN-1 · p.02' }
+  ];
+  var bidders = ['Bidder A', 'Bidder B', 'Bidder C'];
+  var data = [['v','q','m'], ['v','q','v'], ['v','i','d'], ['v','v','m'], ['v','m','f']];
+  var reason = {
+    v:'Declared and evidenced; meets the clause as written.',
+    q:'Met, but scope qualifies a sub-line; flagged for the committee.',
+    i:'Some evidence present; not enough to clear the clause.',
+    m:'No instrument or document located in the bundle.',
+    d:'Partially evidenced; a demonstration is required to confirm.',
+    f:'Evidence present and clearly non-compliant.'
+  };
+  var mx = document.getElementById('mx'), mxd = document.getElementById('mxd');
+  if (!mx) return;
+  var html = '<thead><tr><th scope="col">Criterion</th>';
+  bidders.forEach(function (b) { html += '<th scope="col">' + b + '</th>'; });
+  html += '</tr></thead><tbody>';
+  crit.forEach(function (cr, ri) {
+    html += '<tr><td class="crit">' + cr.c + '<div class="s">' + cr.s + '</div></td>';
+    bidders.forEach(function (b, ci) {
+      var st = data[ri][ci];
+      html += '<td><button class="mcell" data-r="' + ri + '" data-c="' + ci + '" data-st="' + st +
+        '" aria-pressed="false" aria-label="' + cr.c + ', ' + b + ': ' + V[st] +
+        '"><span class="sq ' + st + '" aria-hidden="true"></span></button></td>';
+    });
+    html += '</tr>';
+  });
+  mx.innerHTML = html + '</tbody>';
+  mx.addEventListener('click', function (e) {
+    var cell = e.target.closest('.mcell'); if (!cell) return;
+    mx.querySelectorAll('.mcell').forEach(function (n) { n.setAttribute('aria-pressed', 'false'); });
+    cell.setAttribute('aria-pressed', 'true');
+    var ri = +cell.dataset.r, ci = +cell.dataset.c, st = cell.dataset.st;
+    mxd.innerHTML =
+      '<div class="dt"><span class="verdict-pill" style="border-color:' + VC[st] + ';color:' + VN[st] + '">' + V[st] +
+      '</span><span class="srcref">' + crit[ri].s + ' · ' + bidders[ci] + '</span></div>' +
+      '<div class="body"><b>' + crit[ri].c + '</b> - ' + reason[st] + '</div>' +
+      '<div class="route">' + ((st === 'i' || st === 'm') ? '→ auto-routes to human review (HITL)' : '→ recorded with source · the committee signs') + '</div>';
+  });
+
+  /* verdict distribution ledger: counts derived from the same matrix data */
+  var dist = document.getElementById('mxDist');
+  if (dist) {
+    var counts = {};
+    data.forEach(function (row) { row.forEach(function (st) { counts[st] = (counts[st] || 0) + 1; }); });
+    var order = ['v', 'q', 'd', 'i', 'm', 'f'];
+    var maxC = Math.max.apply(null, order.map(function (k) { return counts[k] || 0; }));
+    var total = data.length * data[0].length;
+    var html = '<div class="mxd-t">Distribution · ' + total + ' verdicts in this synthetic session</div>';
+    order.forEach(function (k) {
+      var c = counts[k] || 0;
+      html += '<div class="mxd-row"><span class="sq ' + k + '" aria-hidden="true"></span>' +
+        '<span class="nm">' + V[k] + '</span>' +
+        '<span class="bar" aria-hidden="true"><i data-w="' + (c / maxC * 100) + '" style="background:' + VC[k] + '"></i></span>' +
+        '<span class="ct" style="color:' + VT[k] + '">' + c + '</span></div>';
+    });
+    dist.innerHTML = html;
+    var bars = dist.querySelectorAll('.bar i');
+    function fill() { bars.forEach(function (b) { b.style.width = b.dataset.w + '%'; }); }
+    if (REDUCE || !('IntersectionObserver' in window)) fill();
+    else new IntersectionObserver(function (es, io) {
+      es.forEach(function (e) { if (e.isIntersecting) { fill(); io.disconnect(); } });
+    }, { threshold: 0.4 }).observe(dist);
+  }
+})();
+
+/* ============================================================
+   MODULE - audit chain: verify / tamper / reset
+   ============================================================ */
+(function () {
+  var blocks = [
+    { id:'0148', ev:'verdict_signed', ts:'14:22:07 IST', h:'9f3a…c1d2', p:'4e58…a907', b:'Criterion 31 · Verified · member B' },
+    { id:'0149', ev:'clarification',  ts:'14:26:41 IST', h:'b70e…44af', p:'9f3a…c1d2', b:'Criterion 47 · clarification requested' },
+    { id:'0150', ev:'recommendation', ts:'15:03:12 IST', h:'c2d8…91b6', p:'b70e…44af', b:'Tender recommendation sealed' }
+  ];
+  var chain = document.getElementById('chain'), status = document.getElementById('chainStatus');
+  if (!chain) return;
+  function render() {
+    chain.innerHTML = '';
+    blocks.forEach(function (bl, i) {
+      if (i > 0) { var l = document.createElement('div'); l.className = 'clink'; chain.appendChild(l); }
+      var d = document.createElement('div');
+      d.className = 'cblock' + (bl.state || '');
+      d.innerHTML =
+        '<div class="bh"><span>Block ' + bl.id + ' · ' + bl.ev + '</span><span>' + bl.ts + '</span></div>' +
+        '<div class="hash">' + bl.h + ' ← ' + bl.p + '</div>' +
+        '<div class="bbody">' + bl.b + '</div>' +
+        '<div class="flag ok">✓ hash matches previous block</div>' +
+        '<div class="flag bad">✕ hash mismatch - tamper detected</div>';
+      chain.appendChild(d);
+    });
+  }
+  render();
+  document.getElementById('verifyBtn').addEventListener('click', function () {
+    var broken = false;
+    blocks.forEach(function (bl, i) {
+      setTimeout(function () {
+        if (bl.tampered || broken) { broken = true; bl.state = ' broken'; } else { bl.state = ' valid'; }
+        render();
+        if (i === blocks.length - 1) {
+          status.textContent = broken
+            ? 'CHAIN BROKEN: an edited block no longer matches the next. Tamper is visible.'
+            : 'CHAIN VERIFIED: every block hashes to the next. Untampered.';
+          status.style.color = broken ? '#E8A99C' : '#9CD3B4';
+        }
+      }, REDUCE ? 0 : i * 460);
+    });
+  });
+  document.getElementById('tamperBtn').addEventListener('click', function () {
+    blocks[1].tampered = true;
+    blocks[1].b = 'Criterion 47 · verdict ALTERED post-hoc';
+    blocks[1].h = 'b70e…0000';
+    blocks.forEach(function (b) { b.state = ''; });
+    render();
+    status.textContent = 'Block 0149 edited. Now run “Verify chain”.';
+    status.style.color = '#C89A4C';
+  });
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    blocks[1].tampered = false;
+    blocks[1].b = 'Criterion 47 · clarification requested';
+    blocks[1].h = 'b70e…44af';
+    blocks.forEach(function (b) { b.state = ''; });
+    render();
+    status.textContent = 'Chain unverified. Run a verification pass.';
+    status.style.color = '';
+  });
+})();
+
+/* ============================================================
+   MODULE - bidability radar
+   ============================================================ */
+(function () {
+  var dims = [
+    { n:'Technical fit',          v:0.90, w:'Spec map clears 9 of 10 mandatory lines; one needs a datasheet revision.', ref:'SPEC §2–§4' },
+    { n:'Financial eligibility',  v:0.78, w:'3-yr average turnover clears the floor; net-worth margin is thin.', ref:'FIN-2 · p.11' },
+    { n:'Certification',          v:0.85, w:'ISO and Udyam current; one OEM authorisation expires inside the bid window.', ref:'ANNEX-C · p.41' },
+    { n:'Past performance',       v:0.60, w:'Two comparable supplies on record; a third would strengthen the case.', ref:'BID-DOC · p.06' },
+    { n:'Delivery capacity',      v:0.72, w:'Within stated lead time at 80% utilisation; little slack for slippage.', ref:'SPEC §6.1' },
+    { n:'Disqualification risk',  v:0.40, w:'EMD instrument not yet located in the bundle.', ref:'FIN-1 · p.02', risk:'Single biggest rejection risk; resolve before bidding.' }
+  ];
+  var svg = document.getElementById('radar'); if (!svg) return;
+  var cx = 170, cy = 170, R = 120, N = dims.length;
+  function pt(i, r) { var a = -Math.PI / 2 + i * 2 * Math.PI / N; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
+  var g = '';
+  [0.25, 0.5, 0.75, 1].forEach(function (k) {
+    var p = '';
+    for (var i = 0; i < N; i++) { var xy = pt(i, R * k); p += (i ? 'L' : 'M') + xy[0].toFixed(1) + ' ' + xy[1].toFixed(1) + ' '; }
+    g += '<path d="' + p + 'Z" fill="none" stroke="rgba(23,19,13,.16)"/>';
+  });
+  for (var i = 0; i < N; i++) {
+    var e = pt(i, R);
+    g += '<line x1="' + cx + '" y1="' + cy + '" x2="' + e[0].toFixed(1) + '" y2="' + e[1].toFixed(1) + '" stroke="rgba(23,19,13,.16)"/>';
+  }
+  var poly = '';
+  for (i = 0; i < N; i++) { var xy = pt(i, R * dims[i].v); poly += (i ? 'L' : 'M') + xy[0].toFixed(1) + ' ' + xy[1].toFixed(1) + ' '; }
+  g += '<path d="' + poly + 'Z" fill="rgba(10,31,68,.12)" stroke="#0A1F44" stroke-width="1.5"/>';
+  for (i = 0; i < N; i++) {
+    xy = pt(i, R * dims[i].v);
+    g += '<circle data-i="' + i + '" cx="' + xy[0].toFixed(1) + '" cy="' + xy[1].toFixed(1) + '" r="4.5" fill="#0A1F44"/>';
+    var lx = pt(i, R + 22);
+    g += '<text x="' + lx[0].toFixed(1) + '" y="' + lx[1].toFixed(1) + '" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9.5" letter-spacing="1" fill="#4E4838">' + String(i + 1).padStart(2, '0') + '</text>';
+  }
+  svg.innerHTML = g;
+  var dl = document.getElementById('dims'), why = document.getElementById('dimWhy');
+  dims.forEach(function (d, i) {
+    var r = document.createElement('button');
+    r.className = 'dimrow' + (d.risk ? ' risk' : '');
+    r.dataset.i = i; r.setAttribute('role', 'tab'); r.setAttribute('aria-selected', 'false');
+    r.innerHTML = '<span class="nm">' + String(i + 1).padStart(2, '0') + ' - ' + d.n + '</span><span class="sc tabular">' + Math.round(d.v * 100) + ' / 100</span>';
+    dl.appendChild(r);
+  });
+  function focusDim(i) {
+    dl.querySelectorAll('.dimrow').forEach(function (n) { n.setAttribute('aria-selected', String(+n.dataset.i === i)); });
+    var d = dims[i];
+    why.innerHTML = '<b>' + d.n + ' · ' + Math.round(d.v * 100) + '/100</b> - ' + d.w +
+      ' <span class="src-note">[' + d.ref + ']</span>' +
+      (d.risk ? '<span class="riskline">⚠ ' + d.risk + '</span>' : '');
+  }
+  dl.addEventListener('click', function (e) { var r = e.target.closest('.dimrow'); if (r) focusDim(+r.dataset.i); });
+  dl.addEventListener('mouseover', function (e) { var r = e.target.closest('.dimrow'); if (r) focusDim(+r.dataset.i); });
+  svg.addEventListener('mouseover', function (e) { if (e.target.dataset && e.target.dataset.i != null) focusDim(+e.target.dataset.i); });
+  focusDim(5);
+})();
+
+/* ============================================================
+   MODULE - the Boundary
+   ============================================================ */
+(function () {
+  var inside = [
+    { n:'Tender bundles',    d:'Stored in the local database and filesystem inside the deployment. Contents never leave.' },
+    { n:'Document parsing',  d:'PDF / DOCX / XLSX parsing and OCR run locally; no document is sent to a third party.' },
+    { n:'LLM inference',     d:'On-premise, local model routes. No cloud LLM, no foreign-hosted inference.' },
+    { n:'Audit log',         d:'The hash-chained event log lives in the local database, mutation-blocked at the database.' },
+    { n:'Company profile',   d:'The capability profile is local to the customer. It is the moat, not a shared asset.' }
+  ];
+  var outside = [
+    { n:'Portal access',          d:'Operator-triggered access to GeM and DefProc: disclosed, logged, and crossable by explicit action only. Dashed by design.' },
+    { n:'Deployment connectors',  d:'Any calendar, email or SSO connector is deployment-specific and reviewed at the boundary, per environment.' }
+  ];
+  var boxIn = document.getElementById('assetsIn'), boxOut = document.getElementById('assetsOut'),
+      det = document.getElementById('bdetail');
+  if (!boxIn) return;
+  function add(box, a, egress) {
+    var b = document.createElement('button');
+    b.className = 'asset'; b.textContent = a.n; b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () {
+      document.querySelectorAll('.asset').forEach(function (n) { n.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+      det.innerHTML = '<span class="tag ' + (egress ? 'out' : 'inside') + '">' +
+        (egress ? 'Explicit egress - documented & crossable' : 'Inside the boundary - never crosses') +
+        '</span><p><b>' + a.n + '</b> - ' + a.d + '</p>';
+    });
+    box.appendChild(b);
+  }
+  inside.forEach(function (a) { add(boxIn, a, false); });
+  outside.forEach(function (a) { add(boxOut, a, true); });
+})();
+
+/* re-measure scroll geometry when the tab becomes visible (background-tab loads)
+   and after webfonts swap in (layout heights change) */
+if (hasST) {
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) ScrollTrigger.refresh();
+  });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+  }
+  /* late image decode shifts trigger geometry; re-measure once settled */
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+}
+
+/* ---------- light parallax on section plates ---------- */
+if (ANIM && hasST && DESKTOP) {
+  gsap.utils.toArray('.mxpanel, .radarbox, .founder-card').forEach(function (el) {
+    gsap.fromTo(el, { y: 26 }, { y: -26, ease: 'none',
+      scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+}
+
+/* ============================================================
+   SIGNATURE - WebGL hero: bundle → brass strands → verdict ledger
+   Desktop + fine pointer + motion allowed + WebGL only.
+   Everyone else gets the static plate (SVG above).
+   ============================================================ */
+(function () {
+  var stage = document.getElementById('heroStage'),
+      canvas = document.getElementById('webgl'),
+      labelBox = document.getElementById('heroLabels'),
+      cue = document.getElementById('scrollCue');
+  /* three.js is injected only for desktop + fine pointer + motion allowed
+     (loader in <head>); boot waits for it, so phones never parse it */
+  var deviceGL = hasGSAP && hasST && !REDUCE && DESKTOP && FINE;
+
+  var P = 0, heroPin = null;
+  function fallback() {
+    document.documentElement.classList.add('hero-fallback');
+    if (heroPin) { heroPin.kill(true); heroPin = null; ScrollTrigger.refresh(); }
+  }
+  if (!deviceGL) { fallback(); return; }
+  /* The pin is created HERE, synchronously, not inside boot(): pins must
+     come into existence in document order, before any trigger below them
+     measures the page, or every downstream trigger is short by the
+     pin-spacer (the v6 "sloppy scroll" defect). boot() only consumes P.
+     150% pin distance: long enough for the strand choreography, short
+     enough that the page never feels parked. */
+  heroPin = ScrollTrigger.create({
+    trigger: '.hero', start: 'top top', end: '+=150%', pin: true, scrub: true,
+    onUpdate: function (self) { P = self.progress; }
+  });
+  if (typeof window.THREE !== 'undefined') { boot(); }
+  else {
+    var ldr = document.getElementById('threeLoader');
+    if (!ldr) { fallback(); return; }
+    ldr.addEventListener('load', boot);
+    ldr.addEventListener('error', fallback);
+  }
+  function boot() {
+  if (typeof window.THREE === 'undefined') { fallback(); return; }
+
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+  } catch (e) { fallback(); return; }
+  labelBox.classList.add('live');   /* labels overlay only exists on the GL path */
+
+  var W = stage.clientWidth, H = stage.clientHeight;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setSize(W, H, false);
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0xDED6C9, 9, 17);
+  var camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 50);
+  var CAM = { x: 1.7, y: 0.35, z: 10.2 };
+  camera.position.set(CAM.x, CAM.y, CAM.z);
+
+  var INK = 0x17130D, PAPER_R = 0xF3EDE0, BRASS = 0xA87229;
+
+  /* ---- the tender bundle: stacked ink-outlined document planes ---- */
+  var bundle = new THREE.Group();
+  var docGeo = new THREE.PlaneGeometry(2.0, 2.7);
+  var edgeGeo = new THREE.EdgesGeometry(docGeo);
+  var JIT = [[0,-0.02,0.05],[0.05,0.03,-0.04],[-0.06,0.01,0.03],[0.03,-0.04,-0.02],[-0.02,0.05,0.06],[0.06,0.02,-0.05],[-0.04,-0.03,0.02]];
+  for (var i = 0; i < 7; i++) {
+    var leaf = new THREE.Group();
+    var face = new THREE.Mesh(docGeo, new THREE.MeshBasicMaterial({ color: PAPER_R, transparent: true, opacity: 0.94, side: THREE.DoubleSide }));
+    var edge = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: INK, transparent: true, opacity: 0.8 }));
+    leaf.add(face); leaf.add(edge);
+    var sc = 1 - i * 0.012;
+    leaf.scale.set(sc, sc, 1);
+    leaf.position.set(JIT[i][0], JIT[i][1], i * 0.075);
+    leaf.rotation.z = (i - 3) * 0.03 + JIT[i][2];
+    bundle.add(leaf);
+  }
+  var seal = new THREE.Mesh(new THREE.CircleGeometry(0.085, 32), new THREE.MeshBasicMaterial({ color: BRASS }));
+  seal.position.set(0.62, 1.0, 0.55);
+  bundle.add(seal);
+  var shadow = new THREE.Mesh(new THREE.CircleGeometry(1.5, 40), new THREE.MeshBasicMaterial({ color: 0x17130D, transparent: true, opacity: 0.1 }));
+  shadow.rotation.x = -Math.PI / 2; shadow.scale.set(1.5, 0.55, 1);
+  shadow.position.set(0.55, -1.62, 0.2);
+  scene.add(shadow);
+  /* ruled "text" rows on the front leaf */
+  (function () {
+    var pts = [];
+    for (var r = 0; r < 8; r++) {
+      var y = 1.05 - r * 0.27, wRow = (r % 3 === 2) ? 0.9 : 1.4;
+      pts.push(new THREE.Vector3(-0.8, y, 0.50), new THREE.Vector3(-0.8 + wRow, y, 0.50));
+    }
+    var lg = new THREE.BufferGeometry().setFromPoints(pts);
+    bundle.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x4E4838, transparent: true, opacity: 0.5 })));
+  })();
+  bundle.position.set(0.55, -0.1, 0);
+  bundle.rotation.y = 0.35;
+  scene.add(bundle);
+
+  /* ---- clause nodes ---- */
+  var NODES = [
+    { ref:'SPEC §3.2 · p.18', st:'v', pos:[ 2.4,  1.75, -0.6] },
+    { ref:'ANNEX-C · p.41',   st:'q', pos:[ 3.6,  1.05,  0.5] },
+    { ref:'BID-DOC · p.06',   st:'d', pos:[ 4.6,  1.55, -1.2] },
+    { ref:'FIN-2 · p.11',     st:'i', pos:[ 3.9, -0.30,  0.3] },
+    { ref:'FIN-1 · p.02',     st:'m', pos:[ 4.9, -1.05, -0.4] },
+    { ref:'ATC §7.1 · p.59',  st:'f', pos:[ 3.0, -1.60, -0.9] }
+  ];
+  var LC = new THREE.Vector3(3.85, 0.1, 0);             /* ledger anchor */
+  var nodesGroup = new THREE.Group();
+  nodesGroup.position.copy(LC);
+  scene.add(nodesGroup);
+
+  var ringGeo = new THREE.RingGeometry(0.055, 0.082, 28);
+  NODES.forEach(function (n, i) {
+    var world = new THREE.Vector3(n.pos[0], n.pos[1], n.pos[2]);
+    n.scatter = world.clone().sub(LC);                   /* local to group */
+    n.ledger  = new THREE.Vector3(0, 1.35 - i * 0.54, 0);
+    n.mesh = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: INK, transparent: true, opacity: 0.85, side: THREE.DoubleSide }));
+    n.mesh.position.copy(n.scatter);
+    nodesGroup.add(n.mesh);
+    /* HTML label */
+    var el = document.createElement('div');
+    el.className = 'node-label';
+    el.innerHTML = '<span class="clause">' + n.ref + '</span>' +
+      '<span class="chip" style="border-color:' + VC[n.st] + ';color:' + VT[n.st] + '">' + V[n.st] + '</span>';
+    labelBox.appendChild(el);
+    n.label = el;
+  });
+
+  /* ---- brass strands: CatmullRom tubes, drawn by index range ---- */
+  var ORIGIN = new THREE.Vector3(1.45, 0.0, 0.25);
+  var strands = [];
+  NODES.forEach(function (n, i) {
+    var end = new THREE.Vector3(n.pos[0], n.pos[1], n.pos[2]);
+    var mid1 = new THREE.Vector3(2.1, ORIGIN.y + (end.y - ORIGIN.y) * 0.45 + 0.55, 0.4);
+    var mid2 = new THREE.Vector3(end.x - 0.8, end.y + 0.3, end.z * 0.5);
+    var curve = new THREE.CatmullRomCurve3([ORIGIN.clone(), mid1, mid2, end]);
+    var geo = new THREE.TubeGeometry(curve, 72, 0.02, 8, false);
+    var mat = new THREE.MeshBasicMaterial({ color: BRASS, transparent: true, opacity: 0.95 });
+    var mesh = new THREE.Mesh(geo, mat);
+    geo.setDrawRange(0, 0);
+    scene.add(mesh);
+    strands.push({ mesh: mesh, total: geo.index.count, window: [0.06 + i * 0.10, 0.16] });
+  });
+
+  /* ---- scroll + idle state (P is owned by the pin created above) ---- */
+  var mouseX = 0, mouseY = 0, idle = 0, lastT = 0, visible = true, resolvedCount = -1;
+  function smooth(t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); }
+
+  stage.addEventListener('mousemove', function (e) {
+    var r = stage.getBoundingClientRect();
+    mouseX = (e.clientX - r.left) / r.width * 2 - 1;
+    mouseY = (e.clientY - r.top) / r.height * 2 - 1;
+  }, { passive: true });
+
+  try {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) { visible = e.isIntersecting; });
+    }).observe(stage);
+  } catch (e) {}
+
+  function onResize() {
+    W = stage.clientWidth; H = stage.clientHeight;
+    camera.aspect = W / H; camera.updateProjectionMatrix();
+    renderer.setSize(W, H, false);
+  }
+  window.addEventListener('resize', onResize);
+
+  var v3 = new THREE.Vector3();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!visible) return;
+    if (now - lastT < 16) return;                        /* ~60fps cap */
+    var dt = Math.min(0.05, (now - lastT) / 1000) || 0.016;
+    lastT = now;
+
+    var aT = smooth((P - 0.74) / 0.24);                  /* ledger assembly 0..1 */
+
+    /* strands draw + fade */
+    var done = 0;
+    strands.forEach(function (s, i) {
+      var t = smooth((P - s.window[0]) / s.window[1]);
+      if (i === 0) t = Math.max(t, 0.22);
+      if (t >= 1) done++;
+      var count = Math.floor(s.total * t / 3) * 3;
+      s.mesh.geometry.setDrawRange(0, count);
+      s.mesh.material.opacity = 0.95 * (1 - aT);
+      s.mesh.visible = aT < 0.98;
+    });
+    if (done !== resolvedCount) {
+      resolvedCount = done;
+      NODES.forEach(function (n, i) {
+        var t = smooth((P - strands[i].window[0]) / strands[i].window[1]);
+        n.label.classList.toggle('resolved', t >= 1);
+      });
+    }
+
+    /* nodes: scatter → ledger; group slowly rotates once assembled */
+    idle += dt * 0.3;
+    nodesGroup.rotation.y = idle * aT;
+    NODES.forEach(function (n) {
+      n.mesh.position.lerpVectors(n.scatter, n.ledger, aT);
+      n.mesh.lookAt(camera.position);
+    });
+
+    /* bundle breath + camera */
+    bundle.position.y = Math.sin(now * 0.0006) * 0.06;
+    bundle.rotation.y = 0.35 + Math.sin(now * 0.0004) * 0.03;
+    camera.position.x += (CAM.x + P * 0.6 + mouseX * 0.22 - camera.position.x) * 0.06;
+    camera.position.y += (CAM.y - mouseY * 0.16 - camera.position.y) * 0.06;
+    camera.position.z += (CAM.z - P * 1.3 - camera.position.z) * 0.06;
+    camera.lookAt(1.7, 0.15, 0);
+
+    renderer.render(scene, camera);
+
+    /* project labels to screen space */
+    NODES.forEach(function (n) {
+      n.mesh.getWorldPosition(v3).project(camera);
+      var x = (v3.x * 0.5 + 0.5) * W, y = (-v3.y * 0.5 + 0.5) * H;
+      n.label.style.transform = 'translate(' + (x + 12).toFixed(1) + 'px,' + (y - 10).toFixed(1) + 'px)';
+      n.label.style.opacity = (v3.z < 1 && P > 0.02) ? 1 : 0;
+    });
+
+    /* scroll cue */
+    if (cue) cue.style.opacity = P > 0.04 ? 0 : 1;
+  }
+  requestAnimationFrame(frame);
+  }   /* end boot() */
+})();
+
+/* ============================================================
+   HERO FALLBACK CHOREOGRAPHY - phones and no-GL devices get the
+   same thesis moment as the WebGL hero: the static plate draws
+   itself on scroll. Brass strands trace from the bundle, then the
+   six verdict chips resolve, scrubbed and reversible.
+   ============================================================ */
+(function () {
+  if (!(ANIM && hasST)) return;
+  if (DESKTOP && !document.documentElement.classList.contains('hero-fallback')) return;
+  var svg = document.querySelector('.hero-static svg');
+  if (!svg) return;
+  var strands = svg.querySelectorAll('g[stroke="#A87229"] path');
+  var chips = svg.querySelectorAll('g[font-size="11"] > g');
+  if (!strands.length) return;
+  strands.forEach(function (p) {
+    var L = p.getTotalLength();
+    p.style.strokeDasharray = L;
+    p.style.strokeDashoffset = L;
+  });
+  chips.forEach(function (c) { c.style.opacity = 0; });
+  var tl = gsap.timeline({
+    scrollTrigger: { trigger: '.hero-static', start: 'top 88%', end: 'top 18%', scrub: true }
+  });
+  strands.forEach(function (p, i) { tl.to(p, { strokeDashoffset: 0, ease: 'none', duration: 1 }, i * 0.3); });
+  chips.forEach(function (c, i) { tl.to(c, { opacity: 1, ease: 'none', duration: 0.35 }, 0.5 + i * 0.3); });
+})();
+
+/* ============================================================
+   ACT 1 - the nation's clock: one acquisition travels the rule
+   while an elapsed-years counter actually climbs (A2). Qualitative
+   on purpose: the number ticks up as the dot passes each station,
+   then ages into "Years later" at the end instead of a literal
+   placeholder. The page still claims no specific duration (see the
+   source note under the rail).
+   (Created here, after the hero pin and before the strip pin,
+   so pin creation order matches document order.)
+   ============================================================ */
+(function () {
+  var stations = document.querySelectorAll('#cycleStations .cst');
+  if (!stations.length) return;
+  var fill = document.getElementById('cycleFill'),
+      dot  = document.getElementById('cycleDot'),
+      box  = document.getElementById('yearBox'),
+      yr   = document.getElementById('yearN');
+  function setP(p) {
+    var cl = Math.max(0, Math.min(1, p));
+    var pct = cl * 100;
+    if (fill) fill.style.width = pct + '%';
+    if (dot) dot.style.left = pct + '%';
+    var idx = Math.min(6, Math.floor(p * 7));
+    stations.forEach(function (s, i) { s.classList.toggle('lit', i <= idx); });
+    /* one tick per station passed: a real integer that climbs 1..7 */
+    if (yr) yr.textContent = String(Math.min(7, Math.floor(cl * 7) + 1));
+    /* near the last station the counter ages into the qualitative end-state */
+    if (box) box.classList.toggle('aged', cl >= 0.985);
+  }
+  if (ANIM && hasST && DESKTOP) {
+    setP(0);
+    ScrollTrigger.create({
+      trigger: '#clockStage', start: 'top top', end: '+=110%', pin: true, scrub: true,
+      onUpdate: function (self) { setP(self.progress); }
+    });
+  } else if (ANIM && hasST) {
+    /* mobile: same journey, no pin. The vertical ledger lights station
+       by station and the year advances as the section passes through
+       the viewport; fully reversible. */
+    setP(0);
+    ScrollTrigger.create({
+      trigger: '#clock', start: 'top 70%', end: 'bottom 92%', scrub: true,
+      onUpdate: function (self) { setP(self.progress); }
+    });
+  } else {
+    setP(1);   /* static fallback: the whole journey, already travelled */
+  }
+})();
+
+/* ============================================================
+   ACT 2 - room A: the bundle explodes into its parts;
+   room B: the committee's checks tick in, by hand.
+   ============================================================ */
+(function () {
+  var leaves = document.querySelectorAll('#bundleX .bx-leaf');
+  var grid = document.getElementById('checkGrid');
+  if (grid) {
+    var cells = '';
+    for (var r = 0; r < 4; r++) {
+      for (var c = 0; c < 8; c++) {
+        var x = 220 + c * 40, y = 60 + r * 40;
+        cells += '<g class="ck"><rect x="' + x + '" y="' + y + '" width="24" height="24" fill="none" stroke="rgba(233,226,210,.4)"/>' +
+          '<path class="ckt" d="M' + (x + 5) + ' ' + (y + 13) + ' l5 5 l9 -11" stroke="#C89A4C" stroke-width="2" fill="none" opacity="0"/></g>';
+      }
+    }
+    grid.innerHTML = cells;
+  }
+  var ticks = document.querySelectorAll('#checkGrid .ckt');
+  function setRooms(p) {
+    leaves.forEach(function (g) {
+      var fx = +g.dataset.fx, fy = +g.dataset.fy, fr = +g.dataset.fr;
+      g.setAttribute('transform', 'translate(' + (fx * p) + ',' + (fy * p) + ') rotate(' + (fr * p) + ' 282 150)');
+    });
+    var n = Math.floor(p * ticks.length);
+    ticks.forEach(function (t, i) { t.setAttribute('opacity', i < n ? '1' : '0'); });
+  }
+  if (ANIM && hasST) {
+    /* desktop and mobile alike: the bundle fans out and the committee's
+       checks tick in as the rooms cross the viewport, both directions */
+    setRooms(0);
+    ScrollTrigger.create({
+      trigger: '#rooms', start: 'top 78%', end: 'center 42%', scrub: true,
+      onUpdate: function (self) { setRooms(self.progress); }
+    });
+  } else {
+    setRooms(1);   /* static fallback: fanned bundle, all checks ticked */
+  }
+})();
+
+/* ============================================================
+   FIELD EVIDENCE - plate reveals, console pan, bbox trace, filmstrip
+   ============================================================ */
+if (ANIM && hasST) {
+  /* steady plates: fade-rise only, never zoom or crop; scrubbed both ways */
+  gsap.utils.toArray('.plate:not(.rv)').forEach(function (p) {
+    gsap.fromTo(p, { opacity: 0, y: 16 }, { opacity: 1, y: 0, ease: 'none',
+      scrollTrigger: { trigger: p, start: 'top 97%', end: 'top 82%', scrub: true } });
+  });
+  /* console annotations slide in, staggered by window, reversible */
+  gsap.utils.toArray('.ann').forEach(function (a, i) {
+    gsap.fromTo(a, { opacity: 0, x: 26 }, { opacity: 1, x: 0, ease: 'none',
+      scrollTrigger: { trigger: '.console-plate', start: 'top ' + (66 - i * 8) + '%', end: 'top ' + (52 - i * 8) + '%', scrub: true } });
+  });
+  /* bundle: brass bbox draws itself, then the label lands */
+  var bbox = document.getElementById('bboxRect');
+  if (bbox) gsap.to(bbox, { strokeDashoffset: 0, ease: 'none',
+    scrollTrigger: { trigger: '.bundle-plate', start: 'top 75%', end: 'center 45%', scrub: true,
+      onUpdate: function (self) {
+        var l = document.getElementById('bboxLabel');
+        if (l) l.classList.toggle('on', self.progress > 0.9);
+      } } });
+  /* filmstrip: pinned horizontal scrub on desktop; on mobile the reel is
+     a native swipe and the rail + counter track the swipe position */
+  var strip = document.getElementById('strip');
+  if (strip && !DESKTOP) {
+    strip.addEventListener('scroll', function () {
+      var max = strip.scrollWidth - strip.clientWidth;
+      var p = max > 0 ? strip.scrollLeft / max : 0;
+      var f = document.getElementById('stripFill');
+      if (f) f.style.width = (p * 100) + '%';
+      var c = document.getElementById('stripCount');
+      if (c) c.textContent = '0' + Math.min(5, 1 + Math.floor(p * 4.999)) + ' / 05';
+    }, { passive: true });
+  }
+  if (strip && DESKTOP) {
+    var dist = function () { return Math.max(0, strip.scrollWidth - document.documentElement.clientWidth); };
+    gsap.to(strip, { x: function () { return -dist(); }, ease: 'none',
+      scrollTrigger: { trigger: '#fieldstrip', start: 'top top', end: function () { return '+=' + (dist() + 80); },
+        pin: true, scrub: true, invalidateOnRefresh: true,
+        onUpdate: function (self) {
+          var f = document.getElementById('stripFill');
+          if (f) f.style.width = (self.progress * 100) + '%';
+          var c = document.getElementById('stripCount');
+          if (c) c.textContent = '0' + Math.min(5, 1 + Math.floor(self.progress * 4.999)) + ' / 05';
+        } } });
+  }
+} else {
+  document.getElementById('bboxLabel') && document.getElementById('bboxLabel').classList.add('on');
+  var bb = document.getElementById('bboxRect'); if (bb) bb.style.strokeDashoffset = 0;
+}
+
+/* ============================================================
+   X3 - the working loop: sources attach only when the plate
+   nears the viewport; reduced motion keeps the still brief.
+   ============================================================ */
+(function () {
+  var v = document.getElementById('consoleLoop');
+  if (!v) return;
+  if (REDUCE || !('IntersectionObserver' in window)) { v.remove(); return; }
+  var plate = document.querySelector('.console-plate');
+  var armed = false;
+  function arm() {
+    if (armed) return; armed = true;
+    v.querySelectorAll('source').forEach(function (s) { s.src = s.dataset.src; });
+    v.load();
+    v.addEventListener('canplay', function once() {
+      v.removeEventListener('canplay', once);
+      plate.classList.add('video-live');
+      v.play().catch(function () { plate.classList.remove('video-live'); });
+    });
+  }
+  new IntersectionObserver(function (es, io) {
+    es.forEach(function (e) {
+      if (e.isIntersecting) { arm(); v.play && v.play().catch(function () {}); }
+      else if (armed) { v.pause(); }
+    });
+  }, { rootMargin: '240px' }).observe(plate);
+})();
+
+/* ============================================================
+   X4 - live third-party origin counter. The browser is the
+   witness: PerformanceObserver counts every origin this page
+   touched. If it is not zero, we say so, by name.
+   ============================================================ */
+(function () {
+  var elC = document.getElementById('x4Count'), elO = document.getElementById('x4Origins');
+  if (!elC || !elO) return;
+  var origins = new Set();
+  function note(list) {
+    list.forEach(function (e) {
+      try {
+        var u = new URL(e.name);
+        if (u.origin !== location.origin && u.protocol.indexOf('http') === 0) origins.add(u.host);
+      } catch (err) {}
+    });
+    render();
+  }
+  function render() {
+    elC.textContent = String(origins.size);
+    elO.textContent = '';
+    if (!origins.size) {
+      var b = document.createElement('b');
+      b.textContent = 'zero third-party origins observed';
+      elO.appendChild(b);
+      elO.appendChild(document.createTextNode(' · every byte served from ' + location.host));
+    } else {
+      var s = document.createElement('span');
+      s.className = 'bad';
+      s.textContent = 'observed: ' + Array.from(origins).join(' · ');
+      elO.appendChild(s);
+      elO.appendChild(document.createTextNode(' · we said zero. If you can read this, hold us to it.'));
+    }
+  }
+  try { note(performance.getEntriesByType('resource')); } catch (e) { render(); }
+  try {
+    new PerformanceObserver(function (l) { note(l.getEntries()); }).observe({ type: 'resource', buffered: true });
+  } catch (e) { render(); }
+})();
+
+/* ============================================================
+   X7 - the guided walk: T or the hero button steps acts 0-6.
+   Arrow keys advance, Escape exits. Off under reduced motion.
+   ============================================================ */
+(function () {
+  var btn = document.getElementById('tourStart'), chip = document.getElementById('tourChip');
+  if (!btn || !chip || REDUCE) return;
+  btn.hidden = false;
+  var STOPS = [
+    ['#top',         'ACT 00', 'A tender becomes a decision system, before your eyes.'],
+    ['#clock',       'ACT 01', 'India does not lack technology, capital, or talent. The bottleneck is the cycle.'],
+    ['#rooms',       'ACT 02', 'Two rooms, one problem: trust in what the documents claim.'],
+    ['#turn',        'ACT 03', 'What if every claim in the bundle had to show its work?'],
+    ['#platform',    'ACT 03', 'Two volumes, one evidence engine.'],
+    ['#console',     'ACT 04', 'The brief the team signs. Every number on it points to a page.'],
+    ['#bidability',  'ACT 04', 'Why you may win, or lose. With evidence.'],
+    ['#evidence',    'ACT 05', 'Every verdict carries its source. Uncertain cases go to a human. Always.'],
+    ['#audit',       'ACT 05', 'Edit the record afterwards and the seam shows.'],
+    ['#sovereignty', 'ACT 06', 'Nothing leaves the building. Your own browser is the witness.']
+  ];
+  var idx = -1, on = false;
+  var pos = document.getElementById('tourPos'), line = document.getElementById('tourLine');
+  function go(n) {
+    if (n < 0 || n >= STOPS.length) { exit(); return; }
+    idx = n;
+    var s = STOPS[idx], el = document.querySelector(s[0]);
+    if (!el) return;
+    pos.textContent = s[1] + ' · ' + (idx + 1) + '/' + STOPS.length;
+    line.textContent = s[2];
+    chip.classList.add('on');
+    if (lenis) lenis.scrollTo(el, { offset: -40, duration: 1.1 });
+    else el.scrollIntoView({ behavior: 'smooth' });
+  }
+  function start() { on = true; go(0); }
+  function exit() { on = false; idx = -1; chip.classList.remove('on'); }
+  btn.addEventListener('click', start);
+  /* touch path: tapping the caption chip advances to the next act */
+  chip.addEventListener('click', function () { if (on) go(idx + 1); });
+  /* taking the wheel back ends the walk; the caption never lingers
+     over content it no longer describes (taps on the chip or the
+     start button are not "taking the wheel back") */
+  ['wheel', 'touchstart'].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      if (!on) return;
+      if (e.target && e.target.closest && e.target.closest('#tourChip,#tourStart')) return;
+      exit();
+    }, { passive: true });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.matches && e.target.matches('input,textarea,select')) return;
+    if (!on) { if (e.key === 't' || e.key === 'T') start(); return; }
+    if (e.key === 'Escape') exit();
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); go(idx + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); go(idx - 1); }
+  });
+})();
+
+/* one global re-measure now that every pin and trigger exists */
+if (hasST) ScrollTrigger.refresh();
+
+});
+</script>
+<style is:inline>
+html.hero-fallback .scroll-cue{display:none}
+.node-label{opacity:0;transition:opacity .3s}
+.scroll-cue{transition:opacity .4s}
+</style>
+
+<!-- X7: guided walk caption chip -->
+<div class="tourchip" id="tourChip" role="dialog" aria-label="Guided walk" aria-live="polite">
+  <div class="tc-k"><span id="tourPos">ACT 00 · 1/10</span><span>→ next · ← back · esc exits</span></div>
+  <p class="tc-s" id="tourLine"></p>
+</div>
+
+<!-- X1: claim-chip registry, baked from publicClaims.ts at build -->
+<script type="application/json" id="claimRegistry" set:html={JSON.stringify(claimRegistry)}></script>
+<script is:inline defer src="/js/kriseva-chips.js"></script>
+
+<!-- BUILD NOTES ==================================================
+CONCEPT - "Evidential Cartography: the dossier, alive."
+The site is a living procurement dossier. The WebGL hero makes the thesis
+literal: a tender bundle (ink-outlined planes) emits brass evidence strands
+(CatmullRom tubes drawn on scroll via setDrawRange) to floating clause nodes;
+as each strand completes, its clause label resolves into a six-state verdict
+chip; at the end of the pinned scroll the nodes assemble into a slowly
+rotating verdict ledger. Everything below is evidence-as-interaction:
+matrix → audit chain → radar → boundary. No decoration.
+
+SECTION MAP
+nav · hero (pinned, scrubbed, 230% scroll) · dual opposing marquees ·
+§01 two volumes (TAS w/ scrubbed 6-stage pipeline, Evaluator) · thesis pull-quote ·
+§02 evaluation matrix (click cell → source clause + reasoning + HITL routing) ·
+§03 audit chain (verify / tamper / reset, navy) · §04 bidability radar ·
+§05 the Boundary (Zone I vs dashed explicit egress) · stats count-ups ·
+§06 field record · contact · footer.
+
+SAFETY / FALLBACKS
+- no-JS: html.js never set → all reveal states stay visible; page fully legible.
+- prefers-reduced-motion: no Lenis, no pin/scrub, no marquees, no count-ups,
+  static SVG hero plate.
+- mobile / coarse pointer / no WebGL: static SVG hero plate; all interactive
+  modules are click/tap-driven buttons.
+- WebGL: DPR ≤ 1.75, ~60fps cap, render loop skips when off-screen or
+  document.hidden.
+
+PORTING TO ASTRO (Kriseva_website_v1-main/website/)
+1. Fonts: replace the Google Fonts <link> with @font-face for the three repo
+   TTFs (Instrument Serif, IBM Plex Sans, IBM Plex Mono) - zero egress.
+2. Split: CSS → src/styles/v6.css (or keep tokens in tokens.css); hero WebGL →
+   an Astro island <HeroLedger client:visible> wrapping the canvas + labels +
+   the IIFE; each module (matrix/chain/radar/boundary/pipeline) is a small
+   vanilla-JS island with client:visible. GSAP/Lenis/Three move to npm deps,
+   imported inside islands so SSR never touches window.
+3. Copy: all claim-bearing strings here trace to publicClaims.ts wording or
+   the §2 ground truth in the build brief - keep them flowing from that file.
+4. Contact: replace mailto with the lead-capture endpoint (Cloudflare Pages
+   Function or Supabase) - mailto is prototype-only.
+5. assets/: real product captures (synthetic demo data) from
+   screenshots_sine_2026_05_20/raw + founder photo + official favicon -
+   copy the folder next to index.html wherever it is served.
+6. OG image: og.png (1200×630) generated alongside this file; place in
+   /public and keep the og:image absolute URL on the canonical host.
+================================================================== -->
+</body>
+</html>

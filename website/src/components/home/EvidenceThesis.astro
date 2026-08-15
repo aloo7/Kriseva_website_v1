@@ -1,0 +1,129 @@
+---
+// EvidenceThesis.astro
+//
+// Homepage manifesto section, corporate site v2
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §5.2). Short statement of what KRISEVA
+// holds constant, introducing the six-station spine vocabulary in one line.
+// The substantive claim rendered here is companyV2.sentence, verbatim from
+// publicClaims.ts. The headline and connective line are structural framing
+// copy, not capability claims, matching the free-typed-motto register
+// already used for section headlines elsewhere on the site (e.g. founder.astro,
+// contact.astro h1 text).
+
+import { getClaim } from '../../data/publicClaims';
+import { spineStations } from '../../data/company';
+
+function claim(id: string): string {
+  const c = getClaim(id);
+  if (!c) {
+    throw new Error(`EvidenceThesis: expected registered claim "${id}" in publicClaims.ts`);
+  }
+  return c.wording;
+}
+
+const sentence = claim('companyV2.sentence');
+---
+
+<section class="evidence-thesis" aria-labelledby="thesis-heading">
+  <div class="container evidence-thesis__grid">
+    <div class="evidence-thesis__lede">
+      <p class="mono-eyebrow">
+        <span class="dot-brass" aria-hidden="true"></span>
+        The evidence thesis
+      </p>
+      <h2 id="thesis-heading" class="evidence-thesis__headline">
+        Institutions decide on documents, not on confidence.
+      </h2>
+      <p class="evidence-thesis__body">{sentence}</p>
+    </div>
+
+    <div class="evidence-thesis__vocab">
+      <p class="mono-eyebrow evidence-thesis__vocab-kicker">What stays constant</p>
+      <p class="evidence-thesis__vocab-lede">
+        The same six checkpoints run under every system we build, in defense procurement and in
+        regulated finance.
+      </p>
+      <ol class="evidence-thesis__stations">
+        {spineStations.map((station) => (
+          <li>{station.label}</li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .evidence-thesis {
+    padding: clamp(76px, 9vw, 128px) 0;
+    background: var(--surface-paper);
+    color: var(--ink-primary);
+  }
+  .evidence-thesis__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(260px, 4fr);
+    gap: clamp(40px, 5vw, 80px);
+    align-items: start;
+  }
+
+  .evidence-thesis__headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--surface-deep);
+    font-size: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+  .evidence-thesis__body {
+    margin-top: clamp(20px, 2.6vw, 28px);
+    font-size: clamp(1.02rem, 0.96rem + 0.3vw, 1.14rem);
+    line-height: 1.65;
+    color: var(--ink-secondary);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  .evidence-thesis__vocab {
+    border-left: var(--rule-paper);
+    padding-left: clamp(24px, 3vw, 36px);
+  }
+  .evidence-thesis__vocab-kicker { color: var(--accent-soft); }
+  .evidence-thesis__vocab-lede {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--ink-secondary);
+    max-width: 40ch;
+    text-wrap: pretty;
+  }
+  .evidence-thesis__stations {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 0;
+  }
+  .evidence-thesis__stations li {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-quiet);
+    white-space: nowrap;
+  }
+  .evidence-thesis__stations li:not(:last-child)::after {
+    content: "\2192";
+    display: inline-block;
+    margin: 0 9px;
+    color: var(--accent-soft);
+  }
+
+  @media (max-width: 900px) {
+    .evidence-thesis__grid { grid-template-columns: 1fr; gap: 44px; }
+    .evidence-thesis__vocab { border-left: none; border-top: var(--rule-paper); padding-left: 0; padding-top: 28px; }
+  }
+  @media (max-width: 560px) {
+    .evidence-thesis__stations { gap: 8px; }
+    .evidence-thesis__stations li:not(:last-child)::after { margin: 0 4px; }
+  }
+</style>

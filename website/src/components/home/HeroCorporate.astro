@@ -1,0 +1,209 @@
+---
+// HeroCorporate.astro
+//
+// Homepage hero, corporate site v2 (CORPORATE_SITE_V2_ARCHITECTURE.md §5.1).
+// Typographic, paper-and-ink. No WebGL, no three.js (D-004). Every
+// claim-bearing string below is read verbatim from a registered companyV2.*
+// claim in publicClaims.ts; nothing here is free-typed wording for a factual
+// or capability claim. Structural labels (eyebrow, CTA copy, plate kicker)
+// are UI furniture, not claims, and are written directly.
+
+import { getClaim } from '../../data/publicClaims';
+import { routes } from '../../data/routes';
+import { site } from '../../data/site';
+
+function claim(id: string): string {
+  const c = getClaim(id);
+  if (!c) {
+    throw new Error(`HeroCorporate: expected registered claim "${id}" in publicClaims.ts`);
+  }
+  return c.wording;
+}
+
+const headline = claim('companyV2.hero-headline');
+const support = claim('companyV2.hero-support');
+const metaSectors = claim('companyV2.hero-meta-sectors');
+const metaStatus = claim('companyV2.hero-meta-status');
+const sentence = claim('companyV2.sentence');
+---
+
+<section class="hero-corporate" aria-labelledby="hero-heading">
+  <div class="container hero-corporate__grid">
+    <div class="hero-corporate__main">
+      <p class="mono-eyebrow hero-corporate__eyebrow">
+        <span class="dot-brass" aria-hidden="true"></span>
+        Company dossier &middot; {site.name}
+      </p>
+      <h1 id="hero-heading" class="hero-corporate__headline">{headline}</h1>
+      <p class="hero-corporate__support">{support}</p>
+
+      <ul class="hero-corporate__chips" aria-label="Domains of work and maturity status">
+        <li class="hero-corporate__chip">{metaSectors}</li>
+        <li class="hero-corporate__chip">{metaStatus}</li>
+      </ul>
+
+      <div class="hero-corporate__ctas">
+        <a class="btn btn--primary" href="#portfolio">
+          Explore the systems <span class="hero-corporate__arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="btn btn--ghost-paper" href={routes.contact}>Contact</a>
+      </div>
+    </div>
+
+    <aside class="hero-corporate__plate" aria-label="Company identity plate">
+      <p class="hero-corporate__plate-kicker">In one sentence</p>
+      <p class="hero-corporate__plate-sentence">{sentence}</p>
+      <div class="hero-corporate__plate-rule" aria-hidden="true"></div>
+      <p class="hero-corporate__plate-meta">
+        {site.legalName}<br />
+        {site.domain}
+      </p>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .hero-corporate {
+    position: relative;
+    padding: clamp(140px, 16vw, 200px) 0 clamp(72px, 9vw, 120px);
+    background: var(--surface-paper);
+    color: var(--ink-primary);
+    background-image:
+      radial-gradient(120% 60% at 0% 0%, rgba(193, 138, 62, 0.03) 0%, transparent 55%),
+      radial-gradient(100% 60% at 100% 100%, rgba(16, 35, 59, 0.025) 0%, transparent 55%);
+    border-bottom: var(--rule-paper);
+  }
+  .hero-corporate__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(240px, 3fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .hero-corporate__eyebrow { color: var(--accent-soft); margin-bottom: clamp(20px, 3vw, 32px); }
+
+  .hero-corporate__headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--surface-deep);
+    font-size: clamp(2.6rem, 1.55rem + 5vw, 5.6rem);
+    line-height: 1.03;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    max-width: 17ch;
+  }
+
+  .hero-corporate__support {
+    margin-top: clamp(22px, 3vw, 34px);
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.24rem);
+    line-height: 1.62;
+    color: var(--ink-secondary);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+
+  .hero-corporate__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-top: clamp(26px, 3.4vw, 40px);
+  }
+  .hero-corporate__chip {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-quiet);
+    border: 1px solid rgba(16, 35, 59, 0.18);
+    border-radius: var(--radius-badge);
+    padding: 7px 12px;
+  }
+
+  .hero-corporate__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: clamp(32px, 4vw, 48px);
+  }
+  .hero-corporate__arrow { display: inline-block; transition: transform var(--motion-precise); }
+  .hero-corporate__ctas a:hover .hero-corporate__arrow { transform: translateX(4px); }
+  .hero-corporate .btn--ghost-paper {
+    border-color: rgba(16, 35, 59, 0.32);
+    color: var(--surface-deep);
+  }
+  .hero-corporate .btn--ghost-paper:hover {
+    background: var(--surface-deep);
+    color: var(--text-primary);
+    border-color: var(--surface-deep);
+  }
+
+  /* ---------- identity plate: archival card, restrained brass keylines ---------- */
+  .hero-corporate__plate {
+    position: relative;
+    background: var(--surface-paper-rise);
+    border: 1px solid rgba(16, 35, 59, 0.16);
+    border-radius: var(--radius-panel);
+    padding: clamp(22px, 2.6vw, 30px) clamp(20px, 2.4vw, 26px);
+    margin-top: 6px;
+  }
+  /* Registration-mark corners · the archival plate signal, brass hairline. */
+  .hero-corporate__plate::before,
+  .hero-corporate__plate::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+  .hero-corporate__plate::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid var(--accent-primary);
+    border-left: 1px solid var(--accent-primary);
+  }
+  .hero-corporate__plate::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid var(--accent-primary);
+    border-right: 1px solid var(--accent-primary);
+  }
+  .hero-corporate__plate-kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 14px;
+  }
+  .hero-corporate__plate-sentence {
+    font-family: var(--font-serif);
+    font-size: clamp(1.14rem, 1.02rem + 0.5vw, 1.4rem);
+    line-height: 1.32;
+    letter-spacing: -0.005em;
+    color: var(--surface-deep);
+    text-wrap: pretty;
+  }
+  .hero-corporate__plate-rule {
+    height: 1px;
+    margin: 20px 0 16px;
+    background: linear-gradient(90deg, var(--accent-primary) 0%, rgba(193, 138, 62, 0.18) 60%, transparent 100%);
+    opacity: 0.7;
+  }
+  .hero-corporate__plate-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+    color: var(--ink-quiet);
+  }
+
+  @media (max-width: 980px) {
+    .hero-corporate__grid { grid-template-columns: 1fr; }
+    .hero-corporate__plate { max-width: 480px; }
+  }
+  @media (max-width: 640px) {
+    .hero-corporate { padding-top: clamp(120px, 30vw, 160px); }
+    .hero-corporate__headline { max-width: none; }
+  }
+</style>
