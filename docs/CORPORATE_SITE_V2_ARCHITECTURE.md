@@ -231,6 +231,23 @@ Phase 2 (claims) runs before W03 so copy lands registered. W01/W02 may proceed i
 
 Gate 1 after W11 (static site coherent). Gate 2 after W12 (motion). Phase 5 QA matrix (existing `qa:stage7` plus budget checks). Phase 6 independent clean-context review. Gate 3 final: release candidate only, no deploy.
 
+## 18A. Motion architecture (Phase 4 specification, locked 2026-08-13)
+
+Approved by the control plane under D-004 and D-008. W12 implements exactly this.
+
+1. **WebGL: none.** No three.js on any route (D-004 stands after Gate 1: the static spine communicates the thesis; depth would decorate, not explain).
+2. **Tier 1, the only scrubbed sequence.** Homepage EvidenceSpine, desktop ≥1024px, fine pointer, motion-allowed only. ScrollTrigger pins the section for roughly 1.5 viewport-heights and scrubs one GSAP timeline: stations activate in order (plate lifts 8px to rest, connector draws via stroke-dashoffset, the traveling field chip advances along the spine), the CONFLICT chip flips at station 3, the signature rule draws at station 4, the chain rule stamps at station 6. No other pins anywhere on the site.
+3. **Tier 2 reveals.** Section headers and card grids: one-time 300-450ms fade/translate on first entry. Implementation rule (codified from the ledger): the from-state (opacity 0, translate) is applied by JavaScript immediately before animating, never in static CSS. With JS absent or reduced motion set, no from-state ever exists. The v8 `.reveal` static-CSS pattern is forbidden.
+4. **Lenis.** Homepage only, desktop only, motion-allowed only. Duration ~1.1. Anchor navigation must not be hijacked.
+5. **Gating and loading.** One controller, `src/scripts/homeMotion.ts`, loaded deferred on the homepage only after a `matchMedia` gate (prefers-reduced-motion: no-preference AND min-width 1024px) evaluated BEFORE injecting vendor scripts. Reduced-motion visitors download zero motion bytes. Motion JS budget ≤ 170 KB total (gsap + ScrollTrigger + lenis + controller). Other pages may share a tiny reveal util with the same gates; no vendor GSAP off-homepage unless already loaded.
+6. **Mobile.** Below 1024px: no pin, no scrub, Tier 2 reveals only; the static vertical spine stands as designed.
+7. **Failure behavior.** Any motion-script error leaves the page fully readable (guaranteed by static-first; motion only ever adds).
+8. **QA hooks (W12 deliverables).** (a) Update tests/motion.spec.ts for the new timeline: final spine state reached after full scroll; (b) new deterministic static-visibility check: a JS-disabled Playwright pass asserting every section root computes opacity 1 on all 13 routes, wired as `npm run qa:static` and included in qa:stage7; (c) reduced-motion context asserts zero motion-script requests.
+
+## 18B. Gate 1 outcome (2026-08-13)
+
+Verdict: PASS with one bounded correction batch (1 BLOCKER, 5 MAJOR, 4 MINOR, 1 OPTIONAL), issued to a Sonnet worker. Homepage cold transfer measured 223.5 KB with zero external JS against the 900 KB budget. Quality-bar tests met: company clarity, hierarchy inversion (company > products), sector coherence, ATTEST maturity transparency, identity continuity.
+
 ## 18. Sensitive-material firewall (binding on all workers)
 
 - docs/v2-handoffs/ is gitignored. Worker receipts, internal facts, and baseline screenshots live there and are never committed. The repository is public.
