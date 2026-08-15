@@ -7,13 +7,16 @@
 // publicClaims.ts / src/data/company.ts rather than inlining wording here.
 //
 // Section order per §5 (8 sections total):
-//   1. HeroCorporate    - built here (W03)
-//   2. EvidenceThesis    - built here (W03)
-//   3. EvidenceSpine     - built here (W04, static composition; scroll
-//                          choreography is Phase 4 / W12, not this file)
-//   4-7. Sectors / Portfolio / Trust Architecture / Selected Proof
-//                          - slots left for W05/W06 (worker B1)
-//   8. Founder / Institutional CTA - existing FounderCTA, trivially reused
+//   1. HeroCorporate  - built W03
+//   2. EvidenceThesis - built W03
+//   3. EvidenceSpine  - built W04, static composition; scroll choreography
+//                       is Phase 4 / W12, not this file
+//   4. SectorPanels   - built W05 (worker B1)
+//   5. PortfolioCards - built W06 (worker B1); carries the id="portfolio"
+//                       anchor the hero's "Explore the systems" CTA targets
+//   6. TrustStrip     - built W06 (worker B1)
+//   7. ProofRow       - built W06 (worker B1)
+//   8. FounderCTA     - existing component, trivially reused
 //
 // The previous (v8) homepage is archived at _index_v8_archive.astro
 // (D-004: three.js hero exhibit retired from every v2 route, code kept,
@@ -23,6 +26,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroCorporate from '../components/home/HeroCorporate.astro';
 import EvidenceThesis from '../components/home/EvidenceThesis.astro';
 import EvidenceSpine from '../components/home/EvidenceSpine.astro';
+import SectorPanels from '../components/home/SectorPanels.astro';
+import PortfolioCards from '../components/home/PortfolioCards.astro';
+import TrustStrip from '../components/home/TrustStrip.astro';
+import ProofRow from '../components/home/ProofRow.astro';
 import FounderCTA from '../components/FounderCTA.astro';
 import { getClaim } from '../data/publicClaims';
 
@@ -42,36 +49,9 @@ const description = claim('companyV2.sentence');
   <HeroCorporate />
   <EvidenceThesis />
   <EvidenceSpine />
-
-  <!--
-    HOMEPAGE SLOT (W05, worker B1): SectorPanels
-    Two panels, same visual grammar: Defense procurement (TAS + Evaluator)
-    and Regulated finance (Attest). Each closes with its boundary line.
-    Reads from src/data/company.ts `sectors`.
-  -->
-
-  <!--
-    HOMEPAGE SLOT (W06, worker B1): PortfolioCards
-    Three uniform cards (TAS / Evaluator / Attest) from `portfolio` in
-    src/data/company.ts. The id="portfolio" anchor below is what the hero's
-    "Explore the systems" CTA targets; move the id onto PortfolioCards'
-    section root once it lands, or leave this wrapper in place.
-  -->
-  <div id="portfolio">
-    <!-- HOMEPAGE SLOT (W06, worker B1): PortfolioCards renders here -->
-  </div>
-
-  <!--
-    HOMEPAGE SLOT (W06, worker B1): TrustStrip
-    Four tiles: local-first deployment, deterministic audit records,
-    human-in-command, public claims discipline. Reads trustV2.* claims.
-  -->
-
-  <!--
-    HOMEPAGE SLOT (W06, worker B1): ProofRow
-    Small receipts row: claims-governance discipline, ATTEST demo hub,
-    TAS pilot status. Reads proofV2.* claims. No test counts (register A3).
-  -->
-
+  <SectorPanels />
+  <PortfolioCards />
+  <TrustStrip />
+  <ProofRow />
   <FounderCTA />
 </BaseLayout>

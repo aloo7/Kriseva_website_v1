@@ -1,4 +1,16 @@
 ---
+// FounderCTA.astro
+//
+// The `.reveal` class previously on `.founder-cta__copy` renders at
+// opacity:0 until JS adds `.is-visible` (see global.css §Scroll reveal +
+// BaseLayout's IntersectionObserver script). That left this section
+// invisible with JavaScript disabled or before the observer fires -- not
+// acceptable for a homepage closing section. Removed here so the section
+// renders statically at opacity:1 by default (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §8: reduced motion / no-JS is a designed static state, not a degraded
+// mode). Scroll-in motion for this section, if wanted, is Phase 4 / W12
+// scope (D-008), not this work order.
+
 import PrimaryButton from './PrimaryButton.astro';
 import SecondaryButton from './SecondaryButton.astro';
 import { routes } from '../data/routes';
@@ -18,7 +30,7 @@ const {
 ---
 <section class:list={['section', `section--${surface}`, 'founder-cta']}>
   <div class="container founder-cta__inner">
-    <div class="founder-cta__copy reveal">
+    <div class="founder-cta__copy">
       <h2>{heading}</h2>
       <p>{body}</p>
       <div class="founder-cta__buttons">

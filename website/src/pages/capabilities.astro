@@ -1,0 +1,268 @@
+---
+// /capabilities - the shared technical thesis, in depth
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §4, §5.3, §9, work order W05). Reuses
+// the homepage EvidenceSpine component unmodified, adds a station-by-station
+// annotation layer naming which product demonstrates each checkpoint today,
+// the CapabilityGrid with the same per-tile elaboration, and three short
+// per-product blocks with links out to /tas, /evaluator, /attest.
+//
+// Claim-bearing wording only from src/data/publicClaims.ts, read through
+// src/data/company.ts (`capabilities`, `spineStations`, `portfolio`) or via
+// getClaim() directly. The six annotation sentences below reuse
+// attestV2.*/evaluator.* claim ids that already describe, product by
+// product, the same mechanism each capabilityV2.* spine station states in
+// the abstract; this is the "how one architecture instantiates per product"
+// content the architecture calls for, built entirely from already-registered
+// wording (no new claim strings are introduced on this page).
+//
+// Deliberate omission: the old CapabilityPipeline.astro component (a
+// 7-stage, TAS-specific "Discovery -> Bundle -> Extract -> Relevance ->
+// Compliance -> Brief -> Operator" operator workflow) is NOT reused here.
+// Its stage copy is TAS product detail (GeM, DefProc, BOQ, ATC), not
+// company-level capability wording, and none of it maps to a registered
+// capabilityV2.* claim. The architecture's own disposal table entry ("Six-
+// stage pipeline -> moves to /capabilities") is satisfied instead by the
+// Evidence Spine, which is the six-station replacement for that old section.
+// See docs/v2-handoffs/W05-W06-receipt.md for the full note.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import MaturityChip from '../components/MaturityChip.astro';
+import CapabilityGrid from '../components/CapabilityGrid.astro';
+import EvidenceSpine from '../components/home/EvidenceSpine.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import { getClaim } from '../data/publicClaims';
+import { spineStations, portfolio } from '../data/company';
+import { routes } from '../data/routes';
+
+function claim(id: string): string {
+  const c = getClaim(id);
+  if (!c) {
+    throw new Error(`capabilities.astro: expected registered claim "${id}" in publicClaims.ts`);
+  }
+  return c.wording;
+}
+
+const sentence = claim('companyV2.sentence');
+
+// Per-station elaboration: which product demonstrates that checkpoint today,
+// in that product's own already-registered wording. Order matches
+// spineStations / capabilities in company.ts.
+const annotations = {
+  source: { product: 'ATTEST', text: claim('attestV2.source-sealing') },
+  evidence: { product: 'EVALUATOR', text: claim('evaluator.three-path') },
+  conflict: { product: 'EVALUATOR', text: claim('evaluator.six-state') },
+  'human-review': { product: 'ATTEST', text: claim('attestV2.human-review') },
+  decision: { product: 'ATTEST', text: claim('attestV2.non-interpretive') },
+  'retained-record': { product: 'EVALUATOR', text: claim('evaluator.audit-chain') },
+} as const;
+
+const tas = portfolio.find((p) => p.id === 'tas')!;
+const evaluator = portfolio.find((p) => p.id === 'evaluator')!;
+const attest = portfolio.find((p) => p.id === 'attest')!;
+
+const heroTitle = 'One architecture. <span class="brass">Six checkpoints.</span>';
+const title = 'Capabilities';
+const description = sentence;
+---
+<BaseLayout title={title} description={description}>
+
+  <RouteHero
+    eyebrow="Capabilities · the shared technical thesis"
+    title={heroTitle}
+    subtitle={sentence}
+    surface="deep"
+  >
+    <Fragment slot="cta">
+      <PrimaryButton href="#instantiation">See it per product</PrimaryButton>
+      <SecondaryButton href={routes.contact}>Contact</SecondaryButton>
+    </Fragment>
+  </RouteHero>
+
+  <EvidenceSpine />
+
+  <!-- ============ ANNOTATIONS · WHERE EACH STATION SHOWS UP TODAY ============ -->
+  <section class="section section--paper" id="annotations">
+    <div class="container">
+      <SectionLabel>Where each station shows up today</SectionLabel>
+      <h2>Same architecture, named systems.</h2>
+      <p class="annotations-intro">The spine above is the abstract version. Each station already runs inside a real, named system.</p>
+      <ol class="annotations-list">
+        {spineStations.map((station, i) => (
+          <li class="annotation-row">
+            <span class="annotation-row__index">{String(i + 1).padStart(2, '0')}</span>
+            <span class="annotation-row__label">{station.label}</span>
+            <span class="annotation-row__product">{annotations[station.id].product}</span>
+            <p class="annotation-row__text">{annotations[station.id].text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ CAPABILITY GRID ============ -->
+  <section class="section section--navy" id="grid">
+    <div class="container">
+      <SectionLabel>Six capability territories</SectionLabel>
+      <h2>The same six stations, as capabilities.</h2>
+      <p class="grid-intro">Each territory below is one spine station, elaborated with the system that demonstrates it.</p>
+      <div class="grid-wrap">
+        <CapabilityGrid elaborations={annotations} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW ONE ARCHITECTURE INSTANTIATES PER PRODUCT ============ -->
+  <section class="section section--paper" id="instantiation">
+    <div class="container">
+      <SectionLabel>One architecture, three products</SectionLabel>
+      <h2>How it shows up per system.</h2>
+      <div class="instantiation-grid">
+        <DossierCard label="Bidder-side" title={tas.name} meta={tas.primaryUser} surface="paper">
+          <p>{tas.purpose}</p>
+          <div class="instantiation-foot">
+            <MaturityChip maturity={tas.maturity} />
+            <a href={tas.route}>Open KRISEVA TAS <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </DossierCard>
+        <DossierCard label="Evaluation-side" title={evaluator.name} meta={evaluator.primaryUser} surface="paper">
+          <p>{evaluator.purpose}</p>
+          <div class="instantiation-foot">
+            <MaturityChip maturity={evaluator.maturity} />
+            <a href={evaluator.route}>Open KRISEVA Evaluator <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </DossierCard>
+        <DossierCard label="Regulated finance" title={attest.name} meta={attest.primaryUser} surface="paper">
+          <p>{attest.purpose}</p>
+          <div class="instantiation-foot">
+            <MaturityChip maturity={attest.maturity} />
+            <a href={attest.route}>Open KRISEVA Attest <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </DossierCard>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section section--dark section--tight" id="cta">
+    <div class="container closing-cta">
+      <h2>See it applied to a sector.</h2>
+      <p>The architecture above is the same everywhere. The sector pages show it working against a real problem.</p>
+      <div class="closing-cta__buttons">
+        <SecondaryButton href={routes.defense} variant="outline">Defense procurement</SecondaryButton>
+        <SecondaryButton href={routes.finance} variant="outline">Regulated finance</SecondaryButton>
+        <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  h2 { margin-bottom: 20px; }
+
+  .annotations-intro { max-width: 66ch; color: var(--ink-secondary); margin-bottom: clamp(24px, 3vw, 36px); }
+  .annotations-list { display: flex; flex-direction: column; }
+  .annotation-row {
+    display: grid;
+    grid-template-columns: 44px 160px 120px 1fr;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(16, 35, 59, 0.12);
+  }
+  .annotation-row:last-child { border-bottom: 1px solid rgba(16, 35, 59, 0.12); }
+  .annotation-row__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    color: var(--ink-quiet);
+  }
+  .annotation-row__label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--surface-deep);
+  }
+  .annotation-row__product {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-radius: var(--radius-badge);
+    padding: 3px 8px;
+    justify-self: start;
+  }
+  .annotation-row__text {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink-secondary);
+  }
+  @media (max-width: 780px) {
+    .annotation-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .annotation-row__product { justify-self: start; }
+  }
+
+  .grid-intro { max-width: 66ch; color: var(--text-secondary); margin-bottom: clamp(24px, 3vw, 36px); }
+  .grid-wrap :global(.capability-tile) {
+    background: rgba(10, 31, 68, 0.55);
+    border-color: rgba(193, 138, 62, 0.2);
+  }
+  .grid-wrap :global(.capability-tile__title) { color: var(--text-primary); }
+  .grid-wrap :global(.capability-tile__description),
+  .grid-wrap :global(.capability-tile__elaboration p) { color: var(--text-secondary); }
+  .grid-wrap :global(.capability-tile__elaboration) { border-top-color: rgba(193, 138, 62, 0.2); }
+  .grid-wrap :global(.capability-tile__elaboration-tag) { color: var(--text-quiet); }
+
+  .instantiation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.4vw, 28px);
+  }
+  .instantiation-foot {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .instantiation-foot a {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.06em;
+  }
+  @media (max-width: 900px) {
+    .instantiation-grid { grid-template-columns: 1fr; }
+  }
+
+  .closing-cta { max-width: 720px; text-align: center; }
+  .closing-cta h2 { margin-bottom: 14px; }
+  .closing-cta p { color: var(--text-secondary); margin-bottom: 26px; }
+  .closing-cta__buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  /* RouteHero wraps its content in a shared `.reveal` div (global.css), which
+     renders at opacity:0 until BaseLayout's IntersectionObserver script adds
+     `.is-visible` -- the same pre-existing pattern fixed on FounderCTA for
+     this work order (a no-JS visitor would otherwise see an empty hero).
+     RouteHero.astro itself is a shared component out of this work order's
+     touch scope (defense.astro/finance.astro/attest.astro carry the same
+     condition and are not this page to fix), so the neutralization is
+     scoped to this page only via :global(), matching the FounderCTA fix's
+     reasoning: render statically now, scroll-in motion is Phase 4 / W12
+     scope (D-008). See docs/v2-handoffs/W05-W06-receipt.md. */
+  :global(.route-hero .reveal) {
+    opacity: 1;
+    transform: none;
+  }
+</style>

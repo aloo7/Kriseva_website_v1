@@ -1,0 +1,241 @@
+---
+// SectorPanels.astro
+//
+// Homepage Sectors section, corporate site v2 (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §5.4). Two panels, same visual grammar: Defense procurement (TAS +
+// EVALUATOR, both systems with maturity chips) and Regulated finance
+// (ATTEST, one research experiment). Each panel closes with its registered
+// boundary line. All claim-bearing copy is read from src/data/company.ts
+// (`sectors`, `portfolio`), which itself resolves every string from a
+// registered publicClaims.ts id; nothing here is free-typed claim wording.
+// Structural labels (kickers, CTA copy) are UI furniture, matching the
+// register already used by HeroCorporate / EvidenceThesis / EvidenceSpine.
+
+import { sectors, portfolio } from '../../data/company';
+import MaturityChip from '../MaturityChip.astro';
+import SecondaryButton from '../SecondaryButton.astro';
+
+const defenseSector = sectors.find((s) => s.id === 'defense')!;
+const financeSector = sectors.find((s) => s.id === 'finance')!;
+
+const defenseSystems = defenseSector.systems.map((id) => portfolio.find((p) => p.id === id)!);
+const financeSystems = financeSector.systems.map((id) => portfolio.find((p) => p.id === id)!);
+---
+
+<section class="sector-panels" aria-labelledby="sectors-heading">
+  <div class="container">
+    <div class="sector-panels__head">
+      <p class="mono-eyebrow">
+        <span class="dot-brass" aria-hidden="true"></span>
+        Where the work happens
+      </p>
+      <h2 id="sectors-heading" class="sector-panels__headline">Two sectors. One evidence architecture.</h2>
+    </div>
+
+    <div class="sector-panels__grid">
+      <article class="sector-panel" aria-labelledby="sector-defense-heading">
+        <p class="sector-panel__kicker">Sector 01 &middot; {defenseSystems.length} systems</p>
+        <h3 id="sector-defense-heading" class="sector-panel__name">{defenseSector.name} procurement</h3>
+        <p class="sector-panel__summary">{defenseSector.summary}</p>
+
+        <ul class="sector-panel__systems">
+          {defenseSystems.map((system) => (
+            <li class="sector-system">
+              <div class="sector-system__head">
+                <span class="sector-system__name">{system.name}</span>
+                <MaturityChip maturity={system.maturity} />
+              </div>
+              <p class="sector-system__user">{system.primaryUser}</p>
+              <a class="sector-system__link" href={system.route}>Open {system.name} <span aria-hidden="true">&rarr;</span></a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="sector-panel__foot">
+          <SecondaryButton href={defenseSector.route} variant="ghost-paper" size="sm">
+            Explore defense <span aria-hidden="true">&rarr;</span>
+          </SecondaryButton>
+          <p class="sector-panel__boundary">{defenseSector.boundaryLine}</p>
+        </div>
+      </article>
+
+      <article class="sector-panel" aria-labelledby="sector-finance-heading">
+        <p class="sector-panel__kicker">Sector 02 &middot; {financeSystems.length} system</p>
+        <h3 id="sector-finance-heading" class="sector-panel__name">Regulated finance</h3>
+        <p class="sector-panel__summary">{financeSector.summary}</p>
+
+        <ul class="sector-panel__systems">
+          {financeSystems.map((system) => (
+            <li class="sector-system">
+              <div class="sector-system__head">
+                <span class="sector-system__name">{system.name}</span>
+                <MaturityChip maturity={system.maturity} />
+              </div>
+              <p class="sector-system__user">{system.primaryUser}</p>
+              <a class="sector-system__link" href={system.route}>Open {system.name} <span aria-hidden="true">&rarr;</span></a>
+            </li>
+          ))}
+        </ul>
+
+        <div class="sector-panel__foot">
+          <SecondaryButton href={financeSector.route} variant="ghost-paper" size="sm">
+            Explore finance <span aria-hidden="true">&rarr;</span>
+          </SecondaryButton>
+          <p class="sector-panel__boundary">{financeSector.boundaryLine}</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sector-panels {
+    padding: clamp(76px, 9vw, 128px) 0;
+    background: var(--surface-paper);
+    color: var(--ink-primary);
+    border-top: var(--rule-paper);
+  }
+
+  .sector-panels__head { max-width: 62ch; }
+  .sector-panels__headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--surface-deep);
+    font-size: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+    max-width: 18ch;
+    text-wrap: balance;
+  }
+
+  .sector-panels__grid {
+    margin-top: clamp(44px, 6vw, 68px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 3vw, 40px);
+    align-items: stretch;
+  }
+
+  .sector-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-paper-rise);
+    border: 1px solid rgba(16, 35, 59, 0.16);
+    border-radius: var(--radius-panel);
+    padding: clamp(26px, 3vw, 36px) clamp(24px, 2.8vw, 32px) clamp(24px, 2.6vw, 30px);
+  }
+  .sector-panel::before,
+  .sector-panel::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+  .sector-panel::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid var(--accent-primary);
+    border-left: 1px solid var(--accent-primary);
+  }
+  .sector-panel::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid var(--accent-primary);
+    border-right: 1px solid var(--accent-primary);
+  }
+
+  .sector-panel__kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 14px;
+  }
+  .sector-panel__name {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    color: var(--surface-deep);
+    line-height: 1.2;
+  }
+  .sector-panel__summary {
+    margin-top: 12px;
+    font-size: 0.96rem;
+    line-height: 1.62;
+    color: var(--ink-secondary);
+    text-wrap: pretty;
+  }
+
+  .sector-panel__systems {
+    margin-top: clamp(22px, 2.6vw, 30px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 0 auto;
+  }
+  .sector-system {
+    padding: 16px 18px;
+    border: 1px solid rgba(16, 35, 59, 0.14);
+    border-radius: var(--radius-panel);
+    background: var(--surface-paper);
+  }
+  .sector-system__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .sector-system__name {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: var(--surface-deep);
+  }
+  .sector-system__user {
+    margin-top: 8px;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--ink-quiet);
+  }
+  .sector-system__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    color: var(--accent-soft);
+  }
+  .sector-system__link span { transition: transform var(--motion-precise); }
+  .sector-system__link:hover span { transform: translateX(3px); }
+
+  .sector-panel__foot {
+    margin-top: clamp(22px, 2.6vw, 30px);
+    padding-top: 18px;
+    border-top: 1px dashed rgba(16, 35, 59, 0.16);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sector-panel__boundary {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+    color: var(--ink-quiet);
+  }
+
+  @media (max-width: 900px) {
+    .sector-panels__grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sector-system__link,
+    .sector-system__link span { transition: none; }
+  }
+</style>

@@ -1,0 +1,137 @@
+---
+// CapabilityGrid.astro
+//
+// Shared capability-tile grid (CORPORATE_SITE_V2_ARCHITECTURE.md §9): six
+// territories, each mapped 1:1 to an Evidence Spine station. Lives beside
+// the home/ components rather than inside that folder because it is
+// explicitly a shared/reused component (architecture §9: "CapabilityGrid.astro
+// lives beside them and is reused by /capabilities"). Its only current
+// consumer is /capabilities.
+//
+// Tile title + base description come from `capabilities` in
+// src/data/company.ts, which resolves capabilityV2.* claim wording. An
+// optional per-tile elaboration string may be passed in by the caller for a
+// deeper, product-grounded sentence (the /capabilities page passes one
+// sourced from an already-registered attestV2.*/evaluator.* claim id per
+// tile — see capabilities.astro for the mapping and rationale). Elaboration
+// text is provided by the caller, not invented in this component: this
+// component only lays out whatever claim-sourced strings it is given.
+
+import { capabilities, spineStations } from '../data/company';
+
+interface Elaboration {
+  /** Which product this elaboration sentence is describing. UI furniture,
+   * not a claim string. */
+  product: string;
+  /** Claim-sourced wording, passed in by the caller. */
+  text: string;
+}
+
+interface Props {
+  elaborations?: Partial<Record<string, Elaboration>>;
+}
+
+const { elaborations = {} } = Astro.props;
+
+const stationLabel = new Map(spineStations.map((s) => [s.id, s.label]));
+---
+
+<div class="capability-grid" role="list">
+  {capabilities.map((cap, i) => {
+    const elaboration = elaborations[cap.id];
+    return (
+      <article class="capability-tile" role="listitem" data-station={cap.station}>
+        <div class="capability-tile__head">
+          <span class="capability-tile__index">{String(i + 1).padStart(2, '0')}</span>
+          <span class="capability-tile__station">{stationLabel.get(cap.station)}</span>
+        </div>
+        <h3 class="capability-tile__title">{cap.title}</h3>
+        <p class="capability-tile__description">{cap.description}</p>
+        {elaboration && (
+          <div class="capability-tile__elaboration">
+            <span class="capability-tile__elaboration-tag">Live in &middot; {elaboration.product}</span>
+            <p>{elaboration.text}</p>
+          </div>
+        )}
+      </article>
+    );
+  })}
+</div>
+
+<style>
+  .capability-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .capability-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface-paper-rise);
+    border: 1px solid rgba(16, 35, 59, 0.16);
+    border-radius: var(--radius-panel);
+    padding: 20px 20px 22px;
+  }
+
+  .capability-tile__head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .capability-tile__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.1em;
+    color: var(--ink-quiet);
+  }
+  .capability-tile__station {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+  }
+
+  .capability-tile__title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.1rem;
+    line-height: 1.28;
+    color: var(--surface-deep);
+  }
+  .capability-tile__description {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--ink-secondary);
+  }
+
+  .capability-tile__elaboration {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(16, 35, 59, 0.16);
+  }
+  .capability-tile__elaboration-tag {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-quiet);
+    margin-bottom: 6px;
+  }
+  .capability-tile__elaboration p {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--ink-secondary);
+  }
+
+  @media (max-width: 980px) {
+    .capability-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 620px) {
+    .capability-grid { grid-template-columns: 1fr; }
+  }
+</style>

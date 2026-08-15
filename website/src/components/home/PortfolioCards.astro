@@ -1,0 +1,174 @@
+---
+// PortfolioCards.astro
+//
+// Homepage Portfolio section, corporate site v2 (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §5.5). Three uniform cards: TAS, EVALUATOR, ATTEST. Per card: one purpose
+// sentence, primary user, three capabilities, maturity chip, link.
+// Uniformity is the design point: same card shape regardless of maturity
+// stage, one family, one thesis. All copy reads from `portfolio` in
+// src/data/company.ts, which resolves every string from a registered
+// portfolioV2.* claim id; nothing here is free-typed claim wording.
+//
+// Carries the id="portfolio" anchor that HeroCorporate's "Explore the
+// systems" CTA targets (architecture §5.1), replacing the placeholder div
+// left in index.astro.
+
+import { portfolio } from '../../data/company';
+import MaturityChip from '../MaturityChip.astro';
+---
+
+<section id="portfolio" class="portfolio-cards" aria-labelledby="portfolio-heading">
+  <div class="container">
+    <div class="portfolio-cards__head">
+      <p class="mono-eyebrow">
+        <span class="dot-brass" aria-hidden="true"></span>
+        The portfolio
+      </p>
+      <h2 id="portfolio-heading" class="portfolio-cards__headline">One family. One thesis. Three systems.</h2>
+    </div>
+
+    <div class="portfolio-cards__grid">
+      {portfolio.map((product) => (
+        <article class="portfolio-card">
+          <div class="portfolio-card__head">
+            <h3 class="portfolio-card__name">{product.name}</h3>
+            <MaturityChip maturity={product.maturity} />
+          </div>
+          <p class="portfolio-card__purpose">{product.purpose}</p>
+          <p class="portfolio-card__user">
+            <span class="portfolio-card__user-label">For</span> {product.primaryUser}
+          </p>
+          <ul class="portfolio-card__caps">
+            {product.capabilities.map((c) => (
+              <li><span class="dot-brass" aria-hidden="true"></span>{c}</li>
+            ))}
+          </ul>
+          <a class="portfolio-card__link" href={product.route}>
+            Open {product.name} <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .portfolio-cards {
+    padding: clamp(76px, 9vw, 128px) 0;
+    background: var(--surface-paper);
+    color: var(--ink-primary);
+    border-top: var(--rule-paper);
+  }
+
+  .portfolio-cards__head { max-width: 62ch; }
+  .portfolio-cards__headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--surface-deep);
+    font-size: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+
+  .portfolio-cards__grid {
+    margin-top: clamp(44px, 6vw, 68px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.4vw, 28px);
+    align-items: stretch;
+  }
+
+  .portfolio-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-paper-rise);
+    border: 1px solid rgba(16, 35, 59, 0.16);
+    border-radius: var(--radius-panel);
+    padding: clamp(22px, 2.4vw, 28px) clamp(20px, 2.2vw, 24px) clamp(22px, 2.4vw, 26px);
+    transition: border-color var(--motion-precise), box-shadow var(--motion-precise), transform var(--motion-precise);
+  }
+  .portfolio-card:hover {
+    border-color: var(--accent-soft);
+    box-shadow: 0 18px 44px rgba(16, 35, 59, 0.14);
+    transform: translateY(-2px);
+  }
+
+  .portfolio-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .portfolio-card__name {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.22rem;
+    color: var(--surface-deep);
+    line-height: 1.25;
+  }
+
+  .portfolio-card__purpose {
+    margin-top: 14px;
+    font-size: 0.92rem;
+    line-height: 1.58;
+    color: var(--ink-secondary);
+    flex: 0 0 auto;
+  }
+  .portfolio-card__user {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.04em;
+    color: var(--ink-quiet);
+  }
+  .portfolio-card__user-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-soft);
+  }
+
+  .portfolio-card__caps {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(16, 35, 59, 0.16);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    flex: 1 0 auto;
+  }
+  .portfolio-card__caps li {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--ink-secondary);
+  }
+
+  .portfolio-card__link {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    color: var(--accent-soft);
+  }
+  .portfolio-card__link span { transition: transform var(--motion-precise); }
+  .portfolio-card__link:hover span { transform: translateX(3px); }
+
+  @media (max-width: 980px) {
+    .portfolio-cards__grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-card,
+    .portfolio-card__link,
+    .portfolio-card__link span { transition: none; }
+    .portfolio-card:hover { transform: none; }
+  }
+</style>

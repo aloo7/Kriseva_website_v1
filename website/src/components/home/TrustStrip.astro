@@ -1,0 +1,155 @@
+---
+// TrustStrip.astro
+//
+// Homepage Trust Architecture section, corporate site v2
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §5.6, §12). Four tiles: local-first
+// deployment, deterministic audit records, human-in-command decisions,
+// public claims discipline. Navy surface (architecture §7: "Navy sections
+// are reserved for trust/audit content"). The fourth tile links /security
+// and /evidence and states that every material claim on the site is
+// registered and evidence-mapped.
+//
+// Tile copy is read directly via getClaim() from the trustV2.* claim group;
+// tile kickers ("Deployment", "Audit", "Authority", "Publishing") are
+// structural labels, not claims, matching the same register already used
+// for section eyebrows elsewhere on the homepage.
+
+import { getClaim } from '../../data/publicClaims';
+import { routes } from '../../data/routes';
+
+function claim(id: string): string {
+  const c = getClaim(id);
+  if (!c) {
+    throw new Error(`TrustStrip: expected registered claim "${id}" in publicClaims.ts`);
+  }
+  return c.wording;
+}
+
+const localFirst = claim('trustV2.local-first');
+const auditRecords = claim('trustV2.audit-records');
+const humanInCommand = claim('trustV2.human-in-command');
+const claimsDiscipline = claim('trustV2.claims-discipline');
+---
+
+<section class="trust-strip" aria-labelledby="trust-heading">
+  <div class="container">
+    <div class="trust-strip__head">
+      <p class="mono-eyebrow trust-strip__eyebrow">
+        <span class="dot-brass" aria-hidden="true"></span>
+        Trust architecture
+      </p>
+      <h2 id="trust-heading" class="trust-strip__headline">What we hold constant, made visible.</h2>
+    </div>
+
+    <div class="trust-strip__grid">
+      <article class="trust-tile">
+        <p class="trust-tile__kicker">Deployment</p>
+        <p class="trust-tile__body">{localFirst}</p>
+      </article>
+      <article class="trust-tile">
+        <p class="trust-tile__kicker">Audit</p>
+        <p class="trust-tile__body">{auditRecords}</p>
+      </article>
+      <article class="trust-tile">
+        <p class="trust-tile__kicker">Authority</p>
+        <p class="trust-tile__body">{humanInCommand}</p>
+      </article>
+      <article class="trust-tile trust-tile--claims">
+        <p class="trust-tile__kicker">Publishing</p>
+        <p class="trust-tile__body">{claimsDiscipline}</p>
+        <div class="trust-tile__links">
+          <a href={routes.security}>Trust architecture <span aria-hidden="true">&rarr;</span></a>
+          <a href={routes.evidence}>Proof and measurement <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .trust-strip {
+    padding: clamp(76px, 9vw, 128px) 0;
+    background: var(--surface-rise);
+    color: var(--text-primary);
+  }
+
+  .trust-strip__head { max-width: 62ch; }
+  .trust-strip__eyebrow { color: var(--accent-soft); }
+  .trust-strip__headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--text-primary);
+    font-size: clamp(1.9rem, 1.5rem + 1.8vw, 3rem);
+    line-height: 1.16;
+    letter-spacing: -0.012em;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+
+  .trust-strip__grid {
+    margin-top: clamp(44px, 6vw, 68px);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(16px, 2vw, 24px);
+    align-items: stretch;
+  }
+
+  .trust-tile {
+    display: flex;
+    flex-direction: column;
+    background: rgba(4, 17, 42, 0.4);
+    border: 1px solid rgba(193, 138, 62, 0.2);
+    border-radius: var(--radius-panel);
+    padding: 22px 20px 24px;
+  }
+  .trust-tile__kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 12px;
+  }
+  .trust-tile__body {
+    font-size: 0.92rem;
+    line-height: 1.58;
+    color: var(--text-secondary);
+    flex: 1 0 auto;
+  }
+
+  .trust-tile--claims {
+    border-color: var(--accent-primary);
+  }
+  .trust-tile__links {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed rgba(193, 138, 62, 0.28);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .trust-tile__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    color: var(--accent-primary);
+  }
+  .trust-tile__links a:hover { color: var(--text-primary); }
+  .trust-tile__links a span { transition: transform var(--motion-precise); }
+  .trust-tile__links a:hover span { transform: translateX(3px); }
+
+  @media (max-width: 980px) {
+    .trust-strip__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .trust-strip__grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trust-tile__links a,
+    .trust-tile__links a span { transition: none; }
+  }
+</style>

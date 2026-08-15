@@ -1,0 +1,123 @@
+---
+// ProofRow.astro
+//
+// Homepage Selected Proof section, corporate site v2
+// (CORPORATE_SITE_V2_ARCHITECTURE.md §5.7). A small receipts row using only
+// homepage-approved claims: the registered-claims discipline itself, the
+// published ATTEST demonstration hub (always paired with the synthetic-data
+// label per the claim's own caveat), and the TAS pilot status line. No test
+// counts on the homepage (register discipline A3) and no agency names; only
+// proofV2.* claims (plus the synthetic-data label the demo-hub claim's
+// caveat requires) are used here.
+
+import { getClaim } from '../../data/publicClaims';
+
+function claim(id: string): string {
+  const c = getClaim(id);
+  if (!c) {
+    throw new Error(`ProofRow: expected registered claim "${id}" in publicClaims.ts`);
+  }
+  return c.wording;
+}
+
+const claimsDiscipline = claim('proofV2.claims-discipline');
+const attestHub = claim('proofV2.attest-hub');
+const attestSynthetic = claim('attestV2.maturity-synthetic-data');
+const tasStatus = claim('proofV2.tas-status');
+---
+
+<section class="proof-row" aria-labelledby="proof-heading">
+  <div class="container">
+    <p class="mono-eyebrow proof-row__eyebrow">
+      <span class="dot-brass" aria-hidden="true"></span>
+      Selected proof
+    </p>
+    <h2 id="proof-heading" class="sr-only">On the record</h2>
+
+    <div class="proof-row__grid">
+      <article class="proof-item">
+        <p class="proof-item__label">Claims discipline</p>
+        <p class="proof-item__body">{claimsDiscipline}</p>
+      </article>
+      <article class="proof-item">
+        <p class="proof-item__label">ATTEST demonstration hub</p>
+        <p class="proof-item__body">{attestHub}</p>
+        <p class="proof-item__meta">{attestSynthetic}</p>
+      </article>
+      <article class="proof-item">
+        <p class="proof-item__label">TAS status</p>
+        <p class="proof-item__body">{tasStatus}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .proof-row {
+    padding: clamp(56px, 6vw, 84px) 0;
+    background: var(--surface-paper);
+    color: var(--ink-primary);
+    border-top: var(--rule-paper);
+  }
+  .proof-row__eyebrow { color: var(--accent-soft); }
+
+  .proof-row__grid {
+    margin-top: clamp(24px, 3vw, 36px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid rgba(16, 35, 59, 0.16);
+    border-radius: var(--radius-panel);
+    background: var(--surface-paper-rise);
+    overflow: hidden;
+  }
+
+  .proof-item {
+    padding: 22px 24px;
+    border-right: 1px solid rgba(16, 35, 59, 0.12);
+  }
+  .proof-item:last-child { border-right: none; }
+
+  .proof-item__label {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 10px;
+  }
+  .proof-item__body {
+    font-size: 0.9rem;
+    line-height: 1.58;
+    color: var(--ink-secondary);
+  }
+  .proof-item__meta {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--text-discipline);
+    letter-spacing: 0.04em;
+    color: var(--ink-quiet);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 780px) {
+    .proof-row__grid { grid-template-columns: 1fr; }
+    .proof-item {
+      border-right: none;
+      border-bottom: 1px solid rgba(16, 35, 59, 0.12);
+    }
+    .proof-item:last-child { border-bottom: none; }
+  }
+</style>
