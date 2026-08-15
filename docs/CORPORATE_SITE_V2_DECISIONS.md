@@ -98,3 +98,11 @@ Reason: The governance system is the site's most credible institutional asset an
 Evidence: Register; publicClaims.ts structure (audit §7).
 Alternatives rejected: Parallel v2 claims file (two sources of truth); loosening the deny-list for marketing reach (violates public-trust priority).
 Reversal condition: None foreseen.
+
+D-013
+Question: How do Tier 2 scroll reveals work after two failed iterations of the hidden-content class?
+Decision: Transform-only. Reveal animations may translate (12px settle) and may animate borders or accents, but opacity never animates from zero and no element is ever in a hidden state, with or without JavaScript, at any scroll position, on any code path. The reveal.ts from-state machinery for opacity is removed rather than patched again.
+Reason: Four instances of the hidden-content class survived three fixes (static CSS .reveal, en-masse from-states, fail-open backstops). Each fix moved the symptom. A state that cannot exist does not need a backstop, and the motion cost of losing the fade is negligible against the certainty gained.
+Evidence: docs/v2-handoffs/final-screens/home-1440.png (post-fix JS-on capture still showing blank section bands); MISTAKE_LEDGER entries for the class.
+Alternatives rejected: A third repair of the from-state machinery (same class, new path); removing Tier 2 reveals entirely (loses warranted motion texture).
+Reversal condition: None while the site uses scroll reveals.
