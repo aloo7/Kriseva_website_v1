@@ -1,0 +1,228 @@
+---
+// /defense - Defense procurement sector page (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §4, §5 item 4, §10). Institutional entry point for the sector: the
+// bidder-side / evaluation-side problem (condensed "two rooms" concept,
+// D-006 disposition table), TAS and EVALUATOR as its two systems, and how
+// the Evidence Spine instantiates as "Tender bundle → bid decision".
+//
+// Claim-bearing wording only from src/data/publicClaims.ts, read through
+// src/data/company.ts (sectors, portfolio, spineStations) wherever that
+// data layer already carries the right claim, and directly via getClaim()
+// for the two ids company.ts does not expose (act2.two-rooms,
+// boundary.notClaimed).
+//
+// Procurement-clock motif: dropped. The clock concept's registered wording
+// (act1.cycle-insight, act1.stage-names) is scoped to index.astro's Act 1
+// only in publicClaims.ts; extending it to /defense would be an
+// unregistered surface use, not a layout call. See W09-W10 receipt.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import MaturityChip from '../components/MaturityChip.astro';
+import EvidenceCard from '../components/EvidenceCard.astro';
+import TenderBundleDiagram from '../components/TenderBundleDiagram.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import SecondaryButton from '../components/SecondaryButton.astro';
+import { getClaim } from '../data/publicClaims';
+import { portfolio, sectors, spineStations } from '../data/company';
+import { routes } from '../data/routes';
+
+const sector = sectors.find((s) => s.id === 'defense')!;
+const tas = portfolio.find((p) => p.id === 'tas')!;
+const evaluator = portfolio.find((p) => p.id === 'evaluator')!;
+const twoRooms = getClaim('act2.two-rooms')!.wording;
+
+const heroTitle = 'Two systems. <span class="brass">One evidence spine.</span>';
+const title = 'Defense procurement';
+const description = sector.summary;
+---
+<BaseLayout title={title} description={description}>
+
+  <RouteHero
+    eyebrow="Sector · Defense procurement"
+    title={heroTitle}
+    subtitle={sector.summary}
+    meta={sector.boundaryLine}
+    surface="deep"
+  >
+    <Fragment slot="cta">
+      <PrimaryButton href={routes.contactWithIntent('demo')}>Request a demo</PrimaryButton>
+      <SecondaryButton href="#systems">See the two systems</SecondaryButton>
+    </Fragment>
+  </RouteHero>
+
+  <!-- ============ THE PROBLEM · TWO ROOMS, CONDENSED ============ -->
+  <section class="section section--paper" id="problem">
+    <div class="container">
+      <SectionLabel>The problem · two sides, one trust gap</SectionLabel>
+      <h2>One tender, two rooms.</h2>
+      <div class="rooms-grid">
+        <div class="room">
+          <p class="room-label">Bidder side</p>
+          <h3>A small team, a heavy bundle.</h3>
+          <p>A defense MSME finds a tender it could win, then the bundle arrives: specifications, BOQs, ATCs, corrigenda, annexures. One missed clause can end a bid before it is read in full.</p>
+        </div>
+        <div class="room">
+          <p class="room-label">Evaluation side</p>
+          <h3>A committee that must be right.</h3>
+          <p>An evaluation committee receives rival bids and checks every claim against a record that has to survive an audit, sometimes years after the file is closed.</p>
+        </div>
+      </div>
+      <p class="rooms-merge">{twoRooms}</p>
+      <div class="bundle-visual">
+        <TenderBundleDiagram surface="paper" caption="One tender, many parts: the bundle both systems in this sector are built to resolve." />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ THE TWO SYSTEMS ============ -->
+  <section class="section section--navy" id="systems">
+    <div class="container">
+      <SectionLabel>The two systems</SectionLabel>
+      <h2>Bidder-side and evaluation-side, one thesis.</h2>
+      <div class="systems-grid">
+        <DossierCard label="System 01 · Bidder-side" title={tas.name} meta={tas.primaryUser} surface="navy">
+          <p>{tas.purpose}</p>
+          <ul class="cap-list">
+            {tas.capabilities.map((c) => (
+              <li><span class="dot-brass" aria-hidden="true"></span>{c}</li>
+            ))}
+          </ul>
+          <div class="card-foot">
+            <MaturityChip maturity={tas.maturity} />
+            <a class="card-link" href={tas.route}>Open KRISEVA TAS →</a>
+          </div>
+        </DossierCard>
+        <DossierCard label="System 02 · Evaluation-side" title={evaluator.name} meta={evaluator.primaryUser} surface="navy">
+          <p>{evaluator.purpose}</p>
+          <ul class="cap-list">
+            {evaluator.capabilities.map((c) => (
+              <li><span class="dot-brass" aria-hidden="true"></span>{c}</li>
+            ))}
+          </ul>
+          <div class="card-foot">
+            <MaturityChip maturity={evaluator.maturity} />
+            <a class="card-link" href={evaluator.route}>Open KRISEVA Evaluator →</a>
+          </div>
+        </DossierCard>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EVIDENCE SPINE · TENDER BUNDLE → BID DECISION ============ -->
+  <section class="section section--paper" id="spine">
+    <div class="container">
+      <SectionLabel>The Evidence Spine · tender bundle → bid decision</SectionLabel>
+      <h2>The same six stations, applied to a tender.</h2>
+      <p class="spine-intro">Both systems in this sector run the same evidence architecture. A tender bundle enters at SOURCE; a signed bid decision leaves at RETAINED RECORD.</p>
+      <div class="spine-list">
+        {spineStations.map((s, i) => (
+          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source="Evidence Spine · shared architecture">
+            {s.description}
+          </EvidenceCard>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BOUNDARY ============ -->
+  <section class="section section--dark section--tight" id="boundary">
+    <div class="container">
+      <SectionLabel>Boundary</SectionLabel>
+      <p class="boundary-line">{sector.boundaryLine}</p>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section section--paper" id="cta">
+    <div class="container closing-cta">
+      <h2>See it on your own tenders.</h2>
+      <p>If your team bids or evaluates on the defense side, the conversation is direct and founder-led.</p>
+      <div class="closing-cta__buttons">
+        <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+        <SecondaryButton href={routes.contactWithIntent('demo')} variant="ghost-paper">Request a demo</SecondaryButton>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  h2 { margin-bottom: 20px; }
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(20px, 3vw, 44px);
+    margin-top: 8px;
+  }
+  .room-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: var(--tracking-meta);
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 10px;
+  }
+  .room h3 { margin-bottom: 10px; }
+  .room p:not(.room-label) { color: var(--ink-secondary); }
+  .rooms-merge {
+    margin-top: clamp(28px, 4vw, 44px);
+    padding-top: clamp(20px, 3vw, 32px);
+    border-top: var(--rule-paper);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.35;
+    max-width: 46ch;
+  }
+  .bundle-visual { max-width: 420px; margin: clamp(28px, 4vw, 40px) auto 0; }
+  @media (max-width: 780px) {
+    .rooms-grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .systems-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(18px, 2.6vw, 32px);
+  }
+  .cap-list { margin: 16px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .cap-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .card-foot {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-link { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.06em; }
+  @media (max-width: 780px) {
+    .systems-grid { grid-template-columns: 1fr; }
+  }
+
+  .spine-intro { max-width: 66ch; color: var(--ink-secondary); margin-bottom: clamp(20px, 3vw, 32px); }
+  .spine-list { display: flex; flex-direction: column; }
+
+  .boundary-line {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    max-width: 64ch;
+  }
+
+  .closing-cta { max-width: 720px; text-align: center; }
+  .closing-cta h2 { margin-bottom: 14px; }
+  .closing-cta p { color: var(--ink-secondary); margin-bottom: 26px; }
+  .closing-cta__buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+</style>

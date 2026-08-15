@@ -1,0 +1,197 @@
+---
+// /finance - Regulated finance sector page (CORPORATE_SITE_V2_ARCHITECTURE.md
+// §4, §5 item 4, §11). Institutional entry point for the sector: the
+// reporting-defensibility problem in neutral terms (no regulator names, no
+// enforcement statistics), ATTEST as a research experiment, the Evidence
+// Spine instantiation as "Source records → filed return", and an explicit
+// maturity transparency block.
+//
+// Claim-bearing wording only from src/data/publicClaims.ts, read through
+// src/data/company.ts (sectors, portfolio, spineStations) wherever that
+// data layer already carries the right claim.
+//
+// No FounderCTA reuse here: that shared component's default buttons include
+// "Join Pilot", which would contradict attestV2.maturity-no-customers ("no
+// customers and no pilots"). A minimal, ATTEST-appropriate closing block is
+// built inline instead. See W09-W10 receipt.
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RouteHero from '../components/RouteHero.astro';
+import SectionLabel from '../components/SectionLabel.astro';
+import DossierCard from '../components/DossierCard.astro';
+import MaturityChip from '../components/MaturityChip.astro';
+import EvidenceCard from '../components/EvidenceCard.astro';
+import PrimaryButton from '../components/PrimaryButton.astro';
+import { getClaim } from '../data/publicClaims';
+import { portfolio, sectors, spineStations } from '../data/company';
+import { routes } from '../data/routes';
+
+const sector = sectors.find((s) => s.id === 'finance')!;
+const attest = portfolio.find((p) => p.id === 'attest')!;
+
+const researchStage = getClaim('attestV2.maturity-research-stage')!.wording;
+const syntheticData = getClaim('attestV2.maturity-synthetic-data')!.wording;
+const noRegulator = getClaim('attestV2.maturity-no-regulator-connection')!.wording;
+const noCustomers = getClaim('attestV2.maturity-no-customers')!.wording;
+
+const heroTitle = 'One system. <span class="brass">Tested honestly.</span>';
+const title = 'Regulated finance';
+const description = sector.summary;
+---
+<BaseLayout title={title} description={description}>
+
+  <RouteHero
+    eyebrow="Sector · Regulated finance"
+    title={heroTitle}
+    subtitle={sector.summary}
+    meta={researchStage}
+    surface="deep"
+  >
+    <Fragment slot="cta">
+      <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+      <MaturityChip maturity={attest.maturity} />
+    </Fragment>
+  </RouteHero>
+
+  <!-- ============ THE PROBLEM · REPORTING DEFENSIBILITY ============ -->
+  <section class="section section--paper" id="problem">
+    <div class="container">
+      <SectionLabel>The problem · reporting defensibility</SectionLabel>
+      <h2>A filed return is only as strong as its evidence.</h2>
+      <p class="problem-copy">
+        Regulated financial entities file periodic returns built from source records: statements,
+        ledgers, disclosures, supporting schedules. Every figure in a filed return has to be
+        defensible long after it is submitted, and the review that produces it is, on most teams,
+        still a manual reconciliation against the underlying documents.
+      </p>
+      <p class="problem-copy">
+        That reconciliation is where evidence goes untracked: which document supported which
+        figure, who resolved a disagreement between sources, and why. ATTEST is KRISEVA's early
+        research into making that evidence trail explicit instead of implicit.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ ATTEST ============ -->
+  <section class="section section--navy" id="attest-card">
+    <div class="container">
+      <SectionLabel>The system</SectionLabel>
+      <h2>A research prototype, not a product.</h2>
+      <div class="attest-card-wrap">
+        <DossierCard label="KRISEVA Attest · Research prototype" title={attest.name} meta={attest.primaryUser} surface="navy">
+          <p>{attest.purpose}</p>
+          <ul class="cap-list">
+            {attest.capabilities.map((c) => (
+              <li><span class="dot-brass" aria-hidden="true"></span>{c}</li>
+            ))}
+          </ul>
+          <div class="card-foot">
+            <MaturityChip maturity={attest.maturity} />
+            <a class="card-link" href={routes.attest}>Read the full page →</a>
+          </div>
+        </DossierCard>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EVIDENCE SPINE · SOURCE RECORDS → FILED RETURN ============ -->
+  <section class="section section--paper" id="spine">
+    <div class="container">
+      <SectionLabel>The Evidence Spine · source records → filed return</SectionLabel>
+      <h2>The same six stations, applied to a filing.</h2>
+      <p class="spine-intro">ATTEST runs the same evidence architecture shared across KRISEVA's systems. Source records enter at SOURCE; a reviewed, retained filing record leaves at RETAINED RECORD.</p>
+      <div class="spine-list">
+        {spineStations.map((s, i) => (
+          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={s.label} source="Evidence Spine · shared architecture">
+            {s.description}
+          </EvidenceCard>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MATURITY TRANSPARENCY ============ -->
+  <section class="section section--dark" id="maturity">
+    <div class="container">
+      <SectionLabel>Maturity transparency</SectionLabel>
+      <h2>Read this before anything else on this page.</h2>
+      <ul class="maturity-list">
+        <li><span class="dot-brass" aria-hidden="true"></span>{researchStage}</li>
+        <li><span class="dot-brass" aria-hidden="true"></span>{syntheticData}</li>
+        <li><span class="dot-brass" aria-hidden="true"></span>{noRegulator}</li>
+        <li><span class="dot-brass" aria-hidden="true"></span>{noCustomers}</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ BOUNDARY ============ -->
+  <section class="section section--dark section--tight" id="boundary">
+    <div class="container">
+      <SectionLabel>Boundary</SectionLabel>
+      <p class="boundary-line">{sector.boundaryLine}</p>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section class="section section--paper" id="cta">
+    <div class="container closing-cta">
+      <h2>Questions about the research.</h2>
+      <p>ATTEST is a research-stage prototype with no customers and no pilots. If you work in regulated finance and want to talk about the approach, the conversation is direct and founder-led.</p>
+      <PrimaryButton href={routes.contact}>Contact the founder</PrimaryButton>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  h2 { margin-bottom: 20px; }
+  .problem-copy { max-width: 68ch; color: var(--ink-secondary); margin-bottom: 18px; }
+  .problem-copy:last-of-type { margin-bottom: 0; }
+
+  .attest-card-wrap { max-width: 560px; }
+  .cap-list { margin: 16px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .cap-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+  .card-foot {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(193, 138, 62, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-link { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.06em; }
+
+  .spine-intro { max-width: 66ch; color: var(--ink-secondary); margin-bottom: clamp(20px, 3vw, 32px); }
+  .spine-list { display: flex; flex-direction: column; }
+
+  .maturity-list { display: flex; flex-direction: column; gap: 14px; max-width: 68ch; }
+  .maturity-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .boundary-line {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    max-width: 64ch;
+  }
+
+  .closing-cta { max-width: 640px; text-align: center; }
+  .closing-cta h2 { margin-bottom: 14px; }
+  .closing-cta p { color: var(--ink-secondary); margin-bottom: 26px; }
+</style>
