@@ -12,7 +12,9 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
   build: {
-    format: 'directory',
+    // 'file' emits tas.html so /tas serves 200 directly on Cloudflare (no 307 to
+    // /tas/), matching the canonical URLs and the sitemap.
+    format: 'file',
   },
   compressHTML: true,
   vite: {
