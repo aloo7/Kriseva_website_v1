@@ -1,0 +1,45 @@
+---
+// /plans: a pilot, then a plan that fits. Two pilots, a module builder
+// that writes the quote request, what every plan includes, and plan questions.
+// The word for money on this site is "quote"; the copy lint bans the other one.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import Faq from '../components/site/Faq.astro';
+import PlanBlueprint from '../components/site/plans/PlanBlueprint.astro';
+import Engagements from '../components/site/plans/Engagements.astro';
+import PlanBuilder from '../components/site/plans/PlanBuilder.astro';
+import Included from '../components/site/plans/Included.astro';
+import { planFaqs } from '../components/site/plans/planFaqs';
+import { faqSchema, breadcrumbSchema } from '../data/kriseva';
+
+const title = 'Plans and custom quote | Kriseva TAS and Evaluator';
+const description =
+  'Start with a pilot on your own tenders, then request a custom quote for Kriseva TAS (for defence and space suppliers) or Evaluator (for government buyers). Pick modules, deployment and team size; the founder replies directly.';
+---
+<SiteLayout
+  title={title}
+  description={description}
+  path="/plans"
+  schema={[breadcrumbSchema([{ name: 'Plans', path: '/plans' }]), faqSchema(planFaqs)]}
+>
+  <PageHero
+    eyebrow="Plans · Pilot first"
+    title="Start with a pilot. Then a plan that fits your side of the bridge."
+    accent="your side of the bridge"
+    lead="No rate card, no slideware. We run a pilot on your own material, then write a quote for the modules, deployment and team you actually need. Build the request below and it goes straight to the founder."
+    crumbs={[{ name: 'Plans', path: '/plans' }]}
+  >
+    <Fragment slot="actions">
+      <a class="btn" href="#builder">Build your plan <span class="arrow" aria-hidden="true">&darr;</span></a>
+      <a class="btn btn--ghost" href="/contact?intent=demo">Book a demo</a>
+    </Fragment>
+    <Fragment slot="visual">
+      <PlanBlueprint />
+    </Fragment>
+  </PageHero>
+
+  <Engagements />
+  <PlanBuilder />
+  <Included />
+  <Faq items={planFaqs} index="04" title="Questions about plans." id="plan-faq" />
+</SiteLayout>

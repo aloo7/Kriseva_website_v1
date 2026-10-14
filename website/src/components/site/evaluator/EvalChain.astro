@@ -1,0 +1,244 @@
+---
+// EvalChain.astro: the tamper-evident record, made touchable. Five specimen
+// entries, each carrying the hash of the one before it. "Edit an entry after
+// the fact" changes one entry's hash, and every link after it visibly breaks.
+const entries = [
+  { id: '0409', ev: 'Criteria set from the tender', prev: 'genesis', hash: '3f9a…c21e' },
+  { id: '0410', ev: 'Bid packet A received', prev: '3f9a…c21e', hash: '7b02…91d4' },
+  { id: '0411', ev: 'Finding 4.2 accepted by officer', edited: 'Finding 4.2 rejected', prev: '7b02…91d4', hash: '9c1e…44a7', editedHash: 'e5d8…0b13' },
+  { id: '0412', ev: 'Clarification sought, clause 4.5', prev: '9c1e…44a7', hash: '51b0…e2d9' },
+  { id: '0413', ev: 'Comparative statement exported', prev: '51b0…e2d9', hash: 'a6f4…7c30' },
+];
+---
+<section class="section echain on-navy-hatch" aria-labelledby="echain-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">04 · Tamper-evident record</p>
+      <h2 id="echain-title" class="h2">Change one entry, and <em>the chain says so.</em></h2>
+      <p class="lead">Every entry carries the hash of the entry before it. Edit anything after the fact and every link that follows stops matching. Try it on this specimen.</p>
+    </header>
+
+    <div class="chain" data-chain>
+      <ol role="list" class="chain__list">
+        {entries.map((e, i) => (
+          <li class:list={['chain__e', { 'chain__e--target': e.edited }]} data-i={i}>
+            <p class="mono chain__id">Entry {e.id}</p>
+            <p class="chain__ev">
+              <span class="chain__ev-orig">{e.ev}</span>
+              {e.edited && <span class="chain__ev-edit">{e.edited}</span>}
+            </p>
+            <dl class="chain__h">
+              <div><dt>prev</dt><dd class="chain__prev">{e.prev}</dd></div>
+              <div><dt>hash</dt><dd>
+                <span class="chain__hash-orig">{e.hash}</span>
+                {e.editedHash && <span class="chain__hash-edit">{e.editedHash}</span>}
+              </dd></div>
+            </dl>
+            {i > 0 && <span class="chain__link" aria-hidden="true"><span class="chain__ok">✓</span><span class="chain__x">×</span></span>}
+          </li>
+        ))}
+      </ol>
+
+      <div class="chain__ctl">
+        <button type="button" class="btn btn--brass chain__btn" aria-pressed="false" data-chain-toggle>
+          <span class="chain__btn-a">Edit entry 0411 after the fact</span>
+          <span class="chain__btn-b">Restore the record</span>
+        </button>
+        <p class="chain__status" aria-live="polite" data-chain-status>Chain verified: every entry matches the one before it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chain]').forEach((root) => {
+    const btn = root.querySelector<HTMLButtonElement>('[data-chain-toggle]');
+    const status = root.querySelector<HTMLElement>('[data-chain-status]');
+    btn?.addEventListener('click', () => {
+      const broken = root.toggleAttribute('data-broken');
+      btn.setAttribute('aria-pressed', String(broken));
+      if (status) {
+        status.textContent = broken
+          ? 'Verification fails at entry 0412: its "prev" no longer matches entry 0411. The edit is visible to anyone who checks.'
+          : 'Chain verified: every entry matches the one before it.';
+      }
+    });
+  });
+</script>
+
+<style>
+  .chain__list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.6rem;
+  }
+
+  .chain__e {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.1rem;
+    background: rgb(245 240 230 / 6%);
+    border: 1px solid var(--line-navy);
+    border-radius: var(--radius);
+    transition: border-color 0.4s, background-color 0.4s;
+  }
+
+  .chain__id {
+    font-size: 0.6875rem;
+    color: var(--brass-light);
+  }
+
+  .chain__ev {
+    font-family: var(--f-serif);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    min-height: 2.6em;
+  }
+
+  .chain__h {
+    display: grid;
+    gap: 0.25rem;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+  }
+
+  .chain__h div {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+  }
+
+  .chain__h dt {
+    color: var(--on-navy-2);
+    text-transform: uppercase;
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    padding-top: 0.1rem;
+  }
+
+  .chain__link {
+    position: absolute;
+    left: -1.6rem;
+    top: 50%;
+    width: 1.6rem;
+    height: 2px;
+    background: var(--brass-light);
+    transition: background-color 0.4s;
+  }
+
+  .chain__link span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    font-weight: 600;
+  }
+
+  .chain__ok {
+    background: var(--brass-light);
+    color: var(--navy);
+  }
+
+  .chain__x {
+    background: #e58c80;
+    color: var(--navy);
+    display: none !important;
+  }
+
+  .chain__ev-edit,
+  .chain__hash-edit {
+    display: none;
+  }
+
+  /* Broken state */
+  [data-broken] .chain__e--target {
+    border-color: #e58c80;
+    background: rgb(229 140 128 / 10%);
+  }
+
+  [data-broken] .chain__e--target .chain__ev-orig,
+  [data-broken] .chain__e--target .chain__hash-orig {
+    display: none;
+  }
+
+  [data-broken] .chain__e--target :is(.chain__ev-edit, .chain__hash-edit) {
+    display: inline;
+    color: #f0a59b;
+  }
+
+  [data-broken] .chain__e--target ~ .chain__e {
+    border-color: rgb(229 140 128 / 45%);
+  }
+
+  [data-broken] .chain__e--target ~ .chain__e .chain__link {
+    background: #e58c80;
+  }
+
+  [data-broken] .chain__e--target ~ .chain__e .chain__ok {
+    display: none;
+  }
+
+  [data-broken] .chain__e--target ~ .chain__e .chain__x {
+    display: grid !important;
+  }
+
+  [data-broken] .chain__e--target + .chain__e .chain__prev {
+    color: #f0a59b;
+    text-decoration: line-through;
+  }
+
+  .chain__ctl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.75rem;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .chain__btn-b {
+    display: none;
+  }
+
+  [data-broken] .chain__btn-a {
+    display: none;
+  }
+
+  [data-broken] .chain__btn-b {
+    display: inline;
+  }
+
+  .chain__status {
+    color: var(--on-navy-2);
+    max-width: 40rem;
+    font-size: var(--t-small);
+  }
+
+  [data-broken] .chain__status {
+    color: #f0a59b;
+  }
+
+  @media (width <= 1000px) {
+    .chain__list {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.2rem;
+    }
+
+    .chain__link {
+      left: 1.5rem;
+      top: -1.2rem;
+      width: 2px;
+      height: 1.2rem;
+    }
+
+    .chain__ev {
+      min-height: 0;
+    }
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+// Recognition.astro: two recognitions, worded exactly as the claims register
+// allows. Programme selection and an incubation offer; neither is an
+// endorsement or a customer relationship.
+---
+<section class="section rec on-navy-hatch" id="recognition" aria-labelledby="rec-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">03 · Recognition</p>
+      <h2 id="rec-title" class="h2">One selection and one offer, <em>worded exactly.</em></h2>
+      <p class="lead">We quote these as they are written on the paper, and we do not round them up.</p>
+    </header>
+
+    <ul role="list" class="rec__grid rv-stagger" data-inview>
+      <li class="rec__plate">
+        <p class="rec__k mono">GIFT IFIH · 2026</p>
+        <p class="rec__t">Selected in the Top 15 of the GIFT IFIH Young Builders’ Program Hackathon 2026 and in the eight-week residency at GIFT City (Sep to Oct 2026).</p>
+        <span class="stamp rec__stamp">Selected</span>
+      </li>
+      <li class="rec__plate">
+        <p class="rec__k mono">IITGN IIEC</p>
+        <p class="rec__t">Kriseva was offered incubation by IITGN IIEC.</p>
+        <span class="stamp rec__stamp">Offered</span>
+      </li>
+    </ul>
+
+    <p class="rec__note">Programme recognition and an offer of incubation. Neither is an endorsement by a government body, and neither is a customer relationship. <a href="/proof">See the dated record <span aria-hidden="true">&rarr;</span></a></p>
+  </div>
+</section>
+
+<style>
+  .rec__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+  }
+
+  .rec__plate {
+    position: relative;
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    min-width: 0;
+    padding: clamp(1.4rem, 1rem + 1.4vw, 2.2rem) clamp(1.4rem, 1rem + 1.4vw, 2.2rem) 4.2rem;
+    border: 1px solid var(--line-navy);
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 3%);
+  }
+
+  .rec__k {
+    color: var(--brass-light);
+  }
+
+  .rec__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.85rem);
+    line-height: 1.3;
+    color: var(--on-navy);
+    text-wrap: pretty;
+  }
+
+  .rec__stamp {
+    position: absolute;
+    right: 1.4rem;
+    bottom: 1.3rem;
+  }
+
+  .rec__note {
+    margin-top: 1.75rem;
+    max-width: 52rem;
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+  }
+
+  .rec__note a {
+    color: var(--on-navy);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (width <= 860px) {
+    .rec__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

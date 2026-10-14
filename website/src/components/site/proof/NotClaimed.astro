@@ -1,0 +1,146 @@
+---
+// NotClaimed.astro: the boundary panel for /proof. Five claims left out on
+// purpose, said plainly. Navy hatched ground, brass rules, one red stamp.
+
+const items = [
+  {
+    t: 'No government endorsement.',
+    d: 'No ministry, agency or unit has approved, endorsed or adopted Kriseva. Where a government team has seen a demonstration, we call it a demonstration.',
+  },
+  {
+    t: 'No customers named.',
+    d: 'We are pre-revenue. We show no customer or prospect logos and we name no institution, because a logo is a claim and we would rather show a date.',
+  },
+  {
+    t: 'No deployments.',
+    d: 'Kriseva is not deployed at any buyer or supplier. Three pilots by 31 December 2026 is our target, and the target card above says so.',
+  },
+  {
+    t: 'No accuracy figures without a dated evaluation file.',
+    d: 'A percentage with no file behind it is a slogan. We publish no accuracy figure on this site today.',
+  },
+  {
+    t: 'No certifications.',
+    d: 'No ISO 27001, no SOC 2, no CERT-In empanelment, and no security certification of any kind today. What a buyer can test in their own room is set out on the Sovereign by design page.',
+    href: '/security',
+    link: 'Sovereign by design',
+  },
+];
+---
+<section class="section nc on-navy-hatch" id="not-claimed" aria-labelledby="nc-title">
+  <div class="wrap nc__grid">
+    <header class="nc__head">
+      <p class="eyebrow">02 · The boundary</p>
+      <h2 id="nc-title" class="h2">What we do <em>not</em> claim.</h2>
+      <p class="lead">A record is as honest as what it leaves out. These five are left out on purpose, and we state them in public so no one has to ask.</p>
+      <span class="stamp nc__stamp">Not claimed</span>
+    </header>
+
+    <ol role="list" class="nc__list rv-stagger" data-inview>
+      {items.map((it, i) => (
+        <li class="nc__item">
+          <span class="nc__ico" aria-hidden="true">
+            <svg viewBox="0 0 36 36" width="36" height="36" focusable="false">
+              <circle cx="18" cy="18" r="14" />
+              <path d="M8 28 L28 8" />
+            </svg>
+          </span>
+          <div class="nc__txt">
+            <h3 class="nc__t"><span class="nc__n mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>{it.t}</h3>
+            <p class="nc__d">{it.d}</p>
+            {it.href && <a class="link-arrow nc__link" href={it.href}>{it.link} <span aria-hidden="true">&rarr;</span></a>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .nc__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .nc__head {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .nc__stamp {
+    justify-self: start;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.9rem;
+  }
+
+  .nc__list {
+    display: grid;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .nc__item {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 1.25rem;
+    padding-block: clamp(1.25rem, 2vw, 1.75rem);
+    border-bottom: 1px solid var(--line-navy);
+  }
+
+  .nc__ico svg {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .nc__txt {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .nc__t {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.85rem;
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    line-height: 1.2;
+    color: var(--on-navy);
+  }
+
+  .nc__n {
+    font-size: 0.6875rem;
+    color: var(--brass-light);
+  }
+
+  .nc__d {
+    color: var(--on-navy-2);
+    font-size: var(--t-small);
+    line-height: 1.6;
+    max-width: 40rem;
+  }
+
+  .nc__link {
+    justify-self: start;
+    color: var(--brass-light);
+  }
+
+  @media (width <= 900px) {
+    .nc__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .nc__head {
+      position: static;
+    }
+  }
+</style>

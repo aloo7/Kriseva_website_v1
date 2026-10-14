@@ -1,4 +1,4 @@
-# Cloudflare Pages — HTTP response headers
+# Cloudflare Pages: HTTP response headers
 #
 # Order matters: Cloudflare applies all matching patterns; specific rules
 # below override the global ones above on conflicting headers.
@@ -33,14 +33,14 @@
 /vendor/*
   Cache-Control: public, max-age=31536000, immutable
 
-# ─────────────── HTML pages — short cache, must revalidate ───────────────
+# ─────────────── HTML pages: short cache, must revalidate ───────────────
 # Astro emits *.html with route-stable URLs; let CDN cache short, browser revalidate.
 /
   Cache-Control: public, max-age=300, must-revalidate
 /*.html
   Cache-Control: public, max-age=300, must-revalidate
 
-# Sitemap + robots — light cache
+# Sitemap + robots: light cache
 /sitemap.xml
   Cache-Control: public, max-age=3600
 /robots.txt

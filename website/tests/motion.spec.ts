@@ -1,18 +1,16 @@
 // motion.spec.ts
-// Verifies the reduced-motion contract documented in
-// STAGE_7_ART_DIRECTION.md §2.9, plus the W12 motion-architecture contract
-// (CORPORATE_SITE_V2_ARCHITECTURE.md §18A).
+// Verifies the reduced-motion contract, the v3 bridge build
+// (docs/V3_BRIDGE_PLAN.md section 6) and the D-013 transform-only invariant.
 //
 // Under `prefers-reduced-motion: reduce`, every contract guarantee below
 // must hold:
 //   - .reveal elements are immediately visible (final state, no transition).
 //   - The mobile-nav toggle does not animate (it only toggles a class).
 //   - No CSS animation runs (animation-duration is clamped to ~0).
-//   - Zero requests to /vendor/* (§18A item 5: reduced-motion visitors
-//     download zero motion bytes).
+//   - Zero requests to /vendor/* (the retired motion libraries).
 //
-// A separate motion-allowed context (below) verifies the Evidence Spine
-// Tier 1 scrub (§18A item 2) reaches its final state after a full scroll.
+// A separate motion-allowed context (below) verifies the bridge reaches its
+// built state after a full scroll through the pinned hero.
 //
 // Run: `npm run qa:motion`
 
@@ -65,10 +63,8 @@ for (const { path, label } of routes) {
 }
 
 // ---------------------------------------------------------------------
-// W12 §18A item 5 / item 8c: reduced-motion visitors must download zero
-// motion bytes. The binding, testable contract is zero requests to
-// /vendor/* (gsap, ScrollTrigger, lenis) on the homepage, where the Tier 1
-// controller and Lenis are wired.
+// v3: the bridge is built by a zero-dependency script; no page may request
+// the retired vendor motion libraries (gsap, ScrollTrigger, lenis).
 // ---------------------------------------------------------------------
 test('motion · reduced-motion · zero /vendor/* requests (/)', async ({ page }) => {
   const vendorRequests: string[] = [];
@@ -79,23 +75,37 @@ test('motion · reduced-motion · zero /vendor/* requests (/)', async ({ page })
   await page.goto('/');
   await page.waitForLoadState('networkidle');
 
-  expect(vendorRequests, 'expected zero /vendor/* requests under reduced motion').toEqual([]);
+  expect(vendorRequests, 'expected zero /vendor/* requests').toEqual([]);
+});
+
+// Reduced motion: the hero is not pinned and the finished bridge renders as
+// drawn (no data-live), so every part of the drawing is visible.
+test('motion · reduced-motion · bridge renders finished and unpinned (/)', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForLoadState('networkidle');
+  const state = await page.evaluate(() => {
+    const hero = document.querySelector<HTMLElement>('[data-bridge]')!;
+    const parts = Array.from(hero.querySelectorAll<SVGElement>('.tower, .deck, .cable, .engine'));
+    return {
+      live: hero.hasAttribute('data-live'),
+      hidden: parts.filter((p) => getComputedStyle(p).visibility === 'hidden').length,
+    };
+  });
+  expect(state.live, 'reduced motion must not arm the scroll build').toBe(false);
+  expect(state.hidden, 'no bridge part may be hidden under reduced motion').toBe(0);
 });
 
 // ---------------------------------------------------------------------
-// W12 §18A item 2 / item 8a: the Evidence Spine Tier 1 scrub, in a
-// motion-allowed desktop context, reaches its final state after a full
-// scroll past the pinned section. homeMotion.ts stamps
-// `data-spine-progress` on `.evidence-spine` from the ScrollTrigger
-// onUpdate callback; a full scroll must drive it to ~1.
+// v3 signature: with motion allowed, scrolling through the pinned hero builds
+// the bridge, carries the three bids across and stamps every checkpoint.
 // ---------------------------------------------------------------------
-test.describe('motion · spine scrub (motion allowed, desktop)', () => {
+test.describe('motion · bridge build (motion allowed, desktop)', () => {
   test.use({
     contextOptions: { reducedMotion: 'no-preference' },
     viewport: { width: 1440, height: 900 },
   });
 
-  test('evidence spine reaches final state after full scroll, no console errors', async ({ page }) => {
+  test('bridge builds to completion on scroll, no console errors', async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
@@ -104,41 +114,35 @@ test.describe('motion · spine scrub (motion allowed, desktop)', () => {
 
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-
-    // Confirm the controller actually booted before relying on its output.
-    await page.waitForFunction(() => document.querySelector('.spine-traveler') !== null, undefined, {
+    await page.waitForFunction(() => document.querySelector('[data-bridge][data-ready]') !== null, undefined, {
       timeout: 10_000,
     });
 
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    // At the top the gap is open: the gates are unstamped.
+    const atTop = await page.evaluate(() => document.querySelectorAll('.gate.is-on').length);
+    expect(atTop, 'no checkpoint stamped before scrolling').toBe(0);
 
-    await page.waitForFunction(
-      () => {
-        const el = document.querySelector<HTMLElement>('.evidence-spine');
-        const p = el?.dataset.spineProgress ? parseFloat(el.dataset.spineProgress) : 0;
-        return p >= 0.98;
-      },
-      undefined,
-      { timeout: 10_000 }
-    );
-
-    const finalState = await page.evaluate(() => {
-      const spine = document.querySelector<HTMLElement>('.evidence-spine');
-      const lastPlate = document.querySelector<HTMLElement>('[data-station="retained-record"] .spine__plate');
-      const signaturePath = document.querySelector<SVGPathElement>(
-        '[data-station="human-review"] .spine__icon svg path'
-      );
-      const cs = lastPlate ? getComputedStyle(lastPlate) : null;
-      return {
-        progress: spine?.dataset.spineProgress ? parseFloat(spine.dataset.spineProgress) : 0,
-        lastPlateOpacity: cs ? parseFloat(cs.opacity) : 0,
-        signatureDashoffset: signaturePath ? getComputedStyle(signaturePath).strokeDashoffset : null,
-      };
+    // Scroll through the pinned section in steps, as a visitor would.
+    const total = await page.evaluate(() => {
+      const hero = document.querySelector<HTMLElement>('[data-bridge]')!;
+      return hero.offsetHeight - window.innerHeight;
     });
+    for (let y = 0; y <= total; y += Math.ceil(total / 12)) {
+      await page.evaluate((top) => window.scrollTo(0, top), y);
+      await page.waitForTimeout(60);
+    }
+    await page.evaluate((top) => window.scrollTo(0, top), total);
 
-    expect(finalState.progress, 'spine scrub progress after full scroll').toBeGreaterThanOrEqual(0.98);
-    expect(finalState.lastPlateOpacity, 'retained-record plate opacity at final state').toBeGreaterThanOrEqual(0.99);
-    expect(consoleErrors, 'no console/page errors during spine scrub').toEqual([]);
+    await page.waitForFunction(() => document.querySelector('[data-bridge][data-built]') !== null, undefined, {
+      timeout: 10_000,
+    });
+    const built = await page.evaluate(() => ({
+      gates: document.querySelectorAll('.gate.is-on').length,
+      deck: getComputedStyle(document.querySelector('.deck')!).transform,
+    }));
+    expect(built.gates, 'all three checkpoints stamped').toBe(3);
+    expect(built.deck === 'none' || built.deck.startsWith('matrix(1,'), 'deck fully laid').toBe(true);
+    expect(consoleErrors, 'no console/page errors during the build').toEqual([]);
   });
 });
 
@@ -172,18 +176,14 @@ test.describe('motion · tier 2 reveal visibility (D-013)', () => {
     }
 
     const revealStates = await page.evaluate(() =>
-      Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]')).map((el) => {
+      Array.from(document.querySelectorAll<HTMLElement>('.rv, .rv-stagger > *')).map((el) => {
         const cs = getComputedStyle(el);
-        return {
-          identity: el.className || el.tagName,
-          mark: el.getAttribute('data-reveal'),
-          opacity: parseFloat(cs.opacity),
-        };
+        return { identity: el.className || el.tagName, opacity: parseFloat(cs.opacity) };
       })
     );
-    expect(revealStates.length, 'expected at least one [data-reveal] element to be tracked').toBeGreaterThan(0);
+    expect(revealStates.length, 'expected at least one reveal element to be tracked').toBeGreaterThan(0);
     for (const s of revealStates) {
-      expect(s.opacity, `[data-reveal="${s.mark}"] "${s.identity}" not at opacity 1`).toBeGreaterThanOrEqual(0.99);
+      expect(s.opacity, `reveal "${s.identity}" not at opacity 1`).toBeGreaterThanOrEqual(0.99);
     }
   }
 
@@ -201,7 +201,7 @@ test.describe('motion · tier 2 reveal visibility (D-013)', () => {
     // immediately after the assertions above passed, at the exact handoff
     // path — no separate capture step that could drift from what the test
     // actually checked.
-    await page.screenshot({ path: 'docs/v2-handoffs/final-screens/home-1440.png', fullPage: true });
+    await page.screenshot({ path: 'tests/.output/home-1440.png', fullPage: true });
   });
 
   test('reveal elements stay visible after instant scroll-to-bottom-and-back', async ({ page }) => {

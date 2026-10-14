@@ -1,0 +1,445 @@
+---
+// FindingZoom.astro: "Zoom into the bridge". An interactive specimen of one
+// Evaluator finding: clause, finding, source page, officer decision, sealed
+// record. Behaviour: initZoom() in src/scripts/site.ts. Without JS every
+// panel is visible with an example record.
+---
+<section class="section zoom-sec on-paper-2" aria-labelledby="zoom-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">03 · Zoom into the bridge</p>
+      <h2 id="zoom-title" class="h2">One finding. One click. <em>One page.</em></h2>
+      <p class="lead">This is the unit of work inside Evaluator. Walk through it: read the clause, open the finding, check the page, then decide as the officer would.</p>
+    </header>
+
+    <div class="zoom" data-zoom data-stage="clause">
+      <div class="zoom__steps" role="group" aria-label="Walk through one finding">
+        <button type="button" class="zoom__step" data-zoom-go="clause" aria-pressed="true"><span class="mono">01</span> Read the clause</button>
+        <button type="button" class="zoom__step" data-zoom-go="finding" aria-pressed="false"><span class="mono">02</span> Open the finding</button>
+        <button type="button" class="zoom__step" data-zoom-go="page" aria-pressed="false"><span class="mono">03</span> Check the page</button>
+        <button type="button" class="zoom__step" data-zoom-go="decide" aria-pressed="false"><span class="mono">04</span> Decide</button>
+      </div>
+
+      <div class="zoom__board">
+        <article class="zp zp--clause" data-panel="clause">
+          <p class="mono zp__k">Tender · Clause 4.2</p>
+          <div class="doc">
+            <span class="doc__line" style="--w:92%"></span>
+            <span class="doc__line" style="--w:78%"></span>
+            <p class="doc__hl">“The bidder shall submit a valid ISO 9001 certificate.”</p>
+            <span class="doc__line" style="--w:86%"></span>
+            <span class="doc__line" style="--w:64%"></span>
+            <span class="doc__line" style="--w:72%"></span>
+          </div>
+          <p class="zp__note">Criteria stay in the tender’s own words.</p>
+        </article>
+
+        <span class="zoom__link" aria-hidden="true"></span>
+
+        <article class="zp zp--finding" data-panel="finding">
+          <p class="mono zp__k">Finding · Bidder A</p>
+          <div class="finding">
+            <p class="finding__state"><span class="finding__dot" aria-hidden="true"></span>Supported</p>
+            <p class="finding__ev">ISO 9001:2015 certificate, valid until 11 Mar 2027</p>
+            <button type="button" class="finding__open" data-zoom-go="page">Open bid page 14 <span aria-hidden="true">&rarr;</span></button>
+          </div>
+          <p class="zp__note">The system proposes. It does not decide.</p>
+        </article>
+
+        <span class="zoom__link" aria-hidden="true"></span>
+
+        <article class="zp zp--page" data-panel="page">
+          <p class="mono zp__k">Bid packet · Page 14</p>
+          <div class="page">
+            <div class="cert">
+              <span class="cert__seal" aria-hidden="true"></span>
+              <p class="cert__t">Certificate of Registration</p>
+              <span class="doc__line" style="--w:70%"></span>
+              <p class="cert__hl">ISO 9001:2015 · valid until 11-03-2027</p>
+              <span class="doc__line" style="--w:56%"></span>
+              <span class="doc__line" style="--w:62%"></span>
+            </div>
+          </div>
+          <p class="zp__note">The exact region is highlighted on the source page.</p>
+        </article>
+
+        <span class="zoom__link" aria-hidden="true"></span>
+
+        <article class="zp zp--decide" data-panel="decide">
+          <p class="mono zp__k">Officer decides</p>
+          <div class="decide">
+            <div class="decide__btns">
+              <button type="button" class="btn decide__btn" data-decide="accepted" data-announce="Finding accepted. Record 0412 sealed.">Accept finding</button>
+              <button type="button" class="btn btn--ghost decide__btn" data-decide="clarify" data-announce="Clarification sought. Record 0412 sealed.">Seek clarification</button>
+            </div>
+            <div class="record">
+              <span class="stamp record__stamp record__stamp--accepted">Accepted</span>
+              <span class="stamp stamp--brass record__stamp record__stamp--clarify">Clarification sought</span>
+              <dl class="record__rows">
+                <div><dt>Record</dt><dd>0412 · Bidder A · Clause 4.2</dd></div>
+                <div><dt>Source</dt><dd>Bid packet, p. 14, region 3</dd></div>
+                <div><dt>Chain</dt><dd>sha256 9c1e…44a7 → 51b0…e2d9</dd></div>
+              </dl>
+              <p class="mono record__spec">Specimen record</p>
+            </div>
+          </div>
+          <p class="zp__note">One edit after the fact breaks the chain.</p>
+        </article>
+      </div>
+
+      <div class="zoom__foot">
+        <p class="sr-only" aria-live="polite" data-zoom-live></p>
+        <button type="button" class="link-arrow zoom__reset" data-zoom-reset>Reset the specimen</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .zoom__steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .zoom__step {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    background: var(--paper);
+    border-right: 1px solid var(--line-strong);
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 48px;
+  }
+
+  .zoom__step:last-child {
+    border-right: 0;
+  }
+
+  .zoom__step .mono {
+    color: var(--brass-ink);
+  }
+
+  .zoom__step[aria-pressed='true'] {
+    background: var(--navy);
+    color: var(--on-navy);
+  }
+
+  .zoom__step[aria-pressed='true'] .mono {
+    color: var(--brass-light);
+  }
+
+  .zoom__board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1.1fr) 28px minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .zoom__link {
+    align-self: center;
+    height: 0;
+    border-top: 2px dashed var(--brass);
+    position: relative;
+  }
+
+  .zoom__link::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: -6px;
+    border-left: 8px solid var(--brass);
+    border-block: 5px solid transparent;
+  }
+
+  .zp {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.1rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition: border-color 0.4s, box-shadow 0.4s, transform 0.5s var(--ease);
+  }
+
+  .zp__k {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+  }
+
+  .zp__note {
+    margin-top: auto;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+
+  /* Active panel and the trail behind it */
+  .zoom[data-stage='clause'] .zp--clause,
+  .zoom[data-stage='finding'] :is(.zp--clause, .zp--finding),
+  .zoom[data-stage='page'] :is(.zp--clause, .zp--finding, .zp--page),
+  .zoom:is([data-stage='decide'], [data-stage='record']) .zp {
+    border-top-color: var(--brass);
+  }
+
+  .zoom[data-stage='clause'] .zp--clause,
+  .zoom[data-stage='finding'] .zp--finding,
+  .zoom[data-stage='page'] .zp--page,
+  .zoom:is([data-stage='decide'], [data-stage='record']) .zp--decide {
+    box-shadow: 0 18px 40px -22px rgb(10 31 68 / 45%), 0 0 0 1px var(--brass);
+    transform: translateY(-4px);
+  }
+
+  .doc {
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+  }
+
+  .doc__line {
+    display: block;
+    height: 5px;
+    width: var(--w);
+    background: var(--paper-3);
+    border-radius: 1px;
+  }
+
+  .doc__hl {
+    font-family: var(--f-serif);
+    font-size: 0.95rem;
+    line-height: 1.35;
+    background: linear-gradient(transparent 55%, rgb(210 166 96 / 45%) 55%);
+  }
+
+  .finding {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.9rem;
+    background: var(--navy);
+    color: var(--on-navy);
+    border-radius: var(--radius);
+  }
+
+  .finding__state {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  .finding__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #7fc79a;
+    box-shadow: 0 0 0 3px rgb(127 199 154 / 25%);
+  }
+
+  .finding__ev {
+    font-size: 0.875rem;
+    color: var(--on-navy-2);
+    line-height: 1.4;
+  }
+
+  .finding__open {
+    justify-self: start;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid currentcolor;
+  }
+
+  .page {
+    padding: 0.7rem;
+    background: var(--paper-3);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .cert {
+    position: relative;
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.9rem;
+    background: var(--card);
+    border: 3px double var(--brass);
+    transform-origin: 70% 62%;
+    transition: transform 0.7s var(--ease);
+  }
+
+  .zoom[data-stage='page'] .cert {
+    transform: scale(1.06);
+  }
+
+  .cert__seal {
+    position: absolute;
+    right: 0.7rem;
+    top: 0.7rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--red);
+    opacity: 0.7;
+  }
+
+  .cert__t {
+    font-family: var(--f-serif);
+    font-size: 0.9rem;
+  }
+
+  .cert__hl {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    padding: 0.3rem 0.4rem;
+    outline: 2px solid var(--brass);
+    outline-offset: 1px;
+    background: rgb(210 166 96 / 18%);
+  }
+
+  .zoom[data-stage='page'] .cert__hl {
+    animation: hl 1.4s var(--ease-io) 2;
+  }
+
+  @keyframes hl {
+    50% { outline-offset: 5px; outline-color: var(--red); }
+  }
+
+  .decide {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .decide__btns {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .decide__btn {
+    justify-content: center;
+    font-size: 0.72rem;
+    padding-inline: 0.8rem;
+  }
+
+  .record {
+    position: relative;
+    padding: 0.8rem;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    min-height: 7.5rem;
+  }
+
+  .record__stamp {
+    position: absolute;
+    right: 0.5rem;
+    top: -0.8rem;
+    background: var(--card);
+    display: none;
+  }
+
+  .zoom:not([data-decision]) .record__stamp--accepted,
+  .zoom[data-decision='accepted'] .record__stamp--accepted,
+  .zoom[data-decision='clarify'] .record__stamp--clarify {
+    display: inline-flex;
+  }
+
+  .zoom[data-stage]:not([data-decision]) .record__stamp--accepted {
+    display: none;
+  }
+
+  .zoom[data-decision] .record__stamp {
+    animation: stamp 0.45s var(--ease) both;
+  }
+
+  @keyframes stamp {
+    from { transform: rotate(-12deg) scale(1.8); opacity: 0; }
+    to { transform: rotate(-4deg) scale(1); opacity: 1; }
+  }
+
+  .record__rows {
+    display: grid;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .record__rows div {
+    display: grid;
+    grid-template-columns: 3.6rem minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .record__rows dt {
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-top: 0.1rem;
+  }
+
+  .record__rows dd {
+    font-family: var(--f-mono);
+    overflow-wrap: anywhere;
+  }
+
+  .zoom[data-stage]:not([data-decision]) .record__rows dd {
+    color: var(--ink-3);
+  }
+
+  .record__spec {
+    font-size: 0.5625rem;
+    color: var(--ink-3);
+    margin-top: 0.5rem;
+  }
+
+  .zoom__foot {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+  }
+
+  .zoom__reset {
+    color: var(--ink-2);
+  }
+
+  @media (width <= 1080px) {
+    .zoom__board {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .zoom__link {
+      display: none;
+    }
+  }
+
+  @media (width <= 600px) {
+    .zoom__board {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .zoom__steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .zoom__step:nth-child(2) {
+      border-right: 0;
+    }
+
+    .zoom__step:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line-strong);
+    }
+  }
+</style>

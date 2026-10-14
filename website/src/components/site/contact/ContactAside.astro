@@ -1,0 +1,155 @@
+---
+// ContactAside.astro: the direct line, what happens next, and the honest line.
+// Plain div (not <aside>): a complementary landmark inside <main> trips axe.
+import { company } from '../../../data/kriseva';
+
+const steps = [
+  { t: 'We reply', d: 'Within two working days, from the founder, not from a queue.' },
+  { t: 'A 30-minute call', d: 'On your tenders, your side of the table, and what you want to see.' },
+  { t: 'A pilot plan', d: 'A written plan for a pilot on your own material. You decide whether to go ahead.' },
+];
+---
+<div class="ca on-navy-hatch">
+  <div class="ca__in">
+    <p class="eyebrow">Direct line</p>
+    <a class="ca__mail" href={`mailto:${company.email}`}>{company.email}</a>
+    <p class="ca__sub">Prefer to write it yourself? Email goes straight to the founder.</p>
+
+    <h2 class="ca__h">What happens next</h2>
+    <ol class="ca__steps" role="list">
+      {steps.map((s, i) => (
+        <li class="ca__step">
+          <span class="ca__n mono" aria-hidden="true">0{i + 1}</span>
+          <div>
+            <p class="ca__t">{s.t}</p>
+            <p class="ca__d">{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <p class="ca__honest">Pre-revenue and bootstrapped. We reply to every serious note.</p>
+    <p class="ca__keep">Please keep real tender documents and bidder data out of this form. When a pilot starts, we agree how files are shared.</p>
+  </div>
+</div>
+
+<style>
+  .ca {
+    position: sticky;
+    top: calc(var(--header-h) + 1rem);
+    min-width: 0;
+    padding: 0.9rem;
+    border-radius: var(--radius);
+  }
+
+  .ca__in {
+    display: grid;
+    gap: 1.1rem;
+    min-width: 0;
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    border: 1px dashed var(--line-navy);
+  }
+
+  .ca__mail {
+    font-family: var(--f-mono);
+    font-size: clamp(1.05rem, 0.9rem + 0.7vw, 1.35rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--brass-light);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    padding-block: 0.15rem;
+    border-bottom: 1px solid var(--line-navy);
+    justify-self: start;
+  }
+
+  .ca__mail:hover {
+    border-bottom-color: var(--brass-light);
+  }
+
+  .ca :focus-visible {
+    outline-color: var(--brass-light);
+  }
+
+  .ca__sub {
+    margin-top: -0.4rem;
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+  }
+
+  .ca__h {
+    margin-top: 0.8rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line-navy);
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.2rem + 0.8vw, 1.9rem);
+    line-height: 1.15;
+  }
+
+  .ca__steps {
+    display: grid;
+    gap: 0;
+  }
+
+  .ca__step {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    padding-bottom: 1.2rem;
+  }
+
+  .ca__step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 1.05rem;
+    top: 2.3rem;
+    bottom: 0.2rem;
+    width: 1px;
+    background: var(--line-navy);
+  }
+
+  .ca__n {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid var(--brass-light);
+    border-radius: 50%;
+    color: var(--brass-light);
+    font-size: 0.6875rem;
+  }
+
+  .ca__t {
+    font-family: var(--f-serif);
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .ca__d {
+    margin-top: 0.15rem;
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--on-navy-2);
+  }
+
+  .ca__honest {
+    padding: 0.9rem 1rem;
+    border-left: 3px solid var(--brass-light);
+    background: rgb(7 21 48 / 55%);
+    font-weight: 500;
+  }
+
+  .ca__keep {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--on-navy-2);
+  }
+
+  @media (width <= 980px) {
+    .ca {
+      position: static;
+    }
+  }
+</style>

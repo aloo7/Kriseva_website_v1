@@ -1,0 +1,192 @@
+---
+// EvalHeroVisual.astro: the Evaluator tower. Bid packets arrive from the left;
+// each finding is tied by a thread to the region of the page it came from;
+// the officer's stamp closes the record. Specimen drawing.
+---
+<figure class="ehv">
+  <svg viewBox="0 0 560 440" role="img" aria-labelledby="ehv-t">
+    <title id="ehv-t">Bid packets from three bidders arrive at the Evaluator tower. Each finding is tied by a thread to the highlighted region of the bid page it came from, and the officer's stamp closes the record.</title>
+    <defs>
+      <pattern id="ehv-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M20 0H0V20" fill="none" stroke="#0a1f44" stroke-opacity=".06" />
+      </pattern>
+    </defs>
+    <rect x="0" y="0" width="560" height="440" fill="url(#ehv-grid)" />
+
+    <!-- deck -->
+    <rect x="0" y="300" width="560" height="4" fill="#b07f35" />
+    <rect x="0" y="304" width="560" height="12" fill="#0a1f44" />
+    <path d="M0 316H560M0 330H560" stroke="#0a1f44" stroke-width="1.5" />
+    <path d="M0 316L14 330L28 316L42 330L56 316L70 330L84 316L98 330L112 316L126 330L140 316L154 330L168 316L182 330L196 316L210 330L224 316L238 330L252 316L266 330L280 316L294 330L308 316L322 330L336 316L350 330L364 316L378 330L392 316L406 330L420 316L434 330L448 316L462 330L476 316L490 330L504 316L518 330L532 316L546 330L560 316" fill="none" stroke="#0a1f44" stroke-width="1" />
+
+    <!-- tower -->
+    <rect x="196" y="58" width="22" height="242" fill="#0a1f44" />
+    <rect x="201" y="58" width="4" height="242" fill="#1d3a6e" />
+    <rect x="188" y="46" width="38" height="12" fill="#0a1f44" />
+    <rect x="192" y="120" width="30" height="4" fill="#b07f35" />
+    <rect x="192" y="200" width="30" height="4" fill="#b07f35" />
+    <rect x="168" y="14" width="78" height="22" fill="#b07f35" />
+    <text x="207" y="29.5" text-anchor="middle" class="ehv-plate">EVALUATOR</text>
+    <path d="M207 52Q120 150 0 296" fill="none" stroke="#0a1f44" stroke-width="3" />
+    <path d="M40 252V300M80 206V300M120 162V300M160 116V300" stroke="#0a1f44" stroke-opacity=".5" />
+
+    <!-- arriving bid packets -->
+    <g class="ehv-packets">
+      {['A', 'B', 'C'].map((b, i) => (
+        <g transform={`translate(${18 + i * 50} ${248 - i * 6})`}><g class="ehv-pk" style={`--i:${i}`}>
+          <rect x="0" y="0" width="38" height="46" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4" />
+          <rect x="0" y="0" width="38" height="9" fill="#0a1f44" />
+          <path d="M6 18H32M6 25H28M6 32H30" stroke="#dccca8" stroke-width="2" />
+          <text x="19" y="44" text-anchor="middle" class="ehv-b">{b}</text>
+        </g></g>
+      ))}
+    </g>
+
+    <!-- findings column -->
+    <g class="ehv-findings">
+      <g transform="translate(250 70)">
+        <rect width="124" height="30" rx="2" fill="#e6efe5" stroke="#255a39" stroke-opacity=".4" />
+        <text x="10" y="19.5" class="ehv-f ehv-f--ok">✓ Supported · p. 14</text>
+      </g>
+      <g transform="translate(250 118)">
+        <rect width="124" height="30" rx="2" fill="#f6ead2" stroke="#855a1a" stroke-opacity=".4" />
+        <text x="10" y="19.5" class="ehv-f ehv-f--ask">? Clarify · p. 3</text>
+      </g>
+      <g transform="translate(250 166)">
+        <rect width="124" height="30" rx="2" fill="#f6dfdb" stroke="#a8322a" stroke-opacity=".4" />
+        <text x="10" y="19.5" class="ehv-f ehv-f--no">× Not found</text>
+      </g>
+      <path d="M218 85H250M218 133H250M218 181H250" stroke="#0a1f44" stroke-width="1.4" />
+    </g>
+
+    <!-- source page -->
+    <g transform="translate(410 40)">
+      <rect width="132" height="176" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4" />
+      <text x="10" y="18" class="ehv-pg">BID PACKET · P. 14</text>
+      <path d="M10 32H118M10 42H96M10 52H110" stroke="#e1d7c3" stroke-width="3" />
+      <rect x="8" y="64" width="116" height="26" fill="rgb(210 166 96 / 22%)" stroke="#b07f35" stroke-width="1.6" />
+      <text x="14" y="81" class="ehv-pg ehv-pg--hl">ISO 9001:2015 · VALID</text>
+      <path d="M10 104H118M10 114H88M10 124H104M10 134H72" stroke="#e1d7c3" stroke-width="3" />
+      <rect x="8" y="146" width="80" height="18" fill="none" stroke="#b07f35" stroke-width="1.2" stroke-dasharray="3 3" />
+    </g>
+
+    <!-- threads from finding to page region -->
+    <path class="ehv-thread" pathLength="1" d="M374 85C392 85 396 117 418 117" />
+    <path class="ehv-thread ehv-thread--2" pathLength="1" d="M374 133C392 133 396 195 418 195" />
+
+    <!-- officer stamp -->
+    <g transform="translate(420 238)"><g class="ehv-stamp">
+      <rect width="124" height="34" fill="none" stroke="#a8322a" stroke-width="2" />
+      <rect x="4" y="4" width="116" height="26" fill="none" stroke="#a8322a" stroke-width="1" />
+      <text x="62" y="21.5" text-anchor="middle" class="ehv-st">OFFICER DECIDES</text>
+    </g></g>
+
+    <text x="0" y="372" class="ehv-cap">FIG. 01 · EACH FINDING TIED TO ITS PAGE · SPECIMEN</text>
+    <path d="M0 384H560" stroke="#0a1f44" stroke-opacity=".25" />
+    <path d="M0 378V390M560 378V390" stroke="#0a1f44" stroke-opacity=".4" />
+  </svg>
+</figure>
+
+<style>
+  .ehv {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .ehv svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .ehv-plate {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    fill: #0a1f44;
+  }
+
+  .ehv-b {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    fill: #0a1f44;
+  }
+
+  .ehv-f {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .ehv-f--ok { fill: #255a39; }
+  .ehv-f--ask { fill: #855a1a; }
+  .ehv-f--no { fill: #a8322a; }
+
+  .ehv-pg {
+    font-family: var(--f-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    fill: #56627c;
+  }
+
+  .ehv-pg--hl {
+    fill: #0a1f44;
+    font-weight: 600;
+  }
+
+  .ehv-st {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    fill: #a8322a;
+  }
+
+  .ehv-cap {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    fill: #56627c;
+  }
+
+  .ehv-thread {
+    fill: none;
+    stroke: #b07f35;
+    stroke-width: 1.6;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    animation: ehv-draw 1.6s var(--ease-io) 0.4s both;
+  }
+
+  .ehv-thread--2 {
+    animation-delay: 0.9s;
+  }
+
+  .ehv-pk {
+    animation: ehv-arrive 1.1s var(--ease) both;
+    animation-delay: calc(var(--i) * 0.12s);
+  }
+
+  .ehv-stamp {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(-6deg);
+    animation: ehv-thud 0.5s var(--ease) 1.6s both;
+  }
+
+  @keyframes ehv-draw {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes ehv-arrive {
+    from { transform: translate(-60px, 0); }
+  }
+
+  @keyframes ehv-thud {
+    from { transform: rotate(-18deg) scale(1.8); }
+    to { transform: rotate(-6deg) scale(1); }
+  }
+</style>

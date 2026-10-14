@@ -1,0 +1,137 @@
+---
+// PlansTeaser.astro: pilot-first offer for each side of the bridge.
+---
+<section class="section plans-t on-paper-2" aria-labelledby="plans-t-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">07 · Plans</p>
+      <h2 id="plans-t-title" class="h2">Start with a pilot on <em>your own</em> tenders.</h2>
+      <p class="lead">No slideware. We prove Kriseva on your work first, then quote for the modules, deployment and team you actually need.</p>
+    </header>
+
+    <div class="plans-t__grid rv-stagger">
+      <article class="pt-card">
+        <p class="mono pt-card__k">For suppliers · TAS</p>
+        <h3 class="pt-card__t">TAS pilot</h3>
+        <p class="pt-card__d">We set TAS up on your machine, load your capability list, and run it on live tenders with your bid team.</p>
+        <ul role="list" class="pt-card__list">
+          <li>Your portals, your keywords, your capability list</li>
+          <li>Daily shortlist with bid, review or skip reasons</li>
+          <li>Runs on your own machine</li>
+        </ul>
+        <a class="btn" href="/contact?intent=pilot&amp;side=supplier">Request a TAS pilot <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </article>
+      <article class="pt-card">
+        <p class="mono pt-card__k">For buyers · Evaluator</p>
+        <h3 class="pt-card__t">Evaluator sandbox</h3>
+        <p class="pt-card__d">One closed tender, in your room. We run Evaluator on a tender your committee has already decided, so you can check every finding against your own result.</p>
+        <ul role="list" class="pt-card__list">
+          <li>A known result to check us against</li>
+          <li>Every finding linked to its page</li>
+          <li>Offline, on your premises</li>
+        </ul>
+        <a class="btn" href="/contact?intent=pilot&amp;side=buyer">Request a sandbox <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </article>
+      <a class="pt-card pt-card--quote" href="/plans">
+        <p class="mono pt-card__k">Custom quote</p>
+        <h3 class="pt-card__t">Build your plan</h3>
+        <p class="pt-card__d">Pick a side, the modules and the deployment. Your request goes straight to the founder.</p>
+        <span class="link-arrow">Open the plan builder <span aria-hidden="true">&rarr;</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .plans-t__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.85rem, 2vw, 1.4rem);
+  }
+
+  .pt-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: clamp(1.4rem, 1rem + 1.4vw, 2.2rem);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+
+  .pt-card__k {
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .pt-card__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 1.2rem + 1vw, 2.1rem);
+    line-height: 1.1;
+  }
+
+  .pt-card__d {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+  }
+
+  .pt-card__list {
+    display: grid;
+    gap: 0.45rem;
+    margin-bottom: 0.75rem;
+    font-size: var(--t-small);
+  }
+
+  .pt-card__list li {
+    padding-left: 1.3rem;
+    position: relative;
+  }
+
+  .pt-card__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.7rem;
+    height: 1px;
+    background: var(--brass);
+  }
+
+  .pt-card .btn {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  .pt-card--quote {
+    background: var(--navy);
+    color: var(--on-navy);
+    border-color: var(--navy);
+    transition: transform 0.4s var(--ease);
+  }
+
+  .pt-card--quote:hover {
+    transform: translateY(-4px);
+  }
+
+  .pt-card--quote .pt-card__k,
+  .pt-card--quote .link-arrow {
+    color: var(--brass-light);
+  }
+
+  .pt-card--quote .pt-card__d {
+    color: var(--on-navy-2);
+  }
+
+  .pt-card--quote .link-arrow {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+
+  @media (width <= 980px) {
+    .plans-t__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

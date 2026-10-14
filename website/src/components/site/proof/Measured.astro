@@ -1,0 +1,108 @@
+---
+// Measured.astro: the numbers Kriseva measured itself, each with its date.
+// Data: stats.ts `measured`, plus the Wi-Fi-off cold start test (6 Oct 2026).
+import { measured } from '../../../data/stats';
+
+const tiles = [
+  { n: measured.tasSources.value, count: 27, l: measured.tasSources.label, d: measured.tasSources.asOf, k: 'Read' },
+  { n: measured.tasOpenTenders.value, count: 84141, l: measured.tasOpenTenders.label, d: measured.tasOpenTenders.asOf, k: 'Read' },
+  { n: measured.tasTests.value, count: 4649, l: measured.tasTests.label, d: measured.tasTests.asOf, k: 'Test' },
+  { n: '0', count: 0, l: 'application requests left the machine in a cold start with the Wi-Fi off', d: '6 Oct 2026', k: 'Test' },
+];
+---
+<section class="section meas on-paper-2" id="measured" aria-labelledby="meas-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">03 · Measured by us</p>
+      <h2 id="meas-title" class="h2">The numbers <em>we measured.</em></h2>
+      <p class="lead">Four numbers about our own work, each with the date it was taken. None of them is an accuracy figure, and none is a claim about a customer.</p>
+    </header>
+
+    <ul role="list" class="meas__grid rv-stagger" data-inview>
+      {tiles.map((t) => (
+        <li class="meas__tile">
+          <p class="meas__k mono">{t.k} · {t.d}</p>
+          <p class="meas__n" data-count={t.count > 0 ? t.count : undefined}>{t.n}</p>
+          <p class="meas__l">{t.l}</p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="meas__note">These are Kriseva’s own measurements, taken on our own systems. They are not third-party audits. Ask us to run the Wi-Fi-off cold start in your room and count the requests yourself.</p>
+  </div>
+</section>
+
+<style>
+  .meas__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+  }
+
+  .meas__tile {
+    position: relative;
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    min-width: 0;
+    padding: 2.1rem 1.35rem 1.6rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* A ruler along the top edge: this is a measurement. */
+  .meas__tile::before {
+    content: '';
+    position: absolute;
+    inset: 0 1.35rem auto;
+    height: 12px;
+    background:
+      repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 10px) 0 0 / 100% 6px no-repeat,
+      repeating-linear-gradient(90deg, var(--ink-3) 0 1px, transparent 1px 50px) 0 0 / 100% 12px no-repeat;
+  }
+
+  .meas__k {
+    font-size: 0.65rem;
+    color: var(--brass-ink);
+  }
+
+  .meas__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(2.6rem, 2rem + 2vw, 3.8rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meas__tile:last-child .meas__n {
+    color: var(--red);
+  }
+
+  .meas__l {
+    font-size: var(--t-small);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .meas__note {
+    margin-top: 1.75rem;
+    max-width: 52rem;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  @media (width <= 980px) {
+    .meas__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 520px) {
+    .meas__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

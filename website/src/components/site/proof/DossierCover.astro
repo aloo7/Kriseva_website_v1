@@ -1,0 +1,132 @@
+---
+// DossierCover.astro: hero visual for /proof. The cover sheet of the dossier:
+// what the record contains, counted, with the two zeroes that matter.
+import { proof } from '../../../data/proof';
+import { RECORD_DATE } from './meta';
+
+const rows = [
+  { n: String(proof.length), t: 'dated entries, each with its stamp' },
+  { n: '1', t: 'target, drawn as a target' },
+  { n: '0', t: 'customers or institutions named' },
+  { n: '0', t: 'certifications claimed' },
+];
+---
+<figure class="cover">
+  <div class="cover__bar mono"><span>Exhibit A</span><span>Sheet 1 of 1</span></div>
+  <div class="cover__body">
+    <p class="mono cover__k">Kriseva AI Private Limited</p>
+    <p class="cover__t">The record, as it stands</p>
+    <ul role="list" class="cover__rows">
+      {rows.map((r) => (
+        <li class="cover__row">
+          <span class="cover__n">{r.n}</span>
+          <span class="cover__rt">{r.t}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="mono cover__f">Checked against the paper · {RECORD_DATE}</p>
+  </div>
+  <span class="stamp cover__stamp">As it stands</span>
+</figure>
+
+<style>
+  .cover {
+    position: relative;
+    max-width: 30rem;
+    margin-inline: auto;
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: 10px 12px 0 -1px var(--paper-3), 10px 12px 0 0 var(--line);
+    transform: rotate(1.2deg);
+  }
+
+  .cover__bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1.1rem;
+    background: var(--navy);
+    color: var(--on-navy);
+    font-size: 0.6875rem;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .cover__body {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1.5rem 1.4rem 1.4rem;
+  }
+
+  .cover__k {
+    color: var(--brass-ink);
+  }
+
+  .cover__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  .cover__rows {
+    display: grid;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .cover__row {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-block: 0.7rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cover__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--navy);
+    text-align: right;
+  }
+
+  .cover__row:nth-child(n + 3) .cover__n {
+    color: var(--red);
+  }
+
+  .cover__rt {
+    font-size: var(--t-small);
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+
+  .cover__f {
+    margin-top: 0.35rem;
+    font-size: 0.65rem;
+    color: var(--ink-3);
+  }
+
+  .cover__stamp {
+    position: absolute;
+    right: -0.6rem;
+    bottom: 3.2rem;
+    background: var(--card);
+    transform: rotate(-8deg);
+  }
+
+  @media (width <= 900px) {
+    .cover {
+      transform: none;
+      margin-inline: 0;
+    }
+
+    .cover__stamp {
+      right: 0.8rem;
+    }
+  }
+</style>

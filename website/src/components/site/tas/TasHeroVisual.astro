@@ -1,0 +1,318 @@
+---
+// TasHeroVisual.astro: many portal tiles converge through the TAS tower and
+// leave as one short ranked list. Distinct from the home radar: this is a
+// funnel, not a sweep. Everything on the right is a labelled specimen.
+const TH = 32;
+const tileW = (s: string) => Math.round(s.length * 6.3 + 30);
+const tiles = [
+  { l: 'GeM', x: 14, y: 52, r: -3 },
+  { l: 'CPPP', x: 138, y: 78, r: 2.5 },
+  { l: 'ISRO e-Procurement', x: 30, y: 122, r: 2 },
+  { l: '', x: 168, y: 150, r: -2.5, w: 62 },
+  { l: 'Defence eProcurement', x: 8, y: 194, r: -2 },
+  { l: 'NSIL', x: 160, y: 226, r: 3 },
+  { l: '', x: 44, y: 262, r: 2.5, w: 70 },
+  { l: 'eTenders', x: 132, y: 298, r: -3 },
+  { l: 'State NIC portals', x: 14, y: 334, r: 2.5 },
+  { l: 'IN-SPACe', x: 130, y: 372, r: -2 },
+  { l: '', x: 30, y: 410, r: 3, w: 74 },
+  { l: '', x: 154, y: 428, r: -2.5, w: 64 },
+].map((t, i, a) => {
+  const w = t.w ?? tileW(t.l);
+  const ty = 196 + i * (192 / (a.length - 1));
+  return { ...t, w, ty, i };
+});
+const cards = [
+  { y: 180, t: 'Rugged display unit, 15 inch', fit: 82, call: 'BID', cls: 'bid' },
+  { y: 260, t: 'Ka-band filter assembly', fit: 71, call: 'REVIEW', cls: 'review' },
+  { y: 340, t: 'Office furniture, annual rate', fit: 8, call: 'SKIP', cls: 'skip' },
+];
+---
+<figure class="tv" data-inview>
+  <svg
+    class="tv__svg"
+    viewBox="0 0 640 520"
+    role="img"
+    aria-label="Twelve public portal tiles on the left feed threads into the TAS tower in the middle. On the right, three specimen tenders leave as a short ranked shortlist, marked bid, review and skip."
+  >
+    <!-- ground line -->
+    <path d="M0 470.5H640" class="tv__ground" />
+
+    <text x="12" y="34" class="tv__k">PORTALS, AS PUBLISHED</text>
+
+    <!-- threads in -->
+    <g class="tv__threads" fill="none">
+      {tiles.map((t) => (
+        <path class="flow" style={`--d:${(t.i % 5) * 0.35}s`} d={`M${t.x + t.w} ${t.y + TH / 2} C ${t.x + t.w + 56} ${t.y + TH / 2}, 252 ${t.ty.toFixed(1)}, 300 ${t.ty.toFixed(1)}`} />
+      ))}
+    </g>
+
+    <!-- portal tiles -->
+    <g class="tv__tiles">
+      {tiles.map((t) => (
+        <g transform={`translate(${t.x} ${t.y}) rotate(${t.r} ${t.w / 2} ${TH / 2})`}>
+          <rect width={t.w} height={TH} rx="3" class="tv__tile" />
+          <rect width={t.w} height="10" rx="3" class="tv__tilebar" />
+          <circle cx="7" cy="5" r="1.7" class="tv__dot" />
+          <circle cx="13" cy="5" r="1.7" class="tv__dot" />
+          <circle cx="19" cy="5" r="1.7" class="tv__dot" />
+          {t.l ? (
+            <text x="9" y="24" class="tv__tl">{t.l}</text>
+          ) : (
+            <path d={`M9 21H${t.w - 24}M9 27H${Math.round(t.w * 0.6)}`} class="tv__skel" />
+          )}
+          {t.i % 3 === 1 && <circle cx={t.w - 8} cy="16" r="3" class="tv__unread" />}
+        </g>
+      ))}
+    </g>
+
+    <!-- the TAS tower -->
+    <g class="tv__tower">
+      <rect x="304" y="88" width="32" height="12" />
+      <rect x="290" y="100" width="60" height="14" />
+      <rect x="300" y="114" width="40" height="356" />
+      <rect x="307" y="114" width="5" height="356" class="tv__shine" />
+      <rect x="294" y="207" width="52" height="6" class="tv__band" />
+      <rect x="294" y="287" width="52" height="6" class="tv__band" />
+      <rect x="294" y="367" width="52" height="6" class="tv__band" />
+      <rect x="306" y="126" width="28" height="20" rx="1" class="tv__plate" />
+      <text x="320" y="140" text-anchor="middle" class="tv__plate-t">TAS</text>
+    </g>
+
+    <!-- threads out -->
+    <g class="tv__threads" fill="none">
+      {cards.map((c, i) => (
+        <path class="flow" style={`--d:${i * 0.4}s`} d={`M346 ${c.y + 30} H404`} />
+      ))}
+    </g>
+
+    <!-- shortlist -->
+    <text x="404" y="160" class="tv__k tv__k--brass">TODAY’S SHORTLIST</text>
+    <text x="628" y="160" text-anchor="end" class="tv__k">SPECIMEN</text>
+    {cards.map((c, i) => (
+      <g transform={`translate(404 ${c.y})`} class:list={['tv__card', `tv__card--${c.cls}`]}>
+        <rect width="224" height="60" rx="3" class="tv__cardbox" />
+        <circle cx="19" cy="30" r="10" class="tv__rank" />
+        <text x="19" y="34" text-anchor="middle" class="tv__rank-t">{i + 1}</text>
+        <text x="38" y="23" class="tv__ct">{c.t}</text>
+        <rect x="38" y="36" width="84" height="4" class="tv__fitbg" />
+        <rect x="38" y="36" width={(84 * c.fit) / 100} height="4" class="tv__fit" />
+        <text x="130" y="42" class="tv__fitn">{c.fit}</text>
+        <rect x="158" y="32" width="56" height="20" rx="2" class="tv__chip" />
+        <text x="186" y="46" text-anchor="middle" class="tv__chip-t">{c.call}</text>
+      </g>
+    ))}
+
+    <!-- dimension line -->
+    <g class="tv__dim">
+      <path d="M12 500H628M12 492V508M628 492V508" />
+      <rect x="132" y="490" width="376" height="20" class="tv__dim-bg" />
+      <text x="320" y="504" text-anchor="middle" class="tv__dim-t">27 PUBLIC SOURCES IN, ONE RANKED SHORTLIST OUT</text>
+    </g>
+  </svg>
+  <figcaption class="sr-only">Specimen illustration: public portals are read through TAS and leave as a ranked shortlist with bid, review or skip calls.</figcaption>
+</figure>
+
+<style>
+  .tv {
+    width: 100%;
+    max-width: 620px;
+    margin-inline: auto;
+  }
+
+  .tv__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .tv__ground {
+    stroke: var(--navy);
+    stroke-opacity: 0.3;
+    stroke-width: 1;
+  }
+
+  .tv__k {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    fill: var(--ink-3);
+  }
+
+  .tv__k--brass {
+    fill: var(--brass-ink);
+  }
+
+  .tv__tile {
+    fill: var(--card);
+    stroke: var(--line-strong);
+  }
+
+  .tv__tilebar {
+    fill: var(--paper-3);
+  }
+
+  .tv__dot {
+    fill: var(--steel);
+  }
+
+  .tv__tl {
+    font-family: var(--f-sans);
+    font-size: 11.5px;
+    fill: var(--ink-2);
+    font-weight: 500;
+  }
+
+  .tv__skel {
+    stroke: var(--paper-3);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .tv__unread {
+    fill: var(--red);
+  }
+
+  .tv__threads path {
+    stroke: var(--brass);
+    stroke-width: 1.1;
+    stroke-opacity: 0.8;
+  }
+
+  .flow {
+    stroke-dasharray: 2 6;
+    animation: tv-flow 2.4s linear infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes tv-flow {
+    to { stroke-dashoffset: -32; }
+  }
+
+  .tv__tower rect {
+    fill: var(--navy);
+  }
+
+  .tv__tower .tv__shine {
+    fill: #1d3a6e;
+  }
+
+  .tv__tower .tv__band {
+    fill: var(--brass);
+  }
+
+  .tv__tower .tv__plate {
+    fill: var(--brass-light);
+  }
+
+  .tv__plate-t {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    fill: var(--navy);
+  }
+
+  .tv__cardbox {
+    fill: var(--card);
+    stroke: var(--line-strong);
+  }
+
+  .tv__card--bid .tv__cardbox {
+    stroke: var(--brass);
+    stroke-width: 1.6;
+  }
+
+  .tv__card--skip .tv__cardbox {
+    stroke-dasharray: 4 3;
+  }
+
+  .tv__rank {
+    fill: none;
+    stroke: var(--brass);
+    stroke-width: 1.2;
+  }
+
+  .tv__rank-t {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--brass-ink);
+  }
+
+  .tv__ct {
+    font-family: var(--f-sans);
+    font-size: 12.5px;
+    font-weight: 500;
+    fill: var(--ink);
+  }
+
+  .tv__card--skip .tv__ct {
+    fill: var(--ink-3);
+  }
+
+  .tv__fitbg {
+    fill: var(--paper-3);
+  }
+
+  .tv__fit {
+    fill: var(--navy);
+  }
+
+  .tv__card--skip .tv__fit {
+    fill: var(--steel);
+  }
+
+  .tv__fitn {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    fill: var(--ink-2);
+  }
+
+  .tv__chip {
+    fill: none;
+    stroke-width: 1.2;
+  }
+
+  .tv__chip-t {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .tv__card--bid .tv__chip { stroke: #2f6b45; }
+  .tv__card--bid .tv__chip-t { fill: #255a39; }
+  .tv__card--review .tv__chip { stroke: var(--brass); }
+  .tv__card--review .tv__chip-t { fill: var(--brass-ink); }
+  .tv__card--skip .tv__chip { stroke: var(--red); }
+  .tv__card--skip .tv__chip-t { fill: var(--red); }
+
+  .tv__dim path {
+    stroke: var(--ink-2);
+    stroke-width: 1;
+    fill: none;
+  }
+
+  .tv__dim-bg {
+    fill: var(--paper);
+  }
+
+  .tv__dim-t {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    fill: var(--ink);
+  }
+
+  /* The top card breathes once the figure is in view. */
+  :global(.js) .tv.in .tv__card--bid .tv__cardbox {
+    animation: tv-pulse 3.2s var(--ease-io) 1.2s 2;
+  }
+
+  @keyframes tv-pulse {
+    50% { stroke-width: 3; }
+  }
+</style>

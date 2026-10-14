@@ -17,28 +17,7 @@
 
 import { test, expect } from 'playwright/test';
 
-// The 13 live routes (src/pages/*.astro; the archived v8 homepage at
-// _index_v8_archive.astro is intentionally excluded). Not sourced from
-// tests/_routes.ts: that file predates the v2 sitemap
-// (CORPORATE_SITE_V2_ARCHITECTURE.md §4) and still lists retired v8 paths
-// (/workflow, /validation) instead of the current route set. Reconciling
-// _routes.ts is outside W12's touch-file scope (architecture §16); this
-// list is the current, correct one independently.
-const routes: { path: string; label: string }[] = [
-  { path: '/', label: 'home' },
-  { path: '/company', label: 'company' },
-  { path: '/capabilities', label: 'capabilities' },
-  { path: '/defense', label: 'defense' },
-  { path: '/finance', label: 'finance' },
-  { path: '/tas', label: 'tas' },
-  { path: '/evaluator', label: 'evaluator' },
-  { path: '/attest', label: 'attest' },
-  { path: '/security', label: 'security' },
-  { path: '/evidence', label: 'evidence' },
-  { path: '/founder', label: 'founder' },
-  { path: '/contact', label: 'contact' },
-  { path: '/404', label: '404' },
-];
+import { routes } from './_routes';
 
 test.use({ javaScriptEnabled: false });
 

@@ -1,0 +1,86 @@
+---
+// SiteLayout.astro: the v3 "Bridge" layout. Head (SEO, fonts, JSON-LD),
+// header, main, footer, and the shared site script.
+import '../styles/site.css';
+import SiteHeader from '../components/site/SiteHeader.astro';
+import SiteFooter from '../components/site/SiteFooter.astro';
+import { SITE, organizationSchema } from '../data/kriseva';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Route path beginning with '/'. */
+  path: string;
+  schema?: Record<string, unknown>[];
+  /** Absolute path of a 1200x630 image under public/. */
+  ogImage?: string;
+  /** Header starts on a navy surface (inner pages with a navy hero). */
+  headerTone?: 'paper' | 'navy';
+  /** First section runs under the fixed header and pads itself. */
+  overlayHeader?: boolean;
+  noindex?: boolean;
+}
+
+const { title, description, path, schema = [], ogImage = '/og/kriseva-bridge.png', headerTone = 'paper', overlayHeader = false, noindex = false } = Astro.props;
+const canonical = SITE + (path === '/' ? '/' : path);
+const og = SITE + ogImage;
+const blocks = [organizationSchema(), ...schema];
+---
+<!doctype html>
+<html lang="en-IN" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0A1F44" />
+    <meta name="color-scheme" content="light" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Kriseva" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A bridge between India's defence and space suppliers and government buyers, with TAS and Evaluator as its two pillars." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/kriseva-favicon.svg" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-serif-latin-300-normal.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-sans-latin-400-normal.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-mono-latin-500-normal.woff2" crossorigin />
+    <style is:inline>
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/ibm-plex-serif-latin-300-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Serif';font-style:italic;font-weight:300;font-display:swap;src:url('/fonts/ibm-plex-serif-latin-300-italic.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-serif-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Serif';font-style:italic;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-serif-latin-400-italic.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Serif';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-serif-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'IBM Plex Sans Devanagari';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/ibm-plex-sans-devanagari-devanagari-500-normal.woff2') format('woff2');unicode-range:U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+25CC,U+A830-A839,U+A8E0-A8FF}
+    </style>
+    <script is:inline>document.documentElement.classList.replace('no-js','js');</script>
+    {blocks.map((b) => <script is:inline type="application/ld+json" set:html={JSON.stringify(b)} />)}
+  </head>
+  <body data-header-tone={headerTone}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader tone={headerTone} path={path} overlay={overlayHeader} />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

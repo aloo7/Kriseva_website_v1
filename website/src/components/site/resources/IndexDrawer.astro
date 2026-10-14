@@ -1,0 +1,86 @@
+---
+// IndexDrawer.astro: the hero visual for /resources. A card-index drawer with
+// three term cards rising out of it and a magnifier over the third. Decorative;
+// the glossary below carries the real content.
+---
+<svg class="drawer" viewBox="0 0 480 340" aria-hidden="true" focusable="false">
+  <!-- Cards -->
+  <g transform="rotate(-6 115 150)">
+    <rect x="50" y="62" width="130" height="190" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.8" />
+    <rect x="50" y="62" width="40" height="14" fill="#b07f35" />
+    <text x="62" y="124" class="dr-big">L1</text>
+    <text x="62" y="146" class="dr-small">LOWEST BIDDER</text>
+    <path d="M62 168H168M62 180H152M62 192H162" stroke="#0a1f44" stroke-opacity=".25" stroke-width="3" />
+  </g>
+  <g transform="rotate(2 237 130)">
+    <rect x="172" y="38" width="130" height="190" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.8" />
+    <rect x="258" y="38" width="40" height="14" fill="#a8322a" />
+    <text x="184" y="100" class="dr-big">EMD</text>
+    <text x="184" y="122" class="dr-small">EARNEST MONEY</text>
+    <path d="M184 144H290M184 156H274M184 168H284" stroke="#0a1f44" stroke-opacity=".25" stroke-width="3" />
+  </g>
+  <g transform="rotate(7 359 160)">
+    <rect x="294" y="64" width="130" height="190" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.8" />
+    <rect x="380" y="64" width="40" height="14" fill="#0a1f44" />
+    <text x="306" y="126" class="dr-big">GeM</text>
+    <text x="306" y="148" class="dr-small">E-MARKETPLACE</text>
+    <path d="M306 170H412M306 182H396M306 194H406" stroke="#0a1f44" stroke-opacity=".25" stroke-width="3" />
+  </g>
+
+  <!-- Drawer -->
+  <rect x="48" y="176" width="384" height="16" fill="#102a57" />
+  <rect x="60" y="192" width="360" height="124" fill="#0a1f44" />
+  <path d="M60 192V316M420 192V316" stroke="#d2a660" stroke-opacity=".3" />
+  <rect x="190" y="226" width="100" height="38" fill="#d2a660" />
+  <rect x="196" y="232" width="88" height="26" fill="#f5f0e6" />
+  <text x="240" y="250" text-anchor="middle" class="dr-label">A TO Z</text>
+  <rect x="214" y="278" width="52" height="11" rx="5.5" fill="#d2a660" stroke="#855a1a" stroke-width="1.4" />
+  <path d="M30 316H450" stroke="#0a1f44" stroke-opacity=".4" />
+
+  <!-- Magnifier -->
+  <g class="dr-glass">
+    <circle cx="396" cy="112" r="34" fill="#f5f0e6" fill-opacity=".5" stroke="#0a1f44" stroke-width="4" />
+    <path d="M420 138L448 170" stroke="#0a1f44" stroke-width="9" stroke-linecap="round" />
+    <path d="M380 102Q388 92 402 93" fill="none" stroke="#0a1f44" stroke-opacity=".4" stroke-width="2.5" stroke-linecap="round" />
+  </g>
+</svg>
+
+<style>
+  .drawer {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .dr-big {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: 44px;
+    fill: #0a1f44;
+  }
+
+  .dr-small {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    fill: #56627c;
+  }
+
+  .dr-label {
+    font-family: var(--f-mono);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    fill: #0a1f44;
+  }
+
+  .dr-glass {
+    animation: dr-scan 7s ease-in-out infinite;
+  }
+
+  @keyframes dr-scan {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-70px, 6px); }
+  }
+</style>

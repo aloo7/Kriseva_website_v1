@@ -35,7 +35,7 @@ const FORBIDDEN_EXT = ['.docx', '.pdf', '.zip', '.tar', '.gz', '.7z', '.mp4', '.
 // Deliberate first-party exceptions (v7): the public dossier download and
 // the scanner-loop media plates are shipped artifacts. Everything else
 // with a forbidden extension still fails.
-const ALLOWED_EXACT = new Set(['dossier.pdf']);
+const ALLOWED_EXACT = new Set([]);
 const ALLOWED_PREFIXES = ['assets/media/'];
 
 // Forbidden filenames specifically for Claude Design reference HTML.

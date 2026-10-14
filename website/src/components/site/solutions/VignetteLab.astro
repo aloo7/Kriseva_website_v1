@@ -1,0 +1,102 @@
+---
+// VignetteLab.astro: a lab or PSU procurement cell in elevation. A wall rack of
+// tender files (A: many tenders in flight, brass tags), a pinboard of
+// deadlines, a clock, and a desk with a monitor. One file carries a red tag
+// (B: the audit query that arrives two years later). A schematic.
+const COLS = 6;
+const ROWS = 4;
+const X0 = 30;
+const Y0 = 56;
+const CW = 36;
+const CH = 40;
+const spine = ['#0a1f44', '#8c98ad', '#c9bea7', '#d2a660', '#33415e'];
+const cells: { x: number; y: number; w: number; h: number; fill: string }[] = [];
+for (let r = 0; r < ROWS; r++) {
+  for (let c = 0; c < COLS; c++) {
+    const n = 3 + ((r * 6 + c) * 7) % 2;
+    for (let i = 0; i < n; i++) {
+      const h = 18 + ((r * 5 + c * 3 + i * 7) % 14);
+      cells.push({ x: X0 + c * CW + 5 + i * 8, y: Y0 + r * CH + CH - 2 - h, w: 5, h, fill: spine[(r + c + i) % spine.length] });
+    }
+  }
+}
+const tags = [
+  [1, 0],
+  [3, 1],
+  [4, 2],
+  [0, 2],
+].map(([c, r]) => ({ x: X0 + c * CW + 5, y: Y0 + r * CH + 4 }));
+---
+<svg viewBox="0 0 400 280" role="img" aria-label="Elevation of a lab or public sector procurement cell: a wall rack of tender files with brass tags, one marked A, one file with a red tag marked B, a pinboard of deadlines, a clock, and a desk with a monitor and a stack of files.">
+  <!-- Floor -->
+  <path d="M8 240H392" stroke="#0a1f44" stroke-width="2" />
+  <path d="M8 246H392" stroke="#0a1f44" stroke-opacity=".22" />
+
+  <!-- File rack -->
+  <rect x="30" y="56" width="216" height="160" fill="#fbf8f2" stroke="#0a1f44" stroke-width="2" />
+  <rect x="26" y="216" width="224" height="24" fill="#0a1f44" />
+  <path d="M66 56V216M102 56V216M138 56V216M174 56V216M210 56V216M30 96H246M30 136H246M30 176H246" stroke="#0a1f44" stroke-width="1.2" />
+  <g>
+    {cells.map((s) => <rect x={s.x} y={s.y} width={s.w} height={s.h} fill={s.fill} />)}
+  </g>
+  <g fill="#b07f35">
+    {tags.map((t) => <rect x={t.x} y={t.y} width="5" height="8" />)}
+  </g>
+  <rect x="75" y="178" width="6" height="36" fill="#a8322a" />
+  <rect x="73" y="174" width="10" height="7" fill="#a8322a" />
+
+  <!-- Pinboard of deadlines and a clock -->
+  <rect x="270" y="52" width="112" height="66" fill="#e9e2d0" stroke="#0a1f44" stroke-width="1.6" />
+  <g stroke="#0a1f44" stroke-width="1">
+    <rect x="278" y="60" width="28" height="22" fill="#fcf9f2" /><rect x="312" y="62" width="28" height="22" fill="#fcf9f2" transform="rotate(2 326 73)" /><rect x="346" y="60" width="28" height="22" fill="#fcf9f2" />
+    <rect x="288" y="88" width="28" height="22" fill="#fcf9f2" transform="rotate(-2 302 99)" /><rect x="324" y="88" width="28" height="22" fill="#f6dfdb" />
+  </g>
+  <g stroke="#0a1f44" stroke-opacity=".4" stroke-width="1.4">
+    <path d="M282 68H302M282 73H298M316 70H336M316 75H332M350 68H370M350 73H366M292 96H312M292 101H308M328 96H348M328 101H344" />
+  </g>
+  <g fill="#b07f35"><circle cx="292" cy="62" r="2" /><circle cx="326" cy="63" r="2" /><circle cx="360" cy="62" r="2" /><circle cx="302" cy="90" r="2" /></g>
+  <circle cx="338" cy="90" r="2" fill="#a8322a" />
+  <circle cx="336" cy="26" r="15" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.8" />
+  <path d="M336 26V16M336 26L343 30" stroke="#0a1f44" stroke-width="1.8" stroke-linecap="round" />
+  <circle cx="336" cy="26" r="1.8" fill="#a8322a" />
+
+  <!-- Desk, monitor, file stack -->
+  <rect x="268" y="196" width="116" height="7" fill="#0a1f44" />
+  <path d="M274 203V240M378 203V240" stroke="#0a1f44" stroke-width="3.4" />
+  <rect x="286" y="158" width="46" height="32" fill="#0a1f44" />
+  <rect x="290" y="162" width="38" height="24" fill="#1b3869" />
+  <path d="M294 168H318M294 173H312M294 178H322" stroke="#d2a660" stroke-width="1.4" />
+  <path d="M309 190V196M299 196H319" stroke="#0a1f44" stroke-width="2.4" />
+  <path d="M290 194H328" stroke="#0a1f44" stroke-opacity=".5" stroke-width="2" />
+  <g stroke="#0a1f44" stroke-width="1">
+    <rect x="344" y="188" width="32" height="8" fill="#fcf9f2" /><rect x="346" y="181" width="30" height="7" fill="#e9e2d0" /><rect x="343" y="174" width="32" height="7" fill="#fcf9f2" /><rect x="345" y="167" width="30" height="7" fill="#e9e2d0" />
+  </g>
+  <rect x="343" y="174" width="9" height="3" fill="#b07f35" />
+
+  <!-- Callouts -->
+  <circle cx="80" cy="64" r="9" fill="#0a1f44" />
+  <text x="80" y="68" text-anchor="middle" class="vl-ltr">A</text>
+  <circle cx="78" cy="176" r="9" fill="#a8322a" stroke="#fbf8f2" stroke-width="1.5" />
+  <text x="78" y="180" text-anchor="middle" class="vl-ltr">B</text>
+
+  <g stroke="#56627c" stroke-width="1" fill="none">
+    <path d="M30 262H132M268 262H370M30 256V268M370 256V268" />
+  </g>
+  <text x="200" y="266" text-anchor="middle" class="vl-dim">PROCUREMENT CELL</text>
+</svg>
+
+<style>
+  .vl-ltr {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    fill: #f5f0e6;
+  }
+
+  .vl-dim {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    fill: #56627c;
+  }
+</style>

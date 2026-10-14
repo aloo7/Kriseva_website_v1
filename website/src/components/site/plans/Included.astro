@@ -1,0 +1,147 @@
+---
+// Included.astro: what every plan carries, and the honest note on money.
+// Wording stays inside FACTS: properties a buyer can test, no certification.
+const items = [
+  {
+    t: 'On-premise install',
+    d: 'Runs on your own machines, with local models. No cloud account is needed to read a tender or check a bid.',
+    icon: '<rect x="3" y="4" width="18" height="7" rx="1"/><rect x="3" y="13" width="18" height="7" rx="1"/><circle cx="17" cy="7.5" r="1"/><circle cx="17" cy="16.5" r="1"/>',
+  },
+  {
+    t: 'Source-linked findings',
+    d: 'Every finding opens the page it came from, so a person can check it before anything is decided.',
+    icon: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21M8 10.5h5M10.5 8v5"/>',
+  },
+  {
+    t: 'Tamper-evident record',
+    d: 'Findings and decisions are written to a hash-chained record. One edit after the fact breaks the chain, visibly.',
+    icon: '<rect x="2" y="9" width="11" height="6" rx="3"/><rect x="11" y="9" width="11" height="6" rx="3"/>',
+  },
+  {
+    t: 'Direct line to the founder',
+    d: 'You write to Ayush Tiwary and the founder replies. There is no sales queue in between.',
+    icon: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  },
+];
+---
+<section class="section inc on-navy-hatch" aria-labelledby="inc-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">03 · In every plan</p>
+      <h2 id="inc-title" class="h2">What every plan <em>includes.</em></h2>
+      <p class="lead">Modules change from plan to plan. These four do not.</p>
+    </header>
+
+    <ul role="list" class="inc__grid rv-stagger">
+      {items.map((it, i) => (
+        <li class="inc__item">
+          <span class="inc__no mono" aria-hidden="true">0{i + 1}</span>
+          <svg class="inc__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={it.icon} />
+          <h3 class="inc__t">{it.t}</h3>
+          <p class="inc__d">{it.d}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="inc__note">
+      <p class="inc__k mono">A note on money</p>
+      <div class="inc__txt">
+        <p>Prices are quoted per engagement, after the pilot, for the modules, deployment and team you chose. There is no rate card behind this page.</p>
+        <p>Kriseva is pre-revenue and bootstrapped. We would rather say so plainly than dress it up: a quote is written for the work in front of us, not taken off a list.</p>
+      </div>
+      <a class="btn btn--ghost" href="#builder">Back to the plan builder <span class="arrow" aria-hidden="true">&uarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .inc__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.25rem, 2.4vw, 2rem);
+  }
+
+  .inc__item {
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    min-width: 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .inc__no {
+    color: var(--brass-light);
+    font-size: 0.6875rem;
+  }
+
+  .inc__icon {
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .inc__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  .inc__d {
+    font-size: var(--t-small);
+    line-height: 1.55;
+    color: var(--on-navy-2);
+  }
+
+  .inc__note {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr) auto;
+    gap: 1.25rem clamp(1.5rem, 4vw, 3.5rem);
+    align-items: start;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding: clamp(1.4rem, 1rem + 1.4vw, 2.2rem);
+    border: 1px dashed var(--line-navy);
+  }
+
+  .inc__k {
+    color: var(--brass-light);
+    font-size: 0.75rem;
+    padding-top: 0.15rem;
+  }
+
+  .inc__txt {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 44rem;
+    color: var(--on-navy);
+  }
+
+  .inc__note .btn {
+    white-space: normal;
+  }
+
+  @media (width <= 1020px) {
+    .inc__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .inc__note {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .inc__note .btn {
+      justify-self: start;
+    }
+  }
+
+  @media (width <= 560px) {
+    .inc__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

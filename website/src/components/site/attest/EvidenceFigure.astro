@@ -1,0 +1,195 @@
+---
+// EvidenceFigure.astro: the evidence-engine motif, drawn for ATTEST. Four
+// stages on one sheet: sources sealed, three independent paths (one differs
+// and is shown), a value bound to its page, and a named human who resolves it.
+// Every number is synthetic and labelled so.
+---
+<figure class="evf">
+  <div class="evf__sheet reg">
+    <svg viewBox="0 0 440 700" role="img" aria-label="Four stages of the ATTEST evidence flow, drawn with synthetic values. One: source documents are sealed on arrival. Two: three independent extraction paths read a value; two agree and one differs, and the difference is shown. Three: the value is bound to the page and region that produced it. Four: a named human resolves the conflict and records a reason.">
+      <!-- Synthetic badge -->
+      <g transform="translate(370 28) rotate(-4)">
+        <rect x="-62" y="-12" width="124" height="24" fill="none" stroke="#855a1a" stroke-width="1.6" />
+        <rect x="-59" y="-9" width="118" height="18" fill="none" stroke="#855a1a" stroke-width=".7" />
+        <text x="0" y="4" text-anchor="middle" class="ev-badge">SYNTHETIC DATA</text>
+      </g>
+
+      <!-- 01 Seal -->
+      <text x="24" y="30" class="ev-k">01 · SEAL</text>
+      <g stroke="#0a1f44" stroke-width="1.4" fill="#fcf9f2">
+        <rect x="30" y="52" width="92" height="100" transform="rotate(-5 76 102)" />
+        <rect x="52" y="46" width="92" height="100" transform="rotate(1 98 96)" />
+        <rect x="76" y="50" width="92" height="100" transform="rotate(6 122 100)" />
+      </g>
+      <g stroke="#0a1f44" stroke-opacity=".28" stroke-width="3"><path d="M92 76H150M92 88H140M92 100H148M92 112H132" /></g>
+      <circle cx="176" cy="122" r="26" fill="#fbf8f2" stroke="#b07f35" stroke-width="2" />
+      <circle cx="176" cy="122" r="19" fill="none" stroke="#b07f35" stroke-width="1" stroke-dasharray="2 3" />
+      <path d="M166 122l7 7l12 -14" fill="none" stroke="#855a1a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <text x="224" y="104" class="ev-h">Source documents</text>
+      <text x="224" y="124" class="ev-m">SEALED ON ARRIVAL</text>
+
+      <path d="M220 158V186M214 180L220 188L226 180" fill="none" stroke="#0a1f44" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- 02 Three paths -->
+      <text x="24" y="214" class="ev-k">02 · THREE PATHS</text>
+      <g fill="#0a1f44">
+        <rect x="40" y="228" width="100" height="30" /><rect x="170" y="228" width="100" height="30" /><rect x="300" y="228" width="100" height="30" />
+      </g>
+      <g class="ev-node">
+        <text x="90" y="248" text-anchor="middle">PATH A</text><text x="220" y="248" text-anchor="middle">PATH B</text><text x="350" y="248" text-anchor="middle">PATH C</text>
+      </g>
+      <path d="M90 258V282M220 258V282M350 258V282" stroke="#0a1f44" stroke-width="1.4" />
+      <g stroke-width="1.6">
+        <rect x="40" y="282" width="100" height="34" fill="#fcf9f2" stroke="#0a1f44" />
+        <rect x="170" y="282" width="100" height="34" fill="#fcf9f2" stroke="#0a1f44" />
+        <rect x="300" y="282" width="100" height="34" fill="#f6dfdb" stroke="#a8322a" />
+      </g>
+      <g class="ev-val">
+        <text x="90" y="304" text-anchor="middle">12,400</text><text x="220" y="304" text-anchor="middle">12,400</text><text x="350" y="304" text-anchor="middle" fill="#a8322a">11,900</text>
+      </g>
+      <path d="M90 322V332H220V322M155 332V340" fill="none" stroke="#2f6b45" stroke-width="1.6" />
+      <text x="155" y="356" text-anchor="middle" class="ev-m" fill="#2f6b45">AGREE</text>
+      <path d="M350 322V340" stroke="#a8322a" stroke-width="1.6" />
+      <path d="M350 330L358 344H342Z" fill="#a8322a" />
+      <text x="350" y="356" text-anchor="middle" class="ev-m" fill="#a8322a">DIFFERS · SHOWN</text>
+
+      <path d="M220 366V388M214 382L220 390L226 382" fill="none" stroke="#0a1f44" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- 03 Bound to its page -->
+      <text x="24" y="414" class="ev-k">03 · BOUND TO ITS PAGE</text>
+      <rect x="40" y="428" width="82" height="104" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4" />
+      <g stroke="#0a1f44" stroke-opacity=".28" stroke-width="3"><path d="M50 444H110M50 456H100M50 468H108M50 504H106M50 516H96" /></g>
+      <rect x="48" y="478" width="66" height="16" fill="#d2a660" fill-opacity=".55" stroke="#b07f35" stroke-width="1.4" />
+      <path d="M114 486H186M178 481L186 486L178 491" fill="none" stroke="#b07f35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+      <rect x="190" y="466" width="150" height="40" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.6" />
+      <text x="202" y="483" class="ev-m ev-m--soft">CELL 4.2</text>
+      <text x="202" y="499" class="ev-val-s">12,400</text>
+      <text x="40" y="550" class="ev-m">PAGE 7 · REGION 2</text>
+
+      <path d="M220 560V584M214 578L220 586L226 578" fill="none" stroke="#0a1f44" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- 04 A named human -->
+      <text x="24" y="612" class="ev-k">04 · A NAMED HUMAN RESOLVES</text>
+      <circle cx="62" cy="646" r="10" fill="none" stroke="#0a1f44" stroke-width="1.8" />
+      <path d="M44 678a18 18 0 0 1 36 0" fill="none" stroke="#0a1f44" stroke-width="1.8" />
+      <rect x="100" y="628" width="210" height="52" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.6" />
+      <text x="112" y="649" class="ev-m">CONFLICT C · RESOLVED</text>
+      <text x="112" y="667" class="ev-m ev-m--soft">REASON RECORDED</text>
+      <g transform="translate(374 656)">
+        <g transform="rotate(-8)">
+          <rect x="-44" y="-13" width="88" height="26" fill="none" stroke="#a8322a" stroke-width="1.8" />
+          <rect x="-41" y="-10" width="82" height="20" fill="none" stroke="#a8322a" stroke-width=".8" />
+          <text x="0" y="4" text-anchor="middle" class="ev-stamp">RESOLVED</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <figcaption class="evf__cap">
+    <span class="mono evf__no">Fig. 01</span>
+    <span>The evidence flow, with invented values. Nothing here is a real document or a real figure.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .evf {
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  .evf__sheet {
+    --reg: var(--steel);
+
+    background-color: var(--card);
+    background-image:
+      linear-gradient(rgb(10 31 68 / 5%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(10 31 68 / 5%) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 1px solid var(--line-strong);
+    padding: clamp(0.6rem, 1.6vw, 1.1rem);
+  }
+
+  .evf__sheet svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .evf__cap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+    align-items: baseline;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  .evf__no {
+    font-size: 0.6875rem;
+    color: var(--brass-ink);
+  }
+
+  .ev-k {
+    font-family: var(--f-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    fill: #855a1a;
+  }
+
+  .ev-h {
+    font-family: var(--f-serif);
+    font-size: 19px;
+    fill: #0a1f44;
+  }
+
+  .ev-m {
+    font-family: var(--f-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    fill: #0a1f44;
+  }
+
+  .ev-m--soft {
+    fill: #56627c;
+  }
+
+  .ev-node text {
+    font-family: var(--f-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    fill: #f5f0e6;
+  }
+
+  .ev-val text {
+    font-family: var(--f-mono);
+    font-size: 16px;
+    font-weight: 600;
+    fill: #0a1f44;
+  }
+
+  .ev-val-s {
+    font-family: var(--f-mono);
+    font-size: 15px;
+    font-weight: 600;
+    fill: #0a1f44;
+  }
+
+  .ev-badge {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    fill: #855a1a;
+  }
+
+  .ev-stamp {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    fill: #a8322a;
+  }
+</style>

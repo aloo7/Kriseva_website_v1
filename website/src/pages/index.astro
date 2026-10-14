@@ -1,86 +1,43 @@
 ---
-// / - KRISEVA AI homepage, corporate site v2
-// (docs/CORPORATE_SITE_V2_ARCHITECTURE.md §5). Company narrative first,
-// products are exhibits reached one click away. This file is composition
-// and metadata only (architecture §9): every section is its own component
-// under src/components/home/, reading claim-bearing copy from
-// publicClaims.ts / src/data/company.ts rather than inlining wording here.
-//
-// Section order per §5 (8 sections total):
-//   1. HeroCorporate  - built W03
-//   2. EvidenceThesis - built W03
-//   3. EvidenceSpine  - built W04, static composition; scroll choreography
-//                       is Phase 4 / W12, not this file
-//   4. SectorPanels   - built W05 (worker B1)
-//   5. PortfolioCards - built W06 (worker B1); carries the id="portfolio"
-//                       anchor the hero's "Explore the systems" CTA targets
-//   6. TrustStrip     - built W06 (worker B1)
-//   7. ProofRow       - built W06 (worker B1)
-//   8. FounderCTA     - existing component, trivially reused
-//
-// The previous (v8) homepage is archived at _index_v8_archive.astro
-// (D-004: three.js hero exhibit retired from every v2 route, code kept,
-// not deleted).
+// Home: the bridge. Hero (scroll-built bridge), the span, the two pillars,
+// one finding up close, tender to award, sovereignty, proof, plans, FAQ.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import BridgeHero from '../components/site/home/BridgeHero.astro';
+import SpanBand from '../components/site/home/SpanBand.astro';
+import Pillars from '../components/site/home/Pillars.astro';
+import FindingZoom from '../components/site/home/FindingZoom.astro';
+import TenderToAward from '../components/site/home/TenderToAward.astro';
+import Sovereign from '../components/site/home/Sovereign.astro';
+import ExhibitA from '../components/site/home/ExhibitA.astro';
+import PlansTeaser from '../components/site/home/PlansTeaser.astro';
+import Faq from '../components/site/Faq.astro';
+import { faqs } from '../data/faq';
+import { SITE, faqSchema } from '../data/kriseva';
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroCorporate from '../components/home/HeroCorporate.astro';
-import EvidenceThesis from '../components/home/EvidenceThesis.astro';
-import EvidenceSpine from '../components/home/EvidenceSpine.astro';
-import SectorPanels from '../components/home/SectorPanels.astro';
-import PortfolioCards from '../components/home/PortfolioCards.astro';
-import TrustStrip from '../components/home/TrustStrip.astro';
-import ProofRow from '../components/home/ProofRow.astro';
-import FounderCTA from '../components/FounderCTA.astro';
-import { getClaim } from '../data/publicClaims';
-
-function claim(id: string): string {
-  const c = getClaim(id);
-  if (!c) {
-    throw new Error(`index.astro: expected registered claim "${id}" in publicClaims.ts`);
-  }
-  return c.wording;
-}
-
-// v2 (W11b SEO pass): "KRISEVA · <page role>" title pattern, page role
-// here is the registered hero headline claim itself (companyV2.hero-headline),
-// exact wording, no paraphrase.
-const title = `KRISEVA · ${claim('companyV2.hero-headline')}`;
-const description = claim('companyV2.sentence');
+const homeFaqs = faqs.slice(0, 8);
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Kriseva',
+  url: SITE + '/',
+  inLanguage: 'en-IN',
+  publisher: { '@id': SITE + '/#organization' },
+};
 ---
-
-<BaseLayout title={title} description={description}>
-  <HeroCorporate />
-  <EvidenceThesis />
-  <EvidenceSpine />
-  <SectorPanels />
-  <PortfolioCards />
-  <TrustStrip />
-  <ProofRow />
-  <FounderCTA />
-
-  {/* Motion wiring (CORPORATE_SITE_V2_ARCHITECTURE.md §18A, W12). The gate
-      below is evaluated BEFORE either module is requested: reduced-motion
-      visitors trigger neither dynamic import, so they fetch zero motion
-      bytes (Tier 2's reveal.ts and Tier 1's homeMotion.ts, plus its vendor
-      bundle, all stay unrequested). Tier 2 (reveal.ts) additionally runs on
-      mobile widths per item 6 ("Tier 2 reveals only" below 1024px); Tier 1
-      (homeMotion.ts: the spine scrub + Lenis) is desktop + fine-pointer
-      only. Both are plain dynamic import() calls so Vite code-splits them
-      into separate chunks that are only fetched when actually imported —
-      this script block itself is the only thing every visitor downloads,
-      and it contains no vendor or motion logic, only the gate. */}
-  <script>
-    const reduceOK = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
-    const desktopOK =
-      reduceOK &&
-      window.matchMedia('(min-width: 1024px)').matches &&
-      window.matchMedia('(pointer: fine)').matches;
-
-    if (reduceOK) {
-      import('../scripts/reveal').then((m) => m.initHomepageReveal());
-    }
-    if (desktopOK) {
-      import('../scripts/homeMotion').then((m) => m.initHomeMotion());
-    }
-  </script>
-</BaseLayout>
+<SiteLayout
+  title="Kriseva | AI for defence and space procurement in India"
+  description="Kriseva builds the bridge between India's defence and space suppliers and the government buyers who evaluate them. TAS finds and answers tenders across GeM, CPPP, ISRO and defence portals; Evaluator checks every bid with the page behind every finding. Runs on your premises."
+  path="/"
+  overlayHeader
+  schema={[website, faqSchema(homeFaqs)]}
+>
+  <BridgeHero />
+  <SpanBand />
+  <Pillars />
+  <FindingZoom />
+  <TenderToAward />
+  <Sovereign />
+  <ExhibitA />
+  <PlansTeaser />
+  <Faq items={homeFaqs} />
+</SiteLayout>

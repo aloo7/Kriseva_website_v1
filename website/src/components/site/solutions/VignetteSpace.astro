@@ -1,0 +1,118 @@
+---
+// VignetteSpace.astro: a space-systems maker. A test hall with a satellite on
+// its stand (A: test evidence on file), a launch vehicle on its pad (B: the
+// requirement in the tender), an orbit arc with a satellite, and a ground
+// dish. A schematic, not a real facility or vehicle.
+
+// Lattice braces for the pad tower: uprights at x=212 and x=226, y 100 to 236.
+const braces: string[] = [];
+for (let y = 236; y - 22 >= 100; y -= 22) {
+  braces.push(`M212 ${y}L226 ${y - 22}M226 ${y}L212 ${y - 22}`);
+}
+---
+<svg viewBox="0 0 400 280" role="img" aria-label="Schematic of a space-systems maker: a test hall with a satellite on a stand, marked A; a launch vehicle on a pad with a lattice tower, marked B; an orbiting satellite and a ground dish. A dashed arc joins A to B.">
+  <!-- Orbit, satellite and the link to the ground dish -->
+  <path d="M20 120Q200 -20 380 100" fill="none" stroke="#8c98ad" stroke-width="1.3" stroke-dasharray="4 7" />
+  <g transform="translate(290 56) rotate(14) scale(.55)">
+    <rect x="-62" y="-9" width="44" height="18" fill="#d2a660" stroke="#0a1f44" stroke-width="1.8" />
+    <path d="M-51 -9V9M-40 -9V9M-29 -9V9M-62 0H-18" stroke="#0a1f44" stroke-width="1" />
+    <rect x="18" y="-9" width="44" height="18" fill="#d2a660" stroke="#0a1f44" stroke-width="1.8" />
+    <path d="M29 -9V9M40 -9V9M51 -9V9M18 0H62" stroke="#0a1f44" stroke-width="1" />
+    <path d="M-18 0H-12M12 0H18" stroke="#0a1f44" stroke-width="2.4" />
+    <rect x="-12" y="-11" width="24" height="22" rx="2" fill="#0a1f44" />
+    <rect x="-6" y="-5" width="12" height="4" fill="#d2a660" />
+    <path d="M0 11V18M-7 24Q0 15 7 24" fill="none" stroke="#0a1f44" stroke-width="2" />
+  </g>
+  <path class="link" d="M292 76L346 198" fill="none" stroke="#b07f35" stroke-width="1.6" stroke-dasharray="3 5" />
+
+  <!-- Ground -->
+  <path d="M8 236H392" stroke="#0a1f44" stroke-width="2" />
+  <path d="M8 242H392" stroke="#0a1f44" stroke-opacity=".22" />
+
+  <!-- Test hall with a satellite on its stand -->
+  <rect x="22" y="142" width="150" height="94" fill="#fbf8f2" stroke="#0a1f44" stroke-width="1.8" />
+  <rect x="18" y="134" width="158" height="9" fill="#0a1f44" />
+  <rect x="38" y="160" width="118" height="76" fill="#e9e2d0" stroke="#0a1f44" stroke-width="1.4" />
+  <path d="M97 143V156" stroke="#0a1f44" stroke-width="1.4" />
+  <path d="M90 156H104L101 161H93Z" fill="#d2a660" stroke="#0a1f44" stroke-width="1" />
+  <path d="M72 224H122L128 236H66Z" fill="#0a1f44" />
+  <rect x="72" y="188" width="50" height="36" fill="#0a1f44" />
+  <rect x="62" y="192" width="10" height="28" fill="#d2a660" stroke="#0a1f44" stroke-width="1.4" />
+  <rect x="122" y="192" width="10" height="28" fill="#d2a660" stroke="#0a1f44" stroke-width="1.4" />
+  <rect x="80" y="196" width="34" height="6" fill="#d2a660" />
+  <path d="M84 188Q97 168 110 188" fill="none" stroke="#0a1f44" stroke-width="2.2" />
+  <path d="M97 180V172" stroke="#0a1f44" stroke-width="1.6" />
+
+  <!-- Launch vehicle, pad and tower -->
+  <rect x="204" y="230" width="68" height="6" fill="#0a1f44" />
+  <path d={`M212 236V100M226 236V100${braces.join('')}`} stroke="#0a1f44" stroke-width="1.6" fill="none" />
+  <path d="M208 100H230" stroke="#0a1f44" stroke-width="3" />
+  <path d="M226 150H244" stroke="#0a1f44" stroke-width="2.4" />
+  <circle class="beacon" cx="219" cy="94" r="2.8" fill="#a8322a" />
+  <rect x="244" y="128" width="18" height="102" fill="#f8f4ec" stroke="#0a1f44" stroke-width="1.6" />
+  <path d="M244 128L253 100L262 128Z" fill="#f8f4ec" stroke="#0a1f44" stroke-width="1.6" />
+  <rect x="244" y="146" width="18" height="6" fill="#0a1f44" />
+  <rect x="244" y="196" width="18" height="5" fill="#b07f35" />
+  <path d="M244 214L236 232L244 230ZM262 214L270 232L262 230Z" fill="#f8f4ec" stroke="#0a1f44" stroke-width="1.4" />
+
+  <!-- Ground dish -->
+  <rect x="347" y="214" width="6" height="22" fill="#0a1f44" />
+  <path d="M330 208Q350 232 370 208" fill="none" stroke="#0a1f44" stroke-width="3" stroke-linecap="round" />
+  <path d="M350 220V204" stroke="#0a1f44" stroke-width="1.6" />
+  <circle cx="350" cy="202" r="3" fill="#b07f35" />
+
+  <!-- Height dimension -->
+  <g stroke="#56627c" stroke-width="1" fill="none">
+    <path d="M286 100V230M281 100H291M281 230H291" />
+  </g>
+
+  <!-- Callouts and the match -->
+  <circle cx="97" cy="118" r="10" fill="#0a1f44" />
+  <text x="97" y="122.5" text-anchor="middle" class="vs-ltr">A</text>
+  <path d="M97 128V134" stroke="#0a1f44" stroke-width="1.2" />
+  <circle cx="253" cy="76" r="10" fill="#0a1f44" />
+  <text x="253" y="80.5" text-anchor="middle" class="vs-ltr">B</text>
+  <path d="M253 86V97" stroke="#0a1f44" stroke-width="1.2" />
+  <path class="match" d="M108 112Q176 62 241 72" fill="none" stroke="#b07f35" stroke-width="1.8" stroke-dasharray="5 5" />
+  <path d="M234 66L242 72L233 77" fill="none" stroke="#b07f35" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Bottom rule -->
+  <g stroke="#56627c" stroke-width="1" fill="none">
+    <path d="M22 262H124M276 262H378M22 256V268M378 256V268" />
+  </g>
+  <text x="200" y="266" text-anchor="middle" class="vs-dim">TEST HALL TO PAD</text>
+</svg>
+
+<style>
+  .vs-ltr {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 600;
+    fill: #f5f0e6;
+  }
+
+  .vs-dim {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    fill: #56627c;
+  }
+
+  .beacon {
+    animation: vs-blink 2.4s steps(1) infinite;
+  }
+
+  .match,
+  .link {
+    animation: vs-flow 1.6s linear infinite;
+  }
+
+  @keyframes vs-blink {
+    0%, 60% { opacity: 1; }
+    61%, 100% { opacity: 0.2; }
+  }
+
+  @keyframes vs-flow {
+    to { stroke-dashoffset: -20; }
+  }
+</style>

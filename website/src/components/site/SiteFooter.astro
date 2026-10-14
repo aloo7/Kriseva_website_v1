@@ -1,0 +1,164 @@
+---
+// SiteFooter.astro: navy ground with the bridge drawn as a horizon line.
+import { footerNav, company } from '../../data/kriseva';
+import Logo from './Logo.astro';
+
+// Hanger positions for the horizon bridge (main span between the towers).
+const hangers = Array.from({ length: 27 }, (_, i) => {
+  const x = 330 + i * 20;
+  const t = (x - 310) / 580;
+  const y = 34 + 264 * t * (1 - t);
+  return { x, y };
+}).filter((h) => h.x < 890);
+---
+<footer class="ftr on-navy-hatch">
+  <svg class="ftr__bridge" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+    <path d="M0 126 H1200" stroke="var(--brass-light)" stroke-opacity=".35" />
+    <g stroke="var(--on-navy)" stroke-opacity=".55" fill="none">
+      <path d="M120 116 Q215 70 310 34" stroke-width="1.6" />
+      <path d="M310 34 Q600 166 890 34" stroke-width="1.6" />
+      <path d="M890 34 Q985 70 1080 116" stroke-width="1.6" />
+      {hangers.map((h) => <path d={`M${h.x} ${h.y.toFixed(1)} V116`} stroke-width=".8" />)}
+    </g>
+    <path d="M120 116 H1080" stroke="var(--on-navy)" stroke-opacity=".7" stroke-width="3" />
+    <rect x="302" y="28" width="16" height="98" fill="var(--on-navy)" fill-opacity=".8" />
+    <rect x="882" y="28" width="16" height="98" fill="var(--on-navy)" fill-opacity=".8" />
+    <rect x="296" y="22" width="28" height="7" fill="var(--brass-light)" />
+    <rect x="876" y="22" width="28" height="7" fill="var(--brass-light)" />
+  </svg>
+
+  <div class="wrap ftr__top">
+    <div class="ftr__lead">
+      <p class="ftr__line">For the issuer who can defend the tender. For the bidder who proves a worthy contender. For the procurement that stands fair to every vendor.</p>
+      <div class="ftr__ctas">
+        <a class="btn btn--brass" href="/contact?intent=demo">Book a demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn--ghost" href="/contact?intent=pilot">Request a pilot</a>
+      </div>
+    </div>
+    <nav class="ftr__cols" aria-label="Footer">
+      {footerNav.map((col) => (
+        <div>
+          <p class="mono ftr__h">{col.title}</p>
+          <ul role="list">
+            {col.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+
+  <div class="wrap ftr__base">
+    <a href="/" class="ftr__brand" aria-label="Kriseva home"><Logo size={26} /></a>
+    <p class="ftr__legal">
+      {company.legalName} · Incorporated {company.incorporated}, {company.city}, India · MSME (Udyam) ·
+      <a href={`mailto:${company.email}`}>{company.email}</a>
+    </p>
+    <p class="ftr__legal ftr__honest">{company.status} No government body is named on this site, and none endorses Kriseva.</p>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    position: relative;
+    padding-top: 0;
+    overflow: hidden;
+  }
+
+  .ftr__bridge {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .ftr__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+
+  .ftr__line {
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+    line-height: 1.35;
+    color: var(--on-navy);
+    max-width: 26ch;
+  }
+
+  .ftr__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .ftr__cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .ftr__h {
+    color: var(--brass-light);
+    margin-bottom: 1rem;
+  }
+
+  .ftr__cols ul {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .ftr__cols a {
+    color: var(--on-navy-2);
+    text-decoration: none;
+    font-size: var(--t-small);
+  }
+
+  .ftr__cols a:hover {
+    color: var(--on-navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .ftr__base {
+    display: grid;
+    gap: 0.6rem;
+    padding-block: 2rem 2.5rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .ftr__brand {
+    color: var(--on-navy);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+  }
+
+  .ftr__legal {
+    font-size: 0.8125rem;
+    color: var(--on-navy-2);
+  }
+
+  .ftr__legal a {
+    color: var(--on-navy);
+  }
+
+  .ftr__honest {
+    max-width: 60rem;
+  }
+
+  @media (width <= 960px) {
+    .ftr__top {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (width <= 560px) {
+    .ftr__cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 2rem;
+    }
+  }
+</style>

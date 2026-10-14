@@ -1,19 +1,287 @@
 ---
-// 404 - on-brand, one line, link home.
+// 404: a bridge with a span missing. One stamp, four routes that still stand.
+// Not indexed. The page is static, so it works with JavaScript off.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
 
-import V6Layout from '../layouts/V6Layout.astro';
+// Hangers on the two intact side spans (quadratic from the anchor to the tower top).
+const hangersFor = (x0: number, cx: number, x2: number) => {
+  const out: { x: number; y: number }[] = [];
+  for (let t = 0.2; t < 0.95; t += 0.14) {
+    const u = 1 - t;
+    out.push({ x: u * u * x0 + 2 * u * t * cx + t * t * x2, y: u * u * 212 + 2 * u * t * 150 + t * t * 76 });
+  }
+  return out;
+};
+const left = hangersFor(96, 140, 180);
+const right = hangersFor(464, 420, 380);
+const truss = (x0: number, x1: number) => {
+  let d = '';
+  for (let x = x0; x + 26 <= x1; x += 26) d += `M${x} 226L${x + 13} 240L${x + 26} 226`;
+  return d;
+};
 
-const title = 'KRISEVA · 404, not on file';
-const description = 'This dossier number is not on file.';
+const routes = [
+  { href: '/', k: 'Home', t: 'The whole bridge', d: 'Start at the beginning: suppliers, buyers and the evidence engine between them.' },
+  { href: '/tas', k: 'For suppliers', t: 'TAS', d: 'Find, read and answer the tenders you can win.' },
+  { href: '/evaluator', k: 'For buyers', t: 'Evaluator', d: 'Check every bid, with a page behind every finding.' },
+  { href: '/contact', k: 'Talk to us', t: 'Contact', d: 'Book a demo, request a pilot, or write to the founder.' },
+];
 ---
-<V6Layout title={title} description={description} path="/404">
-  <section class="ihero" aria-label="Not found" style="min-height:62vh">
-    <div class="wrap">
-      <p class="eyebrow">404 · missing entry</p>
-      <h1 class="display">This dossier number is <em class="em-brass">not on file.</em></h1>
-      <div class="acts">
-        <a class="btn btn-line" href="/">Back to the index <span class="arr">→</span></a>
+<SiteLayout
+  title="Route not found | Kriseva"
+  description="This page is not on file. Return to Kriseva's home, TAS, Evaluator or contact page."
+  path="/404"
+  noindex
+>
+  <PageHero
+    eyebrow="404 · Route not found"
+    title="This span of the bridge is missing."
+    accent="missing"
+    lead="The address may be old or mistyped. These routes still stand."
+  >
+    <Fragment slot="actions">
+      <a class="btn" href="/">Back to Home <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn--ghost" href="/contact">Contact</a>
+    </Fragment>
+    <Fragment slot="visual">
+      <div class="bb">
+        <svg class="bb__svg" viewBox="0 0 560 340" role="img" aria-label="A suspension bridge with a span missing: the left deck ends in a broken edge behind a striped barrier, the right deck sags where it was torn away, loose cables hang over the river, and bid papers float below.">
+          <defs>
+            <pattern id="bb-stripe" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="9" height="9" fill="#fcf9f2" /><rect width="4.5" height="9" fill="#a8322a" />
+            </pattern>
+          </defs>
+
+          <!-- River, shores, piers -->
+          <rect x="140" y="240" width="280" height="100" fill="#e2e8ef" />
+          <path d="M140 242.5H420" stroke="#aebcce" stroke-width="1.5" />
+          <g fill="none" stroke="#9eb0c6" stroke-width="1.5" stroke-linecap="round">
+            <path d="M160 290q7 -4 14 0t14 0" /><path d="M360 312q7 -4 14 0t14 0" /><path d="M392 270q7 -4 14 0t14 0" /><path d="M200 320q7 -4 14 0t14 0" />
+          </g>
+          <path d="M0 220H146L140 236L150 262L140 340H0Z" fill="#0a1f44" />
+          <path d="M560 220H414L420 236L410 262L420 340H560Z" fill="#0a1f44" />
+          <path d="M0 220.5H144M416 220.5H560" stroke="#d2a660" stroke-opacity=".7" />
+          <rect x="174" y="240" width="12" height="100" fill="#7f90ab" fill-opacity=".45" />
+          <rect x="374" y="240" width="12" height="100" fill="#7f90ab" fill-opacity=".45" />
+
+          <!-- Intact cables and hangers -->
+          <g fill="none" stroke="#0a1f44" stroke-linecap="round">
+            <g stroke-width="1" stroke-opacity=".7">
+              {left.map((h) => <path d={`M${h.x.toFixed(1)} ${h.y.toFixed(1)}V210`} />)}
+              {right.map((h) => <path d={`M${h.x.toFixed(1)} ${h.y.toFixed(1)}V210`} />)}
+            </g>
+            <path d="M96 212Q140 150 180 76" stroke-width="3" />
+            <path d="M464 212Q420 150 380 76" stroke-width="3" />
+            <!-- Snapped main cables -->
+            <path d="M180 76Q215 120 246 172" stroke-width="3" />
+            <path d="M380 76Q348 120 318 168" stroke-width="3" />
+            <path d="M246 172l7 4M246 172l2 9M246 172l9 -1M318 168l-7 5M318 168l-2 9M318 168l-9 -2" stroke-width="1.3" />
+            <g class="bb__swing" stroke-width="1.1" stroke-opacity=".8">
+              <path d="M207 112V148" /><path d="M227 142V166" /><path d="M355 112V146" /><path d="M336 140V162" />
+            </g>
+          </g>
+
+          <!-- Towers -->
+          <g fill="#0a1f44">
+            <rect x="173" y="76" width="14" height="164" /><rect x="167" y="68" width="26" height="9" /><rect x="174" y="62" width="12" height="7" />
+            <rect x="373" y="76" width="14" height="164" /><rect x="367" y="68" width="26" height="9" /><rect x="374" y="62" width="12" height="7" />
+          </g>
+          <g fill="#b07f35"><rect x="169" y="124" width="22" height="3" /><rect x="369" y="124" width="22" height="3" /></g>
+
+          <!-- Left deck, ending in a broken edge -->
+          <rect x="96" y="210" width="140" height="4" fill="#b07f35" />
+          <path d="M96 214H238L231 220L240 226H96Z" fill="#0a1f44" />
+          <path d={truss(96, 226)} stroke="#0a1f44" stroke-width="2" fill="none" />
+          <g stroke="#0a1f44" stroke-width="1">
+            <rect x="210" y="196" width="4" height="14" fill="#0a1f44" /><rect x="226" y="196" width="4" height="14" fill="#0a1f44" />
+            <rect x="204" y="198" width="32" height="6" fill="url(#bb-stripe)" />
+          </g>
+
+          <!-- Right deck, sagging where the span was torn away -->
+          <g transform="rotate(-3.5 464 214)">
+            <rect x="322" y="210" width="142" height="4" fill="#b07f35" />
+            <path d="M464 214H322L329 220L320 226H464Z" fill="#0a1f44" />
+            <path d={truss(334, 464)} stroke="#0a1f44" stroke-width="2" fill="none" />
+          </g>
+
+          <!-- What fell: planks, ripples, bid papers -->
+          <g fill="none" stroke="#9eb0c6" stroke-width="1.3">
+            <ellipse cx="276" cy="244" rx="22" ry="3.2" /><ellipse cx="314" cy="246" rx="15" ry="2.6" />
+          </g>
+          <rect x="266" y="256" width="28" height="5" fill="#0a1f44" transform="rotate(24 280 258)" />
+          <rect x="304" y="274" width="24" height="5" fill="#0a1f44" transform="rotate(-18 316 276)" />
+          <rect x="248" y="298" width="20" height="4" fill="#b07f35" transform="rotate(12 258 300)" />
+          <g transform="translate(226 284) rotate(-12)">
+            <rect x="-19" y="-24" width="38" height="48" fill="#fcf9f2" stroke="#cdbf9f" />
+            <rect x="-19" y="-24" width="38" height="8" fill="#0a1f44" />
+            <path d="M-13 -8H12M-13 0H8M-13 8H11M-13 16H4" stroke="#dccca8" stroke-width="2" />
+          </g>
+          <g transform="translate(352 300) rotate(9)">
+            <rect x="-17" y="-22" width="34" height="44" fill="#fcf9f2" stroke="#cdbf9f" />
+            <rect x="-17" y="-22" width="34" height="8" fill="#0a1f44" />
+            <path d="M-11 -6H10M-11 2H6M-11 10H9" stroke="#dccca8" stroke-width="2" />
+          </g>
+        </svg>
+        <span class="stamp bb__stamp">Route not found</span>
       </div>
+    </Fragment>
+  </PageHero>
+
+  <section class="section section--tight bb-routes" aria-labelledby="bb-routes-title">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">Routes that still stand</p>
+        <h2 id="bb-routes-title" class="h3">Pick up the bridge from here.</h2>
+      </header>
+      <ul role="list" class="bb-routes__grid rv-stagger">
+        {routes.map((r) => (
+          <li>
+            <a class="bb-route card" href={r.href}>
+              <span class="mono bb-route__k">{r.k}</span>
+              <span class="bb-route__t">{r.t}</span>
+              <span class="bb-route__d">{r.d}</span>
+              <span class="bb-route__go" aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
-</V6Layout>
+</SiteLayout>
+
+<style>
+  .bb {
+    position: relative;
+    min-width: 0;
+  }
+
+  .bb__svg {
+    width: 100%;
+    height: auto;
+    background-color: var(--card);
+    background-image:
+      linear-gradient(rgb(10 31 68 / 5%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(10 31 68 / 5%) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 1px solid var(--line-strong);
+  }
+
+  .bb__stamp {
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    transform: translate(-50%, -50%) rotate(-7deg);
+    background: rgb(251 248 242 / 85%);
+    font-size: 0.8125rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .bb__swing path {
+    transform-box: fill-box;
+    transform-origin: 50% 0;
+    animation: bb-swing 3.6s ease-in-out infinite;
+  }
+
+  .bb__swing path:nth-child(2) {
+    animation-delay: -0.9s;
+  }
+
+  .bb__swing path:nth-child(3) {
+    animation-delay: -1.8s;
+  }
+
+  .bb__swing path:nth-child(4) {
+    animation-delay: -2.7s;
+  }
+
+  @keyframes bb-swing {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .bb-routes__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+  }
+
+  .bb-route {
+    position: relative;
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    height: 100%;
+    min-height: 11rem;
+    padding-bottom: 3rem;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  .bb-route:hover,
+  .bb-route:focus-visible {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--on-navy);
+  }
+
+  .bb-route__k {
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .bb-route__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.8rem);
+    line-height: 1.1;
+  }
+
+  .bb-route__d {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+
+  .bb-route:hover .bb-route__k,
+  .bb-route:focus-visible .bb-route__k {
+    color: var(--brass-light);
+  }
+
+  .bb-route:hover .bb-route__d,
+  .bb-route:focus-visible .bb-route__d {
+    color: var(--on-navy-2);
+  }
+
+  .bb-route__go {
+    position: absolute;
+    left: clamp(1.25rem, 1rem + 1vw, 2rem);
+    bottom: 1.1rem;
+    font-family: var(--f-mono);
+    color: var(--brass-ink);
+    transition: transform 0.35s var(--ease);
+  }
+
+  .bb-route:hover .bb-route__go,
+  .bb-route:focus-visible .bb-route__go {
+    transform: translateX(4px);
+    color: var(--brass-light);
+  }
+
+  @media (width <= 980px) {
+    .bb-routes__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 520px) {
+    .bb-routes__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .bb__stamp {
+      font-size: 0.625rem;
+      letter-spacing: 0.12em;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,549 @@
+---
+// ProofTimeline.astro: the long form of Exhibit A. A tower in section runs
+// down the page as a lattice spine; each entry is a floor of it, with its
+// stamp, alternating left and right on desktop. A red datum line marks today,
+// and the dashed target card hangs off the tower as the next span.
+// Data: src/data/proof.ts.
+import { proof, target } from '../../../data/proof';
+import { RECORD_DATE, stampClass } from './meta';
+
+const words = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+const count = words[proof.length] ?? String(proof.length);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// What each stamp does not mean, in our own words. Keyed by proof.ts item id.
+const limits: Record<string, string> = {
+  incorporated: 'Registration is not revenue. Kriseva is pre-revenue.',
+  'gift-ifih': 'A programme selection. It is not an endorsement by any government body.',
+  lois: 'Letters of intent are not orders, contracts or pilots.',
+  tests: 'A count of our own tests. It is not an accuracy figure.',
+  'wifi-off': 'Our own test on our own machine, on the build of that date. Not a third-party audit.',
+  'space-buyer': 'A demonstration is not a purchase, a deployment or an endorsement.',
+  'space-maker': 'A demonstration is not an order.',
+};
+
+const key = [
+  { stamp: 'Registered', text: 'Recorded in an official register.' },
+  { stamp: 'Selected', text: 'Chosen through a programme’s own selection process.' },
+  { stamp: 'Signed', text: 'A signed paper exists. Ours are non-binding: they commit no one to buy.' },
+  { stamp: 'Passed', text: 'A test was run and the result is on file.' },
+  { stamp: 'Demonstrated', text: 'Shown live. Not a purchase, not an endorsement.' },
+  { stamp: 'Target', text: 'A goal, drawn dashed, until the paper exists.' },
+];
+---
+<section class="section tl" id="record" aria-labelledby="tl-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">01 · The record, May to October 2026</p>
+      <h2 id="tl-title" class="h2">{count} dated entries, and <em>one target.</em></h2>
+      <p class="lead">Read it top to bottom. The record starts on the day we were incorporated and ends today. Each entry carries the stamp it has earned, and one line on what that stamp does not mean.</p>
+    </header>
+
+    <div class="tl__key" role="group" aria-label="How to read the stamps">
+      <p class="mono tl__key-h">How to read the stamps</p>
+      <ul role="list" class="tl__key-list">
+        {key.map((k) => (
+          <li class="tl__key-item">
+            <span class:list={['stamp', stampClass[k.stamp]]}>{k.stamp}</span>
+            <span class="tl__key-t">{k.text}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="tl__stage">
+      <div class="tl__start" aria-hidden="true">
+        <svg viewBox="0 0 72 40" width="72" height="40" focusable="false">
+          <path d="M6 36 L17 12 H55 L66 36 Z" class="tl__cap" />
+          <path d="M36 12 V1" class="tl__mast" />
+          <path d="M36 1 L48 5 L36 9 Z" class="tl__flag" />
+          <path d="M22 24 H50" class="tl__mast" />
+        </svg>
+        <span class="mono">Start of the record</span>
+      </div>
+
+      <ol role="list" class="tl__list">
+        {proof.map((p, i) => (
+          <li class="tl__item" data-side={i % 2 === 0 ? 'l' : 'r'} data-inview>
+            <div class="tl__spine" aria-hidden="true"><span class="tl__lit"></span></div>
+            <span class="tl__node" aria-hidden="true"></span>
+            <p class="tl__date">
+              <span class="tl__no mono">Entry {pad(i + 1)} of {pad(proof.length)}</span>
+              <span class="tl__when">{p.date}</span>
+            </p>
+            <article class="tl__card">
+              <p class="tl__meta mono">{p.kicker}</p>
+              <h3 class="tl__t">{p.title}</h3>
+              <p class="tl__b">{p.body}</p>
+              {limits[p.id] && (
+                <p class="tl__limit"><span class="mono tl__limit-k">Read it as</span> {limits[p.id]}</p>
+              )}
+              <span class:list={['stamp', 'tl__stamp', stampClass[p.stamp]]}>{p.stamp}</span>
+            </article>
+          </li>
+        ))}
+      </ol>
+
+      <div class="tl__today">
+        <span class="tl__today-line" aria-hidden="true"></span>
+        <p class="tl__today-label mono">Today · {RECORD_DATE}</p>
+        <span class="tl__today-line" aria-hidden="true"></span>
+      </div>
+
+      <div class="tl__dash" aria-hidden="true"></div>
+
+      <article class="tl__next" data-inview>
+        <p class="tl__meta mono"><span class="tl__next-k">Next span</span>{target.date}</p>
+        <h3 class="tl__t">{target.title}</h3>
+        <p class="tl__b">{target.body}</p>
+        <span class="stamp stamp--navy tl__stamp">{target.stamp}</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tl {
+    --lattice: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='80' viewBox='0 0 30 80'%3E%3Cg fill='none' stroke='%230a1f44' stroke-width='1.4' stroke-opacity='.2' stroke-linecap='square'%3E%3Cpath d='M3 0V80M27 0V80'/%3E%3Cpath d='M3 0H27M3 0L27 40L3 80'/%3E%3C/g%3E%3C/svg%3E");
+    --lattice-lit: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='80' viewBox='0 0 30 80'%3E%3Cg fill='none' stroke='%230a1f44' stroke-width='1.6' stroke-linecap='square'%3E%3Cpath d='M3 0V80M27 0V80'/%3E%3Cpath d='M3 0H27M3 0L27 40L3 80'/%3E%3C/g%3E%3C/svg%3E");
+    --lattice-dash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='80' viewBox='0 0 30 80'%3E%3Cg fill='none' stroke='%230a1f44' stroke-width='1.4' stroke-opacity='.45' stroke-dasharray='5 5'%3E%3Cpath d='M3 0V80M27 0V80'/%3E%3C/g%3E%3C/svg%3E");
+    --spine-w: 72px;
+  }
+
+  /* ----- Stamp key ----- */
+  .tl__key {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    padding: 1.25rem clamp(1rem, 2vw, 1.75rem) 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .tl__key-h {
+    color: var(--brass-ink);
+  }
+
+  .tl__key-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem clamp(1rem, 2.4vw, 2rem);
+  }
+
+  .tl__key-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+
+  .tl__key-item .stamp {
+    margin-top: 0.15rem;
+  }
+
+  .tl__key-t {
+    font-size: var(--t-small);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  /* ----- Tower and entries ----- */
+  .tl__stage {
+    position: relative;
+    max-width: 1080px;
+    margin-inline: auto;
+  }
+
+  .tl__start {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    color: var(--ink-3);
+    margin-bottom: -2px;
+  }
+
+  .tl__cap {
+    fill: var(--card);
+    stroke: var(--navy);
+    stroke-width: 1.4;
+    stroke-linejoin: round;
+  }
+
+  .tl__mast {
+    fill: none;
+    stroke: var(--navy);
+    stroke-width: 1.4;
+  }
+
+  .tl__flag {
+    fill: var(--brass);
+  }
+
+  .tl__list {
+    list-style: none;
+  }
+
+  .tl__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--spine-w) minmax(0, 1fr);
+    padding-block: var(--pad);
+    --pad: clamp(0.9rem, 1.6vw, 1.4rem);
+  }
+
+  .tl__spine {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    align-self: stretch;
+    position: relative;
+    width: 30px;
+    margin-block: calc(var(--pad) * -1);
+    background-image: var(--lattice);
+    background-size: 30px 80px;
+    background-repeat: repeat-y;
+  }
+
+  .tl__lit {
+    position: absolute;
+    inset: 0;
+    background-image: var(--lattice-lit);
+    background-size: 30px 80px;
+    background-repeat: repeat-y;
+    transition: clip-path 1.3s var(--ease-io);
+  }
+
+  :global(.js) .tl__item:not(.in) .tl__lit {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .tl__node {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    align-self: start;
+    position: relative;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    margin-top: clamp(1.5rem, 2vw, 2rem);
+    background: var(--red);
+    transform: rotate(45deg);
+    box-shadow: 0 0 0 6px var(--paper);
+  }
+
+  :global(.js) .tl__item.in .tl__node {
+    animation: tl-pop 0.7s var(--ease) both;
+    animation-delay: 0.25s;
+  }
+
+  @keyframes tl-pop {
+    from { transform: rotate(45deg) scale(0.2); }
+    to { transform: rotate(45deg) scale(1); }
+  }
+
+  .tl__date {
+    grid-row: 1;
+    align-self: start;
+    display: grid;
+    gap: 0.35rem;
+    margin-top: clamp(1.1rem, 1.6vw, 1.5rem);
+    min-width: 0;
+  }
+
+  .tl__no {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+  }
+
+  .tl__when {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--navy);
+    text-wrap: balance;
+  }
+
+  .tl__card,
+  .tl__next {
+    position: relative;
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+    min-width: 0;
+    padding: 1.4rem 1.4rem 3.8rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  .tl__card {
+    grid-row: 1;
+  }
+
+  /* Left entries: card left, date right. Right entries: mirrored. */
+  .tl__item[data-side='l'] .tl__card {
+    grid-column: 1;
+  }
+
+  .tl__item[data-side='l'] .tl__date {
+    grid-column: 3;
+    padding-left: 1.75rem;
+  }
+
+  .tl__item[data-side='r'] .tl__card {
+    grid-column: 3;
+  }
+
+  .tl__item[data-side='r'] .tl__date {
+    grid-column: 1;
+    padding-right: 1.75rem;
+    text-align: right;
+  }
+
+  /* Leader line from card to the tower, like a dimension line. */
+  .tl__card::after {
+    content: '';
+    position: absolute;
+    top: clamp(1.95rem, 2.4vw, 2.45rem);
+    width: calc(var(--spine-w) / 2 - 8px);
+    height: 1px;
+    background: var(--navy);
+  }
+
+  .tl__item[data-side='l'] .tl__card::after {
+    left: 100%;
+  }
+
+  .tl__item[data-side='r'] .tl__card::after {
+    right: 100%;
+  }
+
+  .tl__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--ink-3);
+  }
+
+  .tl__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    line-height: 1.2;
+  }
+
+  .tl__b {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  .tl__limit {
+    margin-top: 0.4rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed var(--line-strong);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+    max-width: calc(100% - 7.5rem);
+  }
+
+  .tl__limit-k {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.625rem;
+    color: var(--brass-ink);
+  }
+
+  .tl__stamp {
+    position: absolute;
+    right: 1.1rem;
+    bottom: 1.1rem;
+  }
+
+  :global(.js) .tl__item.in .tl__stamp,
+  :global(.js) .tl__next.in .tl__stamp {
+    animation: tl-thud 0.5s var(--ease) both;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes tl-thud {
+    from { transform: rotate(-14deg) scale(1.5); }
+    to { transform: rotate(-4deg) scale(1); }
+  }
+
+  /* ----- Today datum and the next span ----- */
+  .tl__today {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    padding-block: 0.5rem;
+  }
+
+  .tl__today-line {
+    position: relative;
+    height: 1px;
+    background: var(--red);
+  }
+
+  .tl__today-line::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    width: 1px;
+    height: 13px;
+    background: var(--red);
+  }
+
+  .tl__today-line:nth-child(1)::after {
+    left: 0;
+  }
+
+  .tl__today-line:last-child::after {
+    right: 0;
+  }
+
+  .tl__today-label {
+    padding: 0.35rem 0.8rem;
+    border: 1.5px solid var(--red);
+    border-radius: 2px;
+    color: var(--red);
+    background: var(--paper);
+    text-align: center;
+  }
+
+  .tl__dash {
+    width: 30px;
+    height: clamp(2.5rem, 5vw, 4rem);
+    margin-inline: auto;
+    background-image: var(--lattice-dash);
+    background-size: 30px 80px;
+    background-repeat: repeat-y;
+  }
+
+  .tl__next {
+    max-width: 36rem;
+    margin-inline: auto;
+    padding-bottom: 1.5rem;
+    background: transparent;
+    border: 1.5px dashed var(--line-strong);
+  }
+
+  .tl__next .tl__stamp {
+    position: static;
+    justify-self: start;
+    margin-top: 0.5rem;
+  }
+
+  .tl__next-k {
+    color: var(--navy);
+  }
+
+  /* ----- Mobile: tower on the left ----- */
+  @media (width <= 980px) {
+    .tl__key-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 860px) {
+    .tl {
+      --spine-w: 44px;
+    }
+
+    .tl__stage {
+      max-width: 640px;
+    }
+
+    .tl__start {
+      justify-items: start;
+    }
+
+    .tl__start svg {
+      width: var(--spine-w);
+      height: auto;
+    }
+
+    .tl__item {
+      grid-template-columns: var(--spine-w) minmax(0, 1fr);
+      grid-template-rows: auto auto;
+    }
+
+    .tl__spine {
+      grid-column: 1;
+      grid-row: 1 / -1;
+    }
+
+    .tl__node {
+      grid-column: 1;
+      margin-top: 1.4rem;
+    }
+
+    .tl__item[data-side] .tl__date {
+      grid-column: 2;
+      grid-row: 1;
+      padding: 0 0 0 0.25rem;
+      margin-top: 0.9rem;
+      text-align: left;
+    }
+
+    .tl__item[data-side] .tl__card {
+      grid-column: 2;
+      grid-row: 2;
+      margin-top: 0.7rem;
+    }
+
+    .tl__item[data-side] .tl__card::after {
+      display: none;
+    }
+
+    .tl__today {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .tl__today-line:nth-child(1) {
+      display: none;
+    }
+
+    .tl__today-label {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .tl__today-line:last-child {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .tl__dash {
+      margin-left: 7px;
+    }
+
+    .tl__next {
+      margin-left: var(--spine-w);
+      max-width: none;
+    }
+  }
+
+  @media (width <= 560px) {
+    .tl__key-list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .tl__limit {
+      max-width: none;
+    }
+
+    .tl__card {
+      padding-bottom: 4.2rem;
+    }
+  }
+</style>

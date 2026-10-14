@@ -1,0 +1,850 @@
+---
+// PlanBuilder.astro: the custom-quote builder, drawn as a work-order sheet.
+// Markup matches initQuote() in src/scripts/site.ts: a <form data-quote> with
+// inputs named side (radio), module (checkbox), deploy (radio), team (radio),
+// plus [data-quote-summary], [data-quote-count], a[data-quote-mail] and
+// a[data-quote-contact]. initQuote sets form[data-side] to the chosen side
+// value; CSS below shows the module group that matches it.
+//
+// Page-scoped script (bottom): disables the module group that is hidden so its
+// ticks never reach the summary, supports ?side=, and drives a small mobile bar.
+
+const sides = [
+  { value: 'Supplier: TAS', title: 'Supplier', product: 'TAS', note: 'Find, read and answer tenders.', icon: 'radar', checked: true },
+  { value: 'Buyer: Evaluator', title: 'Buyer', product: 'Evaluator', note: 'Check every bid, page by page.', icon: 'seal', checked: false },
+  { value: 'Both', title: 'Both sides', product: 'TAS + Evaluator', note: 'Supplier and buyer, one standard.', icon: 'bridge', checked: false },
+];
+
+const icons: Record<string, string> = {
+  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6-6"/>',
+  seal: '<circle cx="12" cy="10" r="6"/><path d="M8.5 15L7 21l5-2.5L17 21l-1.5-6M9.5 10l1.7 1.7 3.3-3.4"/>',
+  bridge: '<path d="M2 17h20M2 15L6 7q6 9 12 0l4 8M9 11v6M12 12.5V17M15 11v6"/>',
+};
+
+const tasModules = [
+  'Tender radar across public portals',
+  'Fit scoring against your capability list',
+  'Tender reader',
+  'Bid or skip brief',
+  'Compliance checklist and document pack',
+  'Award book',
+  'Watch list and deadline alerts',
+  'Team hand-off',
+];
+
+const evalModules = [
+  'Criteria in the tender’s words',
+  'Bid intake with sealed price annexes',
+  'Evidence review with source pages',
+  'Comparative statement',
+  'Officer decision record with hashed export',
+  'Committee roles',
+];
+
+const deploys = [
+  { value: 'On your premises, offline', note: 'The install stays closed to the network.' },
+  { value: 'On your premises, connected for portal reading', note: 'For the tender radar. Evaluator does not need it.' },
+  { value: 'Let us advise', note: 'We talk it through on the call.', checked: true },
+];
+
+const teams = ['1 to 5', '6 to 20', '21 or more'];
+
+const defaultBody = encodeURIComponent('Hello Ayush,\n\nWe would like a custom quote for Kriseva.\n\nOrganisation:\nRole:\nTimeline:\n');
+const defaultMail = `mailto:ayush@kriseva.in?subject=${encodeURIComponent('Kriseva custom quote')}&body=${defaultBody}`;
+---
+<section class="section pb on-paper-2" id="builder" aria-labelledby="pb-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">02 · Plan builder</p>
+      <h2 id="pb-title" class="h2">Draw up your <em>request for a quote.</em></h2>
+      <p class="lead">Four choices on one sheet. The slip beside it is what your email will say. Nothing is sent from this page until you send it yourself.</p>
+    </header>
+
+    <form class="pb__form" data-quote aria-label="Plan builder" autocomplete="off">
+      <div class="pb__grid">
+        <div class="pb__sheet reg">
+          <div class="pb__tb" aria-hidden="true">
+            <span>Work order</span>
+            <span>Plan request</span>
+            <span>Sheet 1 of 1</span>
+            <span>Status · Draft</span>
+          </div>
+
+          <!-- 01 side -->
+          <fieldset class="step">
+            <legend class="step__lg"><span class="step__n mono" aria-hidden="true">01</span><span class="step__q">Which side of the bridge are you on?</span></legend>
+            <div class="step__body pb__sides">
+              {sides.map((s) => (
+                <label class="opt">
+                  <input class="opt__in" type="radio" name="side" value={s.value} checked={s.checked} />
+                  <span class="opt__box side__box">
+                    <svg class="side__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={icons[s.icon]} />
+                    <span class="side__t">{s.title}</span>
+                    <span class="side__p mono">{s.product}</span>
+                    <span class="side__d">{s.note}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <!-- 02 modules -->
+          <fieldset class="step">
+            <legend class="step__lg"><span class="step__n mono" aria-hidden="true">02</span><span class="step__q">Which modules belong in the plan?</span></legend>
+            <p class="step__hint">Tick what you want in scope. You see the modules for the side you chose.</p>
+
+            <fieldset class="mods" data-mods="supplier">
+              <legend class="mods__lg mono">TAS modules · for suppliers</legend>
+              <div class="mods__grid">
+                {tasModules.map((m, i) => (
+                  <label class="opt">
+                    <input class="opt__in" type="checkbox" name="module" value={m} />
+                    <span class="opt__box mod__box">
+                      <span class="mod__mark" aria-hidden="true"></span>
+                      <span class="mod__t">{m}</span>
+                      <span class="mod__code mono" aria-hidden="true">T{i + 1}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset class="mods" data-mods="buyer">
+              <legend class="mods__lg mono">Evaluator modules · for buyers</legend>
+              <div class="mods__grid">
+                {evalModules.map((m, i) => (
+                  <label class="opt">
+                    <input class="opt__in" type="checkbox" name="module" value={m} />
+                    <span class="opt__box mod__box">
+                      <span class="mod__mark" aria-hidden="true"></span>
+                      <span class="mod__t">{m}</span>
+                      <span class="mod__code mono" aria-hidden="true">E{i + 1}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          </fieldset>
+
+          <!-- 03 deployment -->
+          <fieldset class="step">
+            <legend class="step__lg"><span class="step__n mono" aria-hidden="true">03</span><span class="step__q">Where should it run?</span></legend>
+            <div class="step__body pb__deploys">
+              {deploys.map((d) => (
+                <label class="opt">
+                  <input class="opt__in" type="radio" name="deploy" value={d.value} checked={d.checked} />
+                  <span class="opt__box dep__box">
+                    <span class="dep__mark" aria-hidden="true"></span>
+                    <span class="dep__t">{d.value}</span>
+                    <span class="dep__d">{d.note}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <!-- 04 team -->
+          <fieldset class="step">
+            <legend class="step__lg"><span class="step__n mono" aria-hidden="true">04</span><span class="step__q">How many people would use it?</span></legend>
+            <div class="step__body pb__teams">
+              {teams.map((t) => (
+                <label class="opt">
+                  <input class="opt__in" type="radio" name="team" value={t} />
+                  <span class="opt__box team__box">
+                    <span class="team__t">{t}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <noscript>
+            <p class="pb__noscript">The summary needs JavaScript. Without it, email <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a> with the side, modules, deployment and team size you want.</p>
+          </noscript>
+        </div>
+
+        <!-- Request slip: plain div, not a landmark -->
+        <div class="slip on-navy-hatch" id="slip">
+          <div class="slip__in">
+            <div class="slip__top">
+              <h3 class="slip__h mono">Request slip</h3>
+              <span class="stamp" aria-hidden="true">Draft</span>
+            </div>
+
+            <p class="slip__count" aria-live="polite">
+              <span class="slip__num" data-quote-count>0</span>
+              <span class="slip__unit mono">modules<br />selected</span>
+            </p>
+
+            <p class="slip__lbl mono" id="slip-lbl">What your email will say</p>
+            <div class="slip__body" data-quote-summary aria-labelledby="slip-lbl" role="group">Pick a side and a few modules.</div>
+
+            <div class="slip__actions">
+              <a class="btn btn--brass" data-quote-mail href={defaultMail}>Email this request <span class="arrow" aria-hidden="true">&rarr;</span></a>
+              <a class="btn btn--ghost" data-quote-contact href="/contact?intent=quote">Continue to the contact form <span class="arrow" aria-hidden="true">&rarr;</span></a>
+            </div>
+
+            <p class="slip__note">Your selection stays in this browser tab. Prices are quoted per engagement, after the pilot.</p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Mobile bar: count and a jump to the slip. Hidden on wide screens and while the slip is on screen. -->
+  <a class="pbbar" href="#slip" data-pbbar hidden>
+    <span class="pbbar__n" data-pbbar-n>0</span>
+    <span class="pbbar__t mono">modules · view request slip</span>
+    <span aria-hidden="true">&darr;</span>
+  </a>
+</section>
+
+<style>
+  .pb__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.6vw, 2.25rem);
+    align-items: start;
+  }
+
+  /* ---------- The sheet ---------- */
+  .pb__sheet {
+    --reg: var(--ink);
+
+    min-width: 0;
+    background: var(--card);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+  }
+
+  .pb__tb {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-bottom: 1px solid var(--ink);
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .pb__tb span {
+    padding: 0.55rem 0.8rem;
+    border-right: 1px solid var(--line-strong);
+    min-width: 0;
+  }
+
+  .pb__tb span:last-child {
+    border-right: 0;
+    color: var(--red);
+  }
+
+  .step {
+    min-width: 0;
+    border: 0;
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    border-top: 1px dashed var(--line-strong);
+  }
+
+  .pb__tb + .step {
+    border-top: 0;
+  }
+
+  .step__lg {
+    float: left;
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0;
+    margin-bottom: 0.9rem;
+  }
+
+  .step__lg + * {
+    clear: both;
+  }
+
+  .step__n {
+    flex: none;
+    padding: 0.18rem 0.45rem;
+    border: 1px solid var(--brass-ink);
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .step__q {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+  }
+
+  .step__hint {
+    margin: -0.2rem 0 1rem;
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+
+  /* ---------- Option cards (radio and checkbox) ---------- */
+  .opt {
+    position: relative;
+    display: block;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .opt__in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .opt__box {
+    display: grid;
+    height: 100%;
+    min-height: 44px;
+    padding: 0.85rem 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+
+  .opt:hover .opt__box {
+    border-color: var(--ink-3);
+  }
+
+  .opt__in:focus-visible + .opt__box {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+  }
+
+  /* Side cards */
+  .pb__sides {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .side__box {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'icon title'
+      'icon prod'
+      'note note';
+    column-gap: 0.8rem;
+    row-gap: 0.1rem;
+    align-content: start;
+    padding: 1rem;
+  }
+
+  .side__icon {
+    grid-area: icon;
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: currentcolor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    color: var(--brass-ink);
+    align-self: center;
+  }
+
+  .side__t {
+    grid-area: title;
+    font-family: var(--f-serif);
+    font-size: 1.25rem;
+    line-height: 1.15;
+    align-self: end;
+  }
+
+  .side__p {
+    grid-area: prod;
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .side__d {
+    grid-area: note;
+    margin-top: 0.6rem;
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    line-height: 1.4;
+  }
+
+  .opt__in:checked + .side__box,
+  .opt__in:checked + .team__box {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--on-navy);
+  }
+
+  .opt__in:checked + .side__box .side__icon,
+  .opt__in:checked + .side__box .side__p {
+    color: var(--brass-light);
+  }
+
+  .opt__in:checked + .side__box .side__d {
+    color: var(--on-navy-2);
+  }
+
+  /* Modules */
+  .mods {
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.25rem;
+  }
+
+  .mods:last-child {
+    margin-bottom: 0;
+  }
+
+  .mods__lg {
+    float: left;
+    width: 100%;
+    padding: 0 0 0.6rem;
+    margin-bottom: 0.2rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .mods__lg + * {
+    clear: both;
+  }
+
+  .mods__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+    padding-top: 0.6rem;
+  }
+
+  .mod__box {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 0.75rem;
+  }
+
+  .mod__mark {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    margin-top: 0.05rem;
+    border: 1.5px solid var(--ink-3);
+    border-radius: 2px;
+    background: var(--card);
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease);
+  }
+
+  .mod__mark::after {
+    content: '';
+    position: absolute;
+    left: 5.5px;
+    top: 1.5px;
+    width: 5px;
+    height: 10px;
+    border: solid var(--on-navy);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .mod__t {
+    font-size: var(--t-small);
+    line-height: 1.35;
+    font-weight: 500;
+    min-width: 0;
+  }
+
+  .mod__code {
+    color: var(--brass-ink);
+    font-size: 0.625rem;
+    padding-top: 0.2rem;
+  }
+
+  .opt__in:checked + .mod__box {
+    background: #f1e4cb;
+    border-color: var(--brass-ink);
+  }
+
+  .opt__in:checked + .mod__box .mod__mark {
+    background: var(--navy);
+    border-color: var(--navy);
+  }
+
+  .opt__in:checked + .mod__box .mod__mark::after {
+    transform: rotate(45deg) scale(1);
+  }
+
+  /* Show the module group for the chosen side (initQuote sets data-side). */
+  form[data-side='Supplier: TAS'] [data-mods='buyer'],
+  form[data-side='Buyer: Evaluator'] [data-mods='supplier'] {
+    display: none;
+  }
+
+  /* Same rule keyed on the checked radio, so the right group shows before the
+     script runs. Kept as separate rules: an unsupported :has() drops its own rule and no other. */
+  .pb__form:has(input[name='side'][value='Supplier: TAS']:checked) [data-mods='buyer'] {
+    display: none;
+  }
+
+  .pb__form:has(input[name='side'][value='Buyer: Evaluator']:checked) [data-mods='supplier'] {
+    display: none;
+  }
+
+  /* Deployment */
+  .pb__deploys {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .dep__box {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'mark title'
+      '. note';
+    column-gap: 0.85rem;
+    row-gap: 0.1rem;
+    align-items: center;
+  }
+
+  .dep__mark {
+    grid-area: mark;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--ink-3);
+    border-radius: 50%;
+    background: var(--card);
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .dep__mark::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--navy);
+    transform: scale(0);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .dep__t {
+    grid-area: title;
+    font-weight: 500;
+    font-size: var(--t-small);
+    line-height: 1.35;
+  }
+
+  .dep__d {
+    grid-area: note;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+
+  .opt__in:checked + .dep__box {
+    background: #f1e4cb;
+    border-color: var(--brass-ink);
+  }
+
+  .opt__in:checked + .dep__box .dep__mark {
+    border-color: var(--navy);
+  }
+
+  .opt__in:checked + .dep__box .dep__mark::after {
+    transform: scale(1);
+  }
+
+  /* Team size */
+  .pb__teams {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+
+  .team__box {
+    place-items: center;
+    text-align: center;
+    padding: 0.8rem 0.5rem;
+  }
+
+  .team__t {
+    font-family: var(--f-mono);
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pb__noscript {
+    padding: 1rem clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    border-top: 1px dashed var(--line-strong);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+
+  /* ---------- The request slip ---------- */
+  .slip {
+    position: sticky;
+    top: calc(var(--header-h) + 1rem);
+    min-width: 0;
+    border-radius: var(--radius);
+    padding: 0.9rem;
+  }
+
+  .slip__in {
+    display: grid;
+    gap: 1.1rem;
+    min-width: 0;
+    padding: clamp(1.1rem, 0.9rem + 1vw, 1.6rem);
+    border: 1px dashed var(--line-navy);
+  }
+
+  .slip__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .slip__h {
+    color: var(--brass-light);
+    font-size: 0.75rem;
+  }
+
+  /* Own solid ground, so contrast tools resolve navy for the stamp text
+     even while the slip is sticky over the hatched panel. */
+  .slip .stamp {
+    background: var(--navy);
+  }
+
+  .slip__count {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.9rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line-navy);
+  }
+
+  .slip__num {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(4rem, 3rem + 3.4vw, 6rem);
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--brass-light);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slip__unit {
+    padding-bottom: 0.3rem;
+    color: var(--on-navy-2);
+    font-size: 0.6875rem;
+    line-height: 1.5;
+  }
+
+  .slip__lbl {
+    margin-bottom: -0.5rem;
+    color: var(--on-navy-2);
+    font-size: 0.6875rem;
+  }
+
+  .slip__body {
+    min-height: 6.5rem;
+    padding: 0.85rem 0.95rem;
+    background: rgb(7 21 48 / 55%);
+    border: 1px solid var(--line-navy);
+    border-radius: 2px;
+    font-family: var(--f-mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    color: var(--on-navy);
+  }
+
+  .slip__actions {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .slip .btn {
+    width: 100%;
+    justify-content: space-between;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .slip :focus-visible {
+    outline-color: var(--brass-light);
+  }
+
+  .slip__note {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--on-navy-2);
+  }
+
+  /* ---------- Mobile bar ---------- */
+  .pbbar {
+    position: fixed;
+    inset: auto 0.75rem 0.75rem;
+    z-index: 40;
+    display: none;
+    align-items: center;
+    gap: 0.8rem;
+    min-height: 48px;
+    padding: 0.5rem 1rem;
+    background: var(--navy);
+    color: var(--on-navy);
+    border: 1px solid var(--brass-light);
+    border-radius: var(--radius);
+    text-decoration: none;
+    box-shadow: 0 10px 28px rgb(7 21 48 / 35%);
+  }
+
+  .pbbar__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--brass-light);
+    min-width: 1.2ch;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pbbar__t {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.6875rem;
+  }
+
+  .pbbar:focus-visible {
+    outline-color: var(--brass-light);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (width <= 980px) {
+    .pb__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .slip {
+      position: static;
+    }
+
+    .pbbar:not([hidden]) {
+      display: flex;
+    }
+  }
+
+  @media (width <= 720px) {
+    .pb__sides {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mods__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pb__tb {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pb__tb span:nth-child(2) {
+      border-right: 0;
+    }
+
+    .pb__tb span:nth-child(n + 3) {
+      border-top: 1px solid var(--line-strong);
+    }
+  }
+
+  @media (width <= 380px) {
+    .team__t {
+      font-size: 0.8125rem;
+      letter-spacing: 0;
+    }
+  }
+</style>
+
+<script>
+  // Page-scoped behaviour for the plan builder. site.ts (initQuote) owns the
+  // summary, count and links; this adds just what the markup needs on top.
+  const form = document.querySelector<HTMLFormElement>('form[data-quote]');
+  if (form) {
+    const sideRadios = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="side"]'));
+    const groups = Array.from(form.querySelectorAll<HTMLFieldSetElement>('fieldset[data-mods]'));
+
+    // A disabled fieldset drops its ticks from FormData, so a module ticked on
+    // one side never leaks into the quote after the visitor switches side.
+    // The tick itself is kept, so switching back restores it.
+    const syncGroups = () => {
+      const side = sideRadios.find((r) => r.checked)?.value ?? '';
+      groups.forEach((g) => {
+        const kind = g.dataset.mods;
+        g.disabled = !(side === 'Both' || side === '' || (kind === 'supplier' && side === 'Supplier: TAS') || (kind === 'buyer' && side === 'Buyer: Evaluator'));
+      });
+    };
+
+    // Target-phase listener on the radios runs before initQuote's listener on the form.
+    sideRadios.forEach((r) => r.addEventListener('change', syncGroups));
+
+    // Optional deep link: /plans?side=supplier|buyer|both
+    const wanted = new URLSearchParams(location.search).get('side');
+    const bySide: Record<string, string> = { supplier: 'Supplier: TAS', buyer: 'Buyer: Evaluator', both: 'Both' };
+    if (wanted && bySide[wanted]) {
+      const hit = sideRadios.find((r) => r.value === bySide[wanted]);
+      if (hit) hit.checked = true;
+    }
+
+    syncGroups();
+    // Ask initQuote to rewrite the summary once with the synced state.
+    form.dispatchEvent(new Event('change', { bubbles: true }));
+
+    // Mobile bar: mirrors the count, hides while the slip or the builder is off screen.
+    const bar = document.querySelector<HTMLAnchorElement>('[data-pbbar]');
+    const barN = document.querySelector<HTMLElement>('[data-pbbar-n]');
+    const count = form.querySelector<HTMLElement>('[data-quote-count]');
+    const slip = document.getElementById('slip');
+    const section = document.getElementById('builder');
+    if (bar && barN && count && slip && section) {
+      const mirror = () => {
+        barN.textContent = count.textContent ?? '0';
+        bar.setAttribute('aria-label', `${count.textContent ?? '0'} modules selected. Go to the request slip.`);
+      };
+      new MutationObserver(mirror).observe(count, { childList: true, characterData: true, subtree: true });
+      mirror();
+
+      let inSection = false;
+      let inSlip = false;
+      const paint = () => {
+        bar.hidden = !(inSection && !inSlip);
+      };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((es) => {
+          inSection = es[es.length - 1].isIntersecting;
+          paint();
+        }).observe(section);
+        new IntersectionObserver((es) => {
+          inSlip = es[es.length - 1].isIntersecting;
+          paint();
+        }).observe(slip);
+      }
+    }
+  }
+</script>

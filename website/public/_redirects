@@ -1,4 +1,4 @@
-# Cloudflare Pages — redirect rules
+# Cloudflare Pages: redirect rules
 # Format: <pattern> <destination> <status>
 # Docs: https://developers.cloudflare.com/pages/configuration/redirects/
 
@@ -8,16 +8,23 @@
 # (If you later want to force one canonical domain, uncomment ONE of the rules
 # below and redeploy.)
 
-# Force apex → www:
+# Force apex to www:
 # https://kriseva.in/* https://www.kriseva.in/:splat 301
 
-# Force www → apex (recommended for procurement-grade URLs):
+# Force www to apex (recommended for procurement-grade URLs):
 # https://www.kriseva.in/* https://kriseva.in/:splat 301
 
 # ─── Page renames ──────────────────────────────────────────────────────
-# Issuer-side promoted from roadmap to product (founder ruling 2026-06-09).
+# v3 "The Bridge" (2026-10-14): retired routes 301 to their replacements.
+# Mirrors worker/index.ts REDIRECTS; keep the two lists identical.
 /issuer-roadmap /evaluator 301
-
-# v2 route retirements (2026-08-16): Pages-native mirrors of worker/index.ts.
-/workflow /capabilities 301
-/validation /evidence 301
+/workflow / 301
+/validation /proof 301
+/evidence /proof 301
+/capabilities / 301
+/defense /solutions 301
+/defence /solutions 301
+/finance /attest 301
+/founder /company 301
+/pricing /plans 301
+/dossier.pdf /proof 301

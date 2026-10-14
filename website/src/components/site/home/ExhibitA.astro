@@ -1,0 +1,228 @@
+---
+// ExhibitA.astro: every claim, exactly as it stands. Procol shows customer
+// logos; Kriseva shows its paper trail, stamped, plus one target marked as a
+// target. Data: src/data/proof.ts.
+import { proof, target, boundary } from '../../../data/proof';
+
+interface Props {
+  index?: string;
+  headingLevel?: 'h1' | 'h2';
+}
+const { index = '06', headingLevel = 'h2' } = Astro.props;
+const H = headingLevel;
+// Company age in whole months at build time, so the headline never goes stale.
+const months = Math.max(1, Math.floor((Date.now() - Date.UTC(2026, 4, 7)) / (30.44 * 864e5)));
+const words = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+const age = months <= 12 ? `${words[months - 1]} month${months > 1 ? 's' : ''} old.` : 'Built in the open.';
+const stampClass: Record<string, string> = {
+  Registered: 'stamp--navy',
+  Selected: '',
+  Passed: 'stamp--navy',
+  Signed: '',
+  Demonstrated: 'stamp--brass',
+  Target: 'stamp--navy',
+};
+---
+<section class="section exa" aria-labelledby="exa-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">{index} · Exhibit A · Every claim, exactly as it stands</p>
+      <H id="exa-title" class="h2">{age} Already in the room with <em>defence suppliers and space buyers.</em></H>
+      <p class="lead">No logos we have not earned, no testimonials we have not been given. This is the paper trail, dated and stamped.</p>
+    </header>
+
+    <div class="exa__rail" aria-hidden="true" data-inview>
+      <span class="exa__end mono">May ’26 · Incorporated</span>
+      <span class="exa__track">
+        <span class="exa__fill"></span>
+        {proof.map((p, i) => <span class="exa__mark" style={`--at:${p.at}`}><span>{String(i + 1).padStart(2, '0')}</span></span>)}
+      </span>
+      <span class="exa__end exa__end--now mono">Oct ’26 · Now</span>
+    </div>
+
+    <ol role="list" class="exa__grid rv-stagger">
+      {proof.map((p, i) => (
+        <li class="exa__card" data-inview>
+          <p class="exa__meta mono"><span class="exa__n">{String(i + 1).padStart(2, '0')}</span>{p.date} · {p.kicker}</p>
+          <h3 class="exa__t">{p.title}</h3>
+          <p class="exa__b">{p.body}</p>
+          <span class:list={['stamp', 'exa__stamp', stampClass[p.stamp]]}>{p.stamp}</span>
+        </li>
+      ))}
+      <li class="exa__card exa__card--target" data-inview>
+        <p class="exa__meta mono"><span class="exa__n">Next</span>{target.date}</p>
+        <h3 class="exa__t">{target.title}</h3>
+        <p class="exa__b">{target.body}</p>
+        <span class="stamp stamp--navy exa__stamp">Target</span>
+      </li>
+    </ol>
+
+    <p class="exa__boundary">{boundary} <a href="/proof">See the full record <span aria-hidden="true">&rarr;</span></a></p>
+  </div>
+</section>
+
+<style>
+  .exa__rail {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2.25rem;
+    color: var(--ink-2);
+  }
+
+  .exa__end {
+    font-size: 0.6875rem;
+  }
+
+  .exa__end--now {
+    color: var(--red);
+  }
+
+  .exa__track {
+    position: relative;
+    height: 2px;
+    background: var(--line-strong);
+  }
+
+  .exa__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--navy);
+    transform-origin: left;
+    transition: transform 1.8s var(--ease-io);
+  }
+
+  :global(.js) .exa__rail:not(.in) .exa__fill {
+    transform: scaleX(0);
+  }
+
+  .exa__mark {
+    position: absolute;
+    left: calc(var(--at) * 100%);
+    top: 50%;
+    width: 11px;
+    height: 11px;
+    background: var(--red);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .exa__mark span {
+    position: absolute;
+    top: -26px;
+    left: 50%;
+    transform: rotate(-45deg) translateX(-30%);
+    font-family: var(--f-mono);
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  .exa__mark:nth-child(odd) span {
+    top: 14px;
+    left: 14px;
+  }
+
+  .exa__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+  }
+
+  .exa__card {
+    position: relative;
+    display: grid;
+    gap: 0.55rem;
+    align-content: start;
+    padding: 1.4rem 1.4rem 3.6rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    min-height: 13rem;
+  }
+
+  .exa__meta {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--ink-3);
+  }
+
+  .exa__n {
+    color: var(--red);
+  }
+
+  .exa__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .exa__b {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  .exa__stamp {
+    position: absolute;
+    right: 1.1rem;
+    bottom: 1.1rem;
+  }
+
+  :global(.js) .exa__card.in .exa__stamp {
+    animation: thud 0.5s var(--ease) both;
+    animation-delay: 0.35s;
+  }
+
+  @keyframes thud {
+    from { transform: rotate(-14deg) scale(1.9); }
+    to { transform: rotate(-4deg) scale(1); }
+  }
+
+  .exa__card--target {
+    background: transparent;
+    border: 1.5px dashed var(--line-strong);
+  }
+
+  .exa__card--target .exa__n {
+    color: var(--navy);
+  }
+
+  .exa__boundary {
+    margin-top: 1.75rem;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+    max-width: 52rem;
+  }
+
+  .exa__boundary a {
+    color: var(--ink);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (width <= 1100px) {
+    .exa__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 900px) {
+
+    .exa__rail {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .exa__end {
+      display: none;
+    }
+  }
+
+  @media (width <= 560px) {
+    .exa__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

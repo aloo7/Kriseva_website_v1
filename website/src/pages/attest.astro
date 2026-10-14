@@ -1,196 +1,291 @@
 ---
-// /attest - KRISEVA Attest product/experiment page, under
-// CORPORATE_SITE_V2_ARCHITECTURE.md §11 BINDING RULES. Research-stage
-// prototype: maturity is stated in the hero, not hidden. Every capability
-// statement below is an attestV2.* (or directly-related) registered claim
-// id from src/data/publicClaims.ts. Nothing here interprets regulation,
-// implies deployment, or names a regulator (architecture §11, D-012).
-//
-// "Six-screen" scope note: the internal facts registry documents a
-// six-screen synthetic review workflow, but no publicClaims.ts id
-// registers that specific screen count or screen-by-screen breakdown as a
-// public claim. Rather than invent that wording, this page describes what
-// the demonstration shows through six registered attestV2 capability
-// claims and links to the hub itself for the walkthrough. Flagged as a
-// claim gap in the W09-W10 receipt.
-//
-// W11b claims-formalization update: registered attestV2.evidence-states
-// (the three-state vocabulary, previously only implied through
-// attestV2.human-review) and attestV2.not-claimed (a single ATTEST-specific
-// boundary sentence). "Evidence states" and "named-human resolution" are
-// now two distinct registered claims, so the demonstration list below goes
-// back to six items instead of the five-item merge noted in the W09-W10
-// receipt. The not-claimed list's fourth item now cites
-// attestV2.not-claimed instead of the trustV2.human-in-command stand-in
-// that receipt flagged (trustV2.human-in-command is a sitewide trust-pillar
-// claim, not an ATTEST-specific boundary statement).
+// /attest: Kriseva Labs, ATTEST. A calm secondary page for a research-stage
+// prototype. Status wording is fixed (see STATUS below). No regulator or
+// regulatory official is named, and nothing here claims a deployment, a
+// filing, an approval or a result. The public demonstration hub link is kept
+// because the previous /attest page already linked to it; it is labelled as a
+// demonstration on synthetic data.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import StatusCard from '../components/site/attest/StatusCard.astro';
+import EvidenceFigure from '../components/site/attest/EvidenceFigure.astro';
+import { breadcrumbSchema, company } from '../data/kriseva';
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import RouteHero from '../components/RouteHero.astro';
-import SectionLabel from '../components/SectionLabel.astro';
-import MaturityChip from '../components/MaturityChip.astro';
-import EvidenceCard from '../components/EvidenceCard.astro';
-import PrimaryButton from '../components/PrimaryButton.astro';
-import { getClaim } from '../data/publicClaims';
-import { routes } from '../data/routes';
+const STATUS = "Research-stage prototype with synthetic data for IFSC fund managers' quarter-close evidence.";
+const BOUNDARY = 'This prototype has shipped to nobody.';
+const HUB_URL = 'https://ayushtiwary-ops.github.io/kriseva-attest';
+const mail = `mailto:${company.email}?subject=${encodeURIComponent('Kriseva Labs: ATTEST')}`;
+const crumbs = [{ name: 'Kriseva Labs: ATTEST', path: '/attest' }];
 
-const purpose = getClaim('portfolioV2.attest-purpose')!.wording;
-const sourceSealing = getClaim('attestV2.source-sealing')!.wording;
-const threePath = getClaim('attestV2.three-path')!.wording;
-const evidenceStates = getClaim('attestV2.evidence-states')!.wording;
-const humanReview = getClaim('attestV2.human-review')!.wording;
-const provenance = getClaim('attestV2.provenance')!.wording;
-const nonInterpretive = getClaim('attestV2.non-interpretive')!.wording;
-const demoHub = getClaim('attestV2.demo-hub')!.wording;
-const researchStage = getClaim('attestV2.maturity-research-stage')!.wording;
-const syntheticData = getClaim('attestV2.maturity-synthetic-data')!.wording;
-const noRegulator = getClaim('attestV2.maturity-no-regulator-connection')!.wording;
-const noCustomers = getClaim('attestV2.maturity-no-customers')!.wording;
-const notClaimedBoundary = getClaim('attestV2.not-claimed')!.wording;
-
-// Six entries: "evidence states" (attestV2.evidence-states) and
-// "named-human resolution" (attestV2.human-review) are now two distinct
-// registered claims (W11b), so they render as two cards instead of the
-// five-card merge the W09-W10 receipt used while only one claim existed.
-//
-// Gate 1 correction N3: the identical "ATTEST · registered claim" eyebrow
-// on every card was replaced with the item's own claim id in mono type
-// (the src-note convention already used elsewhere on this site, e.g.
-// evaluator.astro's "Register entry evaluatorV2.e2e-candidate ·
-// safe-with-care"), so each card states which specific registered claim it
-// renders instead of repeating a generic label six times.
-const demonstrates = [
-  { title: 'Sealed sources', body: sourceSealing, source: 'Register entry attestV2.source-sealing · safe-with-care' },
-  { title: 'Three extraction paths', body: threePath, source: 'Register entry attestV2.three-path · safe-with-care' },
-  { title: 'Evidence states', body: evidenceStates, source: 'Register entry attestV2.evidence-states · safe-with-care' },
-  { title: 'Named-human resolution', body: humanReview, source: 'Register entry attestV2.human-review · safe-with-care' },
-  { title: 'Retained evidence manifests', body: provenance, source: 'Register entry attestV2.provenance · safe-with-care' },
-  { title: 'Non-interpretive boundary', body: nonInterpretive, source: 'Register entry attestV2.non-interpretive · verified-and-safe' },
+const beats = [
+  {
+    n: '01',
+    t: 'Seal the sources',
+    d: 'Source documents are sealed when they arrive, so every later check points back to exactly what came in.',
+  },
+  {
+    n: '02',
+    t: 'Read three ways',
+    d: 'Each value is read through three independent extraction paths. Where they disagree, the disagreement is shown, never settled silently.',
+  },
+  {
+    n: '03',
+    t: 'Bind it, then hand it to a person',
+    d: 'Every value is bound to the page that produced it. A named human resolves each conflict and states the reason.',
+  },
 ];
 
-const title = 'KRISEVA · Attest · Research prototype';
-const description = purpose;
-
-const HUB_URL = 'https://ayushtiwary-ops.github.io/kriseva-attest/';
+const notClaimed = [
+  'It is not connected to any regulator system.',
+  'It does not interpret regulation, state what a rule requires, or claim that a number is correct. It surfaces evidence; a named human decides.',
+  'It runs on synthetic data, not on real fund documents or real company data.',
+];
 ---
-<BaseLayout title={title} description={description}>
-
-  <RouteHero
-    eyebrow="KRISEVA Attest · Regulated finance"
-    title="Evidence review for regulatory filings."
-    subtitle={purpose}
-    meta={researchStage}
-    surface="deep"
+<SiteLayout
+  title="Kriseva Labs: ATTEST | Research prototype"
+  description={`${STATUS} Every value is bound to the page that produced it.`}
+  path="/attest"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    eyebrow="Kriseva Labs · Research"
+    title="ATTEST: every number, traced to its page."
+    accent="traced to its page"
+    lead={STATUS}
+    crumbs={crumbs}
   >
-    <Fragment slot="cta">
-      <MaturityChip maturity="research-prototype" />
-      <PrimaryButton href={routes.contactWithIntent('attest')}>Contact the founder</PrimaryButton>
+    <Fragment slot="actions">
+      <a class="btn" href={mail}>Email the founder <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn--ghost" href="#how">How it works</a>
     </Fragment>
-  </RouteHero>
+    <Fragment slot="visual"><StatusCard /></Fragment>
+  </PageHero>
 
-  <!-- ============ WHAT IT DEMONSTRATES ============ -->
-  <section class="section section--paper" id="demonstrates">
-    <div class="container">
-      <SectionLabel>What the demonstration shows</SectionLabel>
-      <h2>What the demonstration walks through.</h2>
-      <div class="demo-list">
-        {demonstrates.map((d, i) => (
-          <EvidenceCard step={String(i + 1).padStart(2, '0')} title={d.title} source={d.source}>
-            {d.body}
-          </EvidenceCard>
-        ))}
+  <section class="section att-how" id="how" aria-labelledby="att-how-title">
+    <div class="wrap att-how__grid">
+      <div class="att-how__fig rv">
+        <EvidenceFigure />
+      </div>
+      <div class="att-how__copy">
+        <header class="att-how__head">
+          <p class="eyebrow">How it works · three beats</p>
+          <h2 id="att-how-title" class="h2">Seal it. Read it three ways. <em>Hand it to a person.</em></h2>
+          <p class="lead">ATTEST is Kriseva Labs’ research into evidence review for regulated finance. It reuses the discipline at the core of Kriseva’s products: nothing without its source, and a person who decides.</p>
+        </header>
+        <ol role="list" class="att-beats rv-stagger">
+          {beats.map((b) => (
+            <li class="att-beat">
+              <span class="att-beat__n mono" aria-hidden="true">{b.n}</span>
+              <h3 class="att-beat__t">{b.t}</h3>
+              <p class="att-beat__d">{b.d}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   </section>
 
-  <!-- ============ THE PUBLIC DEMONSTRATION HUB ============ -->
-  <!-- Gate 1 correction N1: was section--navy, breaking the page rhythm
-       (navy hero -> cream -> navy -> dark -> cream). Navy is reserved for
-       trust/audit content per architecture §7; this section is product
-       proof, not trust/audit, so it takes the paper/cream treatment like
-       its neighbors. Rhythm is now hero (navy) -> cream -> cream -> dark
-       (not-claimed) -> cream. -->
-  <section class="section section--paper" id="hub">
-    <div class="container">
-      <SectionLabel>The public demonstration</SectionLabel>
-      <h2>A synthetic-data demonstration hub, published and public.</h2>
-      <p class="hub-copy">{demoHub}</p>
-      <div class="hub-cta">
-        <a class="btn btn--primary" href={HUB_URL} target="_blank" rel="noopener">Open the demonstration hub →</a>
-        <p class="hub-note">Synthetic-data demonstration · not connected to any regulator system.</p>
+  <section class="section section--tight on-paper-2 att-demo" aria-labelledby="att-demo-title">
+    <div class="wrap att-demo__grid">
+      <div class="att-demo__copy">
+        <p class="eyebrow">A demonstration</p>
+        <h2 id="att-demo-title" class="h3">See the flow on invented data.</h2>
+        <p class="att-demo__text">A demonstration hub, published 12 August 2026, runs on synthetic data with a deterministic review workflow. It is a demonstration, not a service.</p>
+      </div>
+      <div class="att-demo__cta">
+        <a class="btn btn--ghost" href={HUB_URL} target="_blank" rel="noopener">Open the demonstration <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <p class="mono att-demo__note">Synthetic-data demonstration. Not connected to any regulator system.</p>
       </div>
     </div>
   </section>
 
-  <!-- ============ WHAT THIS PAGE DOES NOT CLAIM ============ -->
-  <section class="section section--dark" id="boundaries">
-    <div class="container">
-      <SectionLabel>What this page does not claim</SectionLabel>
-      <h2>Read this before you read anything else on this page.</h2>
-      <ul class="not-claimed-list">
-        <li><b>Regulator connection.</b> {noRegulator}</li>
-        <li><b>Customers and pilots.</b> {noCustomers}</li>
-        <li><b>Compliance determinations.</b> {nonInterpretive}</li>
-        <li><b>Interpretation, filing, and accuracy.</b> {notClaimedBoundary}</li>
-      </ul>
-      <p class="maturity-footnote">{researchStage} {syntheticData}</p>
+  <section class="section on-navy-hatch att-bound" aria-labelledby="att-bound-title">
+    <div class="wrap att-bound__grid">
+      <div class="att-bound__copy">
+        <p class="eyebrow">The boundary</p>
+        <h2 id="att-bound-title" class="h2">What this prototype <em>is not.</em></h2>
+        <p class="att-bound__line">{BOUNDARY}</p>
+        <p class="att-bound__more">The same discipline runs through <a href="/tas">TAS</a> and <a href="/evaluator">Evaluator</a>, Kriseva’s products for defence and space procurement.</p>
+      </div>
+      <div class="att-bound__side">
+        <ul role="list" class="att-bound__list">
+          {notClaimed.map((n) => <li>{n}</li>)}
+        </ul>
+        <div class="att-bound__cta">
+          <a class="btn btn--brass" href={mail}>Email the founder <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a class="link-arrow" href="/">Back to Kriseva <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
     </div>
   </section>
-
-  <!-- ============ CTA ============ -->
-  <section class="section section--paper" id="cta">
-    <div class="container closing-cta">
-      <h2>Questions about the research, or the demonstration hub.</h2>
-      <p>ATTEST is a research-stage prototype. If you want to talk about the approach, the conversation is direct and founder-led.</p>
-      <PrimaryButton href={routes.contactWithIntent('attest')}>Contact the founder</PrimaryButton>
-    </div>
-  </section>
-
-</BaseLayout>
+</SiteLayout>
 
 <style>
-  h2 { margin-bottom: 20px; }
-  .demo-list { display: flex; flex-direction: column; }
-
-  .hub-copy { max-width: 66ch; color: var(--text-secondary); margin-bottom: clamp(20px, 3vw, 28px); }
-  .hub-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-  .hub-note {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-faint);
+  .att-how__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
   }
-  /* Gate 1 correction N1: #hub moved from section--navy to section--paper;
-     the two rules above were tuned for text-on-navy and read near-invisible
-     on the paper surface, so give them their paper-context counterparts. */
-  .section--paper .hub-copy { color: var(--ink-secondary); }
-  .section--paper .hub-note { color: var(--ink-quiet); }
 
-  .not-claimed-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 70ch;
-    margin-bottom: clamp(20px, 3vw, 28px);
+  .att-how__fig {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+    max-width: 440px;
+    min-width: 0;
   }
-  .not-claimed-list li {
-    font-size: 0.98rem;
+
+  .att-how__copy {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    min-width: 0;
+  }
+
+  .att-how__head {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .att-beats {
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .att-beat {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 0.4rem;
+    padding-block: 1.5rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .att-beat__n {
+    grid-row: span 2;
+    color: var(--brass-ink);
+    font-size: 0.75rem;
+    padding-top: 0.45rem;
+  }
+
+  .att-beat__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.65rem);
+    line-height: 1.2;
+  }
+
+  .att-beat__d {
+    color: var(--ink-2);
+    max-width: 38rem;
+  }
+
+  .att-demo__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .att-demo__copy {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .att-demo__text {
+    max-width: 40rem;
+    color: var(--ink-2);
+  }
+
+  .att-demo__cta {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+  }
+
+  .att-demo__note {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
     line-height: 1.6;
-    color: var(--text-secondary);
-    padding-left: 18px;
-    border-left: var(--rule-dashed);
-  }
-  .not-claimed-list li b { color: var(--text-primary); }
-  .maturity-footnote {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    color: var(--text-faint);
-    max-width: 70ch;
   }
 
-  .closing-cta { max-width: 640px; text-align: center; }
-  .closing-cta h2 { margin-bottom: 14px; }
-  .closing-cta p { color: var(--ink-secondary); margin-bottom: 26px; }
+  .att-bound__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .att-bound__copy {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .att-bound__line {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.45rem, 1.1rem + 1.4vw, 2.3rem);
+    line-height: 1.3;
+    max-width: 24em;
+    text-wrap: balance;
+    color: var(--on-navy);
+  }
+
+  .att-bound__more {
+    color: var(--on-navy-2);
+  }
+
+  .att-bound__more a {
+    color: var(--on-navy);
+    text-underline-offset: 3px;
+  }
+
+  .att-bound__side {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .att-bound__list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .att-bound__list li {
+    position: relative;
+    padding: 0 0 1rem 1.5rem;
+    border-bottom: 1px solid var(--line-navy);
+    color: var(--on-navy-2);
+  }
+
+  .att-bound__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 0.6rem;
+    height: 0.6rem;
+    border: 1.5px solid var(--brass-light);
+    transform: rotate(45deg) scale(0.75);
+  }
+
+  .att-bound__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+  }
+
+  @media (width <= 980px) {
+    .att-how__grid,
+    .att-bound__grid,
+    .att-demo__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .att-how__fig {
+      position: static;
+      max-width: 520px;
+      order: 2;
+    }
+  }
 </style>

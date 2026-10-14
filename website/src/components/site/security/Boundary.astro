@@ -1,0 +1,126 @@
+---
+// Boundary.astro: what Kriseva does not claim about security, and the
+// substitute: the install itself, open to the buyer's own audit.
+import { company } from '../../../data/kriseva';
+
+const nots = [
+  { t: 'No ISO 27001', d: 'We are not certified to it.' },
+  { t: 'No SOC 2', d: 'We hold no SOC 2 report.' },
+  { t: 'No CERT-In empanelment', d: 'We are not empanelled.' },
+  { t: 'No certification of any kind', d: 'No security certification today, from anyone.' },
+];
+const mail = `mailto:${company.email}?subject=${encodeURIComponent('Room test of Kriseva')}`;
+---
+<section class="section sb on-navy-hatch" id="not-claimed" aria-labelledby="sb-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">04 · What we do not claim</p>
+      <h2 id="sb-title" class="h2">No certificate. <em>An install you can audit.</em></h2>
+      <p class="lead">A certificate is someone else’s opinion of us. The install is evidence you can handle yourself, so that is what we hand over.</p>
+    </header>
+
+    <ul role="list" class="sb__nots rv-stagger" data-inview>
+      {nots.map((n) => (
+        <li class="sb__not">
+          <span class="sb__x" aria-hidden="true">
+            <svg viewBox="0 0 36 36" width="34" height="34" focusable="false"><circle cx="18" cy="18" r="14" /><path d="M8 28 L28 8" /></svg>
+          </span>
+          <p class="sb__nt">{n.t}</p>
+          <p class="sb__nd">{n.d}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="sb__audit">
+      <p class="sb__ap">Buyers can audit the install themselves. Your security team can inspect what runs, what is written to disk and what the network sees, on your machines and on your terms. In one sentence, Evaluator works like this: every finding links to the source page and is recorded in a tamper-evident audit chain; officers decide.</p>
+      <div class="sb__actions">
+        <a class="btn btn--brass" href="/contact">Ask for a room test <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn--ghost" href={mail}>Write to the founder</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .sb__nots {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 1.8vw, 1.25rem);
+  }
+
+  .sb__not {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    min-width: 0;
+    padding: 1.4rem 1.25rem 1.5rem;
+    border: 1px solid var(--line-navy);
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 3%);
+  }
+
+  .sb__x svg {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .sb__nt {
+    font-family: var(--f-serif);
+    font-size: 1.35rem;
+    line-height: 1.2;
+    color: var(--on-navy);
+  }
+
+  .sb__nd {
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--on-navy-2);
+  }
+
+  .sb__audit {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    gap: 1.5rem clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .sb__ap {
+    max-width: 46rem;
+    color: var(--on-navy-2);
+    line-height: 1.65;
+  }
+
+  .sb__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    justify-content: flex-end;
+  }
+
+  @media (width <= 980px) {
+    .sb__nots {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 860px) {
+    .sb__audit {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sb__actions {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (width <= 520px) {
+    .sb__nots {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

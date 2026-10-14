@@ -1,0 +1,104 @@
+---
+// VignetteCommittee.astro: an evaluation committee room in plan view. Chairs
+// around a table, one bid file per bidder (A), a comparative statement in the
+// middle (B), and a rubber stamp for the officer's decision. A schematic.
+const topChairs = [134, 190, 246];
+const files = [
+  { x: 136, l: 'A', r: -3 },
+  { x: 192, l: 'B', r: 2 },
+  { x: 248, l: 'C', r: -2 },
+];
+---
+<svg viewBox="0 0 400 280" role="img" aria-label="Plan view of an evaluation committee room: officers' chairs around a table, one bid file for each of three bidders, the left-hand file marked A, a comparative statement in the middle marked B, and a red stamp for the officer's decision.">
+  <!-- Room -->
+  <rect x="12" y="12" width="376" height="256" fill="#fbf8f2" />
+  <path d="M210 268H388V12H12V268H150" fill="none" stroke="#0a1f44" stroke-width="3" />
+  <path d="M150 268V210" stroke="#0a1f44" stroke-width="2" />
+  <path d="M150 210A58 58 0 0 1 208 268" fill="none" stroke="#8c98ad" stroke-width="1" stroke-dasharray="3 4" />
+
+  <!-- Chairs -->
+  <g fill="#0a1f44">
+    {topChairs.map((x) => <rect x={x} y="64" width="28" height="16" rx="6" />)}
+    {topChairs.map((x) => <rect x={x} y="204" width="28" height="16" rx="6" />)}
+    <rect x="74" y="126" width="16" height="28" rx="6" />
+  </g>
+  <rect x="310" y="126" width="16" height="28" rx="6" fill="#d2a660" stroke="#0a1f44" stroke-width="1.4" />
+
+  <!-- Table -->
+  <rect x="104" y="88" width="192" height="108" rx="8" fill="#ede6d7" stroke="#0a1f44" stroke-width="1.8" />
+
+  <!-- Bid files, one per bidder -->
+  {files.map((f) => (
+    <g transform={`rotate(${f.r} ${f.x + 12} 112)`}>
+      <rect x={f.x} y="96" width="24" height="32" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.3" />
+      <rect x={f.x} y="96" width="5" height="32" fill="#0a1f44" />
+      <text x={f.x + 14.5} y="116" text-anchor="middle" class="vc-file">{f.l}</text>
+    </g>
+  ))}
+
+  <!-- Comparative statement -->
+  <rect x="150" y="132" width="100" height="36" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.3" />
+  <path d="M183 132V168M217 132V168M150 144H250M150 156H250" stroke="#0a1f44" stroke-opacity=".5" stroke-width=".9" />
+  <path d="M154 138H178M154 150H172M154 162H176" stroke="#0a1f44" stroke-opacity=".35" stroke-width="1.6" />
+  <path d="M190 138l3 3l6 -7M224 138l3 3l6 -7M190 150l3 3l6 -7" fill="none" stroke="#2f6b45" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M226 150l7 0M226 153l7 0" stroke="#b07f35" stroke-width="1.6" stroke-linecap="round" />
+  <path d="M191 159l8 8M199 159l-8 8" stroke="#a8322a" stroke-width="1.6" stroke-linecap="round" />
+  <path d="M224 163l3 3l6 -7" fill="none" stroke="#2f6b45" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Score sheets -->
+  <g fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.1">
+    <rect x="136" y="162" width="24" height="26" />
+    <rect x="192" y="174" width="24" height="16" />
+  </g>
+  <path d="M140 169H156M140 174H152M140 179H155" stroke="#0a1f44" stroke-opacity=".4" stroke-width="1.4" />
+
+  <!-- Magnifier -->
+  <circle cx="122" cy="146" r="9" fill="#fbf8f2" fill-opacity=".6" stroke="#0a1f44" stroke-width="2" />
+  <path d="M128 153L137 163" stroke="#0a1f44" stroke-width="3" stroke-linecap="round" />
+
+  <!-- The officer's stamp -->
+  <g transform="translate(262 178) rotate(-8)">
+    <rect x="-33" y="-10" width="66" height="20" fill="none" stroke="#a8322a" stroke-width="1.8" />
+    <rect x="-30" y="-7" width="60" height="14" fill="none" stroke="#a8322a" stroke-width=".8" />
+    <text x="0" y="3.5" text-anchor="middle" class="vc-stamp">DECIDES</text>
+  </g>
+
+  <!-- Callouts -->
+  <circle cx="136" cy="96" r="9" fill="#0a1f44" />
+  <text x="136" y="100" text-anchor="middle" class="vc-ltr">A</text>
+  <circle cx="250" cy="132" r="9" fill="#0a1f44" />
+  <text x="250" y="136" text-anchor="middle" class="vc-ltr">B</text>
+
+  <text x="200" y="40" text-anchor="middle" class="vc-dim">EVALUATION ROOM</text>
+</svg>
+
+<style>
+  .vc-file {
+    font-family: var(--f-mono);
+    font-size: 13px;
+    font-weight: 600;
+    fill: #0a1f44;
+  }
+
+  .vc-ltr {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    fill: #f5f0e6;
+  }
+
+  .vc-stamp {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    fill: #a8322a;
+  }
+
+  .vc-dim {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    fill: #56627c;
+  }
+</style>

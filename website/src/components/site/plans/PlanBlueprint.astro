@@ -1,0 +1,346 @@
+---
+// PlanBlueprint.astro: the /plans hero drawing. A drafting sheet on which
+// module blocks snap onto the bridge deck, with the four plan inputs called
+// out as numbered balloons (side, modules, deployment, team), the same four
+// steps as the plan builder below. Decorative: aria-hidden, no information
+// lives here alone.
+---
+<svg class="pbp" viewBox="0 0 560 440" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="pbp-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0V20" fill="none" class="pbp__gl" />
+    </pattern>
+    <pattern id="pbp-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 0V7" class="pbp__ht" />
+    </pattern>
+    <pattern id="pbp-wave" width="24" height="10" patternUnits="userSpaceOnUse">
+      <path d="M0 6q6-5 12 0t12 0" fill="none" class="pbp__wv" />
+    </pattern>
+  </defs>
+
+  <!-- sheet and frame -->
+  <rect x="6" y="6" width="548" height="428" class="pbp__sheet" />
+  <rect x="18" y="18" width="524" height="404" fill="url(#pbp-grid)" class="pbp__frame" />
+
+  <!-- top dimension line -->
+  <g class="pbp__dim">
+    <path d="M60 52H500M60 44V60M500 44V60" />
+    <path d="M60 52l7-3.5v7zM500 52l-7-3.5v7z" class="pbp__fill-ink" />
+  </g>
+  <rect x="132" y="43" width="296" height="18" class="pbp__tag" />
+  <text x="280" y="55.5" text-anchor="middle" class="pbp__t pbp__t--ink">PLAN = SIDE + MODULES + DEPLOYMENT + TEAM</text>
+
+  <!-- stamp -->
+  <g transform="rotate(-7 436 118)">
+    <rect x="372" y="102" width="128" height="30" class="pbp__stamp" />
+    <rect x="376" y="106" width="120" height="22" class="pbp__stamp pbp__stamp--in" />
+    <text x="436" y="121" text-anchor="middle" class="pbp__t pbp__t--stamp">PILOT, THEN PLAN</text>
+  </g>
+
+  <!-- water, shores, piers -->
+  <rect x="18" y="326" width="524" height="40" class="pbp__water" />
+  <rect x="18" y="326" width="524" height="40" fill="url(#pbp-wave)" />
+  <rect x="18" y="264" width="52" height="62" class="pbp__shore" />
+  <rect x="18" y="264" width="52" height="62" fill="url(#pbp-hatch)" />
+  <rect x="490" y="264" width="52" height="62" class="pbp__shore" />
+  <rect x="490" y="264" width="52" height="62" fill="url(#pbp-hatch)" />
+  <rect x="140" y="264" width="24" height="84" class="pbp__pier" />
+  <rect x="396" y="264" width="24" height="84" class="pbp__pier" />
+  <path d="M140 270l24 20M164 270l-24 20M140 296l24 20M164 296l-24 20" class="pbp__brace" />
+  <path d="M396 270l24 20M420 270l-24 20M396 296l24 20M420 296l-24 20" class="pbp__brace" />
+
+  <!-- deck -->
+  <rect x="52" y="250" width="456" height="14" class="pbp__deck" />
+  <text x="280" y="260.2" text-anchor="middle" class="pbp__t pbp__t--deck">KRISEVA EVIDENCE ENGINE</text>
+
+  <!-- shore and pier labels -->
+  <text transform="translate(48 320) rotate(-90)" class="pbp__t pbp__t--ink pbp__t--shore">SUPPLIER</text>
+  <text transform="translate(520 320) rotate(-90)" class="pbp__t pbp__t--ink pbp__t--shore">BUYER</text>
+  <text x="152" y="360" text-anchor="middle" class="pbp__t pbp__t--ink pbp__t--bold">TAS</text>
+  <text x="408" y="360" text-anchor="middle" class="pbp__t pbp__t--ink pbp__t--bold">EVALUATOR</text>
+
+  <!-- snap guides and targets for the two floating blocks -->
+  <path d="M188 168V226M244 168V226M320 168V226M376 168V226" class="pbp__guide" />
+  <rect x="188" y="226" width="56" height="24" class="pbp__target" />
+  <rect x="320" y="226" width="56" height="24" class="pbp__target" />
+
+  <!-- snapped blocks -->
+  <g class="pbp__blk">
+    <rect x="76" y="226" width="56" height="24" />
+    <text x="104" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">T1</text>
+  </g>
+  <g class="pbp__blk">
+    <rect x="132" y="226" width="56" height="24" />
+    <text x="160" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">T2</text>
+  </g>
+  <g class="pbp__blk">
+    <rect x="376" y="226" width="56" height="24" />
+    <text x="404" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">E1</text>
+  </g>
+  <g class="pbp__blk">
+    <rect x="432" y="226" width="56" height="24" />
+    <text x="460" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">E2</text>
+  </g>
+
+  <!-- floating blocks that snap on -->
+  <g class="pbp__blk pbp__blk--float">
+    <rect x="188" y="226" width="56" height="24" />
+    <text x="216" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">T3</text>
+  </g>
+  <g class="pbp__blk pbp__blk--float pbp__blk--late">
+    <rect x="320" y="226" width="56" height="24" />
+    <text x="348" y="241.5" text-anchor="middle" class="pbp__t pbp__t--blk">E3</text>
+  </g>
+
+  <!-- crew glyph under the deck -->
+  <g class="pbp__crew">
+    <circle cx="262" cy="292" r="4.5" /><path d="M255 308a7 7 0 0 1 14 0" />
+    <circle cx="280" cy="290" r="5" /><path d="M272 308a8 8 0 0 1 16 0" />
+    <circle cx="298" cy="292" r="4.5" /><path d="M291 308a7 7 0 0 1 14 0" />
+  </g>
+
+  <!-- balloons: 1 side, 2 modules, 3 deployment, 4 team -->
+  <g class="pbp__bal">
+    <path d="M44 244V264" /><circle cx="44" cy="236" r="8.5" /><text x="44" y="239.2" text-anchor="middle">1</text>
+    <path d="M516 244V264" /><circle cx="516" cy="236" r="8.5" /><text x="516" y="239.2" text-anchor="middle">1</text>
+    <path d="M132 200V226" /><circle cx="132" cy="192" r="8.5" /><text x="132" y="195.2" text-anchor="middle">2</text>
+    <path d="M432 200V226" /><circle cx="432" cy="192" r="8.5" /><text x="432" y="195.2" text-anchor="middle">2</text>
+    <path d="M118 306H140" /><circle cx="109" cy="306" r="8.5" /><text x="109" y="309.2" text-anchor="middle">3</text>
+    <path d="M420 306H442" /><circle cx="451" cy="306" r="8.5" /><text x="451" y="309.2" text-anchor="middle">3</text>
+    <circle cx="326" cy="296" r="8.5" /><text x="326" y="299.2" text-anchor="middle">4</text>
+    <path d="M308 296H317" />
+  </g>
+
+  <!-- legend and title block -->
+  <g class="pbp__leg">
+    <rect x="30" y="376" width="296" height="38" class="pbp__box" />
+    <path d="M178 376V414M30 395H326" class="pbp__rule" />
+    <text x="40" y="389" class="pbp__t pbp__t--ink"><tspan class="pbp__no">01</tspan> SIDE</text>
+    <text x="188" y="389" class="pbp__t pbp__t--ink"><tspan class="pbp__no">02</tspan> MODULES</text>
+    <text x="40" y="408" class="pbp__t pbp__t--ink"><tspan class="pbp__no">03</tspan> DEPLOYMENT</text>
+    <text x="188" y="408" class="pbp__t pbp__t--ink"><tspan class="pbp__no">04</tspan> TEAM SIZE</text>
+  </g>
+  <g class="pbp__tb">
+    <rect x="342" y="376" width="190" height="38" class="pbp__box" />
+    <path d="M342 395H532" class="pbp__rule" />
+    <text x="352" y="389" class="pbp__t pbp__t--ink pbp__t--bold">KRISEVA AI · PLAN SHEET</text>
+    <text x="352" y="408" class="pbp__t pbp__t--ink">SCALE · YOUR TENDERS</text>
+  </g>
+</svg>
+
+<style>
+  .pbp {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    filter: drop-shadow(0 18px 24px rgb(10 31 68 / 10%));
+  }
+
+  .pbp__sheet {
+    fill: var(--card);
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+
+  .pbp__frame {
+    stroke: var(--ink);
+    stroke-width: 0.9;
+  }
+
+  .pbp__gl {
+    stroke: rgb(10 31 68 / 7%);
+    stroke-width: 1;
+  }
+
+  .pbp__ht {
+    stroke: var(--ink-3);
+    stroke-width: 0.9;
+    opacity: 0.55;
+  }
+
+  .pbp__wv {
+    stroke: var(--steel);
+    stroke-width: 1;
+  }
+
+  .pbp__water {
+    fill: var(--water);
+  }
+
+  .pbp__shore {
+    fill: var(--paper-2);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  .pbp__pier {
+    fill: var(--paper-2);
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+
+  .pbp__brace {
+    fill: none;
+    stroke: var(--ink-3);
+    stroke-width: 1;
+  }
+
+  .pbp__deck {
+    fill: var(--navy);
+  }
+
+  .pbp__dim path {
+    fill: none;
+    stroke: var(--ink-2);
+    stroke-width: 1;
+  }
+
+  .pbp__dim .pbp__fill-ink {
+    fill: var(--ink-2);
+    stroke: none;
+  }
+
+  .pbp__tag {
+    fill: var(--card);
+  }
+
+  .pbp__t {
+    font-family: var(--f-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  .pbp__t--ink {
+    fill: var(--ink-2);
+  }
+
+  .pbp__t--bold {
+    font-weight: 600;
+    fill: var(--ink);
+  }
+
+  .pbp__t--shore {
+    font-size: 8.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .pbp__t--deck {
+    fill: var(--brass-light);
+    font-size: 7.6px;
+    letter-spacing: 0.22em;
+    font-weight: 600;
+  }
+
+  .pbp__t--blk {
+    fill: var(--brass-ink);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .pbp__t--stamp {
+    fill: var(--red);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+
+  .pbp__stamp {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 1.6;
+    rx: 2;
+  }
+
+  .pbp__stamp--in {
+    stroke-width: 0.8;
+  }
+
+  .pbp__guide {
+    fill: none;
+    stroke: var(--brass);
+    stroke-width: 1;
+    stroke-dasharray: 2 4;
+  }
+
+  .pbp__target {
+    fill: none;
+    stroke: var(--brass);
+    stroke-width: 1.2;
+    stroke-dasharray: 4 3;
+  }
+
+  .pbp__blk rect {
+    fill: #f1e4cb;
+    stroke: var(--brass-ink);
+    stroke-width: 1.3;
+  }
+
+  .pbp__blk--float {
+    animation: pbp-snap 6s var(--ease-io) infinite;
+  }
+
+  .pbp__blk--late {
+    animation-delay: 1.6s;
+  }
+
+  .pbp__crew {
+    fill: none;
+    stroke: var(--ink-2);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+
+  .pbp__bal path {
+    fill: none;
+    stroke: var(--ink-2);
+    stroke-width: 1;
+  }
+
+  .pbp__bal circle {
+    fill: var(--card);
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+
+  .pbp__bal text {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 600;
+    fill: var(--ink);
+  }
+
+  .pbp__box {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  .pbp__rule {
+    stroke: var(--ink);
+    stroke-width: 0.8;
+  }
+
+  .pbp__no {
+    fill: var(--brass-ink);
+    font-weight: 600;
+  }
+
+  @keyframes pbp-snap {
+    0%,
+    36% {
+      transform: translateY(0);
+    }
+
+    50%,
+    68% {
+      transform: translateY(-46px);
+    }
+
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+  }
+</style>

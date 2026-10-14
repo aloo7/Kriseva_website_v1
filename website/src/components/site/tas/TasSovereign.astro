@@ -1,0 +1,153 @@
+---
+// TasSovereign.astro: a compact sovereignty strip for TAS. Four properties a
+// supplier can check on their own machine. No certification is claimed.
+const items = [
+  {
+    t: 'On your machine',
+    d: 'TAS and its local models run on your own computer.',
+    icon: '<rect x="-15" y="-13" width="30" height="10" rx="1"/><rect x="-15" y="1" width="30" height="10" rx="1"/><circle cx="9" cy="-8" r="1.4"/><circle cx="9" cy="6" r="1.4"/>',
+  },
+  {
+    t: 'No cloud account',
+    d: 'Nothing to sign up for to read a tender.',
+    icon: '<path d="M-11 9h20a7 7 0 0 0 0-14 10 10 0 0 0-19-2 8 8 0 0 0-1 16z"/><path d="M-14 -14L14 14"/>',
+  },
+  {
+    t: 'Public portals, on your say',
+    d: 'It reaches out to read public procurement portals when you allow it, and for nothing else.',
+    icon: '<circle cx="0" cy="0" r="14"/><path d="M-14 0H14M0 -14V14M-8 -10a22 22 0 0 0 0 20M8 -10a22 22 0 0 1 0 20"/>',
+  },
+  {
+    t: 'You submit',
+    d: 'TAS prepares. Your team reviews and submits on the portal.',
+    icon: '<circle cx="0" cy="-7" r="6"/><path d="M-12 14a12 12 0 0 1 24 0"/>',
+  },
+];
+---
+<section class="section--tight tsov on-navy-hatch" aria-labelledby="tsov-title">
+  <div class="wrap">
+    <header class="tsov__head">
+      <p class="eyebrow">05 · Sovereign by design</p>
+      <h2 id="tsov-title" class="h2">Your bid desk stays <em>yours.</em></h2>
+      <p class="lead">Defence and space bid files should stay in the building. TAS goes to your machine, not the other way round.</p>
+    </header>
+
+    <ul role="list" class="tsov__grid rv-stagger">
+      {items.map((it) => (
+        <li class="tsov__item">
+          <svg class="mark" viewBox="-60 -60 120 120" aria-hidden="true">
+            <circle r="54" class="mark__outer" />
+            <circle r="42" class="mark__inner" />
+            <g class="mark__icon" set:html={it.icon} />
+          </svg>
+          <h3 class="tsov__t">{it.t}</h3>
+          <p class="tsov__d">{it.d}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="tsov__honest">
+      <p><strong>No certification is claimed on this site.</strong> The properties above are things you can check on your own machine.</p>
+      <a class="btn btn--ghost" href="/security">How it stays sovereign <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tsov {
+    position: relative;
+    padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  }
+
+  .tsov__head {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 44rem;
+    margin-bottom: clamp(2rem, 4vw, 3.25rem);
+  }
+
+  .tsov__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .tsov__item {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+
+  .mark {
+    width: 104px;
+    margin-bottom: 0.4rem;
+    overflow: visible;
+  }
+
+  .mark__outer {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 1.2;
+  }
+
+  .mark__inner {
+    fill: rgb(210 166 96 / 8%);
+    stroke: var(--brass-light);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 4;
+  }
+
+  .mark__icon {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tsov__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .tsov__d {
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+    line-height: 1.5;
+  }
+
+  .tsov__honest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: clamp(2rem, 4vw, 3.25rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .tsov__honest p {
+    max-width: 40rem;
+    color: var(--on-navy-2);
+  }
+
+  .tsov__honest strong {
+    color: var(--on-navy);
+    font-weight: 600;
+  }
+
+  @media (width <= 980px) {
+    .tsov__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 480px) {
+    .tsov__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

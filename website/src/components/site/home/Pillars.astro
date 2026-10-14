@@ -1,0 +1,565 @@
+---
+// Pillars.astro: the two products as the two pillars of the bridge.
+// TAS gets a radar (sources swept into one shortlist); Evaluator gets the
+// criteria-by-bidder matrix where every cell carries its page. Both visuals
+// are labelled specimens.
+import { measured } from '../../../data/stats';
+
+const blips = [
+  { a: 18, r: 0.78, l: 'GeM' },
+  { a: 64, r: 0.5, l: 'CPPP' },
+  { a: 112, r: 0.84, l: 'ISRO e-Procurement' },
+  { a: 158, r: 0.6, l: 'Defence eProcurement' },
+  { a: 206, r: 0.86, l: 'NSIL' },
+  { a: 246, r: 0.42, l: 'eTenders' },
+  { a: 292, r: 0.72, l: 'State NIC portals' },
+  { a: 334, r: 0.9, l: 'IN-SPACe' },
+];
+const R = 130;
+const shortlist = [
+  { t: 'Rugged display unit, 15 inch', fit: 82, call: 'Bid' },
+  { t: 'Ka-band filter assembly', fit: 71, call: 'Review' },
+  { t: 'Office furniture, annual rate', fit: 8, call: 'Skip' },
+];
+const bidders = ['Bidder A', 'Bidder B', 'Bidder C'];
+const criteria = [
+  { c: 'ISO 9001:2015 certificate', cells: [['ok', 'p. 14'], ['ok', 'p. 6'], ['ok', 'p. 22']] },
+  { c: 'Turnover, Rs 5 cr for 3 years', cells: [['ok', 'p. 3'], ['ask', 'Clarify'], ['ok', 'p. 9']] },
+  { c: 'Two past supply orders', cells: [['ok', 'p. 31'], ['ok', 'p. 18'], ['no', 'Not found']] },
+  { c: 'Make in India, Class I', cells: [['ok', 'p. 2'], ['ok', 'p. 2'], ['ask', 'Clarify']] },
+];
+---
+<section class="section pillars" id="pillars" aria-labelledby="pillars-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">02 · Two pillars, one standard</p>
+      <h2 id="pillars-title" class="h2">Two products. One for each <em>side</em> of the bridge.</h2>
+      <p class="lead">Suppliers need to find the right tenders and answer them well. Buyers need to check every answer and defend the award. Kriseva builds one product for each, held to one evidence discipline.</p>
+    </header>
+
+    <div class="pillars__grid">
+      <article class="pillar pillar--tas on-navy rv" aria-labelledby="p-tas">
+        <div class="pillar__cap" aria-hidden="true"><span>for bidders</span></div>
+        <p class="pillar__plate mono">TAS</p>
+        <h3 id="p-tas" class="h3 pillar__title">Find, read and answer the tenders you can win.</h3>
+
+        <figure class="radar" data-inview>
+          <svg viewBox="-150 -150 300 300" class="radar__svg" role="img" aria-label="Radar sweeping public procurement sources: GeM, CPPP, ISRO e-Procurement, Defence eProcurement, NSIL, eTenders, state NIC portals and IN-SPACe.">
+            <defs>
+              <radialGradient id="rg-sweep" cx="0" cy="0" r="1">
+                <stop offset="0" stop-color="#d2a660" stop-opacity="0" />
+                <stop offset="1" stop-color="#d2a660" stop-opacity=".22" />
+              </radialGradient>
+            </defs>
+            <g fill="none" stroke="#d2a660" stroke-opacity=".28">
+              <circle r={R} /><circle r={R * 0.66} /><circle r={R * 0.33} />
+              <path d={`M-${R} 0H${R}M0 -${R}V${R}`} />
+            </g>
+            <g class="radar__sweep">
+              <path d={`M0 0L${R} 0A${R} ${R} 0 0 0 ${(R * Math.cos((-50 * Math.PI) / 180)).toFixed(1)} ${(R * Math.sin((-50 * Math.PI) / 180)).toFixed(1)}Z`} fill="url(#rg-sweep)" />
+              <path d={`M0 0L${R} 0`} stroke="#d2a660" stroke-width="1.5" />
+            </g>
+            {blips.map((b) => {
+              const rad = (b.a * Math.PI) / 180;
+              const x = Math.cos(rad) * R * b.r;
+              const y = Math.sin(rad) * R * b.r;
+              return (
+                <g class="radar__blip" style={`--d:${(b.a / 360) * 4}s`}>
+                  <circle cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.6" fill="#f5f0e6" />
+                  <circle class="radar__ping" cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.6" fill="none" stroke="#f5f0e6" />
+                  <text x={(x + 7).toFixed(1)} y={(y + 3).toFixed(1)} class="radar__label">{b.l}</text>
+                </g>
+              );
+            })}
+            <circle r="4" fill="#d2a660" />
+          </svg>
+          <figcaption class="radar__caption">
+            <span class="radar__n">{measured.tasSources.value}</span>
+            <span>public sources, read in one search<br /><span class="mono">{measured.tasOpenTenders.value} distinct open tenders held, {measured.tasOpenTenders.asOf}</span></span>
+          </figcaption>
+        </figure>
+
+        <div class="shortlist">
+          <p class="mono shortlist__h">Today’s shortlist <span>Specimen</span></p>
+          <ol role="list" class="rv-stagger">
+            {shortlist.map((s) => (
+              <li class="shortlist__row">
+                <span class="shortlist__t">{s.t}</span>
+                <span class="shortlist__bar" style={`--fit:${s.fit / 100}`}><span></span></span>
+                <span class="shortlist__fit">{s.fit}</span>
+                <span class:list={['chip', `chip--${s.call.toLowerCase()}`]}>{s.call}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <ul role="list" class="pillar__points">
+          <li>Reads GeM, CPPP, ISRO, defence and state portals in one search</li>
+          <li>Scores every tender against your own capability list</li>
+          <li>Bid or skip brief, with the clause behind every reason</li>
+          <li>Runs on your machine, with local models</li>
+        </ul>
+        <a class="btn btn--brass pillar__cta" href="/tas">Explore TAS <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </article>
+
+      <article class="pillar pillar--eval rv" aria-labelledby="p-eval">
+        <div class="pillar__cap" aria-hidden="true"><span>for buyers</span></div>
+        <p class="pillar__plate mono">Evaluator</p>
+        <h3 id="p-eval" class="h3 pillar__title">Check every bid, with a page behind every finding.</h3>
+
+        <figure class="matrix" data-inview>
+          <div class="matrix__scroll" tabindex="0" role="region" aria-label="Specimen evaluation matrix, scrollable">
+          <table class="matrix__table">
+            <caption class="sr-only">Specimen evaluation matrix: four criteria by three bidders, each finding with its page reference.</caption>
+            <thead>
+              <tr>
+                <th scope="col"><span class="mono">Criterion</span></th>
+                {bidders.map((b) => <th scope="col"><span class="mono">{b}</span></th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {criteria.map((row, ri) => (
+                <tr>
+                  <th scope="row">{row.c}</th>
+                  {row.cells.map(([state, ref], ci) => (
+                    <td>
+                      <span class:list={['cell', `cell--${state}`]} style={`--i:${ri * 3 + ci}`}>
+                        <span class="cell__icon" aria-hidden="true">{state === 'ok' ? '✓' : state === 'ask' ? '?' : '×'}</span>
+                        <span class="sr-only">{state === 'ok' ? 'Supported, ' : state === 'ask' ? 'Needs clarification, ' : 'Not found, '}</span>
+                        {ref}
+                      </span>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+          <figcaption class="matrix__foot">
+            <span class="mono">Specimen</span>
+            <span class="stamp">Officer decides</span>
+          </figcaption>
+        </figure>
+
+        <ul role="list" class="pillar__points">
+          <li>Criteria extracted in the tender’s own words</li>
+          <li>Every finding opens the page it came from</li>
+          <li>Comparative statement in one click</li>
+          <li>Tamper-evident record; the officer decides</li>
+        </ul>
+        <a class="btn pillar__cta" href="/evaluator">Explore Evaluator <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </article>
+    </div>
+
+    <div class="engine-bar rv" role="note">
+      <p class="mono engine-bar__name">Kriseva Evidence Engine</p>
+      <ul role="list" class="engine-bar__props">
+        <li><span class="engine-bar__k">Offline</span> runs on your premises</li>
+        <li><span class="engine-bar__k">Source-linked</span> every finding has a page</li>
+        <li><span class="engine-bar__k">Tamper-evident</span> one edit breaks the chain</li>
+        <li><span class="engine-bar__k">Human</span> officers decide</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pillars__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+    align-items: stretch;
+  }
+
+  .pillar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+    padding-top: 3.2rem;
+    border-radius: var(--radius);
+  }
+
+  .pillar--tas {
+    background-color: var(--navy);
+    background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 2.6%) 0 1px, transparent 1px 13px);
+  }
+
+  .pillar--eval {
+    background: var(--card);
+    border: 1px solid var(--line);
+  }
+
+  /* The tower cap: each card wears the top of its pillar. */
+  .pillar__cap {
+    position: absolute;
+    top: -1px;
+    left: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+    width: 64px;
+    height: 18px;
+    background: var(--brass);
+  }
+
+  .pillar__cap::after {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 18px;
+    width: 20px;
+    height: 16px;
+    background: inherit;
+    opacity: 0.55;
+  }
+
+  .pillar__cap span {
+    position: absolute;
+    left: 78px;
+    top: 1px;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    color: var(--on-navy-2);
+  }
+
+  .pillar--eval .pillar__cap span {
+    color: var(--ink-3);
+  }
+
+  .pillar__plate {
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    color: var(--brass-light);
+  }
+
+  .pillar--eval .pillar__plate {
+    color: var(--brass-ink);
+  }
+
+  .pillar__title {
+    font-size: clamp(1.45rem, 1.1rem + 1vw, 2rem);
+    font-weight: 300;
+    max-width: 20ch;
+  }
+
+  .pillar__points {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .pillar__points li {
+    position: relative;
+    padding-left: 1.4rem;
+    font-size: var(--t-small);
+    line-height: 1.45;
+  }
+
+  .pillar__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.65rem;
+    height: 0.65rem;
+    border: 1.5px solid var(--brass);
+    transform: rotate(45deg) scale(0.7);
+  }
+
+  .pillar--tas .pillar__points li {
+    color: var(--on-navy-2);
+  }
+
+  .pillar__cta {
+    align-self: flex-start;
+  }
+
+  /* Radar */
+  .radar {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .radar__svg {
+    width: 100%;
+    max-width: 300px;
+    overflow: visible;
+  }
+
+  .radar__sweep {
+    transform-origin: 0 0;
+    animation: sweep 4s linear infinite;
+  }
+
+  .radar__label {
+    font-family: var(--f-mono);
+    font-size: 7.5px;
+    fill: var(--on-navy-2);
+    letter-spacing: 0.04em;
+  }
+
+  .radar__ping {
+    transform-box: fill-box;
+    transform-origin: center;
+    opacity: 0;
+    animation: ping 4s linear infinite;
+    animation-delay: var(--d);
+  }
+
+  .radar__caption {
+    display: grid;
+    gap: 0.4rem;
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+  }
+
+  .radar__caption .mono {
+    font-size: 0.625rem;
+    color: var(--brass-light);
+  }
+
+  .radar__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(3rem, 2rem + 3vw, 4.5rem);
+    line-height: 0.9;
+    color: var(--on-navy);
+  }
+
+  @keyframes sweep {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes ping {
+    0% { opacity: 0.9; transform: scale(1); }
+    18% { opacity: 0; transform: scale(4); }
+    100% { opacity: 0; transform: scale(4); }
+  }
+
+  /* Shortlist */
+  .shortlist {
+    background: rgb(245 240 230 / 5%);
+    border: 1px solid var(--line-navy);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+  }
+
+  .shortlist__h {
+    display: flex;
+    justify-content: space-between;
+    color: var(--brass-light);
+    font-size: 0.6875rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .shortlist__h span {
+    color: var(--on-navy-2);
+  }
+
+  .shortlist__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 70px 1.8rem auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding-block: 0.5rem;
+    border-top: 1px solid var(--line-navy);
+    font-size: 0.875rem;
+  }
+
+  .shortlist__t {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .shortlist__bar {
+    height: 4px;
+    background: rgb(245 240 230 / 12%);
+  }
+
+  .shortlist__bar span {
+    display: block;
+    height: 100%;
+    background: var(--brass-light);
+    transform-origin: left;
+    transform: scaleX(var(--fit));
+  }
+
+  .shortlist__fit {
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    text-align: right;
+  }
+
+  .pillar--tas .chip--bid {
+    border-color: #7fc79a;
+    color: #9fdcb5;
+  }
+
+  .pillar--tas .chip--review {
+    border-color: var(--brass-light);
+    color: var(--brass-light);
+  }
+
+  .pillar--tas .chip--skip {
+    border-color: #e58c80;
+    color: #f0a59b;
+  }
+
+  /* Matrix */
+  .matrix {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .matrix__scroll {
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .matrix__scroll:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .matrix__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+  }
+
+  .matrix__table th,
+  .matrix__table td {
+    padding: 0.6rem 0.7rem;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .matrix__table thead th {
+    background: var(--paper-2);
+  }
+
+  .matrix__table thead .mono {
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  .matrix__table tbody th {
+    font-weight: 500;
+    line-height: 1.3;
+    min-width: 9rem;
+  }
+
+  .cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    white-space: nowrap;
+    padding: 0.2rem 0.45rem;
+    border-radius: 2px;
+    transition: transform 0.5s var(--ease), background-color 0.5s;
+    transition-delay: calc(var(--i) * 70ms);
+  }
+
+  :global(.js) .matrix:not(.in) .cell {
+    transform: scale(0.85);
+    background: var(--paper-2);
+  }
+
+  .cell--ok {
+    background: #e6efe5;
+    color: #255a39;
+  }
+
+  .cell--ask {
+    background: #f6ead2;
+    color: var(--brass-ink);
+  }
+
+  .cell--no {
+    background: #f6dfdb;
+    color: var(--red);
+  }
+
+  .cell__icon {
+    font-weight: 600;
+  }
+
+  .matrix__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0.9rem 0.9rem;
+  }
+
+  .matrix__foot .mono {
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  /* Engine bar: the deck that joins both pillars */
+  .engine-bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1.5rem 2.5rem;
+    align-items: center;
+    margin-top: clamp(1rem, 2.5vw, 2rem);
+    padding: 1.1rem clamp(1.25rem, 3vw, 2.25rem);
+    background: var(--navy);
+    color: var(--on-navy);
+    border-top: 4px solid var(--brass);
+    border-radius: var(--radius);
+  }
+
+  .engine-bar__name {
+    color: var(--brass-light);
+    letter-spacing: 0.24em;
+  }
+
+  .engine-bar__props {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--on-navy-2);
+  }
+
+  .engine-bar__k {
+    display: block;
+    color: var(--on-navy);
+    font-weight: 600;
+  }
+
+  @media (width <= 980px) {
+    .pillars__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .engine-bar {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .engine-bar__props {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 520px) {
+    .radar {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .shortlist__row {
+      grid-template-columns: minmax(0, 1fr) 1.8rem auto;
+    }
+
+    .shortlist__bar {
+      display: none;
+    }
+  }
+</style>

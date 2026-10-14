@@ -1,0 +1,146 @@
+---
+// SpanBand.astro: the size of the bridge, drawn as a dimension line.
+import { stats } from '../../../data/stats';
+const s = stats.span;
+---
+<section class="span section--tight" aria-labelledby="span-title" data-inview>
+  <div class="wrap">
+    <div class="span__dim" aria-hidden="true">
+      <span class="span__tick"></span>
+      <span class="span__line span__line--l"></span>
+      <span class="span__label mono">Span = 1% of GDP</span>
+      <span class="span__line span__line--r"></span>
+      <span class="span__tick"></span>
+    </div>
+    <div class="span__body">
+      <p class="span__big" aria-hidden="true">1<span>%</span></p>
+      <div>
+        <h2 id="span-title" class="span__title">of GDP: the estimated gain if government buys just 10% better. <strong>That is the size of this bridge.</strong></h2>
+        <p class="span__src mono"><a href={s.url} rel="noopener" target="_blank">{s.source}</a> · Same paper: union and CPSE purchases were about 11 to 12% of GDP in 2016-17</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .span {
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .span__dim {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    color: var(--ink-2);
+  }
+
+  .span__tick {
+    width: 1px;
+    height: 22px;
+    background: currentcolor;
+    flex: none;
+  }
+
+  .span__line {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: currentcolor;
+  }
+
+  .span__line::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    width: 0;
+    height: 0;
+    border-block: 4.5px solid transparent;
+  }
+
+  .span__line--l::before {
+    left: 0;
+    border-right: 9px solid currentcolor;
+  }
+
+  .span__line--r::before {
+    right: 0;
+    border-left: 9px solid currentcolor;
+  }
+
+  .span__line--l {
+    transform-origin: right;
+  }
+
+  .span__line--r {
+    transform-origin: left;
+  }
+
+  :global(.js) .span:not(.in) .span__line {
+    transform: scaleX(0.04);
+  }
+
+  .span__line {
+    transition: transform 1.6s var(--ease-io);
+  }
+
+  .span__label {
+    padding-inline: 1.25rem;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .span__body {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .span__big {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(6rem, 3rem + 11vw, 13rem);
+    line-height: 0.82;
+    color: var(--red);
+    letter-spacing: -0.04em;
+  }
+
+  .span__big span {
+    font-size: 0.62em;
+    vertical-align: 0.42em;
+    margin-left: 0.04em;
+  }
+
+  .span__title {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.4rem, 1rem + 1.5vw, 2.3rem);
+    line-height: 1.25;
+    max-width: 30ch;
+    text-wrap: balance;
+  }
+
+  .span__title strong {
+    font-weight: 400;
+    color: var(--red);
+  }
+
+  .span__src {
+    margin-top: 1rem;
+    color: var(--ink-3);
+    font-size: 0.6875rem;
+  }
+
+  .span__src a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  @media (width <= 640px) {
+    .span__body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

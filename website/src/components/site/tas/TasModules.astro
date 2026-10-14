@@ -1,0 +1,225 @@
+---
+// TasModules.astro: the eight jobs TAS takes off a bid desk, in four lanes
+// that read left to right as the life of a tender: find, read and decide,
+// prepare, track and hand off.
+const icons: Record<string, string> = {
+  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6.4-6.4"/><circle cx="18.4" cy="5.6" r="1.1"/>',
+  gauge: '<path d="M4 17a9 9 0 1 1 16 0"/><path d="M12 17l4.2-5.2"/><circle cx="12" cy="17" r="1.2"/><path d="M6.2 10.2l1 .8M12 5.5v1.3M17.8 10.2l-1 .8"/>',
+  reader: '<path d="M14 3H6v18h6"/><path d="M14 3l4 4v3"/><path d="M14 3v4h4M9 9h4M9 13h2"/><circle cx="16.5" cy="17" r="3.2"/><path d="M18.9 19.4L21.5 22"/>',
+  fork: '<path d="M12 21v-7M12 14L6 8M12 14l6-6M4 5h4v4M20 5h-4v4"/>',
+  check: '<rect x="5" y="4" width="14" height="17" rx="1"/><path d="M9 4V3h6v1M8.3 11.2l1.6 1.6 3.1-3.3M8.5 17h7"/>',
+  book: '<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H18v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H18v-3"/><path d="M12 7.2l.9 1.9 2.1.3-1.5 1.5.4 2.1-1.9-1-1.9 1 .4-2.1L9 9.4l2.1-.3z"/>',
+  bell: '<path d="M6 17v-6a6 6 0 0 1 12 0v6l1.5 2h-15z"/><path d="M10 21.5h4"/>',
+  sheet: '<rect x="3" y="4" width="12" height="15" rx="1"/><path d="M3 9h12M3 14h12M8 4v15"/><path d="M17.5 12h4M19.5 10l2 2-2 2"/>',
+};
+
+const lanes = [
+  {
+    k: 'Find',
+    mods: [
+      { n: 'Tender radar', d: 'Reads GeM, CPPP, ISRO, defence and state portals in one search, so nothing waits in a tab.', icon: 'radar' },
+      { n: 'Fit scoring', d: 'Scores each tender against your capability list, with reasons you can read.', icon: 'gauge' },
+    ],
+  },
+  {
+    k: 'Read and decide',
+    mods: [
+      { n: 'Tender reader', d: 'Pulls clauses, annexures, corrigenda, eligibility and EMD or MSE exemptions out of the document.', icon: 'reader' },
+      { n: 'Bid or skip brief', d: 'A one-page call, with the clause behind each reason.', icon: 'fork' },
+    ],
+  },
+  {
+    k: 'Prepare',
+    mods: [
+      { n: 'Compliance checklist and document pack', d: 'Every requirement as a checklist, with the documents to attach.', icon: 'check' },
+      { n: 'Award book', d: 'Who won similar tenders before, from public GeM award pages.', icon: 'book' },
+    ],
+  },
+  {
+    k: 'Track and hand off',
+    mods: [
+      { n: 'Watch list and deadline alerts', d: 'Follow the tenders you care about and hear before they close.', icon: 'bell' },
+      { n: 'Team hand-off', d: 'Excel and calendar files your bid team already works in.', icon: 'sheet' },
+    ],
+  },
+];
+let n = 0;
+---
+<section class="section mods" id="modules" aria-labelledby="mods-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">02 · Modules</p>
+      <h2 id="mods-title" class="h2">Eight jobs TAS takes off your <em>bid desk.</em></h2>
+      <p class="lead">Each one is work your team already does by hand. Each one shows its working, so a person can check it before anything is sent.</p>
+    </header>
+
+    <ol role="list" class="lanes rv-stagger">
+      {lanes.map((lane, li) => (
+        <li class="lane">
+          <div class="lane__head" aria-hidden="true">
+            <span class="lane__n mono">0{li + 1}</span>
+            <span class="lane__rule"></span>
+            <span class="lane__arrow"></span>
+          </div>
+          <h3 class="lane__k mono">{lane.k}</h3>
+          <ul role="list" class="lane__mods">
+            {lane.mods.map((m) => {
+              n += 1;
+              return (
+                <li class="mod">
+                  <span class="mod__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" set:html={icons[m.icon]} />
+                  </span>
+                  <h4 class="mod__n">{m.n}</h4>
+                  <p class="mod__d">{m.d}</p>
+                  <span class="mod__i mono" aria-hidden="true">M{String(n).padStart(2, '0')}</span>
+                </li>
+              );
+            })}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .lanes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.85rem, 1.6vw, 1.5rem);
+  }
+
+  .lane {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: 0.9rem;
+  }
+
+  /* The pipeline rule across the top of each lane */
+  .lane__head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink-2);
+  }
+
+  .lane__n {
+    color: var(--brass-ink);
+  }
+
+  .lane__rule {
+    flex: 1;
+    height: 1px;
+    background: currentcolor;
+    opacity: 0.45;
+  }
+
+  .lane__arrow {
+    width: 0;
+    height: 0;
+    border-left: 8px solid currentcolor;
+    border-block: 4.5px solid transparent;
+    margin-left: -0.6rem;
+  }
+
+  .lane:last-child .lane__arrow {
+    display: none;
+  }
+
+  .lane__k {
+    color: var(--ink);
+    font-size: 0.8125rem;
+  }
+
+  .lane__mods {
+    display: grid;
+    gap: clamp(0.85rem, 1.6vw, 1.5rem);
+    grid-auto-rows: 1fr;
+  }
+
+  .mod {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1.35rem 1.25rem 1.4rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition: border-top-color 0.35s, transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  }
+
+  .mod:hover {
+    border-top-color: var(--brass);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 34px -24px rgb(10 31 68 / 50%);
+  }
+
+  .mod__icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--paper);
+  }
+
+  .mod__icon svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: var(--brass);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mod__n {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 1.2;
+  }
+
+  .mod__d {
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .mod__i {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  @media (width <= 1080px) {
+    .lanes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 2.25rem;
+    }
+
+    .lane:nth-child(2) .lane__arrow {
+      display: none;
+    }
+  }
+
+  @media (width <= 640px) {
+    .lanes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lane__arrow {
+      display: none;
+    }
+
+    .lane__mods {
+      grid-auto-rows: auto;
+    }
+  }
+</style>

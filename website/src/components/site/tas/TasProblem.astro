@@ -1,0 +1,347 @@
+---
+// TasProblem.astro: a supplier's morning, without and with TAS. 27 browser
+// windows (one per public source TAS reads) against one shortlist.
+// Decorative visual plus a plain-text summary on each side.
+import { measured } from '../../../data/stats';
+
+const named: Record<number, string> = {
+  0: 'GeM',
+  3: 'CPPP',
+  5: 'ISRO e-Procurement',
+  8: 'Defence eProcurement',
+  11: 'NSIL',
+  13: 'eTenders',
+  16: 'State NIC portals',
+  20: 'IN-SPACe',
+};
+const tiles = Array.from({ length: 27 }, (_, i) => ({
+  i,
+  l: named[i] ?? '',
+  r: (((i * 7) % 9) - 4) * 0.7,
+  y: (((i * 5) % 7) - 3) * 1.6,
+  unread: i % 4 === 1 || i % 7 === 3,
+}));
+const shortlist = [
+  { t: 'Rugged display unit, 15 inch', fit: 82, call: 'Bid' },
+  { t: 'Ka-band filter assembly', fit: 71, call: 'Review' },
+  { t: 'Office furniture, annual rate', fit: 8, call: 'Skip' },
+];
+---
+<section class="section prob on-navy-hatch" aria-labelledby="prob-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">01 · The problem</p>
+      <h2 id="prob-title" class="h2">A supplier’s morning, <em>with and without</em> TAS.</h2>
+      <p class="lead">The tenders you can win are spread across many portals, each with its own format, annexures and corrigenda. TAS reads them for you and brings back a short list.</p>
+    </header>
+
+    <div class="prob__grid">
+      <article class="side side--without" aria-labelledby="prob-without">
+        <p class="mono side__k">Without TAS</p>
+        <h3 id="prob-without" class="side__t">{measured.tasSources.value} sources, opened one by one.</h3>
+        <div class="tabs27" aria-hidden="true">
+          {tiles.map((t) => (
+            <span class="tab27" style={`--r:${t.r}deg;--y:${t.y}px`}>
+              <span class="tab27__bar"><i></i><i></i><i></i></span>
+              {t.l ? <span class="tab27__l">{t.l}</span> : <span class="tab27__skel"></span>}
+              {t.unread && <span class="tab27__dot"></span>}
+            </span>
+          ))}
+        </div>
+        <ul role="list" class="chores">
+          <li>Search each portal</li>
+          <li>Download every annexure</li>
+          <li>Hunt for the clause that rules you out</li>
+        </ul>
+      </article>
+
+      <div class="prob__mid" aria-hidden="true">
+        <span class="prob__line"></span>
+        <span class="prob__plate mono">TAS</span>
+        <span class="prob__line"></span>
+      </div>
+
+      <article class="side side--with" aria-labelledby="prob-with">
+        <p class="mono side__k side__k--brass">With TAS</p>
+        <h3 id="prob-with" class="side__t">One shortlist, with the reasons.</h3>
+        <div class="sl">
+          <p class="mono sl__h"><span>Today’s shortlist</span><span>Specimen</span></p>
+          <ol role="list" class="rv-stagger">
+            {shortlist.map((s) => (
+              <li class="sl__row">
+                <span class="sl__t">{s.t}</span>
+                <span class="sl__bar" style={`--fit:${s.fit / 100}`}><span></span></span>
+                <span class="sl__fit">{s.fit}</span>
+                <span class:list={['chip', `chip--${s.call.toLowerCase()}`]}>{s.call}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <ul role="list" class="chores chores--ok">
+          <li>Every tender scored against your list</li>
+          <li>The clause behind every reason</li>
+          <li>Deadlines already on the calendar</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .prob__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr);
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    align-items: stretch;
+  }
+
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: clamp(1.25rem, 1rem + 1.5vw, 2.25rem);
+    border-radius: var(--radius);
+  }
+
+  .side--without {
+    border: 1px dashed rgb(245 240 230 / 28%);
+    background: rgb(7 21 48 / 55%);
+  }
+
+  .side--with {
+    background: var(--paper);
+    color: var(--ink);
+    border-top: 4px solid var(--brass);
+  }
+
+  .side__k {
+    color: var(--on-navy-2);
+  }
+
+  .side__k--brass {
+    color: var(--brass-ink);
+  }
+
+  .side__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.4rem, 1.1rem + 0.9vw, 1.9rem);
+    line-height: 1.15;
+  }
+
+  /* 27 browser windows */
+  .tabs27 {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.4rem 0 0.8rem;
+  }
+
+  .tab27 {
+    position: relative;
+    display: grid;
+    grid-template-rows: 9px 1fr;
+    min-height: 46px;
+    border: 1px solid rgb(245 240 230 / 26%);
+    border-radius: 3px;
+    background: rgb(245 240 230 / 5%);
+    transform: translateY(var(--y)) rotate(var(--r));
+    overflow: hidden;
+  }
+
+  .tab27__bar {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding-left: 5px;
+    background: rgb(245 240 230 / 10%);
+  }
+
+  .tab27__bar i {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--steel);
+  }
+
+  .tab27__l {
+    padding: 3px 5px;
+    font-size: 0.625rem;
+    line-height: 1.15;
+    font-weight: 500;
+    color: var(--on-navy-2);
+    overflow-wrap: anywhere;
+  }
+
+  .tab27__skel {
+    margin: 8px 5px 0;
+    height: 12px;
+    background:
+      linear-gradient(rgb(245 240 230 / 14%), rgb(245 240 230 / 14%)) 0 0 / 100% 3px no-repeat,
+      linear-gradient(rgb(245 240 230 / 14%), rgb(245 240 230 / 14%)) 0 8px / 60% 3px no-repeat;
+  }
+
+  .tab27__dot {
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #e58c80;
+  }
+
+  .chores {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: auto;
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+  }
+
+  .chores li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .chores li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.8rem;
+    height: 1.5px;
+    background: #e58c80;
+    transform: rotate(-35deg);
+  }
+
+  .chores--ok {
+    color: var(--ink-2);
+  }
+
+  .chores--ok li::before {
+    top: 0.35em;
+    width: 0.45rem;
+    height: 0.8rem;
+    background: none;
+    border: solid #2f6b45;
+    border-width: 0 2px 2px 0;
+    transform: rotate(40deg);
+    left: 0.25rem;
+  }
+
+  /* TAS in the middle: a thread through a plate */
+  .prob__mid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .prob__line {
+    flex: 1;
+    width: 0;
+    border-left: 2px dashed var(--brass-light);
+  }
+
+  .prob__plate {
+    padding: 0.55rem 0.7rem;
+    background: var(--brass-light);
+    color: var(--navy);
+    letter-spacing: 0.2em;
+    font-weight: 600;
+  }
+
+  /* shortlist on paper */
+  .sl {
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 0.9rem 1.1rem;
+  }
+
+  .sl__h {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    color: var(--brass-ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .sl__h span:last-child {
+    color: var(--ink-3);
+  }
+
+  .sl__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 60px 1.6rem auto;
+    gap: 0.7rem;
+    align-items: center;
+    padding-block: 0.55rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.875rem;
+  }
+
+  .sl__t {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sl__bar {
+    height: 4px;
+    background: var(--paper-3);
+  }
+
+  .sl__bar span {
+    display: block;
+    height: 100%;
+    background: var(--navy);
+    transform-origin: left;
+    transform: scaleX(var(--fit));
+  }
+
+  .sl__fit {
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    text-align: right;
+  }
+
+  @media (width <= 980px) {
+    .prob__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .prob__mid {
+      flex-direction: row;
+      height: 44px;
+    }
+
+    .prob__line {
+      width: auto;
+      height: 0;
+      border-left: 0;
+      border-top: 2px dashed var(--brass-light);
+    }
+  }
+
+  @media (width <= 520px) {
+    .tabs27 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.35rem;
+    }
+
+    .tab27__l {
+      display: none;
+    }
+
+    .sl__row {
+      grid-template-columns: minmax(0, 1fr) 1.6rem auto;
+    }
+
+    .sl__bar {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,136 @@
+---
+// Facts.astro: the particulars, as a dossier face sheet, with Kriseva Labs
+// noted beside it. Wording follows the claims register.
+import { company } from '../../../data/kriseva';
+
+const facts = [
+  { k: 'Legal name', v: company.legalName },
+  { k: 'Incorporated', v: `${company.incorporated}, ${company.city}, Telangana` },
+  { k: 'Registration', v: 'MSME (Udyam)' },
+  { k: 'Stage', v: 'Pre-revenue and bootstrapped. Raising pre-seed and non-dilutive capital.' },
+  { k: 'Products', v: 'TAS for suppliers, Evaluator for buyers' },
+  { k: 'Email', v: company.email, mail: true },
+];
+---
+<section class="section facts" id="facts" aria-labelledby="facts-title">
+  <div class="wrap facts__grid">
+    <div class="facts__main">
+      <p class="eyebrow">04 · Particulars</p>
+      <h2 id="facts-title" class="h2">The facts, <em>on one sheet.</em></h2>
+
+      <dl class="sheet reg">
+        {facts.map((f) => (
+          <div class="sheet__row">
+            <dt class="sheet__k mono">{f.k}</dt>
+            <dd class="sheet__v">
+              {f.mail ? <a href={`mailto:${f.v}`}>{f.v}</a> : f.v}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="labs" role="group" aria-labelledby="labs-title">
+      <p class="labs__k mono">Kriseva Labs</p>
+      <h3 id="labs-title" class="labs__t">ATTEST</h3>
+      <p class="labs__d">A research-stage prototype for regulated finance. It is a Labs project, kept apart from the two products that make up the bridge.</p>
+      <a class="btn btn--ghost" href="/attest">Read about ATTEST <span class="arrow" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .facts__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .facts__main {
+    display: grid;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+
+  .sheet {
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 0.25rem clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .sheet__row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.6fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sheet__row:last-child {
+    border-bottom: 0;
+  }
+
+  .sheet__k {
+    font-size: 0.6875rem;
+    color: var(--brass-ink);
+  }
+
+  .sheet__v {
+    font-family: var(--f-serif);
+    font-size: 1.2rem;
+    line-height: 1.35;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .sheet__v a {
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+
+  .sheet__v a:hover {
+    color: var(--red);
+  }
+
+  .labs {
+    display: grid;
+    gap: 0.85rem;
+    justify-items: start;
+    padding: clamp(1.4rem, 1rem + 1.4vw, 2.2rem);
+    border: 1.5px dashed var(--line-strong);
+    border-radius: var(--radius);
+  }
+
+  .labs__k {
+    color: var(--brass-ink);
+  }
+
+  .labs__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 2.8rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .labs__d {
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  @media (width <= 900px) {
+    .facts__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (width <= 560px) {
+    .sheet__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.25rem;
+    }
+  }
+</style>

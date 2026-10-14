@@ -1,0 +1,99 @@
+---
+// TestCard.astro: hero visual for /security. The one test result the whole
+// page leans on, drawn as a card on the navy ground. Not a log, not a screenshot.
+---
+<figure class="tc">
+  <figcaption class="tc__bar mono"><span>Test on file</span><span>6 Oct 2026</span></figcaption>
+  <div class="tc__body">
+    <svg class="tc__ico" viewBox="-24 -24 48 48" width="56" height="56" aria-hidden="true" focusable="false">
+      <path d="M-18 -4a26 26 0 0 1 36 0M-12 3a17 17 0 0 1 24 0M-6 10a8 8 0 0 1 12 0" />
+      <circle cx="0" cy="15" r="1.4" />
+      <path d="M-18 -18L18 18" class="tc__slash" />
+    </svg>
+    <p class="tc__k mono">Cold start · Wi-Fi off</p>
+    <p class="tc__n">0</p>
+    <p class="tc__l">application requests left the machine.</p>
+    <p class="tc__f">Measured by Kriseva on its own machine. It is our test, not a third-party audit. Ask us to run it in your room.</p>
+  </div>
+  <span class="stamp tc__stamp">Tested</span>
+</figure>
+
+<style>
+  .tc {
+    position: relative;
+    max-width: 26rem;
+    margin-inline: auto;
+    border: 1px solid var(--line-navy);
+    border-radius: var(--radius);
+    background: rgb(255 255 255 / 4%);
+  }
+
+  .tc__bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.6rem 1.1rem;
+    border-bottom: 1px solid var(--line-navy);
+    font-size: 0.6875rem;
+    color: var(--brass-light);
+  }
+
+  .tc__body {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    padding: 1.4rem 1.4rem 1.6rem;
+  }
+
+  .tc__ico {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  .tc__ico circle {
+    fill: var(--brass-light);
+    stroke: none;
+  }
+
+  .tc__slash {
+    stroke: var(--on-navy);
+  }
+
+  .tc__k {
+    margin-top: 0.5rem;
+    color: var(--on-navy-2);
+  }
+
+  .tc__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(5rem, 4rem + 4vw, 7.5rem);
+    line-height: 0.95;
+    color: var(--brass-light);
+  }
+
+  .tc__l {
+    font-family: var(--f-serif);
+    font-size: 1.3rem;
+    line-height: 1.25;
+    color: var(--on-navy);
+  }
+
+  .tc__f {
+    margin-top: 0.75rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--line-navy);
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--on-navy-2);
+  }
+
+  .tc__stamp {
+    position: absolute;
+    right: 1.1rem;
+    top: 3.4rem;
+    transform: rotate(6deg);
+  }
+</style>

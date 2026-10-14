@@ -1,0 +1,93 @@
+---
+// EvalCross.astro: closing band. The sandbox offer, and the other side of
+// the bridge.
+---
+<section class="section--tight cross on-paper-2" aria-labelledby="ecross-title">
+  <div class="wrap cross__wrap">
+    <div class="cross__main">
+      <p class="eyebrow">07 · Next move</p>
+      <h2 id="ecross-title" class="h2">One closed tender, <em>in your room.</em></h2>
+      <p class="lead">We run Evaluator offline on a tender your committee has already decided, so you can check every finding against your own result before anything else.</p>
+      <div class="cross__ctas">
+        <a class="btn" href="/contact?intent=pilot&amp;side=buyer">Request a sandbox <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn--ghost" href="/contact?intent=demo">Book a demo</a>
+      </div>
+    </div>
+    <a class="cross__other" href="/tas">
+      <span class="mono cross__ok">The other side of the bridge</span>
+      <span class="cross__ot">TAS, for suppliers</span>
+      <span class="cross__od">Suppliers find, read and answer the tenders they can win.</span>
+      <span class="link-arrow">See TAS <span aria-hidden="true">&rarr;</span></span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .cross {
+    padding-block: clamp(3.5rem, 2rem + 5vw, 6.5rem);
+  }
+
+  .cross__wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .cross__main {
+    display: grid;
+    gap: 1.1rem;
+    justify-items: start;
+  }
+
+  .cross__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.4rem;
+  }
+
+  .cross__other {
+    display: grid;
+    gap: 0.6rem;
+    padding: clamp(1.4rem, 1rem + 1.5vw, 2.25rem);
+    background: var(--navy);
+    color: var(--on-navy);
+    border-top: 4px solid var(--brass);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: transform 0.5s var(--ease);
+  }
+
+  .cross__other:hover {
+    transform: translateY(-3px);
+  }
+
+  .cross__ok {
+    color: var(--brass-light);
+  }
+
+  .cross__ot {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+    line-height: 1.12;
+  }
+
+  .cross__od {
+    color: var(--on-navy-2);
+    font-size: var(--t-small);
+  }
+
+  .cross__other .link-arrow {
+    color: var(--brass-light);
+    justify-self: start;
+    margin-top: 0.4rem;
+  }
+
+  @media (width <= 860px) {
+    .cross__wrap {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

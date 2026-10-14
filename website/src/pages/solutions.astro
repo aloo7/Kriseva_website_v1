@@ -1,0 +1,229 @@
+---
+// Solutions: one bridge, four kinds of traveller. Each segment is a full
+// section with an id the header menu links to (#defence-suppliers,
+// #space-suppliers, #evaluation-committees, #labs-and-psus).
+// Public numbers come from src/data/stats.ts with their sources; they describe
+// the sector, never Kriseva customers or results.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import RouteMap from '../components/site/solutions/RouteMap.astro';
+import Segment from '../components/site/solutions/Segment.astro';
+import VignetteDefence from '../components/site/solutions/VignetteDefence.astro';
+import VignetteSpace from '../components/site/solutions/VignetteSpace.astro';
+import VignetteCommittee from '../components/site/solutions/VignetteCommittee.astro';
+import VignetteLab from '../components/site/solutions/VignetteLab.astro';
+import { stats } from '../data/stats';
+import { breadcrumbSchema } from '../data/kriseva';
+
+const crumbs = [{ name: 'Solutions', path: '/solutions' }];
+---
+<SiteLayout
+  title="Solutions for defence and space procurement | Kriseva"
+  description="Kriseva for defence and space suppliers, bid evaluation committees, and labs and PSUs: tenders found across GeM and defence portals, bids checked page by page."
+  path="/solutions"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    eyebrow="Solutions"
+    title="One bridge. Four kinds of traveller."
+    accent="traveller"
+    lead="Defence and space orders in India are won and awarded on paper. Whichever side of the table you sit on, the work is the same: read, check, answer, defend. Pick your route."
+    crumbs={crumbs}
+  >
+    <Fragment slot="actions">
+      <a class="btn" href="/contact?intent=demo">Book a demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn--ghost" href="#defence-suppliers">Start with suppliers</a>
+    </Fragment>
+    <Fragment slot="visual"><RouteMap /></Fragment>
+  </PageHero>
+
+  <Segment
+    id="defence-suppliers"
+    index="01"
+    name="Defence suppliers"
+    title="Find the tenders you can win. Skip the rest."
+    accent="Skip the rest."
+    lead="For MSMEs and OEMs that bid on GeM and the defence portals. The hard part is rarely the product. It is the paper around it."
+    stats={[stats.defenceMsmes, stats.domesticCapital]}
+    slows={[
+      'Tenders are spread over GeM, CPPP, the defence portal and state NIC portals. Nobody reads all of them every day, so a bid is often missed before it is weighed.',
+      'A tender bundle runs past 100 pages of specification, annexures and corrigenda, and a corrigendum can change the terms after you have read them.',
+      'EMD, MSE exemption, Make in India class and past-supply proof sit in different annexures. One missing certificate can end a bid at the technical stage.',
+    ]}
+    changes={[
+      'TAS reads the public portals in one search and scores each tender against your own capability list.',
+      'Eligibility, EMD and document requirements are pulled out of the bundle, each with the clause and page it came from.',
+      'You get a bid, review or skip brief and a checklist. Your team reviews and submits on the portal.',
+    ]}
+    product={{
+      label: 'TAS',
+      note: 'Runs on your own machine with local models. It reaches the internet to read public portals, when you allow it.',
+      links: [{ href: '/tas', label: 'Explore TAS' }],
+    }}
+    cta={{ href: '/contact?intent=demo', label: 'Book a TAS demo' }}
+    caption="Defence MSME shop floor, in section. Schematic, not a real site."
+    legend={['What the shop can make', 'What the tender asks for']}
+    tone="paper"
+  >
+    <VignetteDefence slot="art" />
+  </Segment>
+
+  <Segment
+    id="space-suppliers"
+    index="02"
+    name="Space suppliers"
+    title="Small teams, deep specifications, one deadline."
+    accent="one deadline."
+    lead="For space-systems makers, launch-systems builders and start-ups, where the person who designs the payload also reads the tender."
+    stats={[stats.spaceStartups, stats.spaceBudget]}
+    slows={[
+      'Opportunities sit on separate agency portals, on GeM and in promotion-body listings, each with its own format and its own closing dates.',
+      'Specifications run deep. Qualification tests, environmental limits and heritage requirements hide in annexures, and the clause that rules you out is easy to miss.',
+      'There is often no bid desk. The same few people chase EMD, MSE paperwork and start-up relaxations on turnover and experience, where the tender allows them.',
+    ]}
+    changes={[
+      'The same one-pass read of public portals, scored against what your team can build and has tested.',
+      'Requirements and eligibility signals extracted with their clause and page, so a small team reads the part that matters before the rest.',
+      'A document checklist and deadline alerts for the team. TAS prepares; people decide and submit.',
+    ]}
+    product={{
+      label: 'TAS',
+      note: 'Built for the bid team of a few. Pilots start on live tenders with your own capability list.',
+      links: [
+        { href: '/tas', label: 'Explore TAS' },
+        { href: '/plans', label: 'See plans and pilots' },
+      ],
+    }}
+    cta={{ href: '/contact?intent=pilot', label: 'Request a TAS pilot' }}
+    caption="Space-systems test hall and launch pad. Schematic, not a real facility."
+    legend={['Test evidence on file', 'The requirement in the tender']}
+    flip
+    tone="paper2"
+  >
+    <VignetteSpace slot="art" />
+  </Segment>
+
+  <Segment
+    id="evaluation-committees"
+    index="03"
+    name="Evaluation committees"
+    title="Every bid checked against every criterion, page by page."
+    accent="page by page."
+    lead="For technical evaluation committees who must defend the award long after the file is closed."
+    stats={[stats.defenceContracts]}
+    slows={[
+      'Each member reads the same bids separately. With hundreds of pages per bidder, a criterion is checked against whichever page the reader happens to find.',
+      'The comparative statement is built by hand in a spreadsheet. A late corrigendum or clarification means rebuilding it.',
+      'Months later an audit query asks why a bidder was found non-responsive, and the reasoning lives in somebody’s notes.',
+    ]}
+    changes={[
+      'Criteria are set in the tender’s own words, then every bid is checked against each one. Gaps and doubts are marked for the committee, not guessed.',
+      'Every finding opens the exact page it came from. The comparative statement is one click.',
+      'A hash-chained record of who decided what, and why. The officer decides; Evaluator proposes.',
+    ]}
+    product={{
+      label: 'Evaluator',
+      note: 'The pilot runs on a closed tender your committee has already decided, so every finding can be checked against a known result.',
+      links: [{ href: '/evaluator', label: 'Explore Evaluator' }],
+    }}
+    cta={{ href: '/contact?intent=demo', label: 'Book an Evaluator demo' }}
+    caption="Evaluation committee room, in plan. Schematic."
+    legend={['A bid file for each bidder', 'Comparative statement from the findings']}
+    tone="paper"
+  >
+    <VignetteCommittee slot="art" />
+  </Segment>
+
+  <Segment
+    id="labs-and-psus"
+    index="04"
+    name="Labs and PSUs"
+    title="Many tenders in flight, one record that holds."
+    accent="one record that holds."
+    lead="For procurement cells in laboratories and public sector undertakings, buying at volume under rules that differ from one organisation to the next."
+    stats={[stats.gemMses]}
+    slows={[
+      'A cell runs many tenders at once, each with its own file, deadlines and corrigenda, and a wide pool of suppliers behind every one.',
+      'Rules stack up: financial rules, the organisation’s own purchase manual, Make in India preference and MSE preferences. Each file has to show they were followed.',
+      'Staff move and files stay. An audit query two years on needs the reasoning behind the award, not just the letter.',
+    ]}
+    changes={[
+      'Evaluator gives every tender the same criteria-by-bidder matrix, with the page behind each finding.',
+      'The record outlives the person who made it: hash-chained, exportable, and tied to the pages it cites.',
+      'Where your unit also bids for work, TAS reads the same portals from the supplier side.',
+    ]}
+    product={{
+      label: 'Evaluator, with TAS',
+      note: 'Evaluator for the bids you receive. TAS for the work you bid on yourselves.',
+      links: [
+        { href: '/evaluator', label: 'Explore Evaluator' },
+        { href: '/tas', label: 'Explore TAS' },
+      ],
+    }}
+    cta={{ href: '/contact?intent=pilot', label: 'Request a pilot' }}
+    caption="Lab or PSU procurement cell, in elevation. Schematic."
+    legend={['Tenders in flight, tagged', 'The file an auditor asks for later']}
+    flip
+    tone="navy"
+  >
+    <VignetteLab slot="art" />
+  </Segment>
+
+  <section class="section section--tight sol-end" aria-labelledby="sol-end-title">
+    <div class="wrap">
+      <div class="sol-end__card card reg rv">
+        <div class="sol-end__copy">
+          <p class="eyebrow">Not sure which route is yours?</p>
+          <h2 id="sol-end-title" class="h2">Tell us which side of the table you sit on. <em>We will say plainly if we fit.</em></h2>
+          <p class="sol-end__note">
+            Figures on this page are public numbers, each linked to its source. They describe the sector, not Kriseva results.
+            Kriseva is pre-revenue; the <a href="/proof">Proof page</a> lists every claim exactly as it stands.
+          </p>
+        </div>
+        <div class="sol-end__actions">
+          <a class="btn" href="/contact?intent=demo">Book a demo <span class="arrow" aria-hidden="true">&rarr;</span></a>
+          <a class="btn btn--ghost" href="/contact?intent=pilot">Request a pilot</a>
+          <a class="link-arrow" href="/resources">Read the glossary <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .sol-end__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+    padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  }
+
+  .sol-end__copy {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .sol-end__note {
+    max-width: 44rem;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  .sol-end__note a {
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+
+  .sol-end__actions {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+  }
+
+  @media (width <= 860px) {
+    .sol-end__card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,62 @@
+---
+// Resources: FAQ and a defence and space procurement glossary. Targets the
+// long-tail queries buyers and suppliers actually type (GeM, CPPP, L1, QCBS,
+// EMD, comparative statement). FAQ text comes from src/data/faq.ts; glossary
+// terms from src/components/site/resources/glossary.ts. JSON-LD: FAQPage,
+// DefinedTermSet and BreadcrumbList.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import Faq from '../components/site/Faq.astro';
+import Glossary from '../components/site/resources/Glossary.astro';
+import IndexDrawer from '../components/site/resources/IndexDrawer.astro';
+import { glossary } from '../components/site/resources/glossary';
+import { faqs } from '../data/faq';
+import { SITE, breadcrumbSchema, faqSchema } from '../data/kriseva';
+
+const crumbs = [{ name: 'Resources', path: '/resources' }];
+const setId = `${SITE}/resources#glossary`;
+const definedTermSet = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': setId,
+  name: 'Defence and space procurement glossary (India)',
+  description: 'Plain-language definitions of the portals, tender types, evaluation methods and rules that shape defence and space procurement in India.',
+  url: setId,
+  inLanguage: 'en-IN',
+  publisher: { '@id': `${SITE}/#organization` },
+  hasDefinedTerm: glossary.map((t) => ({
+    '@type': 'DefinedTerm',
+    '@id': `${SITE}/resources#${t.id}`,
+    name: t.term,
+    ...(t.aka && t.aka.length ? { alternateName: t.aka } : {}),
+    description: t.def,
+    termCode: t.id,
+    url: `${SITE}/resources#${t.id}`,
+    inDefinedTermSet: setId,
+  })),
+};
+---
+<SiteLayout
+  title="FAQ and glossary: defence and space procurement | Kriseva"
+  description="Plain answers about defence and space procurement in India, and a glossary of GeM, CPPP, EMD, MSE exemption, L1, QCBS, comparative statement, corrigendum and more."
+  path="/resources"
+  schema={[breadcrumbSchema(crumbs), faqSchema(faqs), definedTermSet]}
+>
+  <PageHero
+    eyebrow="Resources"
+    title="Procurement, in plain words."
+    accent="plain words"
+    lead="Straight answers to the questions suppliers and buyers ask us, and a glossary of the portals, rules and paperwork behind a defence or space tender in India."
+    crumbs={crumbs}
+  >
+    <Fragment slot="actions">
+      <a class="btn" href="#glossary">Search the glossary <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn--ghost" href="#faq">Read the FAQ</a>
+    </Fragment>
+    <Fragment slot="visual"><IndexDrawer /></Fragment>
+  </PageHero>
+
+  <Faq items={faqs} index="01" title="Questions we hear most, answered straight." />
+
+  <Glossary index="02" />
+</SiteLayout>

@@ -1,0 +1,40 @@
+---
+// Hiring.astro: one line and a button.
+import { company } from '../../../data/kriseva';
+
+const mail = `mailto:${company.email}?subject=${encodeURIComponent('CTO at Kriseva')}`;
+---
+<section class="hire on-navy" aria-labelledby="hire-title">
+  <div class="wrap hire__row">
+    <h2 id="hire-title" class="hire__t">We are hiring a <em>CTO.</em></h2>
+    <a class="btn btn--brass" href={mail}>Write to Ayush <span class="arrow" aria-hidden="true">&rarr;</span></a>
+  </div>
+</section>
+
+<style>
+  .hire {
+    padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+
+  .hire__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 2rem;
+  }
+
+  .hire__t {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: var(--t-h2);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    min-width: 0;
+  }
+
+  .hire__t em {
+    font-style: italic;
+    color: var(--brass-light);
+  }
+</style>

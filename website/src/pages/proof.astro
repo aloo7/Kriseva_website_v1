@@ -1,0 +1,79 @@
+---
+// /proof: Exhibit A in full. Every claim exactly as it stands, as a tower of
+// dated entries; what we do not claim; the numbers we measured; and the
+// source for every public number. Data: src/data/proof.ts and stats.ts.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import DossierCover from '../components/site/proof/DossierCover.astro';
+import ProofTimeline from '../components/site/proof/ProofTimeline.astro';
+import NotClaimed from '../components/site/proof/NotClaimed.astro';
+import Measured from '../components/site/proof/Measured.astro';
+import SourcesTable from '../components/site/proof/SourcesTable.astro';
+import { breadcrumbSchema, company } from '../data/kriseva';
+
+const crumbs = [{ name: 'Proof', path: '/proof' }];
+---
+<SiteLayout
+  title="Proof | Kriseva: every claim, exactly as it stands"
+  description="Kriseva's record for defence and space procurement, dated and stamped: incorporation, a programme selection, two non-binding letters of intent, 4,649 automated tests, and a source for every public number. No customers named, no certifications claimed."
+  path="/proof"
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    eyebrow="Proof · Exhibit A"
+    title="Every claim, exactly as it stands."
+    accent="exactly as it stands."
+    lead="Logos can be borrowed and testimonials can be staged. Paper has dates. This page is the paper: each claim we make about Kriseva, worded as it exists, with the day it became true. If it is not here, we do not say it."
+    crumbs={crumbs}
+  >
+    <Fragment slot="actions">
+      <a class="btn" href="#record">Read the record <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      <a class="btn btn--ghost" href="#not-claimed">What we do not claim</a>
+    </Fragment>
+    <Fragment slot="visual"><DossierCover /></Fragment>
+  </PageHero>
+
+  <ProofTimeline />
+  <NotClaimed />
+  <Measured />
+  <SourcesTable />
+
+  <section class="section section--tight on-navy-hatch" aria-labelledby="proof-cta">
+    <div class="wrap proof-cta">
+      <div>
+        <h2 id="proof-cta" class="h2">Cannot trace a claim? <em>Tell us.</em></h2>
+        <p class="lead">If any line on this site does not match a document you can open, write to the founder. We will fix the page or withdraw the claim.</p>
+      </div>
+      <div class="proof-cta__actions">
+        <a class="btn btn--brass" href={`mailto:${company.email}?subject=${encodeURIComponent('A claim on the Kriseva Proof page')}`}>Write to the founder <span class="arrow" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn--ghost" href="/security">Sovereign by design</a>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .proof-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .proof-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    justify-content: flex-end;
+  }
+
+  @media (width <= 860px) {
+    .proof-cta {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .proof-cta__actions {
+      justify-content: flex-start;
+    }
+  }
+</style>

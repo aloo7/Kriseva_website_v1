@@ -1,177 +1,36 @@
 ---
-// /contact - founder-direct lead capture.
-// Real form POSTing to /api/lead (Cloudflare function, MailChannels forward,
-// honeypot, success and error states). With JS off, the form still posts
-// natively and a visible direct-email line always remains. No mailto-only
-// path, no SDR funnel, no third-party form vendor.
+// /contact: direct to the founder. Intent chooser, one form posting to
+// /api/lead, an honest side panel. No sales queue, no third-party form vendor.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PageHero from '../components/site/PageHero.astro';
+import ContactForm from '../components/site/contact/ContactForm.astro';
+import { SITE, breadcrumbSchema } from '../data/kriseva';
 
-import V6Layout from '../layouts/V6Layout.astro';
-import { getClaim } from '../data/publicClaims';
+const title = 'Contact the founder | Kriseva';
+const description =
+  'Book a demo, request a TAS pilot or an Evaluator sandbox, or ask for a custom quote. There is no sales queue: the founder of Kriseva reads and replies to every serious note.';
 
-const education = getClaim('founder.education')!.wording;
-
-const title = 'KRISEVA · Contact, speak directly with the founder';
-const description = 'If you run a tender workflow on the bidder side, sit on the evaluation side, or are evaluating Kriseva seriously, the conversation is direct and founder-led.';
+const contactPage = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact Kriseva',
+  url: SITE + '/contact',
+  inLanguage: 'en-IN',
+  about: { '@id': SITE + '/#organization' },
+};
 ---
-<V6Layout title={title} description={description} path="/contact">
-
-  <!-- ============ HERO + FORM ============ -->
-  <section class="ihero" aria-label="Contact">
-    <div class="wrap cgrid2">
-      <div>
-        <p class="eyebrow">Speak directly</p>
-        <h1 class="display">Contact the founder. <em class="em-brass">No SDR funnel.</em></h1>
-        <p class="dek">If you run a tender workflow on the bidder side, sit on the evaluation side, or are evaluating Kriseva seriously, the conversation is direct and founder-led.</p>
-
-        <form class="leadform rv regmark" id="leadForm" method="post" action="/api/lead" novalidate>
-          <div class="lf-row">
-            <label for="lf-name">Name</label>
-            <input id="lf-name" name="name" type="text" autocomplete="name" required maxlength="200" />
-          </div>
-          <div class="lf-row">
-            <label for="lf-org">Organization <span class="opt">optional</span></label>
-            <input id="lf-org" name="organisation" type="text" autocomplete="organization" maxlength="300" />
-          </div>
-          <div class="lf-row">
-            <label for="lf-email">Email</label>
-            <input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="320" />
-          </div>
-          <div class="lf-row">
-            <label for="lf-intent">Which side of the table</label>
-            <select id="lf-intent" name="intent">
-              <option value="bidder">Bidder-side · MSME or defense-tech team</option>
-              <option value="evaluation">Evaluation side · committee or procurement cell</option>
-              <option value="attest">Research collaboration (ATTEST)</option>
-              <option value="institutional">Institutional · incubator, grant, press</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="lf-row">
-            <label for="lf-msg">The note</label>
-            <textarea id="lf-msg" name="message" rows="6" required minlength="10" maxlength="5000"
-              placeholder="What you run, what you are evaluating, what you want to see."></textarea>
-          </div>
-          <!-- honeypot: humans never see it; bots fill it -->
-          <div class="lf-hp" aria-hidden="true">
-            <label for="lf-web">Website</label>
-            <input id="lf-web" name="website" type="text" tabindex="-1" autocomplete="off" />
-          </div>
-          <div class="lf-actions">
-            <button class="btn btn-fill" type="submit" id="lf-submit">Send the note <span class="arr">→</span></button>
-            <span class="lf-direct">or write directly: <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a></span>
-          </div>
-          <p class="lf-status" id="lfStatus" role="status" aria-live="polite"></p>
-          <noscript>
-            <p class="lf-status">JavaScript is off; the form still sends. If anything fails, write directly: <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a></p>
-          </noscript>
-        </form>
-      </div>
-
-      <!-- a11y fix (Phase 5): was <aside>, nested inside <main>, which
-           trips axe's landmark-complementary-is-top-level. Plain <div>
-           keeps the identical box and position. -->
-      <div class="fcard regmark rv" aria-label="Founder">
-        <div class="fph"><img src="/assets/v6/founder_ayush.jpg" width="900" height="1125" alt="Ayush Tiwary, founder of KRISEVA AI" loading="lazy" /></div>
-        <b>Ayush Tiwary</b>
-        <div class="fmeta">
-          Founder · KRISEVA AI<br />
-          {education}<br />
-          <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a><br />
-          <a href="/founder">The founder dossier →</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ WHAT TO EXPECT ============ -->
-  <section class="sec-pad sec-sunk" id="expect" style="margin-top:clamp(40px,6vw,90px)">
-    <div class="wrap">
-      <div class="record rv">
-        <div class="rec"><span class="date">Who reads it</span><span class="what">The founder. Each note lands in one inbox and is read directly.</span><span class="tag">Direct</span></div>
-        <div class="rec"><span class="date">What helps</span><span class="what">Your side of the table, the portals you work with, and what you want to see demonstrated.</span><span class="tag">Context</span></div>
-        <div class="rec"><span class="date">What never happens</span><span class="what">No mailing list, no SDR sequence, no sharing. Confidential by default.</span><span class="tag">Standing</span></div>
-      </div>
-    </div>
-  </section>
-
-</V6Layout>
-
-<style is:global>
-/* /contact page-specific */
-.cgrid2{display:grid;grid-template-columns:minmax(0,7fr) minmax(280px,4fr);gap:clamp(28px,4vw,72px);align-items:start}
-@media (max-width:900px){.cgrid2{grid-template-columns:1fr}.cgrid2 .fcard{max-width:420px}}
-.leadform{margin-top:clamp(26px,3.4vw,44px);background:var(--paper-raised);border:1px solid var(--ink);
-  border-radius:2px;padding:clamp(18px,2.6vw,30px)}
-.lf-row{margin-bottom:16px}
-.lf-row label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--ink-sec);margin-bottom:7px}
-.lf-row label .opt{color:var(--ink-sec);letter-spacing:.12em}
-.lf-row input,.lf-row select,.lf-row textarea{width:100%;font-family:var(--sans);font-size:.95rem;
-  color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:2px;
-  padding:11px 12px;transition:border-color .2s}
-.lf-row input:focus,.lf-row select:focus,.lf-row textarea:focus{border-color:var(--ink);outline:none}
-.lf-row textarea{resize:vertical;min-height:120px}
-.lf-hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
-.lf-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:6px}
-.lf-direct{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-sec)}
-.lf-direct a{color:var(--brass-deep);text-decoration:none;border-bottom:1px solid rgba(168,114,41,.4)}
-.lf-status{margin-top:14px;font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
-  color:var(--ink-sec);min-height:1.4em}
-.lf-status.ok{color:var(--vt-verified)}
-.lf-status.err{color:var(--vt-failed)}
-.fcard{border:1px solid var(--ink);border-radius:2px;padding:22px;background:var(--paper-raised)}
-.fph{margin:-22px -22px 18px;overflow:hidden;border-bottom:1px solid var(--ink);aspect-ratio:4/5}
-.fph img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92)}
-.fcard b{display:block;font-family:var(--serif);font-weight:400;font-size:1.6rem;letter-spacing:-.01em;margin-bottom:6px}
-.fcard .fmeta{font-size:.9rem;line-height:1.9;color:var(--ink-sec)}
-.fcard a{color:var(--brass-deep);text-decoration:none;border-bottom:1px solid rgba(168,114,41,.4)}
-.fcard a:hover{border-bottom-color:var(--brass-deep)}
-</style>
-
-<script is:inline>
-// Lead form: fetch POST with success / error states; native POST remains the
-// no-JS fallback. ?intent= deep links preselect the side of the table.
-(function () {
-  var form = document.getElementById('leadForm'), status = document.getElementById('lfStatus'),
-      submit = document.getElementById('lf-submit');
-  if (!form) return;
-
-  var intent = new URLSearchParams(location.search).get('intent');
-  var map = { demo: 'bidder', pilot: 'bidder', partnership: 'institutional', issuer: 'evaluation', evaluation: 'evaluation' };
-  var sel = document.getElementById('lf-intent');
-  if (intent && sel) {
-    var v = map[intent] || intent;
-    if ([].some.call(sel.options, function (o) { return o.value === v; })) sel.value = v;
-  }
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
-    submit.disabled = true;
-    status.className = 'lf-status';
-    status.textContent = 'Sending…';
-    var data = {};
-    new FormData(form).forEach(function (val, key) { data[key] = val; });
-    fetch('/api/lead', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', accept: 'application/json' },
-      body: JSON.stringify(data)
-    }).then(function (res) { return res.json().catch(function () { return { ok: res.ok }; }); })
-      .then(function (out) {
-        if (out.ok) {
-          status.className = 'lf-status ok';
-          status.textContent = 'ON FILE. The founder reads each note directly; expect a reply from ayush@kriseva.in.';
-          form.reset();
-        } else {
-          status.className = 'lf-status err';
-          status.textContent = (out.detail || 'The note did not send.') + ' Write directly: ayush@kriseva.in';
-        }
-      })
-      .catch(function () {
-        status.className = 'lf-status err';
-        status.textContent = 'The note did not send. Write directly: ayush@kriseva.in';
-      })
-      .finally(function () { submit.disabled = false; });
-  });
-})();
-</script>
+<SiteLayout
+  title={title}
+  description={description}
+  path="/contact"
+  schema={[breadcrumbSchema([{ name: 'Contact', path: '/contact' }]), contactPage]}
+>
+  <PageHero
+    eyebrow="Contact · Direct to the founder"
+    title="Cross the bridge with us."
+    accent="the bridge"
+    lead="There is no sales development rep and no queue. Tell us which side of the table you sit on, and the founder replies."
+    crumbs={[{ name: 'Contact', path: '/contact' }]}
+  />
+  <ContactForm />
+</SiteLayout>

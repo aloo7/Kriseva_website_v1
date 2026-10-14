@@ -1,0 +1,225 @@
+---
+// SourcesTable.astro: every public number on the site, with its source.
+// Data: stats.ts `stats`. Each source was opened on 14 Oct 2026.
+import { stats } from '../../../data/stats';
+import { fmtDate } from './meta';
+
+// 'span' is dated by month in its own source (xKDR Working Paper 10).
+const monthOnly = new Set(['span']);
+const rows = Object.values(stats).map((s) => ({
+  id: s.id,
+  value: `${s.prefix ?? ''}${s.value}`,
+  label: s.label,
+  source: s.source,
+  url: s.url,
+  host: new URL(s.url).hostname,
+  date: fmtDate(s.asOf, monthOnly.has(s.id)),
+}));
+---
+<section class="section src" id="sources" aria-labelledby="src-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">04 · Sources</p>
+      <h2 id="src-title" class="h2">Sources for <em>every public number.</em></h2>
+      <p class="lead">Every figure printed on this site about India’s defence and space market comes from a public document. Each row links to the document itself, not to a news copy of it.</p>
+    </header>
+
+    <div class="src__wrap reg">
+      <table class="src__table" role="table">
+        <caption class="src__vh">Public numbers used on the Kriseva site, with what each measures, its source document and the date of that document.</caption>
+        <thead role="rowgroup">
+          <tr role="row">
+            <th role="columnheader" scope="col">Number</th>
+            <th role="columnheader" scope="col">What it measures</th>
+            <th role="columnheader" scope="col">Source document</th>
+            <th role="columnheader" scope="col">Dated</th>
+          </tr>
+        </thead>
+        <tbody role="rowgroup">
+          {rows.map((r) => (
+            <tr role="row" id={`src-${r.id}`}>
+              <td role="cell" class="src__v" data-label="Number">{r.value}</td>
+              <td role="cell" class="src__l" data-label="What it measures">{r.label}</td>
+              <td role="cell" class="src__s" data-label="Source document">
+                <a href={r.url} target="_blank" rel="noopener">{r.source}<span aria-hidden="true"> &#8599;</span><span class="src__vh"> (opens in a new tab)</span></a>
+                <span class="src__h mono">{r.host}</span>
+              </td>
+              <td role="cell" class="src__d mono" data-label="Dated">{r.date}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="src__note">Each source was opened and read at the document itself on 14 October 2026. Kriseva’s own measured numbers are listed above with their dates; they come from our own systems rather than a public document.</p>
+  </div>
+</section>
+
+<style>
+  .src__vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .src__wrap {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(0.5rem, 1.5vw, 1rem) clamp(0.75rem, 2vw, 1.5rem);
+  }
+
+  .src__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .src__table th {
+    padding: 0.9rem 1rem 0.9rem 0;
+    text-align: left;
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom: 1.5px solid var(--navy);
+  }
+
+  .src__table td {
+    padding: 1.1rem 1rem 1.1rem 0;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .src__table tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .src__table th:nth-child(1),
+  .src__table td:nth-child(1) {
+    width: 17%;
+  }
+
+  .src__table th:nth-child(2),
+  .src__table td:nth-child(2) {
+    width: 36%;
+  }
+
+  .src__table th:nth-child(3),
+  .src__table td:nth-child(3) {
+    width: 32%;
+  }
+
+  .src__table th:nth-child(4),
+  .src__table td:nth-child(4) {
+    width: 15%;
+    padding-right: 0;
+  }
+
+  .src__v {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--navy);
+  }
+
+  .src__l {
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .src__s a {
+    font-weight: 500;
+    font-size: var(--t-small);
+    color: var(--navy);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .src__s a:hover {
+    color: var(--red);
+  }
+
+  .src__h {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.65rem;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: none;
+  }
+
+  .src__d {
+    font-size: 0.75rem;
+    color: var(--ink-2);
+  }
+
+  .src__note {
+    margin-top: 1.5rem;
+    max-width: 52rem;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  /* Phones: each row becomes a stacked card, labels restored from data-label. */
+  @media (width <= 820px) {
+    .src__table,
+    .src__table tbody,
+    .src__table tr,
+    .src__table td {
+      display: block;
+      width: 100%;
+    }
+
+    .src__table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+    }
+
+    .src__table tr {
+      padding-block: 1.1rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .src__table tr:last-child {
+      border-bottom: 0;
+    }
+
+    .src__table td,
+    .src__table th:nth-child(n),
+    .src__table td:nth-child(n) {
+      width: 100%;
+      padding: 0.3rem 0;
+      border: 0;
+    }
+
+    .src__table td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 0.15rem;
+      font-family: var(--f-mono);
+      font-size: 0.625rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    .src__v::before {
+      display: none;
+    }
+  }
+</style>

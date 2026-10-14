@@ -1,0 +1,180 @@
+---
+// Sovereign.astro: Procol shows certification badges. Kriseva shows the
+// properties a buyer can test in their own room, as four seals.
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+
+const seals = [
+  {
+    t: 'On your premises',
+    ring: 'YOUR MACHINES · LOCAL MODELS · NO CLOUD ACCOUNT · ',
+    d: 'Both products run on your own machines with local models. Evaluator needs no network; TAS goes online only to read public portals, when you allow it.',
+    icon: '<rect x="-15" y="-13" width="30" height="10" rx="1"/><rect x="-15" y="1" width="30" height="10" rx="1"/><circle cx="9" cy="-8" r="1.4"/><circle cx="9" cy="6" r="1.4"/>',
+  },
+  {
+    t: 'Wi-Fi off',
+    ring: 'COLD START · WI-FI OFF · ZERO REQUESTS OUT · ',
+    d: 'Evaluator, tested on 6 October 2026: a cold start with the Wi-Fi off, and zero application requests left the machine.',
+    icon: '<path d="M-15 -3a21 21 0 0 1 30 0M-10 3a14 14 0 0 1 20 0M-5 9a7 7 0 0 1 10 0"/><path d="M-14 -14L14 14"/>',
+  },
+  {
+    t: 'Tamper-evident',
+    ring: 'HASH-CHAINED · APPEND-ONLY · AUDIT-READY · ',
+    d: 'Every finding and decision is written to a hash-chained record. One edit after the fact breaks the chain, visibly.',
+    icon: '<rect x="-16" y="-6" width="16" height="12" rx="6"/><rect x="0" y="-6" width="16" height="12" rx="6"/>',
+  },
+  {
+    t: 'Officers decide',
+    ring: 'NAMED OFFICER · RECORDED REASON · HUMAN DECISION · ',
+    d: 'Kriseva proposes, with evidence. A named officer decides, and the reason is recorded with the decision.',
+    icon: '<circle cx="0" cy="-7" r="6"/><path d="M-12 14a12 12 0 0 1 24 0"/>',
+  },
+];
+---
+<section class:list={['section', 'sov', 'on-navy-hatch', { 'sov--compact': compact }]} aria-labelledby="sov-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">05 · Sovereign by design</p>
+      <h2 id="sov-title" class="h2">Built to run where the files <em>cannot leave.</em></h2>
+      <p class="lead">Defence and space procurement files should stay in the building. Kriseva goes to them, not the other way round.</p>
+    </header>
+
+    <ul role="list" class="sov__grid rv-stagger">
+      {seals.map((s, i) => (
+        <li class="sov__item">
+          <svg class="seal" viewBox="-80 -80 160 160" aria-hidden="true">
+            <defs>
+              <path id={`ring-${i}`} d="M0 -58A58 58 0 1 1 -0.01 -58" />
+            </defs>
+            <circle r="74" class="seal__outer" />
+            <circle r="44" class="seal__inner" />
+            <g class="seal__spin">
+              <text class="seal__text"><textPath href={`#ring-${i}`} textLength="356">{s.ring}</textPath></text>
+            </g>
+            <g class="seal__icon" set:html={s.icon} />
+          </svg>
+          <h3 class="sov__t">{s.t}</h3>
+          <p class="sov__d">{s.d}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="sov__honest">
+      <p><strong>No certification is claimed on this site.</strong> Each property above is something you can watch us test, rather than a badge you have to trust.</p>
+      {!compact && <a class="btn btn--ghost" href="/security">How it stays sovereign <span class="arrow" aria-hidden="true">&rarr;</span></a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sov__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .sov__item {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+  }
+
+  .seal {
+    width: min(170px, 100%);
+    margin-bottom: 0.5rem;
+    overflow: visible;
+  }
+
+  .seal__outer {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 1.2;
+  }
+
+  .seal__inner {
+    fill: rgb(210 166 96 / 8%);
+    stroke: var(--brass-light);
+    stroke-width: 1.2;
+    stroke-dasharray: 2 4;
+  }
+
+  .seal__text {
+    font-family: var(--f-mono);
+    font-size: 9.6px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    fill: var(--on-navy);
+  }
+
+  .seal__spin {
+    transform-origin: 0 0;
+    animation: spin 40s linear infinite;
+  }
+
+  .sov__item:nth-child(even) .seal__spin {
+    animation-direction: reverse;
+  }
+
+  .seal__icon {
+    fill: none;
+    stroke: var(--brass-light);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .sov__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.45rem;
+  }
+
+  .sov__d {
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+    line-height: 1.5;
+  }
+
+  .sov__honest {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .sov__honest p {
+    max-width: 44rem;
+    color: var(--on-navy-2);
+  }
+
+  .sov__honest strong {
+    color: var(--on-navy);
+    font-weight: 600;
+  }
+
+  @media (width <= 980px) {
+    .sov__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (width <= 480px) {
+    .sov__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .seal {
+      width: 140px;
+    }
+  }
+</style>

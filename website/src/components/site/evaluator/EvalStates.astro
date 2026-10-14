@@ -1,0 +1,136 @@
+---
+// EvalStates.astro: what a finding can say, and the rule that nothing is
+// disqualified silently. Specimen examples.
+const states = [
+  {
+    k: 'ok',
+    name: 'Supported',
+    icon: '✓',
+    ex: 'ISO 9001:2015 certificate found, valid until 11 Mar 2027.',
+    ref: 'Clause 4.2 · bid p. 14',
+    what: 'The evidence is on the page. The committee confirms it.',
+  },
+  {
+    k: 'ask',
+    name: 'Needs clarification',
+    icon: '?',
+    ex: 'Turnover statement covers two of the three years asked for.',
+    ref: 'Clause 4.5 · bid p. 3',
+    what: 'Routed to a person, with the page, before anything moves.',
+  },
+  {
+    k: 'no',
+    name: 'Not found',
+    icon: '×',
+    ex: 'No supply order for a similar item in the bid packet.',
+    ref: 'Clause 5.1 · searched all 212 pages',
+    what: 'Shown as missing, never as rejected. A person decides what it means.',
+  },
+];
+---
+<section class="section estates on-paper-2" aria-labelledby="estates-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">02 · What a finding can say</p>
+      <h2 id="estates-title" class="h2">Plain states. A page behind each. <em>No silent rejections.</em></h2>
+      <p class="lead">Evaluator never quietly drops a bidder. When the evidence is unclear or missing, the finding says so, shows where it looked, and waits for a person.</p>
+    </header>
+
+    <ul role="list" class="estates__grid rv-stagger">
+      {states.map((s) => (
+        <li class:list={['estate', `estate--${s.k}`]}>
+          <p class="estate__name"><span class="estate__icon" aria-hidden="true">{s.icon}</span>{s.name}</p>
+          <p class="estate__ex">{s.ex}</p>
+          <p class="mono estate__ref">{s.ref}</p>
+          <p class="estate__what">{s.what}</p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="estates__rule rv">
+      <span class="stamp">Rule</span>
+      <span>Nothing is disqualified silently. Uncertain and missing findings go to a person, with the page open.</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .estates__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.85rem, 2vw, 1.25rem);
+  }
+
+  .estate {
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--c);
+    border-radius: var(--radius);
+  }
+
+  .estate--ok { --c: #2f6b45; --bg: #e6efe5; --fg: #255a39; }
+  .estate--ask { --c: var(--brass); --bg: #f6ead2; --fg: var(--brass-ink); }
+  .estate--no { --c: var(--red); --bg: #f6dfdb; --fg: var(--red); }
+
+  .estate__name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    justify-self: start;
+    padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+    background: var(--bg);
+    color: var(--fg);
+    font-weight: 600;
+    border-radius: 2px;
+  }
+
+  .estate__icon {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--fg);
+    color: var(--card);
+    font-size: 0.8rem;
+  }
+
+  .estate__ex {
+    font-family: var(--f-serif);
+    font-size: 1.15rem;
+    line-height: 1.35;
+  }
+
+  .estate__ref {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+  }
+
+  .estate__what {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--line-strong);
+  }
+
+  .estates__rule {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    font-family: var(--f-serif);
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+    line-height: 1.35;
+  }
+
+  @media (width <= 900px) {
+    .estates__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

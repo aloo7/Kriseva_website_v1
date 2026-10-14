@@ -1,0 +1,370 @@
+---
+// Segment.astro: one audience on /solutions. A drawing sheet with a custom
+// vignette (slot "art"), the audience's headline and public numbers, then a
+// three-column strip: what slows you down today, what Kriseva changes, and
+// the route (product, link, one call to action). Layout alternates with
+// `flip`. Public numbers come from src/data/stats.ts and keep their source.
+import type { Stat } from '../../../data/stats';
+
+interface Product {
+  label: string;
+  note: string;
+  links: { href: string; label: string }[];
+}
+interface Props {
+  id: string;
+  index: string;
+  name: string;
+  title: string;
+  accent?: string;
+  lead: string;
+  stats: Stat[];
+  slows: string[];
+  changes: string[];
+  product: Product;
+  cta: { href: string; label: string };
+  caption: string;
+  /** Meaning of the two callout letters drawn on the vignette. */
+  legend: [string, string];
+  flip?: boolean;
+  tone?: 'paper' | 'paper2' | 'navy';
+}
+const { id, index, name, title, accent, lead, stats, slows, changes, product, cta, caption, legend, flip = false, tone = 'paper' } = Astro.props;
+const parts = accent && title.includes(accent) ? title.split(accent) : [title];
+const toneClass = tone === 'navy' ? 'on-navy-hatch' : tone === 'paper2' ? 'on-paper-2' : '';
+---
+<section id={id} class:list={['section', 'seg', `seg--${tone}`, toneClass, { 'seg--flip': flip }]} aria-labelledby={`${id}-title`}>
+  <div class="wrap">
+    <div class="seg__top">
+      <figure class="seg__fig rv">
+        <div class="seg__sheet reg">
+          <slot name="art" />
+        </div>
+        <figcaption class="seg__cap">
+          <span class="mono seg__figno">Fig. {index}</span>
+          <span class="seg__captext">{caption}</span>
+        </figcaption>
+        <ol class="seg__legend" role="list">
+          <li><span class="seg__dot mono" aria-hidden="true">A</span>{legend[0]}</li>
+          <li><span class="seg__dot mono" aria-hidden="true">B</span>{legend[1]}</li>
+        </ol>
+      </figure>
+
+      <div class="seg__head rv">
+        <p class="eyebrow">{index} · {name}</p>
+        <h2 id={`${id}-title`} class="h2">{parts.length === 2 ? (<>{parts[0]}<em>{accent}</em>{parts[1]}</>) : title}</h2>
+        <p class="lead">{lead}</p>
+        <ul class="seg__stats" role="list">
+          {stats.map((s) => (
+            <li class="seg__stat">
+              <span class="seg__v">{(s.prefix ?? '') + s.value}</span>
+              <span class="seg__l">{s.label}</span>
+              <a class="seg__src mono" href={s.url} target="_blank" rel="noopener">{s.source}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="seg__strip rv">
+      <div class="seg__col">
+        <h3 class="label seg__k seg__k--slow">What slows you down today</h3>
+        <ul role="list" class="seg__list seg__list--slow">
+          {slows.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+      <div class="seg__col">
+        <h3 class="label seg__k seg__k--change">What Kriseva changes</h3>
+        <ul role="list" class="seg__list seg__list--change">
+          {changes.map((s) => <li>{s}</li>)}
+        </ul>
+      </div>
+      <div class="seg__col seg__col--route">
+        <h3 class="label seg__k">Your route</h3>
+        <p class="seg__prod">{product.label}</p>
+        <p class="seg__note">{product.note}</p>
+        <div class="seg__links">
+          {product.links.map((l) => <a class="link-arrow" href={l.href}>{l.label} <span aria-hidden="true">&rarr;</span></a>)}
+        </div>
+        <a class:list={['btn', { 'btn--brass': tone === 'navy' }]} href={cta.href}>{cta.label} <span class="arrow" aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .seg {
+    --seg-line: var(--line);
+    --seg-line-strong: var(--line-strong);
+    --seg-mute: var(--ink-3);
+    --seg-body: var(--ink-2);
+    --seg-accent: var(--brass-ink);
+  }
+
+  .seg--navy {
+    --seg-line: var(--line-navy);
+    --seg-line-strong: rgb(210 166 96 / 45%);
+    --seg-mute: var(--on-navy-2);
+    --seg-body: var(--on-navy-2);
+    --seg-accent: var(--brass-light);
+  }
+
+  .seg__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .seg--flip .seg__fig {
+    order: 2;
+  }
+
+  .seg__fig {
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
+  }
+
+  /* The drawing sheet: gridded paper with registration marks. */
+  .seg__sheet {
+    --reg: var(--steel);
+
+    background-color: var(--card);
+    background-image:
+      linear-gradient(rgb(10 31 68 / 5%) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(10 31 68 / 5%) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 1px solid var(--line-strong);
+    padding: clamp(0.6rem, 1.6vw, 1.1rem);
+    color: var(--ink);
+  }
+
+  .seg--navy .seg__sheet {
+    --reg: var(--brass-light);
+
+    border-color: var(--brass-light);
+  }
+
+  .seg__sheet :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .seg__cap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.9rem;
+    align-items: baseline;
+    color: var(--seg-mute);
+    font-size: var(--t-small);
+  }
+
+  .seg__figno {
+    color: var(--seg-accent);
+    font-size: 0.6875rem;
+  }
+
+  .seg__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    font-size: var(--t-small);
+    color: var(--seg-body);
+  }
+
+  .seg__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .seg__dot {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--seg-accent);
+    color: var(--paper);
+    font-size: 0.6875rem;
+    letter-spacing: 0;
+  }
+
+  .seg--navy .seg__dot {
+    color: var(--navy);
+  }
+
+  .seg__head {
+    display: grid;
+    gap: 1.25rem;
+    align-content: center;
+    min-width: 0;
+  }
+
+  .seg__head .lead {
+    color: var(--seg-body);
+  }
+
+  .seg__stats {
+    display: grid;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .seg__stat {
+    display: grid;
+    gap: 0.2rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--brass);
+  }
+
+  .seg__v {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.9rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .seg__l {
+    font-size: var(--t-small);
+    color: var(--seg-body);
+    max-width: 42ch;
+  }
+
+  .seg__src {
+    font-size: 0.625rem;
+    color: var(--seg-mute);
+    text-underline-offset: 3px;
+    width: fit-content;
+  }
+
+  /* The strip: today | with Kriseva | your route. */
+  .seg__strip {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.15fr) minmax(0, 0.9fr);
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    border-top: 1px solid var(--seg-line-strong);
+  }
+
+  .seg__col {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding-block: 1.6rem 0;
+    padding-right: clamp(1rem, 2.5vw, 2rem);
+    min-width: 0;
+  }
+
+  .seg__col + .seg__col {
+    padding-left: clamp(1rem, 2.5vw, 2rem);
+    border-left: 1px solid var(--seg-line);
+  }
+
+  .seg__k {
+    color: var(--seg-accent);
+  }
+
+  .seg__k--slow {
+    color: var(--red);
+  }
+
+  .seg--navy .seg__k--slow {
+    color: #f0a59b;
+  }
+
+  .seg__list {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .seg__list li {
+    position: relative;
+    padding-left: 1.4rem;
+    font-size: var(--t-small);
+    line-height: 1.5;
+    color: var(--seg-body);
+  }
+
+  .seg__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+
+  .seg__list--slow li::before {
+    border: 1.5px solid var(--red);
+  }
+
+  .seg--navy .seg__list--slow li::before {
+    border-color: #f0a59b;
+  }
+
+  .seg__list--change li::before {
+    border: 1.5px solid var(--brass);
+    transform: rotate(45deg) scale(0.75);
+  }
+
+  .seg__col--route {
+    align-content: start;
+  }
+
+  .seg__prod {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .seg__note {
+    font-size: var(--t-small);
+    color: var(--seg-body);
+  }
+
+  .seg__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  .seg__col--route .btn {
+    justify-self: start;
+    margin-top: 0.25rem;
+    white-space: normal;
+  }
+
+  @media (width <= 980px) {
+    .seg__top {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .seg--flip .seg__fig {
+      order: 0;
+    }
+
+    .seg__head {
+      order: -1;
+    }
+
+    .seg__strip {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .seg__col {
+      padding-right: 0;
+      padding-bottom: 1.6rem;
+    }
+
+    .seg__col + .seg__col {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--seg-line);
+    }
+  }
+</style>

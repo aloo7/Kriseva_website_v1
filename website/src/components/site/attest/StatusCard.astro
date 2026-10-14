@@ -1,0 +1,114 @@
+---
+// StatusCard.astro: a dossier cover for ATTEST. Four plain facts about where
+// the work stands, with two stamps. Hero visual for /attest.
+const rows = [
+  { k: 'Stage', v: 'Research prototype' },
+  { k: 'Data', v: 'Synthetic data' },
+  { k: 'Review', v: 'A named human resolves each conflict' },
+  { k: 'Reach', v: 'Shipped to nobody' },
+];
+---
+<div class="scard reg" role="group" aria-label="ATTEST status at a glance">
+  <div class="scard__spine" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="scard__body">
+    <p class="mono scard__top"><span>Kriseva Labs</span><span>File: ATTEST</span></p>
+    <dl class="scard__rows">
+      {rows.map((r) => (
+        <div class="scard__row">
+          <dt class="mono">{r.k}</dt>
+          <dd>{r.v}</dd>
+        </div>
+      ))}
+    </dl>
+    <div class="scard__stamps">
+      <span class="stamp">Research stage</span>
+      <span class="stamp stamp--navy">Synthetic data</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .scard {
+    --reg: var(--steel);
+
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    max-width: 470px;
+    margin-inline: auto;
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: 10px 10px 0 -1px var(--paper-3), 10px 10px 0 0 var(--line-strong);
+  }
+
+  .scard__spine {
+    display: grid;
+    align-content: space-evenly;
+    justify-items: center;
+    background: var(--navy);
+  }
+
+  .scard__spine span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 0 0 2px var(--brass-light);
+  }
+
+  .scard__body {
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    min-width: 0;
+  }
+
+  .scard__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line-strong);
+    font-size: 0.6875rem;
+    color: var(--brass-ink);
+  }
+
+  .scard__rows {
+    display: grid;
+  }
+
+  .scard__row {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding-block: 0.8rem;
+    border-bottom: 1px dashed var(--line-strong);
+  }
+
+  .scard__row dt {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+  }
+
+  .scard__row dd {
+    font-family: var(--f-serif);
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .scard__stamps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding-top: 0.5rem;
+  }
+
+  @media (width <= 420px) {
+    .scard__row {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.2rem;
+    }
+  }
+</style>

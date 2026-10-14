@@ -1,0 +1,76 @@
+---
+// TitleBlock.astro: hero visual for /company. The title block from the corner
+// of an engineering drawing: who drew it, where, and when it was filed.
+import { company } from '../../../data/kriseva';
+---
+<figure class="tb">
+  <div class="tb__grid">
+    <p class="tb__cell tb__cell--wide"><span class="tb__k mono">Company</span><strong class="tb__v tb__v--big">{company.legalName}</strong></p>
+    <p class="tb__cell"><span class="tb__k mono">Seat</span><strong class="tb__v">{company.city}</strong></p>
+    <p class="tb__cell"><span class="tb__k mono">Incorporated</span><strong class="tb__v">{company.incorporated}</strong></p>
+    <p class="tb__cell tb__cell--wide"><span class="tb__k mono">Subject</span><strong class="tb__v">The bridge for India’s defence and space procurement</strong></p>
+    <p class="tb__cell"><span class="tb__k mono">Drawing</span><strong class="tb__v">No. 01, Company</strong></p>
+    <p class="tb__cell"><span class="tb__k mono">Sheet</span><strong class="tb__v">1 of 1</strong></p>
+  </div>
+  <figcaption class="tb__cap mono">Title block</figcaption>
+</figure>
+
+<style>
+  .tb {
+    position: relative;
+    max-width: 32rem;
+    margin-inline: auto;
+    padding: 1.1rem;
+    background: var(--card);
+    border: 2px solid var(--navy);
+    box-shadow: 0 0 0 5px var(--card), 0 0 0 6px var(--line-strong);
+  }
+
+  .tb__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--navy);
+    border-left: 1px solid var(--navy);
+  }
+
+  .tb__cell {
+    display: grid;
+    gap: 0.3rem;
+    align-content: start;
+    min-width: 0;
+    padding: 0.7rem 0.85rem 0.8rem;
+    border-right: 1px solid var(--navy);
+    border-bottom: 1px solid var(--navy);
+  }
+
+  .tb__cell--wide {
+    grid-column: 1 / -1;
+  }
+
+  .tb__k {
+    font-size: 0.625rem;
+    color: var(--brass-ink);
+  }
+
+  .tb__v {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.05rem;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  .tb__v--big {
+    font-weight: 300;
+    font-size: clamp(1.45rem, 1.2rem + 0.9vw, 1.85rem);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .tb__cap {
+    margin-top: 0.7rem;
+    font-size: 0.625rem;
+    color: var(--ink-3);
+    text-align: right;
+  }
+</style>

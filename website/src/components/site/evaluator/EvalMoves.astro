@@ -1,0 +1,208 @@
+---
+// EvalMoves.astro: one tender through Evaluator, in five moves, as a vertical
+// rail with a small drawing for each move. Specimen drawings.
+const moves = [
+  {
+    t: 'Select the tender',
+    d: 'The criteria are set in the tender’s own words, clause by clause, before a single bid is opened.',
+    tag: 'Criteria',
+    svg: `<rect x="14" y="10" width="76" height="96" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4"/>
+      <path d="M24 26H80M24 36H66M24 46H74M24 56H60M24 66H78M24 76H56" stroke="#e1d7c3" stroke-width="3"/>
+      <rect x="22" y="40" width="60" height="12" fill="rgb(210 166 96 / 28%)"/>
+      <path d="M96 46H122" stroke="#b07f35" stroke-width="1.6" stroke-dasharray="4 4"/>
+      <g font-family="IBM Plex Mono" font-size="9" fill="#0a1f44">
+        <rect x="128" y="18" width="92" height="20" fill="#fff" stroke="#0a1f44" stroke-opacity=".3"/><text x="136" y="31">C1 · Cl. 4.2</text>
+        <rect x="128" y="42" width="92" height="20" fill="#f6ead2" stroke="#b07f35"/><text x="136" y="55">C2 · Cl. 4.5</text>
+        <rect x="128" y="66" width="92" height="20" fill="#fff" stroke="#0a1f44" stroke-opacity=".3"/><text x="136" y="79">C3 · Cl. 5.1</text>
+      </g>`,
+  },
+  {
+    t: 'Upload the bids',
+    d: 'Bid packets come in as they are. Price annexes stay sealed while the technical evaluation runs.',
+    tag: 'Sealed',
+    svg: `<path d="M18 92H150V104H18Z" fill="#0a1f44"/>
+      <g fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.3">
+        <rect x="26" y="40" width="34" height="50"/><rect x="66" y="30" width="34" height="60"/><rect x="106" y="46" width="34" height="44"/>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="8" fill="#0a1f44"><text x="38" y="86">A</text><text x="78" y="86">B</text><text x="118" y="86">C</text></g>
+      <rect x="166" y="38" width="56" height="40" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.3"/>
+      <path d="M166 38L194 60L222 38" fill="none" stroke="#0a1f44" stroke-width="1.3"/>
+      <circle cx="194" cy="66" r="9" fill="#a8322a"/>
+      <text x="166" y="96" font-family="IBM Plex Mono" font-size="8" fill="#a8322a" letter-spacing="1">PRICE · SEALED</text>`,
+  },
+  {
+    t: 'Review the evidence',
+    d: 'Every finding opens the page it came from, with the region highlighted. Uncertain findings are flagged for a person.',
+    tag: 'Page-linked',
+    svg: `<rect x="14" y="10" width="86" height="96" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4"/>
+      <path d="M24 24H90M24 34H70M24 70H86M24 80H64M24 90H78" stroke="#e1d7c3" stroke-width="3"/>
+      <rect x="22" y="44" width="70" height="16" fill="rgb(210 166 96 / 26%)" stroke="#b07f35" stroke-width="1.4"/>
+      <circle cx="78" cy="52" r="20" fill="none" stroke="#0a1f44" stroke-width="2.2"/>
+      <path d="M92 66L106 80" stroke="#0a1f44" stroke-width="4" stroke-linecap="round"/>
+      <path d="M100 52C120 52 124 40 140 40" fill="none" stroke="#b07f35" stroke-width="1.6"/>
+      <rect x="140" y="28" width="82" height="24" rx="2" fill="#e6efe5"/>
+      <text x="148" y="44" font-family="IBM Plex Mono" font-size="9" fill="#255a39">✓ p. 14</text>
+      <rect x="140" y="60" width="82" height="24" rx="2" fill="#f6ead2"/>
+      <text x="148" y="76" font-family="IBM Plex Mono" font-size="9" fill="#855a1a">? to a person</text>`,
+  },
+  {
+    t: 'Compare the bidders',
+    d: 'A comparative statement across every bidder and criterion, each cell carrying its page.',
+    tag: 'Statement',
+    svg: `<rect x="14" y="12" width="208" height="92" fill="#fcf9f2" stroke="#0a1f44" stroke-width="1.4"/>
+      <rect x="14" y="12" width="208" height="18" fill="#ede6d7"/>
+      <path d="M14 30H222M14 48H222M14 66H222M14 84H222M86 12V104M132 12V104M178 12V104" stroke="#0a1f44" stroke-opacity=".2"/>
+      <g font-family="IBM Plex Mono" font-size="8" fill="#56627c"><text x="96" y="24">A</text><text x="142" y="24">B</text><text x="188" y="24">C</text></g>
+      <g font-family="IBM Plex Mono" font-size="9">
+        <text x="94" y="43" fill="#255a39">✓</text><text x="140" y="43" fill="#255a39">✓</text><text x="186" y="43" fill="#255a39">✓</text>
+        <text x="94" y="61" fill="#255a39">✓</text><text x="140" y="61" fill="#855a1a">?</text><text x="186" y="61" fill="#255a39">✓</text>
+        <text x="94" y="79" fill="#255a39">✓</text><text x="140" y="79" fill="#255a39">✓</text><text x="186" y="79" fill="#a8322a">×</text>
+      </g>
+      <path d="M22 38H72M22 56H66M22 74H70M22 92H60" stroke="#e1d7c3" stroke-width="3"/>`,
+  },
+  {
+    t: 'The officer decides',
+    d: 'A named officer makes and records the decision, with the reason. The record is hashed and exports ready for audit.',
+    tag: 'Recorded',
+    final: true,
+    svg: `<g transform="translate(20 22) rotate(-6)">
+        <rect width="120" height="38" fill="none" stroke="#a8322a" stroke-width="2.4"/>
+        <rect x="5" y="5" width="110" height="28" fill="none" stroke="#a8322a" stroke-width="1"/>
+        <text x="60" y="24" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="600" letter-spacing="2" fill="#a8322a">DECIDED</text>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="8.5" fill="#0a1f44">
+        <rect x="150" y="16" width="72" height="22" fill="#0a1f44"/><text x="157" y="30" fill="#f5f0e6">0412</text>
+        <rect x="150" y="44" width="72" height="22" fill="#fcf9f2" stroke="#0a1f44" stroke-opacity=".3"/><text x="157" y="58">9c1e…44a7</text>
+        <rect x="150" y="72" width="72" height="22" fill="#fcf9f2" stroke="#0a1f44" stroke-opacity=".3"/><text x="157" y="86">export.pdf</text>
+      </g>
+      <path d="M20 88H130" stroke="#0a1f44" stroke-opacity=".3"/>
+      <text x="20" y="100" font-family="IBM Plex Mono" font-size="8" fill="#56627c" letter-spacing="1">NAMED OFFICER · REASON</text>`,
+  },
+];
+---
+<section class="section emoves" aria-labelledby="emoves-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">01 · Five moves</p>
+      <h2 id="emoves-title" class="h2">One tender through Evaluator, <em>in five moves.</em></h2>
+      <p class="lead">Evaluator does the reading and the cross-referencing. The committee keeps the judgement, and the officer keeps the decision.</p>
+    </header>
+
+    <div class="emoves__rail" data-inview>
+      <span class="emoves__line" aria-hidden="true"></span>
+      <ol role="list" class="emoves__list">
+      {moves.map((m, i) => (
+        <li class:list={['emove', 'rv', { 'emove--final': m.final }]}>
+          <span class="emove__n mono" aria-hidden="true">0{i + 1}</span>
+          <div class="emove__copy">
+            <p class="mono emove__tag">{m.tag}</p>
+            <h3 class="emove__t">{m.t}</h3>
+            <p class="emove__d">{m.d}</p>
+          </div>
+          <svg class="emove__fig" viewBox="0 0 236 116" aria-hidden="true" set:html={m.svg} />
+        </li>
+      ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .emoves__rail {
+    position: relative;
+  }
+
+  .emoves__list {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .emoves__line {
+    position: absolute;
+    left: 23px;
+    top: 24px;
+    bottom: 24px;
+    width: 1px;
+    background: var(--line-strong);
+    transform-origin: top;
+    transition: transform 1.8s var(--ease-io);
+  }
+
+  :global(.js) .emoves__rail:not(.in) .emoves__line {
+    transform: scaleY(0);
+  }
+
+  .emove {
+    position: relative;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) minmax(0, 300px);
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: center;
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(1rem, 2vw, 1.75rem) clamp(1rem, 2vw, 1.5rem) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .emove__n {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    font-size: 0.75rem;
+    color: var(--ink-2);
+  }
+
+  .emove--final .emove__n {
+    border: 2px solid var(--red);
+    color: var(--red);
+    box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--red);
+  }
+
+  .emove__tag {
+    font-size: 0.6875rem;
+    color: var(--brass-ink);
+    margin-bottom: 0.4rem;
+  }
+
+  .emove__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.1rem + 0.7vw, 1.75rem);
+    line-height: 1.15;
+  }
+
+  .emove--final .emove__t {
+    color: var(--red);
+  }
+
+  .emove__d {
+    margin-top: 0.4rem;
+    color: var(--ink-2);
+    font-size: var(--t-small);
+    max-width: 36rem;
+  }
+
+  .emove__fig {
+    width: 100%;
+    height: auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+  }
+
+  @media (width <= 760px) {
+    .emove {
+      grid-template-columns: 48px minmax(0, 1fr);
+    }
+
+    .emove__fig {
+      grid-column: 2;
+      max-width: 320px;
+    }
+  }
+</style>

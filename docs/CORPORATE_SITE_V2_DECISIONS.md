@@ -114,3 +114,30 @@ Reason: The no-real-tender-data rule is absolute, and the class is systemic to e
 Evidence: A6 visual review of every shipped raster (control plane, this date); quarantine set in docs/v2-handoffs/quarantine/ (untracked).
 Alternatives rejected: Redacting regions per image (residual-leak risk, visible patches); delaying deploy until re-capture (leaves the same data live on v8 production longer).
 Reversal condition: Re-captured exhibits from a verified synthetic fixture pass A6 and restore the media sections.
+
+---
+
+# v3 "The Bridge" decisions (2026-10-14, Claude as co-founder, on the founder's instruction to rebuild the site end to end)
+
+Plan and contract: docs/V3_BRIDGE_PLAN.md. Each decision below supersedes the v2 decision it names; v2 entries stay as history.
+
+## D-015: Positioning is defence and space procurement; the bridge is the signature visual
+Supersedes D-001, D-003, D-006. The founder's brief: a visitor must understand Kriseva in five to ten seconds. The home hero is the Together 7.0 bridge, rebuilt as a scroll-built inline SVG: suppliers on one shore, government buyers on the other, TAS and Evaluator as the pillars, the evidence engine as the deck. ATTEST moves out of the primary navigation to /attest (Kriseva Labs).
+
+## D-016: Spelling is "defence"
+Supersedes the US-spelling clause of D-012 (the no-regulator-names clause stands). Indian official usage (Ministry of Defence, DAP 2020), 00_BRAIN/FACTS.md and the founder's collateral all use "defence". /defence and /defense both 301 to /solutions.
+
+## D-017: Zero-dependency motion
+Supersedes D-004. GSAP, ScrollTrigger and Lenis are no longer loaded (files remain in public/vendor unreferenced). src/scripts/bridge.ts drives one scrubbed sequence on the home page (D-008 kept). D-013 kept: text reveals are transform-only; the bridge drawing arms itself before first paint and falls back to the finished drawing if the module has not taken over within 4 seconds, with JS off, or under reduced motion.
+
+## D-018: No institution or customer named on the public site until the founder clears it
+FACTS.md permits some names in applications and one-to-one conversations; the public site is a broader surface and a public claim about a government body is a one-way door (root CLAUDE.md). The cleared wording stays in the founder's private claims register, never in this public repository. Founder decision logged in the private inbox.
+
+## D-019: "Plans", not "pricing"; no prices
+The copy lint forbids the word "pricing" and FACTS forbids revenue claims. /plans is a pilot-first module picker that writes a quote request (email or contact form); no figures are published. /pricing 301s to /plans.
+
+## D-020: Every public number has a ledger entry
+src/data/stats.ts holds value, label, source, URL and date for every statistic; each was opened at source on 2026-10-14. "~20% of GDP through public procurement (World Bank)" from the brief was dropped: the World Bank says it of seven countries together and it does not reconcile with xKDR's 11 to 12 percent. "Rs 1.39 lakh crore" is labelled as earmarked for procurement from domestic defence industries (PIB), not "capital budget".
+
+## D-021: Sovereignty replaces certification badges
+Procol shows ISO 27001 and SOC 2 badges. Kriseva holds no certification and says so; it shows four properties a buyer can test in their own room (offline, Wi-Fi-off cold start, tamper-evident chain, officers decide).

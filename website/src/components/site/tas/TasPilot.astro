@@ -1,0 +1,246 @@
+---
+// TasPilot.astro: how a pilot works in three steps, and the three measured
+// numbers (from src/data/stats.ts, each with its date). No customer is named.
+import { measured } from '../../../data/stats';
+
+const steps = [
+  {
+    n: '01',
+    t: 'Load your capability list',
+    d: 'We set TAS up on your machine and tell it what you make, supply and have delivered.',
+    icon: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h4"/><path d="M9 8.5h2"/>',
+  },
+  {
+    n: '02',
+    t: 'Run it on live tenders',
+    d: 'With your bid team, on tenders that are open now: shortlist, briefs and checklists, every day.',
+    icon: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12l6.4-6.4"/>',
+  },
+  {
+    n: '03',
+    t: 'Compare, then decide',
+    d: 'Your team checks TAS against what it would have chosen, and decides whether to go further.',
+    icon: '<path d="M4 12l5 5L20 6"/>',
+  },
+];
+const sources = ['GeM', 'CPPP', 'ISRO e-Procurement', 'NSIL', 'IN-SPACe', 'Defence eProcurement', 'eTenders', 'State NIC portals'];
+const nums = [
+  { ...measured.tasSources, count: 27, key: 'sources' },
+  { ...measured.tasOpenTenders, count: 84141, key: 'tenders' },
+  { ...measured.tasTests, count: 4649, key: 'tests' },
+];
+---
+<section class="section pilot" id="pilot" aria-labelledby="pilot-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">04 · How a pilot works</p>
+      <h2 id="pilot-title" class="h2">Three steps, on <em>your</em> tenders.</h2>
+      <p class="lead">No slideware. We prove TAS on your work first. Then we quote for the modules, deployment and team you need.</p>
+    </header>
+
+    <ol role="list" class="steps rv-stagger">
+      {steps.map((s) => (
+        <li class="step">
+          <div class="step__top">
+            <span class="step__n">{s.n}</span>
+            <svg class="step__icon" viewBox="0 0 24 24" aria-hidden="true" set:html={s.icon} />
+          </div>
+          <span class="draw-rule step__rule" aria-hidden="true"></span>
+          <h3 class="step__t">{s.t}</h3>
+          <p class="step__d">{s.d}</p>
+        </li>
+      ))}
+    </ol>
+
+    <div class="meas rv" data-inview aria-labelledby="meas-title">
+      <div class="meas__head">
+        <h3 id="meas-title" class="mono meas__k">Measured, not promised</h3>
+        <a class="link-arrow meas__proof" href="/proof">See every claim <span aria-hidden="true">&rarr;</span></a>
+      </div>
+      <dl class="meas__nums">
+        {nums.map((n) => (
+          <div class="meas__n">
+            <dt class="meas__l">{n.label}</dt>
+            <dd class="meas__v" data-count={n.count}>{n.value}</dd>
+            <dd class="mono meas__d">{n.asOf}</dd>
+          </div>
+        ))}
+      </dl>
+      <div class="meas__src">
+        <p class="mono meas__srck">Sources TAS reads</p>
+        <ul role="list" class="meas__chips">
+          {sources.map((s) => <li class="chip">{s}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .step {
+    display: grid;
+    gap: 0.85rem;
+    align-content: start;
+  }
+
+  .step__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .step__n {
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(3.4rem, 2.5rem + 3vw, 5.2rem);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--brass);
+  }
+
+  .step__icon {
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .step__rule {
+    background: var(--ink);
+  }
+
+  .step__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1.2;
+  }
+
+  .step__d {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+    line-height: 1.55;
+    max-width: 30ch;
+  }
+
+  /* Measured numbers: a navy dossier plate */
+  .meas {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+    padding: clamp(1.4rem, 1rem + 2vw, 2.5rem);
+    background-color: var(--navy);
+    background-image: repeating-linear-gradient(135deg, rgb(255 255 255 / 2.6%) 0 1px, transparent 1px 13px);
+    color: var(--on-navy);
+    border-top: 4px solid var(--brass);
+    border-radius: var(--radius);
+  }
+
+  .meas__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .meas__k {
+    color: var(--brass-light);
+    letter-spacing: 0.22em;
+  }
+
+  .meas__proof {
+    color: var(--on-navy);
+  }
+
+  .meas__nums {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2.5rem);
+  }
+
+  .meas__n {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .meas__v {
+    order: 1;
+    font-family: var(--f-serif);
+    font-weight: 300;
+    font-size: clamp(2.8rem, 2rem + 3.4vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meas__l {
+    order: 2;
+    font-size: var(--t-small);
+    color: var(--on-navy-2);
+    line-height: 1.4;
+    max-width: 24ch;
+  }
+
+  .meas__d {
+    order: 3;
+    margin: 0;
+    font-size: 0.6875rem;
+    color: var(--brass-light);
+  }
+
+  .meas__src {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-navy);
+  }
+
+  .meas__srck {
+    color: var(--on-navy-2);
+    font-size: 0.6875rem;
+  }
+
+  .meas__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .meas__chips .chip {
+    color: var(--on-navy);
+    border-color: rgb(245 240 230 / 38%);
+    letter-spacing: 0.08em;
+    padding: 0.45rem 0.7rem;
+  }
+
+  @media (width <= 860px) {
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .step {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .step__d {
+      max-width: none;
+    }
+
+    .meas__nums {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

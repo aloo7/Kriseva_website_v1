@@ -1,0 +1,711 @@
+---
+// ContactForm.astro: the /contact work area. Intent chooser (large radio
+// cards), the note, and a status region, beside ContactAside.
+//
+// Without JS the form posts form-encoded to /api/lead (hidden intent=other).
+// With JS it posts JSON, maps the five human intents onto the server's four
+// (bidder, evaluation, institutional, other), writes the readable intent on the
+// opening line of the message, and on ANY failure shows a mailto fallback that
+// carries the message. See the script at the bottom.
+import ContactAside from './ContactAside.astro';
+
+const intents = [
+  { value: 'demo', tag: 'Walk-through', title: 'Book a demo', note: 'See TAS or Evaluator working, with the founder.', checked: true },
+  { value: 'pilot-supplier', tag: 'Supplier · TAS', title: 'Request a pilot', note: 'TAS on your machine, run on your live tenders.' },
+  { value: 'sandbox-buyer', tag: 'Buyer · Evaluator', title: 'Request a sandbox', note: 'Evaluator on one closed tender, in your room.' },
+  { value: 'quote', tag: 'Plans', title: 'Custom quote', note: 'Modules, deployment and team size, from the plan builder or your own notes.' },
+  { value: 'other', tag: 'Open', title: 'Something else', note: 'A question, a partnership or a conversation.' },
+];
+---
+<section class="section section--tight cf" aria-labelledby="cf-title">
+  <div class="wrap cf__grid">
+    <div class="cf__main" data-contact>
+      <h2 id="cf-title" class="cf__vh">Send a note to the founder</h2>
+
+      <form class="cf__sheet reg" method="post" action="/api/lead" aria-labelledby="cf-title">
+        <!-- Read by the server when JavaScript is off; the script sends its own mapped value. -->
+        <input type="hidden" name="intent" value="other" />
+
+        <fieldset class="cf__step">
+          <legend class="cf__lg"><span class="cf__n mono" aria-hidden="true">01</span><span class="cf__q">What would you like to do?</span></legend>
+          <div class="cf__intents">
+            {intents.map((it) => (
+              <label class="opt">
+                <input class="opt__in" type="radio" name="topic" value={it.value} checked={it.checked} />
+                <span class="opt__box">
+                  <span class="opt__tag mono">{it.tag}</span>
+                  <span class="opt__t">{it.title}</span>
+                  <span class="opt__d">{it.note}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="cf__step">
+          <legend class="cf__lg"><span class="cf__n mono" aria-hidden="true">02</span><span class="cf__q">Your note</span></legend>
+
+          <div class="cf__row">
+            <div class="field">
+              <label for="cf-name"><span>Name</span><span class="field__req mono">Required</span></label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" required minlength="2" maxlength="200" aria-describedby="cf-name-err" />
+              <p class="field__err" id="cf-name-err" hidden></p>
+            </div>
+            <div class="field">
+              <label for="cf-org"><span>Organisation</span><span class="field__req mono">Optional</span></label>
+              <input id="cf-org" name="organisation" type="text" autocomplete="organization" maxlength="300" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="cf-email"><span>Work email</span><span class="field__req mono">Required</span></label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" required maxlength="320" aria-describedby="cf-email-hint cf-email-err" />
+            <p class="field__hint" id="cf-email-hint">So we can reply. It is not added to any list.</p>
+            <p class="field__err" id="cf-email-err" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="cf-message"><span>Message</span><span class="field__req mono">Required</span></label>
+            <textarea id="cf-message" name="message" rows="7" required minlength="10" maxlength="4500" aria-describedby="cf-message-hint cf-message-note cf-message-err" placeholder="What you work on, which tenders or portals matter to you, and what you want to see."></textarea>
+            <p class="field__hint" id="cf-message-hint">Please keep real tender documents and bidder data out of this form.</p>
+            <p class="field__hint field__hint--note" id="cf-message-note" data-quote-note hidden>Filled in from your plan builder selection. Edit it freely.</p>
+            <p class="field__err" id="cf-message-err" hidden></p>
+          </div>
+
+          <!-- Honeypot: humans never see it; bots fill it. The server drops any note that has it. -->
+          <div class="cf__hp" aria-hidden="true">
+            <label for="cf-website">Leave this field empty</label>
+            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+        </fieldset>
+
+        <div class="cf__send">
+          <button class="btn" type="submit" data-submit>Send the note <span class="arrow" aria-hidden="true">&rarr;</span></button>
+          <p class="cf__direct">or write to <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a></p>
+        </div>
+
+        <noscript>
+          <p class="cf__noscript">JavaScript is off, so the form sends as it is. Start your message with what you want: a demo, a pilot, a sandbox or a quote. If anything fails, email <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a>.</p>
+        </noscript>
+      </form>
+
+      <div class="cf__status" data-status aria-live="polite" aria-atomic="true" tabindex="-1"></div>
+    </div>
+
+    <ContactAside />
+  </div>
+</section>
+
+<style>
+  .cf__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3vw, 2.75rem);
+    align-items: start;
+  }
+
+  .cf__main {
+    min-width: 0;
+  }
+
+  .cf__vh {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .cf__sheet {
+    --reg: var(--ink);
+
+    min-width: 0;
+    background: var(--card);
+    border: 1px solid var(--ink);
+    border-radius: var(--radius);
+  }
+
+  .cf__step {
+    min-width: 0;
+    border: 0;
+    padding: clamp(1.25rem, 1rem + 1.4vw, 2.1rem);
+  }
+
+  .cf__step + .cf__step {
+    border-top: 1px dashed var(--line-strong);
+  }
+
+  .cf__lg {
+    float: left;
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .cf__lg + * {
+    clear: both;
+  }
+
+  .cf__n {
+    flex: none;
+    padding: 0.18rem 0.45rem;
+    border: 1px solid var(--brass-ink);
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .cf__q {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+    line-height: 1.2;
+  }
+
+  /* ---------- Intent cards ---------- */
+  .cf__intents {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 0.7rem;
+  }
+
+  .opt {
+    position: relative;
+    display: block;
+    grid-column: span 2;
+    min-width: 0;
+    cursor: pointer;
+  }
+
+  .opt:nth-child(n + 4) {
+    grid-column: span 3;
+  }
+
+  .opt__in {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .opt__box {
+    display: grid;
+    align-content: start;
+    gap: 0.35rem;
+    height: 100%;
+    min-height: 44px;
+    padding: 1rem;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    transition:
+      background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease),
+      color 0.3s var(--ease);
+  }
+
+  .opt:hover .opt__box {
+    border-color: var(--ink-3);
+  }
+
+  .opt__in:focus-visible + .opt__box {
+    outline: 2px solid var(--brass);
+    outline-offset: 3px;
+  }
+
+  .opt__tag {
+    color: var(--brass-ink);
+    font-size: 0.6875rem;
+  }
+
+  .opt__t {
+    font-family: var(--f-serif);
+    font-size: 1.3rem;
+    line-height: 1.15;
+  }
+
+  .opt__d {
+    font-size: var(--t-small);
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+
+  .opt__in:checked + .opt__box {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--on-navy);
+  }
+
+  .opt__in:checked + .opt__box .opt__tag {
+    color: var(--brass-light);
+  }
+
+  .opt__in:checked + .opt__box .opt__d {
+    color: var(--on-navy-2);
+  }
+
+  /* ---------- Fields ---------- */
+  .cf__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.1rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    margin-bottom: 1.2rem;
+  }
+
+  .field label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--f-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .field__req {
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.7rem 0.85rem;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--ink-3);
+    border-radius: var(--radius);
+  }
+
+  .field textarea {
+    min-height: 9.5rem;
+    resize: vertical;
+    line-height: 1.55;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+    border-color: var(--ink);
+  }
+
+  .field input::placeholder,
+  .field textarea::placeholder {
+    color: var(--ink-3);
+    opacity: 1;
+  }
+
+  .field [aria-invalid='true'] {
+    border-color: var(--red);
+    box-shadow: inset 3px 0 0 var(--red);
+  }
+
+  .field__hint {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+
+  .field__hint--note {
+    color: var(--brass-ink);
+    font-weight: 500;
+  }
+
+  .field__err {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--red);
+  }
+
+  /* Visually hidden, not display:none, so simple bots still fill it. */
+  .cf__hp {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .cf__send {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.5rem;
+    padding: clamp(1.25rem, 1rem + 1.4vw, 2.1rem);
+    padding-top: 0;
+  }
+
+  .cf__direct {
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    overflow-wrap: anywhere;
+  }
+
+  .cf__direct a {
+    color: var(--ink);
+  }
+
+  .cf__send .btn[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .cf__noscript {
+    padding: 0 clamp(1.25rem, 1rem + 1.4vw, 2.1rem) 1.5rem;
+    font-size: var(--t-small);
+    color: var(--ink-2);
+  }
+
+  /* ---------- Status (filled by the script) ---------- */
+  /* The live region stays in the layout (never display:none) so announcements are not missed. */
+  .cf__status {
+    margin-top: 1.25rem;
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+
+  .cf__status:empty {
+    margin: 0;
+  }
+
+  .cf__status :global(.cf__msg) {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 1rem + 1.4vw, 2rem);
+    background: var(--card);
+    border: 1px solid var(--ink);
+    border-left-width: 4px;
+    border-radius: var(--radius);
+  }
+
+  .cf__status :global(.cf__msg .stamp) {
+    margin: 0.3rem 0 0.4rem 0.3rem;
+  }
+
+  .cf__status :global(.cf__msg--ok) {
+    border-left-color: var(--navy);
+  }
+
+  .cf__status :global(.cf__msg--err) {
+    border-color: var(--red);
+  }
+
+  .cf__status :global(.cf__msg-t) {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.65rem);
+    line-height: 1.2;
+  }
+
+  .cf__status :global(.cf__msg p) {
+    max-width: 38em;
+    color: var(--ink-2);
+  }
+
+  .cf__status :global(.cf__msg a) {
+    color: var(--ink);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .cf__status :global(.cf__actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+  }
+
+  .cf__status :global(.cf__msg .btn) {
+    white-space: normal;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (width <= 980px) {
+    .cf__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (width <= 720px) {
+    .cf__intents {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .opt,
+    .opt:nth-child(n + 4) {
+      grid-column: auto;
+    }
+  }
+
+  @media (width <= 620px) {
+    .cf__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // Contact form behaviour. Everything degrades: without JS the form posts
+  // form-encoded to /api/lead and the server replies with a plain page.
+  type IntentKey = 'demo' | 'pilot-supplier' | 'sandbox-buyer' | 'quote' | 'other';
+  type Wire = 'bidder' | 'evaluation' | 'institutional' | 'other';
+  type Side = 'supplier' | 'buyer';
+
+  const EMAIL_TO = 'ayush@kriseva.in';
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const LABEL: Record<IntentKey, string> = {
+    demo: 'Book a demo',
+    'pilot-supplier': 'Request a pilot (supplier, TAS)',
+    'sandbox-buyer': 'Request a sandbox (buyer, Evaluator)',
+    quote: 'Custom quote',
+    other: 'Something else',
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-contact]');
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('form')!;
+    const status = root.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const radios = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="topic"]'));
+    const nameEl = form.querySelector<HTMLInputElement>('#cf-name')!;
+    const orgEl = form.querySelector<HTMLInputElement>('#cf-org')!;
+    const emailEl = form.querySelector<HTMLInputElement>('#cf-email')!;
+    const msgEl = form.querySelector<HTMLTextAreaElement>('#cf-message')!;
+    const hpEl = form.querySelector<HTMLInputElement>('#cf-website')!;
+    const quoteNote = form.querySelector<HTMLElement>('[data-quote-note]');
+
+    form.noValidate = true; // our messages replace the browser's, and the server still validates
+
+    const params = new URLSearchParams(location.search);
+    const rawSide = params.get('side');
+    const sideParam: Side | null = rawSide === 'supplier' || rawSide === 'buyer' ? rawSide : null;
+    const rawIntent = params.get('intent');
+
+    let stored = '';
+    try {
+      stored = sessionStorage.getItem('kriseva-quote') ?? '';
+    } catch {
+      stored = '';
+    }
+    const quoteSide: Side | null = (() => {
+      const m = stored.match(/^Side: (.+)$/m);
+      if (!m) return null;
+      if (m[1].startsWith('Supplier')) return 'supplier';
+      if (m[1].startsWith('Buyer')) return 'buyer';
+      return null;
+    })();
+
+    const selected = (): IntentKey => (radios.find((r) => r.checked)?.value as IntentKey) ?? 'other';
+    const pick = (k: IntentKey) => {
+      const r = radios.find((x) => x.value === k);
+      if (r) r.checked = true;
+    };
+
+    // ---- Prefill from the URL: ?intent=demo|pilot|quote and ?side=supplier|buyer
+    if (rawIntent === 'demo') pick('demo');
+    else if (rawIntent === 'quote') pick('quote');
+    else if (rawIntent === 'sandbox') pick('sandbox-buyer');
+    else if (rawIntent === 'other') pick('other');
+    else if (rawIntent === 'pilot' || (!rawIntent && sideParam)) pick(sideParam === 'buyer' ? 'sandbox-buyer' : 'pilot-supplier');
+
+    // ---- Quote text from the plan builder (sessionStorage), when the intent is a quote
+    const quoteText = stored
+      ? `Custom quote request, from the plan builder:\n\n${stored}\n\nTimeline:\nAnything else we should know:\n`
+      : '';
+    let prefilled = '';
+    const syncQuote = () => {
+      if (!quoteText) return;
+      if (selected() === 'quote' && !msgEl.value.trim()) {
+        msgEl.value = quoteText;
+        prefilled = quoteText;
+        if (quoteNote) quoteNote.hidden = false;
+      } else if (selected() !== 'quote' && prefilled && msgEl.value === prefilled) {
+        msgEl.value = '';
+        prefilled = '';
+        if (quoteNote) quoteNote.hidden = true;
+      }
+    };
+    syncQuote();
+    radios.forEach((r) => r.addEventListener('change', syncQuote));
+    msgEl.addEventListener('input', () => {
+      if (prefilled && msgEl.value !== prefilled && quoteNote) quoteNote.hidden = true;
+    });
+
+    // ---- Map the five human intents to the server's allowed values
+    const wireFor = (k: IntentKey): Wire => {
+      if (k === 'pilot-supplier') return 'bidder';
+      if (k === 'sandbox-buyer') return 'evaluation';
+      const hint: Side | null = k === 'quote' ? (sideParam ?? quoteSide) : k === 'demo' ? sideParam : null;
+      if (hint) return hint === 'supplier' ? 'bidder' : 'evaluation';
+      return 'other';
+    };
+    const labelFor = (k: IntentKey): string => {
+      const hint: Side | null = k === 'quote' ? (sideParam ?? quoteSide) : k === 'demo' ? sideParam : null;
+      return hint ? `${LABEL[k]} (${hint} side)` : LABEL[k];
+    };
+
+    // ---- Small DOM helpers (text nodes, so nothing typed is ever parsed as HTML)
+    const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls = '', text = ''): HTMLElementTagNameMap[K] => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text) n.textContent = text;
+      return n;
+    };
+
+    const setError = (input: HTMLElement, msg: string) => {
+      const err = document.getElementById(`${input.id}-err`);
+      input.setAttribute('aria-invalid', 'true');
+      if (err) {
+        err.textContent = msg;
+        err.hidden = false;
+      }
+    };
+    const clearError = (input: HTMLElement) => {
+      const err = document.getElementById(`${input.id}-err`);
+      input.removeAttribute('aria-invalid');
+      if (err) {
+        err.textContent = '';
+        err.hidden = true;
+      }
+    };
+    [nameEl, emailEl, msgEl].forEach((i) => i.addEventListener('input', () => clearError(i)));
+
+    const validate = (): HTMLElement | null => {
+      let topmost: HTMLElement | null = null;
+      const bad = (i: HTMLElement, m: string) => {
+        setError(i, m);
+        topmost = topmost ?? i;
+      };
+      if (nameEl.value.trim().length < 2) bad(nameEl, 'Please give your name, at least two characters.');
+      if (!EMAIL_RE.test(emailEl.value.trim())) bad(emailEl, 'Please give a working email address so we can reply.');
+      if (msgEl.value.trim().length < 10) bad(msgEl, 'Please write a few words, at least ten characters, about what you need.');
+      return topmost;
+    };
+
+    // ---- Outcomes
+    const showSuccess = (name: string) => {
+      const given = name.trim().split(/\s+/)[0] || 'there';
+      status.replaceChildren();
+      const box = el('div', 'cf__msg cf__msg--ok');
+      box.append(
+        el('span', 'stamp stamp--navy', 'On file'),
+        el('h3', 'cf__msg-t', `Thank you, ${given}.`),
+        el('p', '', `Your note is with the founder. Expect a reply from ${EMAIL_TO} within two working days.`),
+      );
+      status.append(box);
+      form.hidden = true;
+      status.focus();
+      status.scrollIntoView({ block: 'nearest' });
+    };
+
+    const showFailure = (mailBody: string, subject: string) => {
+      status.replaceChildren();
+      const box = el('div', 'cf__msg cf__msg--err');
+      box.append(el('h3', 'cf__msg-t', 'Your message did not send from here.'));
+
+      const p = el('p');
+      const a = el('a', '', `Email ${EMAIL_TO} directly`);
+      a.href = `mailto:${EMAIL_TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`;
+      p.append(a, '. Your message is filled in for you, and what you typed is still in the form above.');
+      box.append(p);
+
+      const actions = el('div', 'cf__actions');
+      if (navigator.clipboard?.writeText) {
+        const copy = el('button', 'btn btn--ghost', 'Copy my message');
+        copy.type = 'button';
+        copy.addEventListener('click', () => {
+          navigator.clipboard.writeText(mailBody).then(
+            () => (copy.textContent = 'Copied'),
+            () => (copy.textContent = 'Copy failed: select the text in the form'),
+          );
+        });
+        actions.append(copy);
+      }
+      if (actions.childElementCount) box.append(actions);
+
+      status.append(box);
+      status.focus();
+      status.scrollIntoView({ block: 'nearest' });
+    };
+
+    // ---- Submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstBad = validate();
+      if (firstBad) {
+        firstBad.focus();
+        return;
+      }
+
+      const key = selected();
+      const human = labelFor(key);
+      const message = `Intent: ${human}\n\n${msgEl.value.trim()}`;
+      const payload = {
+        name: nameEl.value.trim(),
+        organisation: orgEl.value.trim(),
+        email: emailEl.value.trim(),
+        intent: wireFor(key),
+        message,
+        website: hpEl.value,
+      };
+      const mailBody = `${message}\n\n--\nName: ${payload.name}\nOrganisation: ${payload.organisation || '(not given)'}\nEmail: ${payload.email}`;
+      const subject = `Kriseva: ${human}`;
+
+      submit.disabled = true;
+      submit.setAttribute('aria-busy', 'true');
+      status.replaceChildren(el('p', 'cf__sending mono', 'Sending your note...'));
+
+      const ctrl = new AbortController();
+      const timer = window.setTimeout(() => ctrl.abort(), 15000);
+      try {
+        const res = await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', accept: 'application/json' },
+          body: JSON.stringify(payload),
+          signal: ctrl.signal,
+        });
+        let ok = false;
+        if (res.ok) {
+          try {
+            const out = (await res.json()) as { ok?: boolean };
+            ok = out?.ok === true;
+          } catch {
+            ok = false;
+          }
+        }
+        if (ok) showSuccess(payload.name);
+        else showFailure(mailBody, subject);
+      } catch {
+        showFailure(mailBody, subject);
+      } finally {
+        window.clearTimeout(timer);
+        submit.disabled = false;
+        submit.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>

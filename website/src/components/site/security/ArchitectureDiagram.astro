@@ -1,0 +1,647 @@
+---
+// ArchitectureDiagram.astro: where everything runs. The building boundary is a
+// dashed perimeter. Inside: documents, local models, the evidence engine, the
+// hash-chained record and the officer. Outside: the internet, with a crossed-out
+// link (Evaluator has none), and public portals, with a one-way read arrow into
+// TAS that opens when the buyer or supplier allows it.
+//
+// Two drawings, one per width class, because text in a 1200 unit drawing is too
+// small on a phone. Both are aria-hidden; the numbered list below the figure is
+// the text alternative.
+
+const ico = {
+  doc: '<path d="M-12 -18h16l8 8v28h-24z"/><path d="M4 -18v8h8"/><path d="M-7 -2h14M-7 4h14M-7 10h9"/><path d="M-16 -14v34h20" opacity=".45"/>',
+  chip: '<rect x="-12" y="-12" width="24" height="24" rx="2"/><rect x="-5" y="-5" width="10" height="10"/><path d="M-6 -12v-6M0 -12v-6M6 -12v-6M-6 12v6M0 12v6M6 12v6M-12 -6h-6M-12 0h-6M-12 6h-6M12 -6h6M12 0h6M12 6h6"/>',
+  engine: '<path d="M-16 -16h20l8 8v8"/><path d="M-16 -16v32h18"/><circle cx="8" cy="8" r="9"/><path d="M15 15l9 9"/><path d="M-9 -6h10M-9 0h8M-9 6h5"/>',
+  officer: '<circle cx="-3" cy="-10" r="8"/><path d="M-19 18a16 16 0 0 1 32 0z"/><circle cx="15" cy="-12" r="7"/><path d="M11.5 -12l2.5 2.5 4.5 -5"/>',
+  globe: '<circle r="16"/><ellipse rx="7" ry="16"/><path d="M-16 0h32M-13 -8h26M-13 8h26"/>',
+  browser: '<rect x="-18" y="-13" width="36" height="26" rx="2"/><path d="M-18 -5h36"/><circle cx="-13" cy="-9" r="1"/><circle cx="-9" cy="-9" r="1"/><circle cx="-5" cy="-9" r="1"/><path d="M-12 2h14M-12 7h22"/>',
+  radar: '<circle r="15"/><circle r="7.5"/><path d="M0 0L12 -12"/><circle cx="8" cy="5" r="2"/>',
+};
+
+const reads = [
+  { n: 1, t: 'Documents stay on your disk.', d: 'Tenders, bid packs and annexures are opened on the machine Kriseva is installed on.' },
+  { n: 2, t: 'Local models and the evidence engine read them there.', d: 'Both run on the same machine. Every finding is linked to the source page it came from.' },
+  { n: 3, t: 'A named officer reviews and decides.', d: 'Kriseva proposes with evidence. The officer decides, and the reason is recorded with the decision.' },
+  { n: 4, t: 'Every step is appended to a hash-chained record.', d: 'Change one entry afterwards and every hash after it stops matching.' },
+  { n: 5, t: 'Evaluator needs no link to the internet.', d: 'The crossed line is deliberate: Evaluator is built to run without one. In the Wi-Fi-off cold start test of 6 October 2026, zero application requests left the machine.' },
+  { n: 6, t: 'TAS reads public portals one way, when you allow it.', d: 'It requests public tender pages and brings them inside. The gate is yours to open or keep shut.' },
+];
+
+// Illustrative hashes for the chain drawing.
+const hashes = ['#a3f1', '#7c20', '#e91b', '#4d08', '#b6a2'];
+---
+<section class="section ad" id="architecture" aria-labelledby="ad-title">
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">01 · The drawing</p>
+      <h2 id="ad-title" class="h2">Everything that matters happens <em>inside the line.</em></h2>
+      <p class="lead">The dashed line is the building. Documents, models, the evidence engine, the record and the officer all sit inside it. What crosses it is short enough to list.</p>
+    </header>
+
+    <figure class="ad__fig reg" aria-labelledby="ad-cap" aria-describedby="ad-reads" data-inview>
+      <div class="ad__frame">
+        <!-- ============ Wide drawing ============ -->
+        <svg class="ad__svg ad__svg--wide" viewBox="0 0 1200 640" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="ad-hatch-w" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="12" class="ad__hl" />
+            </pattern>
+            <marker id="ad-ah-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ah" /></marker>
+            <marker id="ad-ab-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ab" /></marker>
+            <marker id="ad-ar-w" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ar" /></marker>
+          </defs>
+
+          <rect x="824" y="0" width="376" height="640" class="ad__out" />
+          <rect x="24" y="64" width="800" height="552" rx="6" fill="url(#ad-hatch-w)" />
+          <rect x="24" y="64" width="800" height="552" rx="6" class="ad__perimeter" />
+          <rect x="40" y="50" width="404" height="28" class="ad__tab" />
+          <text x="52" y="69" class="ad__m">YOUR BUILDING · YOUR MACHINES · YOUR NETWORK</text>
+
+          <!-- Evaluator bracket and the crossed-out link -->
+          <path d="M52 88V104M52 96H824" class="ad__line" />
+          <rect x="383" y="84" width="110" height="24" class="ad__tab" />
+          <text x="438" y="101" text-anchor="middle" class="ad__m ad__m--ink">EVALUATOR</text>
+          <path d="M824 96H944" class="ad__line" />
+          <circle cx="884" cy="96" r="15" class="ad__xbg" />
+          <path d="M878 90L890 102M890 90L878 102" class="ad__xmark" />
+          <circle cx="884" cy="62" r="13" class="ad__badge" />
+          <text x="884" y="66.5" text-anchor="middle" class="ad__bn">5</text>
+          <text x="884" y="128" text-anchor="middle" class="ad__m ad__m--red">NO LINK</text>
+          <text x="884" y="143" text-anchor="middle" class="ad__m ad__m--red">NEEDED</text>
+
+          <!-- Internet -->
+          <rect x="944" y="42" width="232" height="108" rx="10" class="ad__node ad__node--out" />
+          <g transform="translate(1060 76)" class="ad__ico" set:html={ico.globe} />
+          <text x="1060" y="118" class="ad__t ad__t--sm">The internet</text>
+          <text x="1060" y="138" class="ad__s">outside networks</text>
+
+          <!-- Row one: documents, engine, officer -->
+          <rect x="48" y="128" width="190" height="172" rx="4" class="ad__node" />
+          <g transform="translate(143 186)" class="ad__ico" set:html={ico.doc} />
+          <text x="143" y="246" class="ad__t">Documents</text>
+          <text x="143" y="268" class="ad__s">Tenders, bid packs</text>
+          <text x="143" y="287" class="ad__s">stay on your disk</text>
+          <circle cx="48" cy="128" r="13" class="ad__badge" /><text x="48" y="132.5" text-anchor="middle" class="ad__bn">1</text>
+
+          <path d="M240 214H284" class="ad__line" marker-end="url(#ad-ah-w)" />
+
+          <rect x="286" y="112" width="280" height="204" rx="4" class="ad__node" />
+          <rect x="306" y="128" width="240" height="62" rx="3" class="ad__node ad__node--inner" />
+          <g transform="translate(338 159) scale(.9)" class="ad__ico" set:html={ico.chip} />
+          <text x="366" y="154" class="ad__s ad__s--b ad__s--l">Local models</text>
+          <text x="366" y="174" class="ad__s ad__s--l ad__s--mute">run on this machine</text>
+          <g transform="translate(426 226)" class="ad__ico" set:html={ico.engine} />
+          <text x="426" y="277" class="ad__t">Evidence engine</text>
+          <text x="426" y="298" class="ad__s">links each finding to its page</text>
+          <circle cx="286" cy="112" r="13" class="ad__badge" /><text x="286" y="116.5" text-anchor="middle" class="ad__bn">2</text>
+
+          <path d="M568 214H612" class="ad__line" marker-end="url(#ad-ah-w)" />
+
+          <rect x="614" y="128" width="190" height="172" rx="4" class="ad__node" />
+          <g transform="translate(709 186)" class="ad__ico" set:html={ico.officer} />
+          <text x="709" y="246" class="ad__t">Officer</text>
+          <text x="709" y="268" class="ad__s">reviews and decides,</text>
+          <text x="709" y="287" class="ad__s">reason is recorded</text>
+          <circle cx="614" cy="128" r="13" class="ad__badge" /><text x="614" y="132.5" text-anchor="middle" class="ad__bn">3</text>
+
+          <!-- Everything is appended to the record -->
+          <path d="M143 300V348H709V300M426 316V398" class="ad__line" marker-end="url(#ad-ah-w)" />
+          <text x="442" y="384" class="ad__m">EVERY STEP IS APPENDED</text>
+
+          <!-- Row two: the chain and TAS -->
+          <rect x="48" y="400" width="560" height="180" rx="4" class="ad__node" />
+          <text x="68" y="428" class="ad__m ad__m--ink">HASH-CHAINED RECORD · TAMPER-EVIDENT</text>
+          <circle cx="48" cy="400" r="13" class="ad__badge" /><text x="48" y="404.5" text-anchor="middle" class="ad__bn">4</text>
+          {hashes.map((h, i) => (
+            <g>
+              <rect x={68 + i * 110} y="462" width="80" height="60" rx="3" class:list={['ad__blk', { 'ad__blk--edit': i === 2 }]} />
+              <text x={108 + i * 110} y="486" text-anchor="middle" class="ad__m ad__m--blk">{`ENTRY ${i + 1}`}</text>
+              <text x={108 + i * 110} y="508" text-anchor="middle" class="ad__hash">{h}</text>
+              {i < 4 && (
+                <path d={`M${148 + i * 110} 492H${176 + i * 110}`} class:list={['ad__line', { 'ad__line--red': i >= 2 }]} marker-end={i >= 2 ? 'url(#ad-ar-w)' : 'url(#ad-ah-w)'} />
+              )}
+            </g>
+          ))}
+          <text x="328" y="452" text-anchor="middle" class="ad__m ad__m--red">ONE EDIT</text>
+          <text x="68" y="556" class="ad__s ad__s--l">Change one entry and every hash after it stops matching.</text>
+
+          <rect x="632" y="430" width="172" height="150" rx="4" class="ad__node" />
+          <g transform="translate(718 474)" class="ad__ico" set:html={ico.radar} />
+          <text x="718" y="522" class="ad__t">TAS</text>
+          <text x="718" y="545" class="ad__s">supplier side:</text>
+          <text x="718" y="564" class="ad__s">reads public portals</text>
+
+          <!-- Public portals and the one-way read -->
+          <rect x="944" y="440" width="232" height="130" rx="10" class="ad__node ad__node--out" />
+          <g transform="translate(1060 478)" class="ad__ico" set:html={ico.browser} />
+          <text x="1060" y="524" class="ad__t ad__t--sm">Public tender portals</text>
+          <text x="1060" y="546" class="ad__s">pages open to the public</text>
+          <path d="M944 505H806" class="ad__read" marker-end="url(#ad-ab-w)" />
+          <rect x="818" y="488" width="12" height="5" class="ad__gate" />
+          <rect x="818" y="517" width="12" height="5" class="ad__gate" />
+          <text x="884" y="480" text-anchor="middle" class="ad__m ad__m--brass">ONE-WAY READ</text>
+          <text x="884" y="540" text-anchor="middle" class="ad__m ad__m--brass">WHEN ALLOWED</text>
+          <circle cx="884" cy="505" r="13" class="ad__badge" /><text x="884" y="509.5" text-anchor="middle" class="ad__bn">6</text>
+        </svg>
+
+        <!-- ============ Tall drawing ============ -->
+        <svg class="ad__svg ad__svg--tall" viewBox="0 0 360 1080" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="ad-hatch-t" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="12" class="ad__hl" />
+            </pattern>
+            <marker id="ad-ah-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ah" /></marker>
+            <marker id="ad-ab-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ab" /></marker>
+            <marker id="ad-ar-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ad__ar" /></marker>
+          </defs>
+
+          <rect x="0" y="0" width="360" height="160" class="ad__out" />
+          <rect x="0" y="926" width="360" height="154" class="ad__out" />
+          <rect x="8" y="160" width="344" height="766" rx="6" fill="url(#ad-hatch-t)" />
+          <rect x="8" y="160" width="344" height="766" rx="6" class="ad__perimeter" />
+          <rect x="20" y="147" width="252" height="26" class="ad__tab" />
+          <text x="30" y="165" class="ad__m ad__m--sm">YOUR BUILDING · YOUR MACHINES</text>
+
+          <!-- Internet and the crossed-out link -->
+          <rect x="100" y="14" width="252" height="84" rx="10" class="ad__node ad__node--out" />
+          <g transform="translate(140 56)" class="ad__ico" set:html={ico.globe} />
+          <text x="172" y="54" class="ad__t ad__t--sm ad__t--l">The internet</text>
+          <text x="172" y="76" class="ad__s ad__s--l">outside networks</text>
+          <path d="M306 98V196" class="ad__line" />
+          <circle cx="306" cy="130" r="14" class="ad__xbg" />
+          <path d="M300.5 124.5L311.5 135.5M311.5 124.5L300.5 135.5" class="ad__xmark" />
+          <text x="288" y="127" text-anchor="end" class="ad__m ad__m--red ad__m--sm">NO LINK</text>
+          <text x="288" y="141" text-anchor="end" class="ad__m ad__m--red ad__m--sm">NEEDED</text>
+          <circle cx="334" cy="130" r="12" class="ad__badge" /><text x="334" y="134" text-anchor="middle" class="ad__bn">5</text>
+
+          <!-- Evaluator bracket -->
+          <path d="M24 188V204M24 196H336" class="ad__line" />
+          <rect x="85" y="184" width="110" height="24" class="ad__tab" />
+          <text x="140" y="201" text-anchor="middle" class="ad__m ad__m--ink">EVALUATOR</text>
+
+          <!-- Documents -->
+          <rect x="28" y="216" width="304" height="92" rx="4" class="ad__node" />
+          <g transform="translate(68 262)" class="ad__ico" set:html={ico.doc} />
+          <text x="108" y="256" class="ad__t ad__t--l">Documents</text>
+          <text x="108" y="277" class="ad__s ad__s--l">Tenders, bid packs</text>
+          <text x="108" y="296" class="ad__s ad__s--l">stay on your disk</text>
+          <circle cx="28" cy="216" r="12" class="ad__badge" /><text x="28" y="220" text-anchor="middle" class="ad__bn">1</text>
+          <path d="M180 310V334" class="ad__line" marker-end="url(#ad-ah-t)" />
+
+          <!-- Engine -->
+          <rect x="28" y="336" width="304" height="170" rx="4" class="ad__node" />
+          <rect x="46" y="350" width="268" height="52" rx="3" class="ad__node ad__node--inner" />
+          <g transform="translate(78 376) scale(.9)" class="ad__ico" set:html={ico.chip} />
+          <text x="104" y="372" class="ad__s ad__s--b ad__s--l">Local models</text>
+          <text x="104" y="392" class="ad__s ad__s--l ad__s--mute">run on this machine</text>
+          <g transform="translate(68 452)" class="ad__ico" set:html={ico.engine} />
+          <text x="108" y="446" class="ad__t ad__t--l">Evidence engine</text>
+          <text x="108" y="468" class="ad__s ad__s--l">links each finding</text>
+          <text x="108" y="487" class="ad__s ad__s--l">to its source page</text>
+          <circle cx="28" cy="336" r="12" class="ad__badge" /><text x="28" y="340" text-anchor="middle" class="ad__bn">2</text>
+          <path d="M180 508V532" class="ad__line" marker-end="url(#ad-ah-t)" />
+
+          <!-- Officer -->
+          <rect x="28" y="534" width="304" height="92" rx="4" class="ad__node" />
+          <g transform="translate(68 580)" class="ad__ico" set:html={ico.officer} />
+          <text x="108" y="574" class="ad__t ad__t--l">Officer</text>
+          <text x="108" y="595" class="ad__s ad__s--l">reviews and decides,</text>
+          <text x="108" y="614" class="ad__s ad__s--l">reason is recorded</text>
+          <circle cx="28" cy="534" r="12" class="ad__badge" /><text x="28" y="538" text-anchor="middle" class="ad__bn">3</text>
+          <path d="M180 628V652" class="ad__line" marker-end="url(#ad-ah-t)" />
+          <text x="196" y="645" class="ad__m ad__m--sm">EVERY STEP APPENDED</text>
+
+          <!-- Record -->
+          <rect x="28" y="654" width="304" height="152" rx="4" class="ad__node" />
+          <text x="46" y="680" class="ad__m ad__m--ink ad__m--sm">HASH-CHAINED RECORD · TAMPER-EVIDENT</text>
+          <circle cx="28" cy="654" r="12" class="ad__badge" /><text x="28" y="658" text-anchor="middle" class="ad__bn">4</text>
+          {hashes.slice(0, 4).map((h, i) => (
+            <g>
+              <rect x={46 + i * 74} y="706" width="54" height="46" rx="3" class:list={['ad__blk', { 'ad__blk--edit': i === 2 }]} />
+              <text x={73 + i * 74} y="725" text-anchor="middle" class="ad__m ad__m--blk ad__m--xs">{`ENTRY ${i + 1}`}</text>
+              <text x={73 + i * 74} y="743" text-anchor="middle" class="ad__hash ad__hash--sm">{h}</text>
+              {i < 3 && (
+                <path d={`M${100 + i * 74} 729H${118 + i * 74}`} class:list={['ad__line', { 'ad__line--red': i >= 2 }]} marker-end={i >= 2 ? 'url(#ad-ar-t)' : 'url(#ad-ah-t)'} />
+              )}
+            </g>
+          ))}
+          <text x="221" y="700" text-anchor="middle" class="ad__m ad__m--red ad__m--xs">ONE EDIT</text>
+          <text x="46" y="776" class="ad__s ad__s--l ad__s--sm">Change one entry and every</text>
+          <text x="46" y="794" class="ad__s ad__s--l ad__s--sm">hash after it stops matching.</text>
+
+          <!-- TAS -->
+          <path d="M20 822H340" class="ad__divider" />
+          <rect x="28" y="834" width="304" height="76" rx="4" class="ad__node" />
+          <g transform="translate(68 872)" class="ad__ico" set:html={ico.radar} />
+          <text x="108" y="860" class="ad__t ad__t--l">TAS</text>
+          <text x="108" y="881" class="ad__s ad__s--l">supplier side: reads</text>
+          <text x="108" y="899" class="ad__s ad__s--l">public portals</text>
+
+          <!-- Portals and the one-way read -->
+          <path d="M180 990V912" class="ad__read" marker-end="url(#ad-ab-t)" />
+          <rect x="160" y="923" width="12" height="5" class="ad__gate" />
+          <rect x="188" y="923" width="12" height="5" class="ad__gate" />
+          <text x="214" y="955" class="ad__m ad__m--brass ad__m--sm">ONE-WAY READ</text>
+          <text x="214" y="971" class="ad__m ad__m--brass ad__m--sm">WHEN ALLOWED</text>
+          <circle cx="180" cy="958" r="12" class="ad__badge" /><text x="180" y="962" text-anchor="middle" class="ad__bn">6</text>
+          <rect x="40" y="992" width="280" height="76" rx="10" class="ad__node ad__node--out" />
+          <g transform="translate(80 1028)" class="ad__ico" set:html={ico.browser} />
+          <text x="116" y="1024" class="ad__t ad__t--sm ad__t--l">Public tender portals</text>
+          <text x="116" y="1046" class="ad__s ad__s--l">pages open to the public</text>
+        </svg>
+      </div>
+
+      <ul role="list" class="ad__legend mono" aria-label="Key to the drawing">
+        <li><span class="ad__k ad__k--dash" aria-hidden="true"></span>Building boundary</li>
+        <li><span class="ad__k ad__k--solid" aria-hidden="true"></span>Stays inside</li>
+        <li><span class="ad__k ad__k--x" aria-hidden="true"></span>No link needed</li>
+        <li><span class="ad__k ad__k--read" aria-hidden="true"></span>One-way read, when allowed</li>
+      </ul>
+
+      <figcaption id="ad-cap" class="ad__cap"><strong>Figure 1.</strong> Where Kriseva runs. The record hashes shown are illustrative.</figcaption>
+    </figure>
+
+    <div class="ad__reads" id="ad-reads">
+      <h3 class="h3">Reading the drawing</h3>
+      <ol role="list" class="ad__list">
+        {reads.map((r) => (
+          <li class="ad__li">
+            <span class="ad__n mono" aria-hidden="true">{r.n}</span>
+            <div>
+              <p class="ad__lt">{r.t}</p>
+              <p class="ad__ld">{r.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ad__fig {
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .ad__frame {
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .ad__svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .ad__svg--tall {
+    display: none;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  /* ----- drawing parts ----- */
+  .ad__out {
+    fill: var(--water);
+    opacity: 0.7;
+  }
+
+  .ad__hl {
+    stroke: rgb(10 31 68 / 9%);
+    stroke-width: 1;
+  }
+
+  .ad__perimeter {
+    fill: none;
+    stroke: var(--navy);
+    stroke-width: 1.8;
+    stroke-dasharray: 10 7;
+    animation: ad-march 40s linear infinite;
+  }
+
+  @keyframes ad-march {
+    to { stroke-dashoffset: -340; }
+  }
+
+  .ad__tab {
+    fill: var(--card);
+  }
+
+  .ad__node {
+    fill: var(--card);
+    stroke: var(--navy);
+    stroke-width: 1.4;
+  }
+
+  .ad__node--inner {
+    fill: var(--paper);
+    stroke-width: 1.2;
+    stroke-dasharray: 5 4;
+  }
+
+  .ad__node--out {
+    fill: var(--paper);
+    stroke: var(--ink-3);
+    stroke-dasharray: 6 5;
+  }
+
+  .ad__ico {
+    fill: none;
+    stroke: var(--navy);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .ad__t {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: 22px;
+    text-anchor: middle;
+    fill: var(--ink);
+  }
+
+  .ad__t--sm {
+    font-size: 19px;
+  }
+
+  .ad__s {
+    font-family: var(--f-sans);
+    font-size: 14.5px;
+    text-anchor: middle;
+    fill: var(--ink-2);
+  }
+
+  .ad__t--l,
+  .ad__s--l {
+    text-anchor: start;
+  }
+
+  .ad__s--b {
+    font-weight: 500;
+    fill: var(--ink);
+  }
+
+  .ad__s--mute {
+    fill: var(--ink-3);
+    font-size: 13.5px;
+  }
+
+  .ad__s--sm {
+    font-size: 13.5px;
+  }
+
+  .ad__m {
+    font-family: var(--f-mono);
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    fill: var(--ink-3);
+  }
+
+  .ad__m--ink {
+    fill: var(--ink);
+  }
+
+  .ad__m--red {
+    fill: var(--red);
+  }
+
+  .ad__m--brass {
+    fill: var(--brass-ink);
+  }
+
+  .ad__m--sm {
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+  }
+
+  .ad__m--xs {
+    font-size: 9.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .ad__m--blk {
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    fill: var(--ink-2);
+  }
+
+  .ad__hash {
+    font-family: var(--f-mono);
+    font-weight: 500;
+    font-size: 12.5px;
+    fill: var(--brass-ink);
+  }
+
+  .ad__hash--sm {
+    font-size: 10.5px;
+  }
+
+  .ad__line {
+    fill: none;
+    stroke: var(--navy);
+    stroke-width: 1.6;
+  }
+
+  .ad__line--red {
+    stroke: var(--red);
+    stroke-dasharray: 4 3;
+  }
+
+  .ad__ah {
+    fill: var(--navy);
+  }
+
+  .ad__ab {
+    fill: var(--brass-ink);
+  }
+
+  .ad__ar {
+    fill: var(--red);
+  }
+
+  .ad__blk {
+    fill: var(--paper);
+    stroke: var(--navy);
+    stroke-width: 1.2;
+  }
+
+  .ad__blk--edit {
+    stroke: var(--red);
+    stroke-width: 1.6;
+    stroke-dasharray: 4 3;
+  }
+
+  .ad__xbg {
+    fill: var(--card);
+    stroke: var(--red);
+    stroke-width: 1.6;
+  }
+
+  .ad__xmark {
+    fill: none;
+    stroke: var(--red);
+    stroke-width: 2.4;
+    stroke-linecap: round;
+  }
+
+  .ad__read {
+    fill: none;
+    stroke: var(--brass-ink);
+    stroke-width: 2;
+    stroke-dasharray: 7 6;
+    animation: ad-flow 1.4s linear infinite;
+  }
+
+  @keyframes ad-flow {
+    to { stroke-dashoffset: -26; }
+  }
+
+  .ad__gate {
+    fill: var(--brass-ink);
+  }
+
+  .ad__divider {
+    stroke: var(--ink-3);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+  }
+
+  .ad__badge {
+    fill: var(--navy);
+  }
+
+  .ad__bn {
+    font-family: var(--f-mono);
+    font-weight: 600;
+    font-size: 12px;
+    fill: var(--on-navy);
+  }
+
+  /* ----- legend and caption ----- */
+  .ad__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
+    padding: 1rem clamp(1rem, 2vw, 1.5rem) 0.25rem;
+    font-size: 0.6875rem;
+    color: var(--ink-2);
+  }
+
+  .ad__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  .ad__k {
+    display: inline-block;
+    flex: none;
+    width: 28px;
+    height: 0;
+    border-top: 2px solid var(--navy);
+  }
+
+  .ad__k--dash {
+    border-top-style: dashed;
+  }
+
+  .ad__k--x {
+    position: relative;
+    border-top-color: var(--ink-3);
+  }
+
+  .ad__k--x::after {
+    content: '×';
+    position: absolute;
+    left: 50%;
+    top: -0.85em;
+    transform: translateX(-50%);
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--red);
+    background: var(--card);
+    padding-inline: 2px;
+  }
+
+  .ad__k--read {
+    border-top-color: var(--brass-ink);
+    border-top-style: dashed;
+  }
+
+  .ad__cap {
+    padding: 0.35rem clamp(1rem, 2vw, 1.5rem) 1.1rem;
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  .ad__cap strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* ----- text alternative ----- */
+  .ad__reads {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .ad__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem clamp(1.5rem, 4vw, 3.5rem);
+  }
+
+  .ad__li {
+    display: grid;
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+    gap: 0.9rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-strong);
+  }
+
+  .ad__n {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--on-navy);
+    font-size: 0.6875rem;
+    letter-spacing: 0;
+  }
+
+  .ad__lt {
+    font-family: var(--f-serif);
+    font-size: 1.15rem;
+    line-height: 1.3;
+  }
+
+  .ad__ld {
+    margin-top: 0.3rem;
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+
+  @media (width <= 1000px) {
+    .ad__svg--wide {
+      display: none;
+    }
+
+    .ad__svg--tall {
+      display: block;
+    }
+  }
+
+  @media (width <= 760px) {
+    .ad__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

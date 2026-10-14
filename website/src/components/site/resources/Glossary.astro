@@ -1,0 +1,341 @@
+---
+// Glossary.astro: a searchable, filterable glossary. Without JavaScript every
+// term shows and the controls stay hidden; the page-scoped script below turns
+// on the search box and topic filters. Each term has an id for deep links.
+import { glossary, categories, termById } from './glossary';
+
+interface Props {
+  index?: string;
+}
+const { index = '02' } = Astro.props;
+
+const items = glossary.map((t) => ({
+  ...t,
+  hay: [t.term, t.full ?? '', ...(t.aka ?? []), t.category, t.def].join(' ').toLowerCase(),
+}));
+---
+<section class="section gloss on-paper-2" id="glossary" aria-labelledby="glossary-title" data-gloss>
+  <div class="wrap">
+    <header class="section-head section-head--split">
+      <p class="eyebrow">{index} · Glossary</p>
+      <h2 id="glossary-title" class="h2">The words on a defence tender, <em>explained.</em></h2>
+      <p class="lead">{glossary.length} terms from the portals, rules and paperwork that decide a defence or space bid in India. Where rules differ by organisation, we say so. Always check the tender and your buyer’s current rules.</p>
+    </header>
+
+    <div class="gloss__controls" data-gloss-controls>
+      <div class="gloss__search">
+        <label class="label" for="gloss-q">Search the glossary</label>
+        <input id="gloss-q" class="gloss__input" type="search" name="q" placeholder="Try L1, EMD, GeM or reverse auction" autocomplete="off" spellcheck="false" data-gloss-q />
+      </div>
+      <div class="gloss__filters" role="group" aria-label="Filter by topic">
+        <button type="button" class="gloss__chip" aria-pressed="true" data-gloss-cat="All">All</button>
+        {categories.map((c) => <button type="button" class="gloss__chip" aria-pressed="false" data-gloss-cat={c}>{c}</button>)}
+      </div>
+      <div class="gloss__status">
+        <p class="gloss__count mono" role="status" aria-live="polite" data-gloss-count>{glossary.length} terms</p>
+        <button type="button" class="link-arrow gloss__clear" data-gloss-clear hidden>Clear search and filters</button>
+      </div>
+    </div>
+
+    <dl class="gloss__list" data-gloss-list>
+      {items.map((t) => (
+        <div class="term" id={t.id} data-cat={t.category} data-text={t.hay}>
+          <dt class="term__head">
+            <span class="term__name">{t.term}</span>
+            <span class="term__cat mono">{t.category}</span>
+          </dt>
+          <dd class="term__body">
+            {t.full && <span class="term__full mono">{t.full}</span>}
+            <span class="term__def">{t.def}</span>
+            {t.see && t.see.length > 0 && (
+              <span class="term__see">
+                <span class="mono">See also</span>
+                {t.see.map((id) => <a href={`#${id}`}>{termById.get(id)?.term}</a>)}
+              </span>
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+
+    <p class="gloss__empty" data-gloss-empty hidden>No term matches that search. <a href="mailto:ayush@kriseva.in?subject=Glossary%20term">Email the founder</a> and we will add it.</p>
+
+    <p class="gloss__foot">
+      These are plain-language summaries, not legal or financial advice, and they do not replace the tender document or your organisation’s rules. Missing a term?
+      <a href="mailto:ayush@kriseva.in?subject=Glossary%20term">Email the founder</a>.
+    </p>
+  </div>
+</section>
+
+<style>
+  .gloss__controls {
+    display: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+
+  :global(.js) .gloss__controls {
+    display: grid;
+  }
+
+  .gloss__search {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .gloss__search .label {
+    color: var(--brass-ink);
+  }
+
+  .gloss__input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 1rem;
+    font: inherit;
+    font-size: 1.0625rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+  }
+
+  .gloss__input::placeholder {
+    color: var(--ink-3);
+    opacity: 1;
+  }
+
+  .gloss__input:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+    border-color: var(--brass);
+  }
+
+  .gloss__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .gloss__chip {
+    min-height: 40px;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--paper);
+    font-family: var(--f-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    transition: background-color 0.25s, color 0.25s, border-color 0.25s;
+  }
+
+  .gloss__chip:hover {
+    border-color: var(--navy);
+    color: var(--ink);
+  }
+
+  .gloss__chip[aria-pressed='true'] {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--on-navy);
+  }
+
+  .gloss__status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .gloss__count {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+  }
+
+  .gloss__clear[hidden] {
+    display: none;
+  }
+
+  .gloss__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 4vw, 4rem);
+  }
+
+  .term {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.4rem 0.9rem 1.5rem;
+    margin-inline: -0.9rem;
+    border-top: 1px solid var(--line-strong);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+    min-width: 0;
+  }
+
+  .term[hidden] {
+    display: none;
+  }
+
+  .term:target {
+    background: var(--card);
+    border-top-color: var(--brass);
+    box-shadow: inset 3px 0 0 var(--brass);
+  }
+
+  .term__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .term__name {
+    font-family: var(--f-serif);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .term__cat {
+    font-size: 0.625rem;
+    color: var(--brass-ink);
+  }
+
+  .term__body {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .term__full {
+    font-size: 0.6875rem;
+    color: var(--ink-3);
+    overflow-wrap: anywhere;
+  }
+
+  .term__def {
+    color: var(--ink-2);
+    font-size: var(--t-small);
+    line-height: 1.6;
+  }
+
+  .term__see {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    align-items: baseline;
+    font-size: var(--t-small);
+  }
+
+  .term__see .mono {
+    font-size: 0.625rem;
+    color: var(--ink-3);
+  }
+
+  .term__see a {
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+
+  .gloss__empty {
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line-strong);
+    color: var(--ink-2);
+  }
+
+  .gloss__empty[hidden] {
+    display: none;
+  }
+
+  .gloss__empty a,
+  .gloss__foot a {
+    color: var(--ink);
+    text-underline-offset: 3px;
+  }
+
+  .gloss__foot {
+    max-width: 52rem;
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-strong);
+    font-size: var(--t-small);
+    color: var(--ink-3);
+  }
+
+  @media (width <= 860px) {
+    .gloss__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
+
+<script>
+  // Page-scoped glossary filter. Terms are real DOM, so search engines and
+  // no-JS readers always see all of them; this hides and shows rows, nothing more.
+  const root = document.querySelector<HTMLElement>('[data-gloss]');
+  if (root) {
+    const input = root.querySelector<HTMLInputElement>('[data-gloss-q]')!;
+    const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-gloss-cat]'));
+    const terms = Array.from(root.querySelectorAll<HTMLElement>('.term'));
+    const count = root.querySelector<HTMLElement>('[data-gloss-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-gloss-empty]')!;
+    const clear = root.querySelector<HTMLButtonElement>('[data-gloss-clear]')!;
+    let category = 'All';
+
+    const apply = () => {
+      const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      terms.forEach((el) => {
+        const okCat = category === 'All' || el.dataset.cat === category;
+        const okText = words.every((w) => (el.dataset.text ?? '').includes(w));
+        const show = okCat && okText;
+        el.hidden = !show;
+        if (show) shown += 1;
+      });
+      count.textContent = shown === terms.length ? `${terms.length} terms` : `Showing ${shown} of ${terms.length} terms`;
+      empty.hidden = shown !== 0;
+      clear.hidden = words.length === 0 && category === 'All';
+    };
+
+    const reset = () => {
+      input.value = '';
+      category = 'All';
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.glossCat === 'All')));
+      apply();
+    };
+
+    input.addEventListener('input', apply);
+    chips.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        category = chip.dataset.glossCat ?? 'All';
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+        apply();
+      }),
+    );
+    clear.addEventListener('click', () => {
+      reset();
+      input.focus();
+    });
+    // A "See also" link must never point at a term the filter has hidden.
+    root.addEventListener('click', (e) => {
+      const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('.term__see a');
+      if (a) reset();
+    });
+    if (location.hash) {
+      const target = document.getElementById(location.hash.slice(1));
+      if (target && target.hidden) reset();
+    }
+  }
+</script>

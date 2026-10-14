@@ -1,0 +1,125 @@
+---
+// DataHandling.astro: a short, plain list. Where files live, what is logged,
+// what leaves the machine, how records are exported.
+
+const rows = [
+  {
+    k: 'Where files live',
+    v: ['On the machine Kriseva is installed on, in a folder you choose. Tender documents, bid packs and extracted text stay there.'],
+    icon: '<path d="M-14 -10h10l4 5h14v18h-28z"/>',
+  },
+  {
+    k: 'What is logged',
+    v: ['Every finding and every officer decision, in order, in the hash-chained record. The reason for a decision is logged with it.'],
+    icon: '<path d="M-12 -14h24v28h-24z"/><path d="M-6 -6h12M-6 0h12M-6 6h7"/>',
+  },
+  {
+    k: 'What leaves the machine',
+    v: [
+      'Evaluator: it is built to need no network. In our test of 6 October 2026, zero application requests left the machine.',
+      'TAS: it requests public tender portals when you allow it, and not otherwise.',
+    ],
+    icon: '<path d="M-14 0h22M2 -9l9 9-9 9"/><path d="M14 -14v28"/>',
+  },
+  {
+    k: 'How records are exported',
+    v: ['As files on the same machine, such as the recommendation memorandum as a PDF. Where a file goes next is your decision, not ours.'],
+    icon: '<path d="M-10 -14h14l8 8v20h-22z"/><path d="M4 -14v8h8"/><path d="M0 2v8M-4 6l4 4 4-4"/>',
+  },
+];
+---
+<section class="section dh" id="data" aria-labelledby="dh-title">
+  <div class="wrap dh__grid">
+    <header class="dh__head">
+      <p class="eyebrow">03 · Data handling</p>
+      <h2 id="dh-title" class="h2">Four questions, <em>answered plainly.</em></h2>
+      <p class="lead">The questions a security team asks at the start, with the answers as they stand today.</p>
+    </header>
+
+    <dl class="dh__list rv-stagger" data-inview>
+      {rows.map((r) => (
+        <div class="dh__row">
+          <dt class="dh__k">
+            <svg class="dh__ico" viewBox="-20 -20 40 40" width="36" height="36" aria-hidden="true" focusable="false" set:html={r.icon} />
+            <span>{r.k}</span>
+          </dt>
+          <dd class="dh__v">
+            {r.v.map((line) => <p>{line}</p>)}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .dh__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+  }
+
+  .dh__head {
+    display: grid;
+    gap: 1.25rem;
+    position: sticky;
+    top: calc(var(--header-h) + 2rem);
+  }
+
+  .dh__list {
+    display: grid;
+    border-top: 1.5px solid var(--navy);
+  }
+
+  .dh__row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: 1rem clamp(1rem, 3vw, 2.5rem);
+    padding-block: clamp(1.1rem, 2vw, 1.6rem);
+    border-bottom: 1px solid var(--line-strong);
+  }
+
+  .dh__k {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    font-family: var(--f-serif);
+    font-size: 1.25rem;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .dh__ico {
+    flex: none;
+    fill: none;
+    stroke: var(--brass-ink);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .dh__v {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  @media (width <= 900px) {
+    .dh__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dh__head {
+      position: static;
+    }
+  }
+
+  @media (width <= 560px) {
+    .dh__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
