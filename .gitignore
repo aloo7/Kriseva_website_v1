@@ -11,6 +11,7 @@ website/tests/.output/
 website/test-results/
 website/playwright-report/
 website/playwright/.cache/
+website/output/
 
 # Logs
 npm-debug.log*

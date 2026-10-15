@@ -1,0 +1,260 @@
+---
+import BridgeSuppliers from './BridgeSuppliers.astro';
+import BridgeBuyers from './BridgeBuyers.astro';
+const VB = { x: 0, y: 60, w: 1600, h: 740 };
+
+// Main span cable: M600,172 Q800,568 1000,172 (vertex y = 370).
+const main = [] as { x: number; y: number }[];
+for (let x = 616; x <= 984; x += 16) {
+  const t = (x - 600) / 400;
+  main.push({ x, y: 172 + 792 * t * (1 - t) });
+}
+// Side spans: M428,450 Q514,330 600,172 and its mirror.
+const side = (x0: number, y0: number, y2: number) => (x: number) => {
+  const t = (x - x0) / 172;
+  return (1 - t) ** 2 * y0 + 2 * t * (1 - t) * 330 + t ** 2 * y2;
+};
+const leftY = side(428, 450, 172);
+const rightY = side(1000, 172, 450);
+const sideL = [] as { x: number; y: number }[];
+for (let x = 444; x <= 588; x += 16) sideL.push({ x, y: leftY(x) });
+const sideR = [] as { x: number; y: number }[];
+for (let x = 1012; x <= 1156; x += 16) sideR.push({ x, y: rightY(x) });
+
+// Build order for hangers: outward from each tower, so the deck "hangs" as
+// the cables finish.
+const hangers = [
+  ...main.map((h) => ({ ...h, o: Math.min(Math.abs(h.x - 600), Math.abs(1000 - h.x)) / 200 })),
+  ...sideL.map((h) => ({ ...h, o: (600 - h.x) / 172 })),
+  ...sideR.map((h) => ({ ...h, o: (h.x - 1000) / 172 })),
+];
+
+const posts = [] as number[];
+for (let x = 426; x <= 1176; x += 10) posts.push(x);
+const trussL = [] as number[];
+for (let x = 420; x < 800; x += 38) trussL.push(x);
+const trussR = [] as number[];
+for (let x = 800; x < 1180; x += 38) trussR.push(x);
+
+const papers = [
+  { x: 690, y: 590, r: -8, item: 'Rugged display unit', org: 'Defence buyer', due: '24-09' },
+  { x: 802, y: 574, r: 3, item: 'Gaskets and O-rings', org: 'Defence buyer', due: '02-10' },
+  { x: 914, y: 592, r: -3, item: 'S-band transponder', org: 'Space buyer', due: '28-09' },
+];
+const gates = [
+  { x: 700, label: 'Answered' },
+  { x: 800, label: 'Evidenced' },
+  { x: 900, label: 'Decided' },
+];
+const waves = [
+  [458, 520], [476, 602], [452, 684], [498, 752], [1118, 532], [1100, 626], [1126, 704], [1080, 770], [612, 778], [990, 760],
+];
+---
+        <svg class="bridge" data-bridge-scene viewBox={`${VB.x} ${VB.y} ${VB.w} ${VB.h}`} role="img" aria-labelledby="bridge-title bridge-desc" preserveAspectRatio="xMidYMid meet">
+          <title id="bridge-title">The Kriseva bridge</title>
+          <desc id="bridge-desc">On the left shore, defence and space suppliers: a factory, a drone, a satellite and a ground station. On the right shore, government buyers: a domed government building with the national flag, and a launch vehicle on its pad. Between them, bid documents float in a river of paper. A suspension bridge spans the river. Its left pillar is TAS, for bidders; its right pillar is Evaluator, for buyers; the deck is the Kriseva Evidence Engine, with three checkpoints: answered, evidenced, decided.</desc>
+          <defs>
+            <linearGradient id="k-water" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#e9eef4" />
+              <stop offset="1" stop-color="#cdd7e3" />
+            </linearGradient>
+            <linearGradient id="k-pier" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#7f90ab" stop-opacity=".75" />
+              <stop offset="1" stop-color="#7f90ab" stop-opacity=".25" />
+            </linearGradient>
+            <clipPath id="k-above"><rect x="0" y="0" width="1600" height="488" /></clipPath>
+            <pattern id="k-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+              <path d="M12 0H0V12" fill="none" stroke="#0a1f44" stroke-width=".9" />
+            </pattern>
+            <clipPath id="k-view-clip"><rect data-view-clip x="0" y="60" width="1600" height="740" /></clipPath>
+          </defs>
+          <g clip-path="url(#k-view-clip)">
+
+          <g class="landscape-backdrop" aria-hidden="true">
+            <path d="M18 416Q90 375 154 410T294 402T422 420M1182 419Q1240 382 1312 403T1460 398T1600 417" fill="none" stroke="#b8c4cd" stroke-width="1" />
+            <path d="M32 432H408M1192 432H1584" stroke="#b8c4cd" stroke-dasharray="2 8" />
+            <path d="M92 167h42m-21 -21v42M1482 151h32m-16 -16v32" stroke="#d2a660" stroke-opacity=".35" />
+            <circle cx="800" cy="362" r="220" fill="none" stroke="#b07f35" stroke-opacity=".06" />
+            <circle cx="800" cy="362" r="260" fill="none" stroke="#b07f35" stroke-opacity=".06" stroke-dasharray="2 12" />
+          </g>
+          <!-- River (the gap) -->
+          <rect x="420" y="486" width="760" height="314" fill="url(#k-water)" />
+          <path d="M420 488.5H1180" stroke="#aebcce" stroke-width="1.5" />
+          <g class="waves" fill="none" stroke="#9eb0c6" stroke-width="1.6" stroke-linecap="round">
+            {waves.map(([x, y]) => <path d={`M${x} ${y}q7 -4 14 0t14 0`} />)}
+          </g>
+
+          <path d="M450 510Q800 540 1150 510M466 555Q800 581 1134 555M478 710Q800 736 1122 710" fill="none" stroke="#fff" stroke-opacity=".35" />
+          <g class="river-current" stroke="#8cabc1" stroke-width="1" fill="none" opacity=".5">
+            <path d="M520 733h100m170 -12h120m80 -100h70M488 559h55m430 192h75" />
+          </g>
+          <!-- Submerged piers -->
+          <g class="piers">
+            <rect x="588" y="488" width="24" height="292" fill="url(#k-pier)" />
+            <rect x="568" y="770" width="64" height="16" fill="#8494ad" fill-opacity=".45" />
+            <rect x="988" y="488" width="24" height="292" fill="url(#k-pier)" />
+            <rect x="968" y="770" width="64" height="16" fill="#8494ad" fill-opacity=".45" />
+          </g>
+
+          <!-- Paper in the river: specimen bid documents, not real tenders -->
+          {papers.map((p, i) => (
+            <g class="paper" data-k="paper" data-i={i} data-x={p.x} data-y={p.y} data-r={p.r} transform={`translate(${p.x} ${p.y}) rotate(${p.r})`}>
+              <rect x="-64" y="-76" width="128" height="152" fill="#fcf9f2" stroke="#cdbf9f" />
+              <rect x="-64" y="-76" width="128" height="17" fill="#0a1f44" />
+              <text x="-57" y="-64" class="pt pt--hd">GeM · BID DOCUMENT</text>
+              <text x="-57" y="-47" class="pt pt--deva">बिड दस्तावेज़ / Bid Details</text>
+              <text x="-57" y="-31" class="pt pt--id">SPECIMEN · NOT A REAL BID</text>
+              <text x="-57" y="-16" class="pt"><tspan class="pt--k">Org</tspan>  {p.org}</text>
+              <text x="-57" y="-4" class="pt"><tspan class="pt--k">Item</tspan>  {p.item}</text>
+              <text x="-57" y="8" class="pt"><tspan class="pt--k">Closes</tspan>  {p.due}</text>
+              <g stroke="#dccca8" stroke-width="2">
+                <path d="M-56 22H52M-56 31H40M-56 40H48M-56 49H30M-56 58H44" />
+              </g>
+            </g>
+          ))}
+          <rect x="436" y="652" width="728" height="148" fill="#cfd8e4" fill-opacity=".62" />
+
+          <!-- Seam band where the river meets the ground, and the shore edges -->
+          <path d="M0 468H420V488H0ZM1180 468H1600V488H1180Z" fill="#0a1f44" />
+          <path d="M420 486H437L431 494L444 532L430 572L446 622L433 672L448 726L436 800H420Z" fill="#0a1f44" />
+          <path d="M1180 486H1163L1169 494L1156 532L1170 572L1154 622L1167 672L1152 726L1164 800H1180Z" fill="#0a1f44" />
+          <path d="M0 470.5H436M1164 470.5H1600" stroke="#d2a660" stroke-opacity=".65" />
+
+          <BridgeSuppliers />
+          <BridgeBuyers />
+
+          <!-- Cables and hangers -->
+          <g class="cables" fill="none" stroke="#0a1f44" stroke-linecap="round">
+            <g stroke-width="1.2" stroke-opacity=".75">
+              {hangers.map((h) => (
+                <path class="hanger" data-k="hanger" data-o={h.o.toFixed(3)} d={`M${h.x} ${h.y.toFixed(1)}V451`} />
+              ))}
+            </g>
+            <path class="cable" data-k="cable" data-s="0.28" data-e="0.44" pathLength="1" d="M600 172Q514 330 428 450" stroke-width="4.5" />
+            <path class="cable" data-k="cable" data-s="0.29" data-e="0.48" pathLength="1" d="M600 172Q700 370 800 370" stroke-width="4.5" />
+            <path class="cable" data-k="cable" data-s="0.29" data-e="0.48" pathLength="1" d="M1000 172Q900 370 800 370" stroke-width="4.5" />
+            <path class="cable" data-k="cable" data-s="0.28" data-e="0.44" pathLength="1" d="M1000 172Q1086 330 1172 450" stroke-width="4.5" />
+          </g>
+
+          <g data-k="engine" class="rear-span" fill="none" stroke="#7f90ab" stroke-width="2" opacity=".5">
+            <path d="M436 440Q526 318 610 164Q710 358 810 358Q910 358 1010 164Q1096 318 1188 440" />
+            <path d="M436 446H1188" stroke-width="7" />
+          </g>
+          <!-- Towers (clipped at the water surface so they rise out of the river) -->
+          <g clip-path="url(#k-above)">
+          <g class="tower" data-k="tower" data-s="0.04" data-e="0.26">
+            <path d="M613 174L625 164V488H613Z" fill="#284369" />
+            <path d="M579 160L590 151H632L621 160Z" fill="#7f90ab" />
+            <rect x="587" y="174" width="26" height="314" fill="#0a1f44" />
+            <rect x="593" y="174" width="5" height="314" fill="#1d3a6e" />
+            <rect x="579" y="160" width="42" height="14" fill="#0a1f44" />
+            <rect x="590" y="151" width="20" height="9" fill="#0a1f44" />
+            <rect x="583" y="248" width="34" height="5" fill="#b07f35" />
+            <rect x="583" y="332" width="34" height="5" fill="#b07f35" />
+          </g>
+          <g class="tower" data-k="tower" data-s="0.08" data-e="0.30">
+            <path d="M1013 174L1025 164V488H1013Z" fill="#284369" />
+            <path d="M979 160L990 151H1032L1021 160Z" fill="#7f90ab" />
+            <rect x="987" y="174" width="26" height="314" fill="#0a1f44" />
+            <rect x="993" y="174" width="5" height="314" fill="#1d3a6e" />
+            <rect x="979" y="160" width="42" height="14" fill="#0a1f44" />
+            <rect x="990" y="151" width="20" height="9" fill="#0a1f44" />
+            <rect x="983" y="248" width="34" height="5" fill="#b07f35" />
+            <rect x="983" y="332" width="34" height="5" fill="#b07f35" />
+          </g>
+          </g>
+
+          <g data-k="engine" fill="#d2a660" opacity=".5">
+            <circle cx="600" cy="242" r="2" /><circle cx="600" cy="326" r="2" />
+            <circle cx="1000" cy="242" r="2" /><circle cx="1000" cy="326" r="2" />
+          </g>
+          <!-- Deck: two halves that meet in the middle -->
+          <g class="deck deck--l" data-k="deck" data-side="l">
+            <path d={`M420 438H800${posts.filter((x) => x < 800).map((x) => `M${x} 438V450`).join('')}`} stroke="#0a1f44" stroke-opacity=".55" stroke-width="1.2" />
+            <rect x="420" y="450" width="380" height="4" fill="#b07f35" />
+            <rect x="420" y="454" width="380" height="14" fill="#0a1f44" />
+            <path d={`M420 468H800M420 486H800${trussL.map((x) => `M${x} 468L${x + 19} 486L${x + 38} 468`).join('')}`} stroke="#0a1f44" stroke-width="2" fill="none" />
+          </g>
+          <g class="deck deck--r" data-k="deck" data-side="r">
+            <path d={`M800 438H1180${posts.filter((x) => x >= 800).map((x) => `M${x} 438V450`).join('')}`} stroke="#0a1f44" stroke-opacity=".55" stroke-width="1.2" />
+            <rect x="800" y="450" width="380" height="4" fill="#b07f35" />
+            <rect x="800" y="454" width="380" height="14" fill="#0a1f44" />
+            <path d={`M800 468H1180M800 486H1180${trussR.map((x) => `M${x} 468L${x + 19} 486L${x + 38} 468`).join('')}`} stroke="#0a1f44" stroke-width="2" fill="none" />
+          </g>
+          <rect class="anchor" x="408" y="444" width="22" height="26" fill="#0a1f44" />
+          <rect class="anchor" x="1170" y="444" width="22" height="26" fill="#0a1f44" />
+
+          <g class="deck-detail" data-k="engine">
+            <path d="M430 455H1170" stroke="#efcf95" stroke-width="1" />
+            <path d="M442 464H1158" stroke="#527090" stroke-width="1" />
+            <path d="M430 473H1170" stroke="#d2a660" stroke-width="1" stroke-opacity=".45" />
+            <path d="M443 481H1157" stroke="#527090" stroke-width="1" />
+          </g>
+          <g class="evidence-traffic" data-k="engine" aria-hidden="true">
+            <path class="evidence-traffic__line" d="M448 444H1153" fill="none" stroke="#f2cd8b" stroke-width="2.5" stroke-dasharray="5 145" />
+          </g>
+          <!-- Engine plate -->
+          <g class="engine" data-k="engine">
+            <rect x="636" y="491" width="328" height="34" fill="#0a1f44" stroke="#d2a660" stroke-width="1.6" />
+            <rect x="641" y="496" width="318" height="24" fill="none" stroke="#d2a660" stroke-opacity=".45" />
+          </g>
+
+          <!-- Checkpoints -->
+          <path class="gate-line" data-k="gateline" d="M716 431H784M816 431H884M916 431H962" stroke="#b07f35" stroke-width="2" stroke-dasharray="5 5" />
+          <path class="gate-line" data-k="gateline" d="M958 425L966 431L958 437" fill="none" stroke="#b07f35" stroke-width="2" />
+          {gates.map((g, i) => (
+            <g class="gate" data-k="gate" data-gx={g.x} data-i={i}>
+              <rect x={g.x - 13} y="417" width="26" height="25" fill="#0a1f44" />
+              <path class="gate__check" d={`M${g.x - 6} ${429}l4.5 5l8 -10`} pathLength="1" fill="none" stroke="#f5f0e6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+            </g>
+          ))}
+          <g class="scene-annotations" fill="#0a1f44" text-anchor="middle">
+            <g data-k="plate">
+              <text x="600" y="106" class="scene-small">FOR SUPPLIERS</text>
+              <rect x="565" y="117" width="70" height="30" rx="2" fill="#d2a660" />
+              <text x="600" y="138" class="scene-product">TAS</text>
+            </g>
+            <g data-k="plate">
+              <text x="1000" y="106" class="scene-small">FOR BUYERS</text>
+              <rect x="929" y="117" width="142" height="30" rx="2" fill="#d2a660" />
+              <text x="1000" y="138" class="scene-product">EVALUATOR</text>
+            </g>
+            <text x="800" y="513" class="scene-engine" data-k="engine-label" fill="#f5f0e6">KRISEVA EVIDENCE ENGINE</text>
+            {gates.map((g) => <text x={g.x} y="403" class="scene-gate" data-k="gate-label">{g.label}</text>)}
+            <text x="213" y="520" class="scene-shore">Defence &amp; space suppliers</text>
+            <text x="1387" y="520" class="scene-shore">Government buyers</text>
+            <path d="M84 540H342M1258 540H1516" stroke="#b07f35" stroke-opacity=".4" />
+            <text x="213" y="565" class="scene-small">BUILD · FIND · BID</text>
+            <text x="1387" y="565" class="scene-small">CHECK · REVIEW · DECIDE</text>
+            <text x="800" y="750" class="scene-small" opacity=".6">ILLUSTRATIVE WORKFLOW · SPECIMEN DOCUMENTS</text>
+          </g>
+          </g>
+        </svg>
+<style>
+  .bridge { display: block; width: 100%; height: 100%; overflow: hidden; }
+  .scene-annotations { font-family: var(--f-mono); }
+  .scene-small { font-size: 10px; letter-spacing: 1.6px; }
+  .scene-product { font-size: 15px; font-weight: 600; letter-spacing: 2px; }
+  .scene-engine { font-size: 13px; letter-spacing: 2px; }
+  .scene-gate { font-size: 10px; letter-spacing: .5px; }
+  .scene-shore { font-family: var(--f-sans); font-size: 17px; font-weight: 500; }
+  .pt { font-family: var(--f-mono); font-size: 7.2px; fill: #33415e; }
+  .pt--hd { fill: #f5f0e6; font-size: 7px; letter-spacing: .08em; }
+  .pt--deva { font-family: var(--f-deva); font-size: 8px; }
+  .pt--id { font-size: 7.4px; font-weight: 600; fill: #a8322a; letter-spacing: .06em; }
+  .pt--k { fill: #8c98ad; }
+  .hanger, .deck, .gate { transform-box: fill-box; }
+  .hanger { transform-origin: top; }
+  .deck--l { transform-origin: left; }
+  .deck--r { transform-origin: right; }
+  .gate { transform-origin: center; }
+  .gate.is-on rect { fill: #a07530; }
+  .gate__check { stroke-dasharray: 1; stroke-dashoffset: 0; }
+  :global([data-bridge][data-ready]) .gate:not(.is-on) .gate__check { stroke-dashoffset: 1; }
+  .evidence-traffic__line { animation: evidence-flow 12s linear infinite; }
+  .river-current { animation: river-flow 9s ease-in-out infinite alternate; }
+  @keyframes evidence-flow { to { stroke-dashoffset: -750; } }
+  @keyframes river-flow { to { transform: translateY(5px); opacity: .3; } }
+  :global([data-bridge]:not([data-ready])) *, :global([data-bridge][data-paused]) *, :global([data-bridge][data-in-view="false"]) * { animation-play-state: paused !important; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>

@@ -15,15 +15,25 @@ function initHeader() {
 
   const triggers = Array.from(hdr.querySelectorAll<HTMLButtonElement>('[data-mega-trigger]'));
   const panels = new Map(triggers.map((t) => [t, document.getElementById(t.dataset.megaTrigger!)!]));
+  const sheetBtn = hdr.querySelector<HTMLButtonElement>('[data-sheet-trigger]');
+  const sheet = hdr.querySelector<HTMLElement>('[data-sheet]');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const pageRegions = Array.from(document.querySelectorAll<HTMLElement>('main, body > footer'));
+  const priorInert = new Map<HTMLElement, boolean>();
+  let priorOverflow = '';
   let closeTimer = 0;
 
+  const sheetIsOpen = () => sheetBtn?.getAttribute('aria-expanded') === 'true';
+  const compactHeader = () => !!sheetBtn && sheetBtn.getClientRects().length > 0 && getComputedStyle(sheetBtn).display !== 'none';
+  const paintOpen = () => hdr.classList.toggle('is-open', sheetIsOpen() || triggers.some((t) => t.getAttribute('aria-expanded') === 'true'));
   const closeAll = (except?: HTMLButtonElement) => {
+    window.clearTimeout(closeTimer);
     triggers.forEach((t) => {
       if (t === except) return;
       t.setAttribute('aria-expanded', 'false');
       panels.get(t)!.hidden = true;
     });
-    if (!except) hdr.classList.remove('is-open');
+    paintOpen();
   };
   const open = (t: HTMLButtonElement) => {
     window.clearTimeout(closeTimer);
@@ -33,48 +43,95 @@ function initHeader() {
     hdr.classList.add('is-open');
   };
 
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
   triggers.forEach((t) => {
     t.addEventListener('click', () => (t.getAttribute('aria-expanded') === 'true' ? closeAll() : open(t)));
-    if (finePointer) {
-      t.addEventListener('mouseenter', () => open(t));
-    }
-  });
-  if (finePointer) {
-    hdr.addEventListener('mouseleave', () => {
-      closeTimer = window.setTimeout(() => closeAll(), 160);
+    t.addEventListener('mouseenter', () => { if (finePointer.matches && !compactHeader()) open(t); });
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      open(t);
+      panels.get(t)?.querySelector<HTMLAnchorElement>('a')?.focus();
     });
-    hdr.addEventListener('mouseenter', () => window.clearTimeout(closeTimer));
-  }
+  });
+  hdr.addEventListener('mouseleave', () => {
+    if (!finePointer.matches || hdr.contains(document.activeElement)) return;
+    closeTimer = window.setTimeout(() => closeAll(), 160);
+  });
+  hdr.addEventListener('mouseenter', () => window.clearTimeout(closeTimer));
+  hdr.addEventListener('focusout', () => {
+    queueMicrotask(() => { if (!sheetIsOpen() && !hdr.contains(document.activeElement)) closeAll(); });
+  });
   document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    const openTrigger = triggers.find((t) => t.getAttribute('aria-expanded') === 'true');
-    closeAll();
-    openTrigger?.focus();
-    closeSheet();
+    if (e.key === 'Escape') {
+      const openTrigger = triggers.find((t) => t.getAttribute('aria-expanded') === 'true');
+      if (!sheetIsOpen() && !openTrigger) return;
+      e.preventDefault();
+      if (sheetIsOpen()) closeSheet(true);
+      else {
+        closeAll();
+        openTrigger?.focus();
+      }
+    }
+    if (e.key !== 'Tab' || !sheetIsOpen()) return;
+    const focusable = Array.from(hdr.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), summary, [tabindex="0"]'))
+      .filter((el) => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (!first || !last) return;
+    if (e.shiftKey && (document.activeElement === first || !hdr.contains(document.activeElement))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (document.activeElement === last || !hdr.contains(document.activeElement))) {
+      e.preventDefault();
+      first.focus();
+    }
   });
   document.addEventListener('click', (e) => {
     if (!hdr.contains(e.target as Node)) closeAll();
   });
 
-  const sheetBtn = hdr.querySelector<HTMLButtonElement>('[data-sheet-trigger]');
-  const sheet = hdr.querySelector<HTMLElement>('[data-sheet]');
-  function closeSheet() {
-    if (!sheetBtn || !sheet) return;
+  function closeSheet(restoreFocus = false) {
+    if (!sheetBtn || !sheet || !sheetIsOpen()) return;
     sheetBtn.setAttribute('aria-expanded', 'false');
     sheet.hidden = true;
-    document.documentElement.style.overflow = '';
-    hdr!.classList.remove('is-open');
+    document.documentElement.style.overflow = priorOverflow;
+    pageRegions.forEach((el) => { el.inert = priorInert.get(el) ?? false; });
+    priorInert.clear();
+    hdr!.removeAttribute('role');
+    hdr!.removeAttribute('aria-modal');
+    hdr!.removeAttribute('aria-label');
+    paintOpen();
+    if (restoreFocus) {
+      const target = compactHeader() ? sheetBtn : hdr!.querySelector<HTMLElement>('.hdr__brand');
+      target?.focus({ preventScroll: true });
+    }
   }
   sheetBtn?.addEventListener('click', () => {
     const isOpen = sheetBtn.getAttribute('aria-expanded') === 'true';
     if (isOpen) return closeSheet();
+    closeAll();
     sheetBtn.setAttribute('aria-expanded', 'true');
     sheet!.hidden = false;
+    priorOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = 'hidden';
-    hdr.classList.add('is-open');
+    pageRegions.forEach((el) => {
+      priorInert.set(el, el.inert);
+      el.inert = true;
+    });
+    hdr.setAttribute('role', 'dialog');
+    hdr.setAttribute('aria-modal', 'true');
+    hdr.setAttribute('aria-label', 'Navigation menu');
+    paintOpen();
+    sheet!.querySelector<HTMLElement>('summary, a[href]')?.focus({ preventScroll: true });
   });
-  sheet?.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeSheet));
+  sheet?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => closeSheet()));
+  const onLayoutChange = () => {
+    const focusWasInSheet = !!sheet?.contains(document.activeElement);
+    if (!compactHeader()) closeSheet(focusWasInSheet || document.activeElement === sheetBtn);
+    closeAll();
+  };
+  addEventListener('resize', onLayoutChange, { passive: true });
+  if (sheetBtn && 'ResizeObserver' in window) new ResizeObserver(onLayoutChange).observe(sheetBtn);
 }
 
 /* ---------- Reveals and in-view hooks (transform only) ---------- */
@@ -146,6 +203,11 @@ function initTabs() {
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => select(t));
       t.addEventListener('keydown', (e) => {
+        if (e.key === 'Home' || e.key === 'End') {
+          e.preventDefault();
+          select(tabs[e.key === 'Home' ? 0 : tabs.length - 1], true);
+          return;
+        }
         const dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if (!dir) return;
         e.preventDefault();

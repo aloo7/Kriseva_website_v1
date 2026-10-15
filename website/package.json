@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "KRISEVA AI public website — procurement intelligence for India's defense ecosystem.",
+  "description": "Kriseva public website: procurement intelligence for India's defence and space ecosystem.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -20,7 +20,9 @@
     "qa:static": "playwright test tests/qa-static.spec.ts",
     "qa:stage7": "npm run lint:css && npm run qa && npm run qa:a11y && npm run qa:visual && npm run qa:responsive && npm run qa:motion && npm run qa:static",
     "optimize:screenshots": "node scripts/optimize-screenshots.mjs",
-    "optimize:screenshots:revert": "node scripts/optimize-screenshots.mjs --revert"
+    "optimize:screenshots:revert": "node scripts/optimize-screenshots.mjs --revert",
+    "qa:experience": "playwright test --config=playwright.experience.config.ts",
+    "qa:reflow": "node scripts/check-experience.mjs"
   },
   "dependencies": {
     "astro": "^4.16.18"

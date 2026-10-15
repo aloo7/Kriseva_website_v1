@@ -9,8 +9,8 @@
 //   - No CSS animation runs (animation-duration is clamped to ~0).
 //   - Zero requests to /vendor/* (the retired motion libraries).
 //
-// A separate motion-allowed context (below) verifies the bridge reaches its
-// built state after a full scroll through the pinned hero.
+// A separate motion-allowed context verifies the finished bridge remains
+// readable while scrolling through the unpinned hero.
 //
 // Run: `npm run qa:motion`
 
@@ -96,8 +96,7 @@ test('motion · reduced-motion · bridge renders finished and unpinned (/)', asy
 });
 
 // ---------------------------------------------------------------------
-// v3 signature: with motion allowed, scrolling through the pinned hero builds
-// the bridge, carries the three bids across and stamps every checkpoint.
+// The bridge starts finished. Scrolling must not rewind it or pin the hero.
 // ---------------------------------------------------------------------
 test.describe('motion · bridge build (motion allowed, desktop)', () => {
   test.use({
@@ -105,7 +104,7 @@ test.describe('motion · bridge build (motion allowed, desktop)', () => {
     viewport: { width: 1440, height: 900 },
   });
 
-  test('bridge builds to completion on scroll, no console errors', async ({ page }) => {
+  test('finished bridge stays built while the page scrolls, no console errors', async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text());
@@ -118,24 +117,19 @@ test.describe('motion · bridge build (motion allowed, desktop)', () => {
       timeout: 10_000,
     });
 
-    // At the top the gap is open: the gates are unstamped.
-    const atTop = await page.evaluate(() => document.querySelectorAll('.gate.is-on').length);
-    expect(atTop, 'no checkpoint stamped before scrolling').toBe(0);
+    const hero = page.locator('[data-bridge]');
+    await expect(hero).toHaveAttribute('data-built', '');
+    await expect(hero).toHaveAttribute('data-stage', '2');
+    await expect(hero).not.toHaveAttribute('data-live', '');
+    await expect(page.locator('.gate.is-on')).toHaveCount(3);
 
-    // Scroll through the pinned section in steps, as a visitor would.
-    const total = await page.evaluate(() => {
-      const hero = document.querySelector<HTMLElement>('[data-bridge]')!;
-      return hero.offsetHeight - window.innerHeight;
-    });
-    for (let y = 0; y <= total; y += Math.ceil(total / 12)) {
-      await page.evaluate((top) => window.scrollTo(0, top), y);
-      await page.waitForTimeout(60);
-    }
-    await page.evaluate((top) => window.scrollTo(0, top), total);
+    await page.locator('#pillars').scrollIntoViewIfNeeded();
+    const position = await hero.evaluate((el) => el.getBoundingClientRect().top);
+    expect(position, 'the hero moves out of the viewport normally').toBeLessThan(0);
+    await page.evaluate(() => window.scrollTo(0, 0));
 
-    await page.waitForFunction(() => document.querySelector('[data-bridge][data-built]') !== null, undefined, {
-      timeout: 10_000,
-    });
+    await expect(hero).toHaveAttribute('data-built', '');
+    await expect(hero).toHaveAttribute('data-stage', '2');
     const built = await page.evaluate(() => ({
       gates: document.querySelectorAll('.gate.is-on').length,
       deck: getComputedStyle(document.querySelector('.deck')!).transform,

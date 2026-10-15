@@ -112,11 +112,19 @@ const isActive = (href?: string, items?: { href: string }[]) => {
       </div>
     </div>
   </div>
+  <noscript>
+    <nav class="hdr__fallback wrap" aria-label="Primary">
+      {nav.map((g) => g.items
+        ? g.items.map((item) => <a href={item.href}>{item.label}</a>)
+        : <a href={g.href}>{g.label}</a>)}
+    </nav>
+  </noscript>
 </header>
 {!overlay && <div class="hdr-spacer" aria-hidden="true"></div>}
 
 <style>
   .hdr {
+    container: site-header / inline-size;
     position: fixed;
     inset: 0 0 auto;
     z-index: 50;
@@ -154,6 +162,9 @@ const isActive = (href?: string, items?: { href: string }[]) => {
     display: inline-flex;
     text-decoration: none;
     flex: none;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
   }
 
   .hdr__nav {
@@ -175,6 +186,7 @@ const isActive = (href?: string, items?: { href: string }[]) => {
     text-decoration: none;
     border-radius: var(--radius);
     position: relative;
+    min-height: 44px;
   }
 
   .hdr__link::after {
@@ -391,11 +403,42 @@ const isActive = (href?: string, items?: { href: string }[]) => {
     background: var(--paper);
     color: var(--ink);
     overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     border-top: 1px solid var(--line);
   }
 
   .sheet__inner {
     padding-block: 1rem 3rem;
+  }
+
+  .hdr__fallback {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    padding-block: 0.75rem 1rem;
+    background: var(--paper);
+    color: var(--ink);
+    border-top: 1px solid var(--line);
+  }
+
+  .hdr__fallback a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-small);
+  }
+
+  :global(.no-js) .hdr {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  :global(.no-js) .hdr__nav,
+  :global(.no-js) .hdr__burger,
+  :global(.no-js) .hdr-spacer {
+    display: none;
   }
 
   .sheet__group {
@@ -455,6 +498,37 @@ const isActive = (href?: string, items?: { href: string }[]) => {
 
     .hdr__bar {
       justify-content: space-between;
+    }
+  }
+
+  /* The rem threshold also responds to a larger default text size. */
+  @container site-header (width <= 67.5rem) {
+    .hdr__nav,
+    .hdr__mail {
+      display: none;
+    }
+
+    .hdr__burger {
+      display: grid;
+    }
+
+    .hdr__bar {
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+  }
+
+  @container site-header (width <= 20rem) {
+    .hdr__brand :global(.logo__word) {
+      display: none;
+    }
+  }
+
+  @media (width > 1080px) {
+    .mega {
+      max-height: calc(100dvh - var(--header-h));
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
   }
 

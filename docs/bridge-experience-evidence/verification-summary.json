@@ -1,0 +1,48 @@
+{
+  "checkedOn": "2026-10-16",
+  "productionBrowserTests": {
+    "passed": 213,
+    "failed": 0,
+    "engines": [
+      "chromium",
+      "webkit",
+      "firefox"
+    ],
+    "scopes": [
+      "bridge",
+      "motion",
+      "usability",
+      "accessibility",
+      "no JavaScript"
+    ]
+  },
+  "finalToolbarStyleRecheck": {
+    "startTime": "2026-10-15T19:56:50.023Z",
+    "duration": 33643.926999999996,
+    "expected": 66,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "routeViewportChecks": {
+    "passed": 168,
+    "total": 168,
+    "internalLinks": 71,
+    "brokenLinks": []
+  },
+  "pageWeight": {
+    "homeHtmlBytes": 165570,
+    "homeHtmlGzipBytes": 30529,
+    "scriptResources": [
+      {
+        "url": "/_astro/hoisted.CL-B-CrJ.js",
+        "fileBytes": 12781,
+        "gzipBytes": 4886
+      }
+    ],
+    "requestOrigins": [
+      "http://127.0.0.1:4322"
+    ],
+    "newRuntimeDependencies": 0
+  }
+}
