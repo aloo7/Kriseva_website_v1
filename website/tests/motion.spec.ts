@@ -175,7 +175,7 @@ test.describe('motion · tier 2 reveal visibility (D-013)', () => {
         return { identity: el.className || el.tagName, opacity: parseFloat(cs.opacity) };
       })
     );
-    expect(revealStates.length, 'expected at least one reveal element to be tracked').toBeGreaterThan(0);
+    // The compact homepage has no entrance reveal. If one is added, it must stay visible.
     for (const s of revealStates) {
       expect(s.opacity, `reveal "${s.identity}" not at opacity 1`).toBeGreaterThanOrEqual(0.99);
     }

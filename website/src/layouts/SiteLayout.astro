@@ -4,6 +4,7 @@
 import '../styles/site.css';
 import SiteHeader from '../components/site/SiteHeader.astro';
 import SiteFooter from '../components/site/SiteFooter.astro';
+import HomeFooter from '../components/site/HomeFooter.astro';
 import { SITE, organizationSchema } from '../data/kriseva';
 
 interface Props {
@@ -19,9 +20,10 @@ interface Props {
   /** First section runs under the fixed header and pads itself. */
   overlayHeader?: boolean;
   noindex?: boolean;
+  compactFooter?: boolean;
 }
 
-const { title, description, path, schema = [], ogImage = '/og/kriseva-bridge.png', headerTone = 'paper', overlayHeader = false, noindex = false } = Astro.props;
+const { title, description, path, schema = [], ogImage = '/og/kriseva-bridge.png', headerTone = 'paper', overlayHeader = false, noindex = false, compactFooter = false } = Astro.props;
 const canonical = SITE + (path === '/' ? '/' : path);
 const og = SITE + ogImage;
 const blocks = [organizationSchema(), ...schema];
@@ -78,7 +80,7 @@ const blocks = [organizationSchema(), ...schema];
     <main id="main">
       <slot />
     </main>
-    <SiteFooter />
+    {compactFooter ? <HomeFooter /> : <SiteFooter />}
     <script>
       import '../scripts/site.ts';
     </script>

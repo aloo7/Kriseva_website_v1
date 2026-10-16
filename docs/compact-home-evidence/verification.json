@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-16",
+  "browser_tests": {
+    "passed": 231,
+    "failed": 0,
+    "engines": [
+      "Chromium",
+      "WebKit",
+      "Firefox"
+    ],
+    "files": 6
+  },
+  "route_viewports": {
+    "total": 168,
+    "passed": 168
+  },
+  "internal_links": 69,
+  "broken_links": [],
+  "reading_target_seconds": [
+    15,
+    30
+  ],
+  "guided_animation_seconds": 12,
+  "primary_copy_words": 42,
+  "duration_measured_on_people": false
+}

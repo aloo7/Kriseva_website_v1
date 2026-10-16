@@ -34,10 +34,10 @@ With production preview running on port 4322, check all 12 routes at 14 viewport
 npm run qa:reflow
 ```
 
-The JSON result is saved to `output/playwright/reflow-results.json`. Runtime browser artifacts are ignored by Git. Dated visual evidence and the review report are in `../docs/bridge-experience-evidence/` and `../docs/BRIDGE_EXPERIENCE_QA_2026-10-16.md`.
+The JSON result is saved to `output/playwright/reflow-results.json`. Runtime browser artifacts are ignored by Git. Latest visual evidence and the verification report are in `../docs/compact-home-evidence/` and `../docs/COMPACT_HOME_QA_2026-10-16.md`.
 
 ## Bridge components
 
-`BridgeHero.astro` owns the responsive frame, copy and controls. `home/bridge/BridgeScene.astro` owns the bridge structure; `BridgeSuppliers.astro` and `BridgeBuyers.astro` own the detailed shores. `src/scripts/bridge.ts` drives construction tracks, playback, focus views, live motion preferences and visibility suspension.
+`BridgeHero.astro` owns the compact first-page story, responsive frame and controls. `HomeNextStep.astro` provides direct product paths; `HomeFooter.astro` is the short homepage footer. Other routes retain the full footer. `home/bridge/BridgeScene.astro` owns the bridge structure; `BridgeSuppliers.astro` and `BridgeBuyers.astro` own the detailed shores. `src/scripts/bridge.ts` drives construction tracks, playback, focus views, live motion preferences and visibility suspension.
 
 The complete bridge and explanation render without JavaScript. Ambient motion starts only when accessible controls are ready. Reduced motion shows the finished diagram; visitors can still inspect each focus view and read every story step.

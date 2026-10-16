@@ -1,11 +1,11 @@
 ---
-import { stats } from '../../../data/stats';
+import HomeNextStep from './HomeNextStep.astro';
 import BridgeScene from './bridge/BridgeScene.astro';
 
 const stages = [
-  { name: 'The paper gap', title: 'One opportunity. Hundreds of pages.', text: 'Suppliers read the tender. Committees read the bids. Requirements, answers and supporting documents are scattered across both sides.' },
-  { name: 'The two products', title: 'A product on each side of the crossing.', text: 'TAS helps suppliers find, read and answer tenders. Evaluator helps procurement committees check the evidence. Both run on your premises.' },
-  { name: 'The crossing', title: 'Evidence crosses. People decide.', text: 'Follow a specimen bid across the bridge: an answer, its supporting evidence, then a finding the committee can review. Every decision stays with the people responsible.' },
+  { name: 'The gap', title: 'Too much paper. Too little clarity.', text: 'Requirements, answers and evidence are scattered across hundreds of pages.' },
+  { name: 'The bridge', title: 'Two products. One evidence trail.', text: 'TAS helps suppliers prepare. Evaluator helps committees review. Both run on your premises.' },
+  { name: 'Your next step', title: 'Evidence crosses. People decide.', text: 'Choose your side of the bridge.' },
 ];
 const views = [
   { id: 'overview', name: 'Overview' },
@@ -14,17 +14,16 @@ const views = [
   { id: 'buyers', name: 'Buyers' },
 ];
 ---
-<section class="hero" data-bridge data-stage="2" aria-labelledby="hero-title">
+<section class="hero" data-bridge data-quick-home data-stage="2" aria-labelledby="hero-title">
   <div class="hero__intro wrap">
     <div>
-      <p class="eyebrow">Defence and space procurement · India</p>
-      <h1 id="hero-title" class="display">Orders cross a gap made of <em>paper</em>.<br />Kriseva is the <span class="hero__word">bridge.</span></h1>
+      <p class="eyebrow">Defence and space · India</p>
+      <h1 id="hero-title" class="display" data-quick-copy>From paperwork<br /> <em>to proof.</em></h1>
     </div>
     <div class="hero__side">
-      <p><strong>TAS</strong> stands with the supplier.<br /><strong>Evaluator</strong> stands with the buyer.<br />Evidence connects the two. People decide.</p>
+      <p data-quick-copy>Kriseva is the bridge between defence and space suppliers and government procurement.</p>
       <div class="hero__ctas">
         <a class="btn" href="/contact?intent=demo">Book a demo <span aria-hidden="true">&rarr;</span></a>
-        <a class="hero__product-link" href="#pillars">Explore the products <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </div>
@@ -39,7 +38,7 @@ const views = [
           <span data-play-label>Play the story</span>
         </button>
         <div class="crossing__progress" aria-hidden="true"><span data-k="progress"></span></div>
-        <span class="mono crossing__duration">12 SEC · YOU CONTROL THE PACE</span>
+        <span class="mono crossing__duration">12 SECONDS</span>
       </div>
       </div>
       <div class="crossing__canvas" id="bridge-canvas">
@@ -69,18 +68,13 @@ const views = [
         ))}
       </div>
       <div class="crossing__explanation" id="bridge-story" aria-live="polite" aria-atomic="true">
-        {stages.map((stage, i) => <div data-story={i} hidden={i !== 2}><h2>{stage.title}</h2><p>{stage.text}</p></div>)}
+        {stages.map((stage, i) => <div data-story={i} data-quick-copy hidden={i !== 2}><h2>{stage.title}</h2><p>{stage.text}</p></div>)}
       </div>
 
     </div>
   </div>
 
-  <div class="hero__scale">
-    <div class="wrap hero__scale-grid">
-      <div class="hero__scale-intro"><span class="mono">The scale of the crossing</span><p>Built for the people behind<br />India’s defence and space orders.</p><a href="/proof#sources">View the sources <span aria-hidden="true">&rarr;</span></a></div>
-      {[stats.defenceMsmes, stats.spaceStartups, stats.domesticCapital].map((stat) => <div class="hero__stat"><p class="hero__stat-value">{'prefix' in stat && stat.prefix}{stat.value}</p><p class="hero__stat-label">{stat.label}</p><p class="hero__stat-source mono">{stat.source}</p></div>)}
-    </div>
-  </div>
+  <HomeNextStep />
 </section>
 
 <style>
@@ -97,7 +91,7 @@ const views = [
   .hero__product-link:hover { text-decoration: underline; }
   .crossing { padding-bottom: 3.5rem; }
   .crossing__frame { border: 1px solid var(--line); position: relative; background: #f8f5ee; scroll-margin-top: calc(var(--header-h) + 1rem); }
-  .crossing__topline { position: relative; min-height: 52px; padding: .65rem 1.3rem; display: flex; justify-content: space-between; align-items: center; gap: .5rem 1rem; border-bottom: 1px solid var(--line); }
+  .crossing__topline { flex-wrap: wrap; position: relative; min-height: 52px; padding: .65rem 1.3rem; display: flex; justify-content: space-between; align-items: center; gap: .5rem 1rem; border-bottom: 1px solid var(--line); }
   .crossing__topline > .mono { display: flex; align-items: center; gap: .65rem; font-size: .6875rem; color: var(--navy); }
   .crossing__dot { width: 6px; height: 6px; background: var(--brass-ink); border-radius: 50%; }
   .crossing__note { font-size: .75rem; color: var(--ink-3); }
@@ -193,4 +187,58 @@ const views = [
     .crossing__canvas { height: 400px; }
   }
   @media (prefers-reduced-motion: reduce) { .crossing__playback { display: none; } }
+
+  /* Compact first pass: the complete story fits a short visit. */
+  .hero__intro { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; padding-block: 1.6rem 1.4rem; }
+  .hero__intro .eyebrow { margin-bottom: .65rem; }
+  .hero__intro h1 { font-size: clamp(2.4rem, 4vw, 3.7rem); overflow-wrap: anywhere; line-height: .99; letter-spacing: -.035em; max-width: none; }
+  .hero__side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 1rem 1.4rem; }
+  .hero__side p { max-width: 30ch; font-size: .9375rem; line-height: 1.5; }
+  .hero__ctas { margin-top: 0; flex: none; }
+  .crossing { padding-bottom: 0; }
+  .crossing__topline { min-height: 46px; padding: .2rem 1rem; }
+  .crossing__canvas { height: clamp(280px, 39vw, 440px); }
+  .crossing__coordinate { display: none; }
+  .crossing__toolbar { padding: .25rem .5rem; }
+  .crossing__view { padding: .4rem .8rem; font-size: .75rem; }
+  .crossing__motion { padding: .4rem .6rem; font-size: .6875rem; }
+  .crossing__story { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; padding-block: .9rem; }
+  .crossing__steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+  .crossing__step { gap: .5rem; font-size: .8125rem; padding: .4rem 0; }
+  .crossing__step[aria-pressed="true"] { border-bottom-color: var(--brass-ink); }
+  .crossing__step-arrow { display: none; }
+  .crossing__explanation { min-height: 68px; display: grid; align-items: center; }
+  .crossing__explanation h2 { font-size: 1.3rem; margin-bottom: .2rem; }
+  .crossing__explanation p { font-size: .8125rem; line-height: 1.5; }
+  .crossing__play { font-size: .75rem; }
+  @media (width <= 1100px) { .hero__side { display: grid; gap: .75rem; justify-content: start; } }
+  @media (width <= 700px) {
+    .hero__intro { grid-template-columns: 1fr; gap: .85rem; padding-block: 1.1rem; align-items: center; }
+    .hero__intro h1 { font-size: clamp(2rem, 6.5vw, 2.6rem); }
+    .hero__intro .eyebrow { font-size: .5rem; letter-spacing: .08em; margin-bottom: .6rem; }
+    .hero__side { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; }
+    .hero__side p { font-size: 1rem; }
+    .hero__side .btn { padding: .65rem .8rem; }
+    .crossing__topline { padding-inline: .7rem; }
+    .crossing__topline > .mono { font-size: .5rem; letter-spacing: .08em; }
+    .crossing__play { font-size: .625rem; gap: .25rem; }
+    .crossing__canvas { height: clamp(200px, 55vw, 290px); }
+    .crossing__toolbar { flex-wrap: wrap; padding: .35rem; gap: .25rem; }
+    .crossing__views { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4.25rem), 1fr)); flex: 1; width: 100%; }
+    .crossing__view { padding: .4rem .35rem; font-size: .75rem; }
+    .crossing__motion { font-size: .625rem; }
+    .crossing__story { grid-template-columns: 1fr; gap: .65rem; padding-block: .6rem .85rem; }
+    .crossing__steps { gap: .5rem; }
+    .crossing__step { font-size: .75rem; gap: .2rem; justify-content: center; }
+    .crossing__explanation { min-height: 70px; }
+    .crossing__explanation h2 { font-size: 1.2rem; }
+    .crossing__explanation p { font-size: 1rem; }
+  }
+  @media (width <= 380px) {
+    .hero__intro { grid-template-columns: 1fr; gap: .75rem; }
+    .hero__intro h1 { font-size: 2.15rem; }
+    .hero__intro h1 br { display: none; }
+    .hero__side { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; }
+    .hero__side p { font-size: 1rem; }
+  }
 </style>

@@ -1,0 +1,33 @@
+---
+import { company } from '../../data/kriseva';
+import Logo from './Logo.astro';
+---
+<footer class="home-footer">
+  <div class="wrap home-footer__inner">
+    <a href="/" class="home-footer__brand" aria-label="Kriseva home"><Logo size={21} /></a>
+    <nav aria-label="Footer">
+      <a href="/proof">Proof</a>
+      <a href="/security">Security</a>
+      <a href="/company">Company</a>
+      <a href="/contact">Contact</a>
+    </nav>
+    <p>{company.legalName} · {company.city}, India</p>
+  </div>
+</footer>
+<style>
+  .home-footer { border-top: 1px solid var(--line); background: var(--paper); }
+  .home-footer__inner { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 2rem; padding-block: 1rem; }
+  .home-footer__brand { display: inline-flex; min-height: 44px; align-items: center; text-decoration: none; }
+  nav { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; margin-left: auto; }
+  nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: .8125rem; color: var(--ink-2); text-decoration: none; }
+  nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  p { color: var(--ink-3); font-size: .6875rem; }
+  @media (width <= 700px) {
+    .home-footer__inner { gap: .25rem 1rem; padding-block: .5rem 1rem; }
+    nav { gap: .25rem .85rem; }
+    nav a { font-size: .75rem; }
+    p { width: 100%; font-size: .625rem; }
+    .home-footer__brand :global(.logo__word) { display: none; }
+    .home-footer__brand :global(.logo__rule) { display: none; }
+  }
+</style>
