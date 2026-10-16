@@ -52,3 +52,14 @@ test('a blocked video leaves the transcript and product paths usable', async ({ 
   await expect(page.locator('#pillars a[href="/tas"]')).toBeVisible();
   await expect(page.locator('#pillars a[href="/evaluator"]')).toBeVisible();
 });
+
+test('a failed chapter load resets the controls and leaves a readable fallback', async ({ page }) => {
+  await page.route('**/*.mp4', (route) => route.fulfill({ status: 503, body: 'Unavailable' }));
+  await page.goto('/');
+  await page.locator('[data-film-time="10"]').click();
+  await expect(page.locator('[data-film-status]')).toContainText('could not play');
+  await expect(page.locator('[data-film-label]')).toHaveText('Play film');
+  await page.getByText('Read the story', { exact: true }).click();
+  await expect(page.locator('.story-home__transcript p')).toBeVisible();
+  expect(await page.locator('video').evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
+});
