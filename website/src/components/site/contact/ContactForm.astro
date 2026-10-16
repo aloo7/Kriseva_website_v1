@@ -59,7 +59,7 @@ const intents = [
 
           <div class="field">
             <label for="cf-email"><span>Work email</span><span class="field__req mono">Required</span></label>
-            <input id="cf-email" name="email" type="email" autocomplete="email" required maxlength="320" aria-describedby="cf-email-hint cf-email-err" />
+            <input id="cf-email" name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="none" required maxlength="320" aria-describedby="cf-email-hint cf-email-err" />
             <p class="field__hint" id="cf-email-hint">So we can reply. It is not added to any list.</p>
             <p class="field__err" id="cf-email-err" hidden></p>
           </div>
@@ -83,6 +83,7 @@ const intents = [
           <button class="btn" type="submit" data-submit>Send the note <span class="arrow" aria-hidden="true">&rarr;</span></button>
           <p class="cf__direct">or write to <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a></p>
         </div>
+        <p class="cf__draft" data-draft-note hidden>Your draft is saved in this tab until your note is sent.</p>
 
         <noscript>
           <p class="cf__noscript">JavaScript is off, so the form sends as it is. Start your message with what you want: a demo, a pilot, a sandbox or a quote. If anything fails, email <a href="mailto:ayush@kriseva.in">ayush@kriseva.in</a>.</p>
@@ -379,6 +380,12 @@ const intents = [
     color: var(--ink-2);
   }
 
+  .cf__draft {
+    padding: 0 clamp(1.25rem, 1rem + 1.4vw, 2.1rem) 1.5rem;
+    font-size: 0.8125rem;
+    color: var(--ink-3);
+  }
+
   /* ---------- Status (filled by the script) ---------- */
   /* The live region stays in the layout (never display:none) so announcements are not missed. */
   .cf__status {
@@ -497,6 +504,10 @@ const intents = [
     const msgEl = form.querySelector<HTMLTextAreaElement>('#cf-message')!;
     const hpEl = form.querySelector<HTMLInputElement>('#cf-website')!;
     const quoteNote = form.querySelector<HTMLElement>('[data-quote-note]');
+    const draftNote = form.querySelector<HTMLElement>('[data-draft-note]');
+    const draftKey = 'kriseva-contact-draft';
+    let draftSaved = false;
+    let sent = false;
 
     form.noValidate = true; // our messages replace the browser's, and the server still validates
 
@@ -555,6 +566,54 @@ const intents = [
       if (prefilled && msgEl.value !== prefilled && quoteNote) quoteNote.hidden = true;
     });
 
+    // Keep the visitor's note through reloads and visits to the other pages in
+    // this tab. Storage is optional; a blocked store still leaves the form usable.
+    try {
+      const saved: unknown = JSON.parse(sessionStorage.getItem(draftKey) ?? 'null');
+      if (saved && typeof saved === 'object') {
+        const draft = saved as Record<string, unknown>;
+        const restore = (key: string, field: HTMLInputElement | HTMLTextAreaElement) => {
+          if (typeof draft[key] === 'string') field.value = (draft[key] as string).slice(0, field.maxLength);
+        };
+        restore('name', nameEl);
+        restore('organisation', orgEl);
+        restore('email', emailEl);
+        const freshPlanQuote = rawIntent === 'quote' && !!quoteText
+          && (draft.topic !== 'quote' || draft.planQuote !== stored);
+        if (!freshPlanQuote) restore('message', msgEl);
+        if (!rawIntent && !sideParam && typeof draft.topic === 'string' && Object.hasOwn(LABEL, draft.topic)) pick(draft.topic as IntentKey);
+        if (quoteNote && !freshPlanQuote) quoteNote.hidden = true;
+      }
+    } catch {
+      // A malformed or unavailable draft never blocks the contact form.
+    }
+    const hasDraft = () => [nameEl, orgEl, emailEl, msgEl].some((field) => !!field.value.trim());
+    const saveDraft = () => {
+      try {
+        if (hasDraft()) {
+          sessionStorage.setItem(draftKey, JSON.stringify({
+            name: nameEl.value,
+            organisation: orgEl.value,
+            email: emailEl.value,
+            message: msgEl.value,
+            topic: selected(),
+            planQuote: selected() === 'quote' ? stored : '',
+          }));
+        } else sessionStorage.removeItem(draftKey);
+        draftSaved = true;
+      } catch {
+        draftSaved = false;
+      }
+      if (draftNote) draftNote.hidden = !hasDraft() || !draftSaved;
+    };
+    form.addEventListener('input', saveDraft);
+    form.addEventListener('change', saveDraft);
+    saveDraft();
+    addEventListener('beforeunload', (event) => {
+      if (sent || draftSaved || !hasDraft()) return;
+      event.preventDefault();
+    });
+
     // ---- Map the five human intents to the server's allowed values
     const wireFor = (k: IntentKey): Wire => {
       if (k === 'pilot-supplier') return 'bidder';
@@ -608,6 +667,8 @@ const intents = [
 
     // ---- Outcomes
     const showSuccess = (name: string) => {
+      sent = true;
+      try { sessionStorage.removeItem(draftKey); } catch { /* storage is optional */ }
       const given = name.trim().split(/\s+/)[0] || 'there';
       status.replaceChildren();
       const box = el('div', 'cf__msg cf__msg--ok');
@@ -655,6 +716,7 @@ const intents = [
     // ---- Submit
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (submit.disabled) return;
       const firstBad = validate();
       if (firstBad) {
         firstBad.focus();

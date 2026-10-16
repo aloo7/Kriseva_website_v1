@@ -40,7 +40,7 @@
   --gutter: clamp(1.25rem, 0.6rem + 3vw, 3rem);
   --wrap: 1240px;
   --s-section: clamp(4.5rem, 2.5rem + 7vw, 9.5rem);
-  --header-h: 68px;
+  --header-h: 4.25rem;
   --radius: 3px;
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
@@ -94,6 +94,20 @@ button {
   cursor: pointer;
 }
 
+a,
+button,
+summary,
+input,
+textarea,
+select {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgb(210 166 96 / 24%);
+}
+
+main :where(section, article, [id], a, button, input, textarea, select, summary) {
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
 ul[role="list"],
 ol[role="list"] {
   list-style: none;
@@ -145,7 +159,8 @@ ol[role="list"] {
   width: 100%;
   max-width: calc(var(--wrap) + var(--gutter) * 2);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
 }
 
 .section {
@@ -328,7 +343,9 @@ ol[role="list"] {
   isolation: isolate;
   transition: color 0.35s var(--ease);
   border: 1px solid var(--btn-bg);
-  white-space: nowrap;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .btn::before {
@@ -348,7 +365,8 @@ ol[role="list"] {
   transform-origin: left;
 }
 
-.btn:hover {
+.btn:hover,
+.btn:focus-visible {
   color: var(--navy);
 }
 
@@ -368,7 +386,8 @@ ol[role="list"] {
   border-color: var(--line-strong);
 }
 
-.btn--ghost:hover {
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
   color: var(--on-navy);
 }
 
@@ -389,7 +408,10 @@ ol[role="list"] {
 
 .on-navy .btn--ghost:hover,
 .on-navy-hatch .btn--ghost:hover,
-.phero--navy .btn--ghost:hover {
+.phero--navy .btn--ghost:hover,
+.on-navy .btn--ghost:focus-visible,
+.on-navy-hatch .btn--ghost:focus-visible,
+.phero--navy .btn--ghost:focus-visible {
   color: var(--navy);
 }
 
@@ -592,8 +614,10 @@ ol[role="list"] {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: -1ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
 

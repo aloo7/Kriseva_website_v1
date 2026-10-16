@@ -1,0 +1,42 @@
+[
+  {
+    "width": 1440,
+    "height": 900,
+    "pageHeight": 1116,
+    "mainHeight": 1039,
+    "mainWords": 190,
+    "primaryWords": 42,
+    "footerHeight": 77,
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "pageHeight": 1106,
+    "mainHeight": 1017,
+    "mainWords": 188,
+    "primaryWords": 42,
+    "footerHeight": 89,
+    "overflow": false
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "pageHeight": 1118,
+    "mainHeight": 1029,
+    "mainWords": 188,
+    "primaryWords": 42,
+    "footerHeight": 89,
+    "overflow": false
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "pageHeight": 1012,
+    "mainHeight": 935,
+    "mainWords": 190,
+    "primaryWords": 42,
+    "footerHeight": 77,
+    "overflow": false
+  }
+]

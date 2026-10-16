@@ -702,7 +702,7 @@ const defaultMail = `mailto:ayush@kriseva.in?subject=${encodeURIComponent('Krise
   /* ---------- Mobile bar ---------- */
   .pbbar {
     position: fixed;
-    inset: auto 0.75rem 0.75rem;
+    inset: auto max(0.75rem, env(safe-area-inset-right, 0px)) max(0.75rem, env(safe-area-inset-bottom, 0px)) max(0.75rem, env(safe-area-inset-left, 0px));
     z-index: 40;
     display: none;
     align-items: center;
@@ -749,6 +749,12 @@ const defaultMail = `mailto:ayush@kriseva.in?subject=${encodeURIComponent('Krise
 
     .pbbar:not([hidden]) {
       display: flex;
+    }
+  }
+
+  @media (height <= 540px) and (width <= 980px) {
+    .pbbar:not([hidden]) {
+      display: none;
     }
   }
 

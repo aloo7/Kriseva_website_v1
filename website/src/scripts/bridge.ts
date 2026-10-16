@@ -1,11 +1,4 @@
-// bridge.ts: the scroll-built bridge on the home hero.
-//
-// Zero dependencies. The hero section becomes tall (data-live), its stage is
-// pinned with position: sticky, and scroll progress p in [0, 1] drives every
-// part of the drawing through small tracks. Progress is smoothed with a lerp so
-// wheel steps feel continuous. Without JS, or with reduced motion, nothing here
-// runs and the finished bridge (as drawn in the markup) is what renders.
-
+// The finished illustration works without JS. Controls enhance it at the visitor's pace.
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p: number, s: number, e: number) => clamp((p - s) / (e - s));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -15,7 +8,9 @@ const easeIO = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 /
 type El = HTMLElement | SVGElement;
 
 export function initBridge(root: HTMLElement): void {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const preference = matchMedia('(prefers-reduced-motion: reduce)');
+  const scene = root.querySelector<SVGSVGElement>('[data-bridge-scene]');
+  if (!scene) return;
 
   const q = <T extends El = El>(k: string) => Array.from(root.querySelectorAll<T>(`[data-k="${k}"]`));
   const towers = q<SVGGElement>('tower');
@@ -59,7 +54,7 @@ export function initBridge(root: HTMLElement): void {
 
     plates.forEach((el, i) => {
       const t = easeOut(seg(p, 0.16 + i * 0.04, 0.3 + i * 0.04));
-      set(el, 'transform', `translate(-50%, calc(-100% - ${((1 - t) * 26).toFixed(1)}px))`);
+      set(el, 'transform', `translateY(${((1 - t) * -26).toFixed(1)}px)`);
       set(el, 'opacity', t.toFixed(3));
     });
 
@@ -123,47 +118,124 @@ export function initBridge(root: HTMLElement): void {
       if (i === beat) b.setAttribute('data-active', '');
       else b.removeAttribute('data-active');
     });
-    root.toggleAttribute('data-built', p > 0.985);
+    root.toggleAttribute('data-built', p > 0.998);
   }
 
-  root.setAttribute('data-live', '');
 
-  let target = 0;
-  let current = 0;
-  let raf = 0;
-
-  const measure = () => {
-    const rect = root.getBoundingClientRect();
-    const total = root.offsetHeight - window.innerHeight;
-    target = total > 0 ? clamp(-rect.top / total) : 1;
+  const viewData: Record<string, { box: number[]; text: string }> = {
+    overview: { box: [0, 60, 1600, 740], text: 'Two shores. Two products. One evidence trail between suppliers and procurement committees.' },
+    suppliers: { box: [0, 120, 540, 560], text: 'The supplier shore: precision manufacturing, drones, satellites and ground systems. TAS helps suppliers find, read and answer relevant tenders.' },
+    bridge: { box: [410, 60, 780, 740], text: 'The crossing: TAS on the supplier side, Evaluator on the buyer side. An answer travels with its evidence so a committee can review the finding.' },
+    buyers: { box: [1160, 130, 440, 540], text: 'The buyer shore: a procurement institution and a space launch complex. Evaluator links findings to source pages. Officers make the decisions.' },
   };
+  const stages = [...root.querySelectorAll<HTMLButtonElement>('[data-stage-button]')];
+  const stories = [...root.querySelectorAll<HTMLElement>('[data-story]')];
+  const views = [...root.querySelectorAll<HTMLButtonElement>('[data-view]')];
+  const description = root.querySelector<HTMLElement>('[data-view-description]');
+  const play = root.querySelector<HTMLButtonElement>('[data-play-story]');
+  const playLabel = root.querySelector<HTMLElement>('[data-play-label]');
+  const motion = root.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+  const motionLabel = root.querySelector<HTMLElement>('[data-motion-label]');
+  const duration = 12000;
+  let current = 1, target = 1, elapsed = duration, last = 0, raf = 0;
+  let playing = false, hasPlayed = false, paused = false, inView = true;
+  let stage = 2;
+  let box = [...viewData.overview.box];
+  let targetBox = [...box];
 
-  const tick = () => {
+
+  function setStage(index: number) {
+    stage = index;
+    root.dataset.stage = String(index);
+    stages.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
+    stories.forEach((story, i) => { story.hidden = i !== index; });
+  }
+  function syncControls() {
+    const stopped = paused || preference.matches;
+    root.toggleAttribute('data-paused', stopped);
+    root.toggleAttribute('data-playing', playing && !stopped);
+    motion?.setAttribute('aria-pressed', String(stopped));
+    if (motion) motion.hidden = preference.matches;
+    if (motionLabel) motionLabel.textContent = stopped ? 'Resume motion' : 'Pause motion';
+    if (play) play.disabled = preference.matches;
+    if (playLabel) playLabel.textContent = playing ? (paused ? 'Resume story' : 'Pause story') : hasPlayed ? (elapsed < duration ? 'Resume story' : 'Replay the story') : 'Play the story';
+  }
+  const canMove = () => inView && !document.hidden && !paused && !preference.matches;
+  function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; }
+  function kick() { if (!raf && canMove()) raf = requestAnimationFrame(tick); }
+  function tick(now: number) {
     raf = 0;
-    current += (target - current) * 0.15;
-    if (Math.abs(target - current) < 0.0006) current = target;
+    if (!canMove()) { last = 0; return; }
+    const dt = last ? Math.min(now - last, 64) : 16;
+    last = now;
+    if (playing) {
+      elapsed = Math.min(duration, elapsed + dt);
+      current = target = elapsed / duration;
+      const next = current < .27 ? 0 : current < .62 ? 1 : 2;
+      if (stage !== next) setStage(next);
+      if (elapsed === duration) { playing = false; syncControls(); }
+    } else {
+      current = lerp(current, target, 1 - Math.exp(-dt / 90));
+      if (Math.abs(current - target) < .0001) current = target;
+    }
     render(current);
-    if (current !== target) raf = requestAnimationFrame(tick);
-  };
-
-  const kick = () => {
-    measure();
-    if (!raf) raf = requestAnimationFrame(tick);
-  };
-
-  measure();
-  current = target;
-  render(current);
-  root.setAttribute('data-ready', '');
-  addEventListener('scroll', kick, { passive: true });
-  addEventListener('resize', kick);
-
-  // Jump links inside the hero ("See the two products") skip the build.
-  root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
-    a.addEventListener('click', () => {
-      target = 1;
-      current = 1;
-      render(1);
-    });
+    if (playing || current !== target) kick(); else last = 0;
+  }
+  stages.forEach((button, i) => button.addEventListener('click', () => {
+    playing = false;
+    target = preference.matches ? 1 : [0, .58, 1][i];
+    setStage(i);
+    if (!canMove()) { current = target; render(current); }
+    syncControls(); kick();
+  }));
+  views.forEach((button) => button.addEventListener('click', () => {
+    const view = viewData[button.dataset.view || 'overview'];
+    if (!view) return;
+    targetBox = [...view.box];
+    views.forEach((el) => el.setAttribute('aria-pressed', String(el === button)));
+    if (description) { description.textContent = view.text; description.hidden = false; }
+    // View selection is immediate, including while paused or outside the frame.
+    box = [...targetBox];
+    scene!.setAttribute('viewBox', box.join(' '));
+    const clip = root.querySelector<SVGRectElement>('[data-view-clip]');
+    ['x', 'y', 'width', 'height'].forEach((key, i) => clip?.setAttribute(key, String(box[i])));
+  }));
+  play?.addEventListener('click', () => {
+    if (preference.matches) return;
+    if (paused && playing) paused = false;
+    else if (playing) playing = false;
+    else {
+      if (elapsed >= duration || !hasPlayed || Math.abs(elapsed / duration - current) > .01) {
+        elapsed = current = target = 0; setStage(0); render(0);
+      }
+      playing = hasPlayed = true; paused = false;
+      root.querySelector<HTMLElement>('.crossing__frame')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+    syncControls(); last = 0; kick();
   });
+  motion?.addEventListener('click', () => {
+    paused = !paused; syncControls();
+    if (paused) stop(); else kick();
+  });
+  preference.addEventListener('change', () => {
+    stop();
+    if (preference.matches) {
+      playing = false; current = target = 1; elapsed = duration; setStage(2);
+      box = [...targetBox]; scene!.setAttribute('viewBox', box.join(' ')); render(1);
+    }
+    syncControls(); kick();
+  });
+  const observer = new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    root.dataset.inView = String(inView && !document.hidden);
+    if (inView) kick(); else stop();
+  });
+  observer.observe(scene);
+  document.addEventListener('visibilitychange', () => {
+    root.dataset.inView = String(inView && !document.hidden);
+    if (document.hidden) stop(); else kick();
+  });
+  render(1); syncControls();
+  root.setAttribute('data-ready', '');
+  root.querySelectorAll<HTMLElement>('[data-bridge-controls]').forEach((el) => { el.hidden = false; });
 }

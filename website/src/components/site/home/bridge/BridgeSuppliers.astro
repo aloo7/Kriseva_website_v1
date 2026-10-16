@@ -1,0 +1,268 @@
+---
+// Scene fragment. Every coordinate is in the parent bridge's 1600 x 740 scene.
+const cells = Array.from({ length: 18 }, (_, i) => ({ x: (i % 6) * 11 + 3, y: Math.floor(i / 6) * 13 + 3 }));
+const roofBays = [105, 145, 185, 225, 265];
+const facadeJoints = [117, 141, 165, 189, 213, 237, 261, 285];
+const officeWindows = [0, 1, 2];
+---
+
+<g class="bs-shore" aria-hidden="true">
+  <defs>
+    <linearGradient id="bs-cell" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#527da8" />
+      <stop offset=".48" stop-color="#244c78" />
+      <stop offset="1" stop-color="#112e53" />
+    </linearGradient>
+    <linearGradient id="bs-metal" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#fbf6e9" />
+      <stop offset=".42" stop-color="#c8ced3" />
+      <stop offset="1" stop-color="#7f90ab" />
+    </linearGradient>
+    <linearGradient id="bs-foil" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#edce8d" />
+      <stop offset=".52" stop-color="#d2a660" />
+      <stop offset="1" stop-color="#99733d" />
+    </linearGradient>
+    <linearGradient id="bs-glass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#a6bfd0" />
+      <stop offset=".5" stop-color="#6585a3" />
+      <stop offset="1" stop-color="#294769" />
+    </linearGradient>
+    <linearGradient id="bs-bay" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#102747" />
+      <stop offset="1" stop-color="#3c526b" />
+    </linearGradient>
+    <pattern id="bs-panel-grid" width="9" height="7" patternUnits="userSpaceOnUse">
+      <path d="M0 0H9V7" fill="none" stroke="#c5d4df" stroke-opacity=".57" stroke-width=".55" />
+    </pattern>
+  </defs>
+
+  <!-- A flight path is a quiet construction line, not a second bridge cable. -->
+  <path d="M39 303C111 190 280 139 443 172C473 178 494 189 508 204" fill="none" stroke="#7f90ab" stroke-opacity=".38" stroke-width="1" stroke-dasharray="3 7" />
+  <path d="M76 268L70 264M133 216L129 209M214 177L212 170M306 164V157M396 169L398 162" fill="none" stroke="#7f90ab" stroke-opacity=".6" stroke-width="1" />
+  <path class="bs-link bs-motion" d="M369 374C365 320 318 286 278 254" fill="none" stroke="#b18a4f" stroke-opacity=".43" stroke-width="1" stroke-dasharray="3 8" />
+
+  <!-- Solar wings use separate cell faces, bus bars, perimeter rails and depth. -->
+  <g class="bs-satellite bs-motion">
+    <g transform="translate(261 216) rotate(-15)">
+      <path d="M-45 -3H-19M20 -3H46" stroke="#0a1f44" stroke-width="4" />
+      <path d="M-45 -4H-19M20 -4H46" stroke="#a8b8c7" stroke-width="1.3" />
+      <g transform="matrix(1 -.15 0 1 -114 -17)">
+        <path d="M0 0H72V45H0Z" transform="translate(1.5 2.6)" fill="#0a1f44" />
+        <rect width="72" height="45" rx=".8" fill="#9bafbf" stroke="#0a1f44" stroke-width="1.3" />
+        <rect x="1.5" y="1.5" width="69" height="42" fill="#1d4068" />
+        {cells.map(({ x, y }) => <rect x={x} y={y} width="9.4" height="10.9" rx=".6" fill="url(#bs-cell)" stroke="#86a5be" stroke-opacity=".55" stroke-width=".45" />)}
+        <path d="M2 15.7H70M2 28.7H70M13.1 2V43M35.1 2V43M57.1 2V43" stroke="#d7d9cc" stroke-width=".55" stroke-opacity=".55" />
+        <path d="M.5 .5H71.5M.5 .5V44" fill="none" stroke="#dbe1e1" stroke-width=".8" />
+      </g>
+      <g transform="matrix(1 .15 0 1 42 -28)">
+        <path d="M0 0H72V45H0Z" transform="translate(1.5 2.6)" fill="#0a1f44" />
+        <rect width="72" height="45" rx=".8" fill="#9bafbf" stroke="#0a1f44" stroke-width="1.3" />
+        <rect x="1.5" y="1.5" width="69" height="42" fill="#1d4068" />
+        {cells.map(({ x, y }) => <rect x={x} y={y} width="9.4" height="10.9" rx=".6" fill="url(#bs-cell)" stroke="#86a5be" stroke-opacity=".55" stroke-width=".45" />)}
+        <path d="M2 15.7H70M2 28.7H70M13.1 2V43M35.1 2V43M57.1 2V43" stroke="#d7d9cc" stroke-width=".55" stroke-opacity=".55" />
+        <path d="M.5 .5H71.5M.5 .5V44" fill="none" stroke="#dbe1e1" stroke-width=".8" />
+      </g>
+      <path d="M-19 -25L-9 -32H25L16 -25Z" fill="#e6d3aa" stroke="#0a1f44" stroke-width="1.2" />
+      <path d="M16 -25L25 -32V13L16 23Z" fill="#9b773f" stroke="#0a1f44" stroke-width="1.2" />
+      <rect x="-19" y="-25" width="35" height="48" rx="1" fill="url(#bs-foil)" stroke="#0a1f44" stroke-width="1.3" />
+      <path d="M-18 -12L-4 -17L15 -11M-18 8L-8 4L15 12M-8 -25L-12 -7L-3 2L-8 22M7 -24L3 -5L11 4L7 22" fill="none" stroke="#f9e3ac" stroke-width=".85" stroke-opacity=".65" />
+      <rect x="-13" y="-19" width="23" height="13" rx="1" fill="url(#bs-metal)" stroke="#344962" stroke-width=".8" />
+      <path d="M-9 -16H7M-9 -13H7M-9 -10H7" stroke="#667e97" stroke-width=".65" />
+      <rect x="-13" y="2" width="14" height="12" fill="#243e5b" stroke="#f1d38e" stroke-width=".8" />
+      <circle cx="-6" cy="8" r="3.3" fill="#071a35" stroke="#a6c0d0" stroke-width="1" />
+      <path d="M5 3H11V15H5Z" fill="#d3d8d8" stroke="#556a81" stroke-width=".7" />
+      <path d="M-1 -31V-43M-7 -43H5" stroke="#0a1f44" stroke-width="1.2" stroke-linecap="round" />
+      <circle cx="-1" cy="-43" r="1.8" fill="#d2a660" />
+      <path d="M-2 23V33L10 40" fill="none" stroke="#61728b" stroke-width="2" />
+      <path d="M-5 37Q6 50 17 36L11 34Q5 42-1 34Z" fill="url(#bs-metal)" stroke="#0a1f44" stroke-width="1" />
+      <path d="M6 41L7 32" stroke="#0a1f44" stroke-width="1" />
+      <circle cx="7" cy="31" r="1.5" fill="#d2a660" />
+      <circle cx="19.5" cy="-20" r="1" fill="#e7dfc8" />
+      <circle cx="19.5" cy="12" r="1" fill="#e7dfc8" />
+    </g>
+  </g>
+
+  <!-- A four-rotor inspection platform, drawn in a shallow three-quarter view. -->
+  <ellipse cx="175" cy="466" rx="33" ry="3" fill="#0a1f44" fill-opacity=".07" />
+  <g class="bs-drone bs-motion">
+    <g transform="translate(177 318)">
+      <path d="M-8 -4L-34 -16M8 -4L34 -16M-11 3L-45 6M11 3L45 6" fill="none" stroke="#0a1f44" stroke-width="4.2" stroke-linecap="round" />
+      <path d="M-8 -6L-34 -18M8 -6L34 -18M-11 1L-45 4M11 1L45 4" fill="none" stroke="#91a1b5" stroke-width="1.2" stroke-linecap="round" />
+      <g fill="#152e4d" stroke="#0a1f44" stroke-width=".8">
+        <rect x="-37" y="-22" width="6" height="9" rx="2" />
+        <rect x="31" y="-22" width="6" height="9" rx="2" />
+        <rect x="-48" y="-1" width="6" height="10" rx="2" />
+        <rect x="42" y="-1" width="6" height="10" rx="2" />
+      </g>
+      <g fill="#91a8bc" fill-opacity=".16" stroke="#4d6886" stroke-opacity=".52" stroke-width=".7">
+        <ellipse cx="-34" cy="-24" rx="20" ry="4.5" />
+        <ellipse cx="34" cy="-24" rx="20" ry="4.5" />
+        <ellipse cx="-45" cy="-3" rx="22" ry="5" />
+        <ellipse cx="45" cy="-3" rx="22" ry="5" />
+      </g>
+      <g fill="#0a1f44">
+        <path class="bs-rotor bs-motion" d="M-54 -24Q-40 -27-34 -24Q-21 -21-14 -24Q-27 -27-34 -24Q-46 -21-54 -24Z" />
+        <path class="bs-rotor bs-motion" d="M14 -24Q28 -27 34 -24Q47 -21 54 -24Q41 -27 34 -24Q22 -21 14 -24Z" />
+        <path class="bs-rotor bs-motion" d="M-67 -3Q-52 -6-45 -3Q-30 0-23 -3Q-38 -6-45 -3Q-58 0-67 -3Z" />
+        <path class="bs-rotor bs-motion" d="M23 -3Q38 -6 45 -3Q60 0 67 -3Q52 -6 45 -3Q32 0 23 -3Z" />
+      </g>
+      <path d="M-15 -9L-6 -14H9L16 -8L12 6H-12Z" fill="url(#bs-metal)" stroke="#0a1f44" stroke-width="1.2" />
+      <path d="M-15 -9L-11 2H12L16 -8L12 6H-12Z" fill="#0a1f44" />
+      <path d="M-7 -12H8L11 -7H-10Z" fill="#354f6b" />
+      <path d="M-7 -8H7" stroke="#d2a660" stroke-width="1.1" />
+      <path d="M-10 7L-15 20H-23M10 7L15 20H23" fill="none" stroke="#0a1f44" stroke-width="1.8" stroke-linecap="round" />
+      <path d="M-7 5V12H7V5" fill="none" stroke="#70849c" stroke-width="1.5" />
+      <rect x="-7" y="11" width="14" height="11" rx="3" fill="#0a1f44" stroke="#d0d7db" stroke-width=".8" />
+      <circle cx="0" cy="16.5" r="4" fill="#a78247" />
+      <circle cx="0" cy="16.5" r="2.7" fill="#173857" stroke="#aec7d8" stroke-width=".7" />
+      <circle cx="-.7" cy="15.7" r=".7" fill="#dce8ec" />
+      <circle cx="-44" cy="8" r="1.1" fill="#d2a660" />
+      <circle cx="44" cy="8" r="1.1" fill="#b86751" />
+    </g>
+  </g>
+
+  <!-- Precision manufacturing campus. The pale walls expose the structure. -->
+  <path d="M42 466H328L345 470H30Z" fill="#0a1f44" fill-opacity=".13" />
+  <path d="M94 407L116 394H326L304 407Z" fill="#c6cdd1" stroke="#0a1f44" stroke-width="1" />
+  <path d="M304 407L326 394V457L304 470Z" fill="#8c9cb0" stroke="#0a1f44" stroke-width="1" />
+  <path d="M309 418L321 411V447L309 454Z" fill="#4e6783" stroke="#607892" stroke-width=".6" />
+  <path d="M310 423L320 417M310 430L320 424M310 437L320 431M310 444L320 438" stroke="#b8c6d0" stroke-width=".7" />
+  <rect x="94" y="405" width="210" height="65" fill="#ece5d6" stroke="#0a1f44" stroke-width="1.3" />
+  <rect x="94" y="459" width="210" height="11" fill="#c3b9a5" />
+  <path d="M94 410H304M94 455H304" stroke="#b7ae9d" stroke-width=".8" />
+  {facadeJoints.map((x) => <path d={`M${x} 410V454`} stroke="#b8b2a7" stroke-width=".55" />)}
+  <g stroke="#0a1f44" stroke-width="1" stroke-linejoin="round">
+    {roofBays.map((x) => (
+      <g>
+        <path d={`M${x - 11} 405V382L${x + 29} 401V405Z`} fill="#193451" />
+        <path d={`M${x - 11} 382L${x + 10} 369L${x + 50} 388L${x + 29} 401Z`} fill="#aab6bf" />
+        <path d={`M${x - 7} 386V400H${x + 20}Z`} fill="url(#bs-glass)" stroke="#94a8b8" stroke-width=".6" />
+        <path d={`M${x + 2} 391V400M${x + 12} 396V400`} fill="none" stroke="#c0cdd4" stroke-width=".55" />
+        <path d={`M${x + 1} 382L${x + 14} 375L${x + 40} 387L${x + 28} 394Z`} fill="#335676" stroke="#0a1f44" stroke-width=".65" />
+        <path d={`M${x + 1} 382L${x + 28} 394M${x + 8} 378L${x + 35} 390M${x + 10} 386L${x + 23} 379M${x + 19} 390L${x + 32} 383`} fill="none" stroke="#a1b7c9" stroke-width=".5" />
+      </g>
+    ))}
+  </g>
+  <path d="M94 405H304" stroke="#0a1f44" stroke-width="2" />
+  <path d="M94 407H304" stroke="#d2a660" stroke-width="1.2" />
+
+  <!-- Two working assembly bays with gantry, jigs and component benches. -->
+  <rect x="109" y="421" width="45" height="43" fill="url(#bs-bay)" stroke="#7c7e79" stroke-width="1.1" />
+  <rect x="166" y="421" width="45" height="43" fill="url(#bs-bay)" stroke="#7c7e79" stroke-width="1.1" />
+  <path d="M110 421H153V427H110ZM167 421H210V427H167Z" fill="#6e7d8d" />
+  <path d="M111 423H152M111 425H152M168 423H209M168 425H209" stroke="#a0a9b0" stroke-width=".6" />
+  <path d="M114 430H150M171 430H207" stroke="#d2a660" stroke-width="2" />
+  <path d="M120 430V436M194 430V436" stroke="#aebdcb" stroke-width=".8" />
+  <path d="M118 437H122V440H120M192 437H196V440H194" fill="none" stroke="#d2a660" stroke-width=".9" />
+  <path d="M114 459V451H150V459M171 459V451H207V459" fill="none" stroke="#b6c0c7" stroke-width="1.2" />
+  <path d="M122 449L127 441H137L142 449Z" fill="#9cafbd" stroke="#d7d9d5" stroke-width=".6" />
+  <path d="M126 441V448M137 441V448M123 446H140" stroke="#557089" stroke-width=".65" />
+  <path d="M175 449L182 440L187 445L183 450M182 440L186 433L191 434M191 434V440" fill="none" stroke="#d2a660" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="182" cy="440" r="2" fill="#203d59" stroke="#edcf92" stroke-width=".6" />
+  <rect x="194" y="445" width="9" height="6" rx=".8" fill="#98acbd" />
+  <path d="M112 463H152M169 463H209" stroke="#d2a660" stroke-width="1.7" stroke-dasharray="4 3" />
+  <rect class="bs-ground-light bs-motion" x="124" y="417" width="16" height="1.8" rx=".9" fill="#ecc886" />
+  <rect class="bs-ground-light bs-motion" x="181" y="417" width="16" height="1.8" rx=".9" fill="#ecc886" />
+
+  <!-- A glazed clean room and a loading door with an articulated service rail. -->
+  <rect x="224" y="419" width="65" height="17" fill="url(#bs-glass)" stroke="#0a1f44" stroke-width="1" />
+  <path d="M237 420V435M250 420V435M263 420V435M276 420V435M225 427.5H288" stroke="#bac6cd" stroke-width=".75" />
+  <path d="M226 421H287" stroke="#dce4e5" stroke-width="1" stroke-opacity=".8" />
+  <rect x="244" y="444" width="32" height="26" fill="#62758b" stroke="#0a1f44" stroke-width="1" />
+  <path d="M246 448H274M246 452H274M246 456H274M246 460H274M246 464H274" stroke="#b2bec8" stroke-width=".65" />
+  <path d="M239 470V440H281V470" fill="none" stroke="#a99c81" stroke-width="2.4" />
+  <path d="M242 442H278" stroke="#d2a660" stroke-width="1.2" />
+  <rect x="285" y="446" width="6" height="13" rx=".6" fill="#213c5b" />
+  <circle cx="288" cy="450" r=".8" fill="#d2a660" />
+  <path d="M223 469V461M232 469V461M284 469V461M294 469V461" stroke="#0a1f44" stroke-width="2.2" />
+  <path d="M223 462V465M232 462V465M284 462V465M294 462V465" stroke="#d2a660" stroke-width="2.2" />
+  <path d="M233 468L223 473M286 468L296 473" stroke="#7f90ab" stroke-opacity=".5" stroke-width=".8" />
+
+  <!-- Rooftop plant, office wing and a small workshop annex. -->
+  <g stroke="#0a1f44" stroke-width=".8">
+    <path d="M275 372V350H283V376" fill="#91a0b2" />
+    <path d="M273 350H285V354H273Z" fill="#ced4d5" />
+    <path d="M277 356H281M277 360H281M277 364H281" stroke="#dce0dd" stroke-width=".6" />
+    <path d="M296 379V363H303V382" fill="#7f90ab" />
+    <path d="M294 363H305V366H294Z" fill="#c8cfd1" />
+  </g>
+  <path d="M48 405L61 397H106L94 405Z" fill="#d3d5ce" stroke="#0a1f44" stroke-width="1" />
+  <path d="M94 405L106 397V462L94 470Z" fill="#899aaf" stroke="#0a1f44" stroke-width=".9" />
+  <rect x="48" y="405" width="46" height="65" fill="#d8d2c4" stroke="#0a1f44" stroke-width="1.1" />
+  <path d="M45 405H97V409H45Z" fill="#0a1f44" />
+  <path d="M48 409H94" stroke="#d2a660" stroke-width="1" />
+  {officeWindows.map((i) => (
+    <g>
+      <rect x={54 + i * 12} y="416" width="8" height="13" fill="url(#bs-glass)" stroke="#3e5670" stroke-width=".6" />
+      <rect x={54 + i * 12} y="435" width="8" height="13" fill="url(#bs-glass)" stroke="#3e5670" stroke-width=".6" />
+      <path d={`M${55 + i * 12} 417H${60 + i * 12}M${55 + i * 12} 436H${60 + i * 12}`} stroke="#c2d0d6" stroke-width=".6" />
+    </g>
+  ))}
+  <path d="M64 470V456H78V470" fill="#183451" stroke="#0a1f44" stroke-width=".8" />
+  <path d="M71 457V469" stroke="#c2cad0" stroke-width=".7" />
+  <path d="M45 469H97" stroke="#9e927b" stroke-width="2" />
+  <rect x="58" y="397" width="25" height="5" fill="#899aa9" stroke="#0a1f44" stroke-width=".8" />
+  <path d="M62 398V401M66 398V401M70 398V401M74 398V401M78 398V401" stroke="#d7dddb" stroke-width=".7" />
+
+  <!-- A ground station: parabolic reflector, feed, pedestal and control shelter. -->
+  <path d="M346 466H414L420 470H337Z" fill="#0a1f44" fill-opacity=".12" />
+  <path d="M351 470L361 432H374L384 470Z" fill="#b2bdc8" stroke="#0a1f44" stroke-width="1.1" />
+  <path d="M356 466L369 441L378 465M361 451H376M356 461H380" fill="none" stroke="#667e98" stroke-width="1" />
+  <path d="M365 438V421" stroke="#0a1f44" stroke-width="5" />
+  <path d="M365 438V421" stroke="#a9b8c7" stroke-width="2" />
+  <g transform="translate(365 404) rotate(-30)">
+    <path d="M-25 -3Q0 33 25 -3Q0 10-25-3Z" fill="#9aabbb" stroke="#0a1f44" stroke-width="1.2" />
+    <ellipse cy="-3" rx="25" ry="10" fill="#e1e5e2" stroke="#0a1f44" stroke-width="1.2" />
+    <ellipse cy="-3" rx="21.5" ry="7.5" fill="#cbd5d9" stroke="#93a6b7" stroke-width=".8" />
+    <path d="M-21 -5Q0 0 21 -5M-15 -9L0 4L15 -9M0 -12V5" fill="none" stroke="#8ca0b2" stroke-width=".7" />
+    <path d="M-20 -4L0 -29L20 -4" fill="none" stroke="#0a1f44" stroke-width="1.2" />
+    <path d="M0 -27V-36" stroke="#0a1f44" stroke-width="1.6" />
+    <rect x="-2.5" y="-37" width="5" height="7" rx="1" fill="#d2a660" stroke="#0a1f44" stroke-width=".8" />
+    <path class="bs-signal bs-motion" d="M-10 -40Q0 -50 10 -40M-16 -46Q0 -63 16 -46M-23 -51Q0 -76 23 -51" fill="none" stroke="#a98245" stroke-opacity=".5" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3" />
+  </g>
+  <path d="M384 444L393 438H414L406 444Z" fill="#b5bec2" stroke="#0a1f44" stroke-width=".9" />
+  <path d="M406 444L414 438V465L406 470Z" fill="#71859d" stroke="#0a1f44" stroke-width=".9" />
+  <rect x="384" y="444" width="22" height="26" fill="#d9d9cc" stroke="#0a1f44" stroke-width="1" />
+  <rect x="388" y="449" width="13" height="8" fill="#223e5d" />
+  <path d="M391 451H398M391 454H396" stroke="#7fa2ba" stroke-width=".6" />
+  <path d="M388 461H401M388 464H401M388 467H401" stroke="#6f8294" stroke-width=".65" />
+  <path d="M398 438V423" stroke="#0a1f44" stroke-width="1.3" />
+  <circle class="bs-ground-light bs-motion" cx="398" cy="423" r="1.7" fill="#d2a660" />
+
+  <!-- Human scale, ground details and light pools anchor the model. -->
+  <g fill="#0a1f44" stroke-linecap="round">
+    <circle cx="334" cy="450" r="2.4" />
+    <path d="M334 454V462M334 456L330 459M334 456L338 458M334 461L331 468M334 461L337 468" fill="none" stroke="#0a1f44" stroke-width="1.7" />
+    <path d="M331 454H337L336 459H332Z" fill="#d2a660" stroke="none" />
+  </g>
+  <path d="M20 470H417" stroke="#0a1f44" stroke-width="1.4" />
+  <path d="M33 466V451H44M40 451H45" fill="none" stroke="#0a1f44" stroke-width="1.4" />
+  <path class="bs-ground-light bs-motion" d="M40 452H45" stroke="#e8c181" stroke-width="2" />
+  <path d="M30 469H37M342 469H348" stroke="#b9a17a" stroke-width="1" />
+</g>
+
+<style>
+  .bs-satellite { animation: bs-drift 16s ease-in-out infinite alternate; }
+  .bs-drone { animation: bs-hover 5.8s ease-in-out infinite alternate; }
+  .bs-rotor {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bs-rotor 0.22s linear infinite alternate;
+  }
+  .bs-link { animation: bs-link 7s linear infinite; }
+  .bs-signal { animation: bs-signal 6s linear infinite; }
+  .bs-ground-light { animation: bs-light 7s ease-in-out infinite alternate; }
+  :global([data-bridge]:not([data-ready])) .bs-motion,
+  :global([data-bridge][data-paused]) .bs-motion,
+  :global([data-bridge][data-in-view='false']) .bs-motion { animation-play-state: paused; }
+  @keyframes bs-drift { to { transform: translate(5px, -4px); } }
+  @keyframes bs-hover { to { transform: translate(0, -5px); } }
+  @keyframes bs-rotor { to { transform: scaleX(.45); opacity: .62; } }
+  @keyframes bs-link { to { stroke-dashoffset: -44; } }
+  @keyframes bs-signal { to { stroke-dashoffset: -20; } }
+  @keyframes bs-light { from { opacity: .72; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .bs-motion { animation-play-state: paused; }
+  }
+</style>

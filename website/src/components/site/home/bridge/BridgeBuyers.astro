@@ -1,0 +1,239 @@
+---
+const chakraSpokes = Array.from({ length: 24 }, (_, index) => index * 15);
+---
+
+<g class="bb-buyers" aria-hidden="true">
+  <defs>
+    <linearGradient id="bb-stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f5f0e6" />
+      <stop offset="1" stop-color="#d5cdbf" />
+    </linearGradient>
+    <linearGradient id="bb-dome" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8592a4" />
+      <stop offset=".43" stop-color="#c9c7bf" />
+      <stop offset="1" stop-color="#6c7d96" />
+    </linearGradient>
+    <linearGradient id="bb-vehicle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b9c2ca" />
+      <stop offset=".35" stop-color="#f5f0e6" />
+      <stop offset=".62" stop-color="#f5f0e6" />
+      <stop offset="1" stop-color="#8c9bb0" />
+    </linearGradient>
+    <linearGradient id="bb-tower" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#526781" />
+      <stop offset="1" stop-color="#253d5c" />
+    </linearGradient>
+  </defs>
+
+  <!-- Public institution: stone, deep colonnade, and a small coppered dome. -->
+  <g class="bb-institution">
+    <ellipse cx="1283" cy="470" rx="101" ry="6" fill="#0a1f44" opacity=".09" />
+    <path d="M1198 410 1208 403H1361L1372 410V461H1198Z" fill="#a7a99f" />
+    <path d="M1362 410 1372 405V461L1362 465Z" fill="#7f90ab" />
+    <path d="M1198 410H1362V459H1198Z" fill="url(#bb-stone)" />
+    <path d="M1200 414H1361M1200 453H1361" stroke="#b6b7af" stroke-width="1" />
+    <path d="M1195 407H1364L1372 410H1198Z" fill="#f5f0e6" />
+    <path d="M1198 410H1363V415H1198Z" fill="#0a1f44" opacity=".1" />
+    <path d="M1198 455H1363V461H1198Z" fill="#c2b9a8" />
+
+    <!-- Recessed windows on the two wings. -->
+    {[1207, 1220, 1233, 1324, 1337, 1350].map((x) => (
+      <g>
+        <path d={`M${x} 424h8v20h-8z`} fill="#7f90ab" />
+        <path d={`M${x + 1.5} 425h5v17h-5z`} fill="#233b58" />
+        <path d={`M${x + 2} 425v17m-3 2h11`} stroke="#f5f0e6" stroke-width=".8" opacity=".7" />
+        <path d={`M${x + 4} 426v15M${x + 1} 434h6`} stroke="#8d9bb0" stroke-width=".6" />
+      </g>
+    ))}
+
+    <!-- The drum sits behind the forward portico. -->
+    <path d="M1259 385H1307V408H1259Z" fill="#b4b6ad" />
+    <path d="M1255 385H1311V389H1255Z" fill="#d2a660" />
+    <path d="M1259 384C1260 369 1269 358 1283 356C1297 358 1306 369 1307 384Z" fill="url(#bb-dome)" stroke="#6d7d94" stroke-width="1" />
+    <path d="M1283 357C1275 366 1273 375 1273 384M1283 357V384M1283 357C1291 366 1293 375 1293 384" fill="none" stroke="#f5f0e6" stroke-width=".8" opacity=".55" />
+    <path d="M1259 383H1307V386H1259Z" fill="#546a84" />
+    <path d="M1281 352H1285V357H1281Z" fill="#d2a660" />
+    <circle cx="1283" cy="351" r="2" fill="#d2a660" />
+    {[1266, 1277, 1288, 1299].map((x) => (
+      <path d={`M${x} 400v-6a2 2 0 0 1 4 0v6z`} fill="#314967" />
+    ))}
+
+    <!-- A flag is deliberately modest in scale and anchored to the roof. -->
+    <g transform="translate(62 30)">
+      <path d="M1283 344V377" stroke="#536982" stroke-width="1.1" />
+      <circle cx="1283" cy="343.5" r="1.3" fill="#d2a660" />
+      <g class="bb-flag bb-motion">
+      <path d="M1284 346C1290 344 1297 349 1304 346V350C1297 353 1290 348 1284 350Z" fill="#c7814b" />
+      <path d="M1284 350C1290 348 1297 353 1304 350V354C1297 357 1290 352 1284 354Z" fill="#f5f0e6" />
+      <path d="M1284 354C1290 352 1297 357 1304 354V358C1297 361 1290 356 1284 358Z" fill="#547566" />
+      <g transform="translate(1294 352.8)">
+        <circle r="1.65" fill="none" stroke="#0a1f44" stroke-width=".35" />
+        {chakraSpokes.map((angle) => (
+          <path d="M0 0V-1.55" transform={`rotate(${angle})`} stroke="#0a1f44" stroke-width=".15" />
+        ))}
+      </g>
+      </g>
+    </g>
+
+    <!-- Shadowed pediment, entablature, and individual fluted columns. -->
+    <path d="M1241 411 1283 394 1326 411V417H1241Z" fill="#a5a99f" />
+    <path d="M1239 409 1283 391 1328 409Z" fill="#e8dfcf" stroke="#8c9aa9" stroke-width=".9" />
+    <path d="M1249 407 1283 395 1317 407Z" fill="#bdc0b7" />
+    <path d="M1259 405 1283 397 1307 405Z" fill="#f5f0e6" opacity=".48" />
+    <path d="M1241 410H1325V415H1241Z" fill="#f5f0e6" />
+    <path d="M1245 416H1321V455H1245Z" fill="#18314f" />
+    <path d="M1268 454V434a15 15 0 0 1 30 0v20Z" fill="#0a1f44" />
+    <path d="M1273 454V435a10 10 0 0 1 20 0v19Z" fill="#314966" />
+    <path d="M1283 425V453" stroke="#d2a660" stroke-width=".8" opacity=".8" />
+    {[1247, 1261, 1299, 1313].map((x) => (
+      <g>
+        <path d={`M${x - 2} 415h11v3h-11zM${x - 1} 450h9v4h-9z`} fill="#e9e1d2" />
+        <path d={`M${x} 418h7v32h-7z`} fill="url(#bb-stone)" />
+        <path d={`M${x + 2} 419v30M${x + 4.5} 419v30`} stroke="#b9b9ae" stroke-width=".7" />
+        <path d={`M${x + 6} 419v30`} stroke="#f5f0e6" stroke-width=".7" />
+      </g>
+    ))}
+    <path d="M1242 454H1325V459H1242Z" fill="#d1c7b6" />
+    <path d="M1237 459H1329V463H1237ZM1232 463H1334V467H1232ZM1226 467H1340V470H1226Z" fill="#e6ddcd" />
+    <path d="M1237 463H1329M1232 467H1334M1226 470H1340" stroke="#94a0ad" stroke-width=".8" />
+    <path d="M1200 461H1229M1340 461H1363" stroke="#f5f0e6" stroke-width="2" />
+  </g>
+
+  <!-- Launch complex: a layered vehicle and a latticed service gantry. -->
+  <g class="bb-launch-complex">
+    <ellipse cx="1485" cy="470" rx="93" ry="5" fill="#0a1f44" opacity=".09" />
+
+    <!-- A quiet tracking link, distinct from the bridge's data routes. -->
+    <path class="bb-signal bb-motion" d="M1427 399Q1444 363 1474 354" fill="none" stroke="#7f90ab" stroke-width=".9" stroke-dasharray="2 7" opacity=".55" />
+
+    <!-- Operations building with a stepped roof and shaded glazing. -->
+    <path d="M1401 431 1410 425H1450L1459 431V464H1401Z" fill="#9ca7b0" />
+    <path d="M1401 433H1450V465H1401Z" fill="#d7d6cc" />
+    <path d="M1450 433 1459 428V461L1450 465Z" fill="#687e97" />
+    <path d="M1399 430H1452V434H1399Z" fill="#f5f0e6" />
+    <path d="M1405 441H1445V449H1405Z" fill="#293f5a" />
+    <path d="M1412 441V449M1421 441V449M1430 441V449M1439 441V449" stroke="#a7b0b7" stroke-width="1" />
+    <path d="M1405 452H1428V454H1405Z" fill="#b8beb8" />
+    <path d="M1435 454H1444V465H1435Z" fill="#677c94" />
+    <path d="M1437 456H1442V465H1437Z" fill="#314967" />
+    <path d="M1400 465H1460V469H1400Z" fill="#8797a8" />
+
+    <!-- Tracking dish and its mechanical support. -->
+    <path d="M1413 425 1418 409H1422L1429 425" fill="none" stroke="#6d819a" stroke-width="2" />
+    <path d="M1416 419H1426M1420 410V425" stroke="#9ba7b1" stroke-width="1.1" />
+    <path d="M1407 394Q1411 415 1430 413L1436 397Q1420 406 1407 394Z" fill="#a7b1b8" stroke="#667d97" stroke-width="1" />
+    <path d="M1407 394Q1420 405 1436 397Q1421 390 1407 394Z" fill="#f5f0e6" stroke="#7f90ab" stroke-width=".8" />
+    <path d="M1421 401 1428 390" stroke="#667d97" stroke-width="1" />
+    <circle cx="1428.5" cy="389.5" r="1.5" fill="#d2a660" />
+
+    <!-- Gantry back face, visible steel lattice, and inset maintenance lift. -->
+    <path d="M1520 290 1528 285H1546V459H1520Z" fill="#60758e" />
+    <path d="M1540 292 1546 287V459H1540Z" fill="#203b5a" />
+    <path d="M1520 292H1540V459H1520Z" fill="url(#bb-tower)" />
+    <path d="M1523 296H1537V454H1523Z" fill="#a8b1b7" opacity=".12" />
+    <path d="M1521 292V459M1539 292V459" stroke="#a7b0b6" stroke-width="2" />
+    {[296, 324, 352, 380, 408, 436].map((y) => (
+      <g fill="none" stroke="#8d9bad" stroke-width="1">
+        <path d={`M1522 ${y}H1538M1522 ${y} 1538 ${y + 27}M1538 ${y} 1522 ${y + 27}`} />
+      </g>
+    ))}
+    <path d="M1530 301V451M1533 301V451" stroke="#0a1f44" stroke-width=".7" opacity=".6" />
+    <path d="M1527 362H1536V379H1527Z" fill="#bac1c2" />
+    <path d="M1529 364H1534V371H1529Z" fill="#243f5c" />
+    <path d="M1517 288H1543V293H1517Z" fill="#b5babe" />
+    <path d="M1517 285V288M1523 285V288M1529 285V288M1535 285V288M1542 285V288M1517 285H1542" fill="none" stroke="#7f90ab" stroke-width=".8" />
+    <path d="M1538 285V276" stroke="#637993" stroke-width="1" />
+    <circle class="bb-warning bb-motion" cx="1538" cy="275" r="2.1" fill="#bb775b" />
+    <circle cx="1538" cy="275" r=".7" fill="#f5d6ad" />
+
+    <!-- Articulated service arms behind the launch vehicle. -->
+    <g fill="none" stroke-linejoin="round">
+      <path d="M1521 312H1501V317H1521M1521 352H1503V357H1521M1521 392H1506V397H1521" stroke="#a9b2b7" stroke-width="2" />
+      <path d="M1520 319 1508 312M1520 359 1508 352M1520 399 1509 392" stroke="#667f99" stroke-width="1.2" />
+      <path d="M1501 313V324M1503 353V365M1506 393V407" stroke="#c39b63" stroke-width="1.6" />
+    </g>
+
+    <!-- Multi-stage vehicle, shaded in narrow bands, with no real-world insignia. -->
+    <path d="M1485 288C1485 278 1490 269 1493 265C1497 270 1502 278 1502 288Z" fill="url(#bb-vehicle)" stroke="#7f90ab" stroke-width=".7" />
+    <path d="M1485 288H1502V339H1485Z" fill="url(#bb-vehicle)" stroke="#7f90ab" stroke-width=".7" />
+    <path d="M1485 289H1502V293H1485Z" fill="#bdc4c7" />
+    <path d="M1485 318H1502V322H1485Z" fill="#314d6b" />
+    <path d="M1485 337H1502L1506 345V430L1501 438H1485L1481 430V345Z" fill="url(#bb-vehicle)" stroke="#71869d" stroke-width=".8" />
+    <path d="M1482 345H1505M1482 350H1505M1482 395H1505M1482 400H1505M1482 427H1505" stroke="#8192a6" stroke-width=".8" />
+    <path d="M1483 361H1504V371H1483Z" fill="#0a1f44" opacity=".86" />
+    <path d="M1487 351V358M1487 376V391M1487 405V421" stroke="#f5f0e6" stroke-width="1.3" opacity=".8" />
+    <path d="M1499 297V312M1499 326V333" stroke="#8598ae" stroke-width=".8" />
+    <path d="M1485 438H1501L1504 446H1482Z" fill="#273f59" />
+    <path d="M1487 439H1499L1501 444H1485Z" fill="#6c7e91" />
+    <path d="M1482 419 1475 437 1482 434M1505 419 1512 437 1505 434" fill="#7f90ab" stroke="#546c86" stroke-width=".8" />
+
+    <!-- Paired strap-on boosters and their small nozzle bells. -->
+    {[1476, 1505].map((x) => (
+      <g>
+        <path d={`M${x} 359q0-13 4-19q4 6 4 19v72h-8z`} fill="url(#bb-vehicle)" stroke="#6c829b" stroke-width=".7" />
+        <path d={`M${x} 366h8v5h-8zM${x} 407h8v4h-8z`} fill="#546d88" />
+        <path d={`M${x + 1} 431h6l2 8h-10z`} fill="#324b66" />
+        <path d={`M${x + 2} 376v25`} stroke="#f5f0e6" stroke-width="1.1" />
+      </g>
+    ))}
+    <path d="M1483 376H1486M1502 376H1505M1483 414H1486M1502 414H1505" stroke="#d2a660" stroke-width="1.5" />
+
+    <!-- Flame trench, service pipes, and the heavy concrete launch deck. -->
+    <path d="M1469 446H1517V454H1469Z" fill="#bfc2bc" />
+    <path d="M1473 449H1513V458H1473Z" fill="#213a56" />
+    <path d="M1481 450H1505V457H1481Z" fill="#0a1f44" />
+    <path d="M1465 456H1556L1566 463H1460Z" fill="#c4c7bf" />
+    <path d="M1460 463H1566V469H1460Z" fill="#8595a4" />
+    <path d="M1461 463H1566" stroke="#f5f0e6" stroke-width="1" />
+    <path d="M1514 442H1520V456M1517 447H1532V456M1544 455H1561V460" fill="none" stroke="#b59466" stroke-width="2" />
+    <path d="M1453 461H1463V453H1472M1546 458H1570V450H1563V442" fill="none" stroke="#607b98" stroke-width="2.2" />
+    <path d="M1454 466H1474M1547 466H1561" stroke="#0a1f44" stroke-width=".8" opacity=".3" />
+    <path d="M1555 432H1568V456H1555Z" fill="#b7bdb8" />
+    <path d="M1555 432 1559 428H1572L1568 432Z" fill="#e5dfd1" />
+    <path d="M1568 432 1572 428V452L1568 456Z" fill="#7f90ab" />
+    <path d="M1558 438H1565M1558 441H1565M1558 444H1565" stroke="#6b8097" stroke-width="1" />
+    <path d="M1463 454V447M1459 454V447M1459 447H1463" fill="none" stroke="#b59466" stroke-width=".9" />
+  </g>
+</g>
+
+<style>
+  .bb-flag {
+    transform-box: view-box;
+    transform-origin: 1283px 352px;
+    animation: bb-flag-wave 8s ease-in-out infinite;
+  }
+
+  .bb-signal {
+    animation: bb-signal-travel 12s linear infinite;
+  }
+
+  .bb-warning {
+    animation: bb-warning-breathe 7s ease-in-out infinite;
+  }
+
+  :global([data-bridge]:not([data-ready])) .bb-motion,
+  :global([data-bridge][data-paused]) .bb-motion,
+  :global([data-bridge][data-in-view='false']) .bb-motion {
+    animation-play-state: paused;
+  }
+
+  @keyframes bb-flag-wave {
+    0%, 100% { transform: skewY(0deg) scaleX(1); }
+    50% { transform: skewY(3deg) scaleX(.94); }
+  }
+
+  @keyframes bb-signal-travel {
+    to { stroke-dashoffset: -54; }
+  }
+
+  @keyframes bb-warning-breathe {
+    0%, 100% { opacity: .5; }
+    50% { opacity: .9; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bb-motion {
+      animation: none;
+    }
+  }
+</style>

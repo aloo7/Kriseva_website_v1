@@ -123,7 +123,7 @@ const specs = [
             <p class="cd__foot">TAS proposes. Your bid team decides and submits.</p>
           </article>
 
-          <aside class="src" aria-label="The tender clauses behind each reason">
+          <div class="src" role="group" aria-label="The tender clauses behind each reason">
             <p class="mono src__k">The tender, as TAS read it</p>
             <div class="src__doc">
               {s.reasons.map((r, ri) => (
@@ -141,7 +141,7 @@ const specs = [
               <span class="src__line" style="--w:46%"></span>
             </div>
             <p class="src__note">The numbers on the card point to the lines highlighted here.</p>
-          </aside>
+          </div>
         </div>
       ))}
     </div>

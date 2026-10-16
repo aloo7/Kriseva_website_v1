@@ -1,20 +1,9 @@
 ---
-// Home: the bridge. Hero (scroll-built bridge), the span, the two pillars,
-// one finding up close, tender to award, sovereignty, proof, plans, FAQ.
+// A short first pass: understand the gap, see the crossing, choose a side.
 import SiteLayout from '../layouts/SiteLayout.astro';
 import BridgeHero from '../components/site/home/BridgeHero.astro';
-import SpanBand from '../components/site/home/SpanBand.astro';
-import Pillars from '../components/site/home/Pillars.astro';
-import FindingZoom from '../components/site/home/FindingZoom.astro';
-import TenderToAward from '../components/site/home/TenderToAward.astro';
-import Sovereign from '../components/site/home/Sovereign.astro';
-import ExhibitA from '../components/site/home/ExhibitA.astro';
-import PlansTeaser from '../components/site/home/PlansTeaser.astro';
-import Faq from '../components/site/Faq.astro';
-import { faqs } from '../data/faq';
-import { SITE, faqSchema } from '../data/kriseva';
+import { SITE } from '../data/kriseva';
 
-const homeFaqs = faqs.slice(0, 8);
 const website = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -26,18 +15,11 @@ const website = {
 ---
 <SiteLayout
   title="Kriseva | AI for defence and space procurement in India"
-  description="Kriseva builds the bridge between India's defence and space suppliers and the government buyers who evaluate them. TAS finds and answers tenders across GeM, CPPP, ISRO and defence portals; Evaluator checks every bid with the page behind every finding. Runs on your premises."
+  description="The bridge between defence and space suppliers and government procurement. TAS helps suppliers prepare. Evaluator helps committees review. Evidence crosses. People decide."
   path="/"
   overlayHeader
-  schema={[website, faqSchema(homeFaqs)]}
+  compactFooter
+  schema={[website]}
 >
   <BridgeHero />
-  <SpanBand />
-  <Pillars />
-  <FindingZoom />
-  <TenderToAward />
-  <Sovereign />
-  <ExhibitA />
-  <PlansTeaser />
-  <Faq items={homeFaqs} />
 </SiteLayout>
