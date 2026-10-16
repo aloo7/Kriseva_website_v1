@@ -1,6 +1,6 @@
 # Kriseva public website
 
-Astro static pages with local fonts, custom SVG artwork, scoped CSS and small TypeScript controllers. There is no additional animation or 3D runtime dependency.
+Astro static pages with local fonts, original SVG artwork and TypeScript controllers. The homepage uses local MP4 files and native video controls. Motion 14.3.0 and Paper Shaders 0.0.81 load only on the optional interactive bridge route.
 
 ## Development
 
@@ -16,6 +16,8 @@ npm run qa
 npm run preview -- --host 127.0.0.1 --port 4322
 ```
 
+Do not replace an existing preview listener without checking ownership.
+
 ## Verification
 
 ```sh
@@ -24,20 +26,22 @@ npm run lint:css
 npm run qa
 npx playwright install chromium firefox webkit
 npm run qa:experience
-```
-
-The experience suite runs the production build in Chromium, Firefox and WebKit. It covers the bridge controls, keyboard and touch layouts, navigation focus, text enlargement, reduced motion, JavaScript-free content, accessibility, contact draft recovery and mocked form outcomes. It does not send real contact messages.
-
-With production preview running on port 4322, check all 12 routes at 14 viewport configurations and verify internal links:
-
-```sh
 npm run qa:reflow
+node scripts/capture-mobile-motion.mjs
 ```
 
-The JSON result is saved to `output/playwright/reflow-results.json`. Runtime browser artifacts are ignored by Git. Latest visual evidence and the verification report are in `../docs/compact-home-evidence/` and `../docs/COMPACT_HOME_QA_2026-10-16.md`.
+The experience suite checks the production build in Chromium, Firefox and WebKit: film playback and seeking, rotation, video failures, mobile sizing, bridge controls, WebGL failure, reduced motion, keyboard navigation, enlarged text, JavaScript-free content, accessibility and mocked contact outcomes. Software-GPU integration runs once in Chromium. Unsupported Firefox mobile emulation cases are explicitly skipped. Tests do not send real contact messages.
 
-## Bridge components
+The reflow check covers all 13 routes at 14 viewport configurations and internal links. Runtime artifacts live in ignored `output/playwright/`. Curated screenshots, measurements and the final report live in `../docs/mobile-motion-evidence/` and `../docs/MOBILE_MOTION_QA_2026-10-16.md`.
 
-`BridgeHero.astro` owns the compact first-page story, responsive frame and controls. `HomeNextStep.astro` provides direct product paths; `HomeFooter.astro` is the short homepage footer. Other routes retain the full footer. `home/bridge/BridgeScene.astro` owns the bridge structure; `BridgeSuppliers.astro` and `BridgeBuyers.astro` own the detailed shores. `src/scripts/bridge.ts` drives construction tracks, playback, focus views, live motion preferences and visibility suspension.
+Browser emulation is not physical-device verification. A real Android browser desktop-site toggle, iPhone rotation and mobile browser chrome remain manual review items.
 
-The complete bridge and explanation render without JavaScript. Ambient motion starts only when accessible controls are ready. Reduced motion shows the finished diagram; visitors can still inspect each focus view and read every story step.
+## Homepage and bridge
+
+`HomeStory.astro` owns the concise homepage. `home-film.ts` selects the portrait or wide MP4, preserves the playhead across source changes, supports explicit chapter selection and pauses hidden/offscreen playback. `preload="none"` avoids a video download until interaction. A transcript and the two product paths remain usable when playback fails or JavaScript is disabled.
+
+`/bridge` uses `BridgeHero.astro`, the original detailed SVG shores and structure, and `bridge.ts` for camera and story control. `crossing-atmosphere.ts` adds one optional low-power shader with a pixel cap and permanent SVG fallback after context loss. The main homepage does not load the bridge animation packages.
+
+`phone-layout.js` and `phone-layout.css` apply only to the home and bridge pages. They compensate for a small touch screen receiving an unusually wide layout viewport, without changing zoom or disabling user text enlargement.
+
+Public distribution licenses are in `public/licenses/`. The editable film, local assets and deterministic render commands live in `../videos/kriseva-explainer/`.

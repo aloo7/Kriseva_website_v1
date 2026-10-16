@@ -1,14 +1,18 @@
 <div class="wrap home-end">
   <nav class="home-paths" id="pillars" aria-label="Choose your next step" data-quick-copy>
     <a href="/tas" class="home-paths__link">
-      <span class="mono home-paths__for">For suppliers</span>
-      <strong>TAS <span aria-hidden="true">&rarr;</span></strong>
-      <span class="home-paths__detail">Find tenders. Prepare your bid.</span>
+      <span class="home-paths__copy">
+        <span class="home-paths__heading"><strong>TAS</strong><span class="home-paths__for">For suppliers</span></span>
+        <span class="home-paths__detail">Find tenders. Prepare your bid.</span>
+      </span>
+      <span class="home-paths__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
     </a>
     <a href="/evaluator" class="home-paths__link">
-      <span class="mono home-paths__for">For buyers</span>
-      <strong>Evaluator <span aria-hidden="true">&rarr;</span></strong>
-      <span class="home-paths__detail">Check evidence. Review bids.</span>
+      <span class="home-paths__copy">
+        <span class="home-paths__heading"><strong>Evaluator</strong><span class="home-paths__for">For buyers</span></span>
+        <span class="home-paths__detail">Check evidence. Review bids.</span>
+      </span>
+      <span class="home-paths__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 12h14m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
     </a>
   </nav>
   <div class="home-boundary">
@@ -17,25 +21,26 @@
   </div>
 </div>
 <style>
-  .home-end { padding-bottom: .4rem; }
-  .home-paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); background: var(--navy); color: var(--on-navy); }
-  .home-paths__link { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: .2rem 1.25rem; padding: .85rem 1.5rem; text-decoration: none; transition: background .2s; }
-  .home-paths__link + .home-paths__link { border-left: 1px solid var(--line-navy); }
-  .home-paths__link:hover { background: var(--navy-2); }
-  .home-paths__link:focus-visible { outline-offset: -4px; }
-  .home-paths__for { grid-column: 1 / -1; color: var(--brass-light); font-size: .5625rem; }
-  .home-paths__link strong { font-family: var(--f-serif); font-size: 1.5rem; font-weight: 400; }
-  .home-paths__link strong span { display: inline-block; color: var(--brass-light); margin-left: .35rem; transition: transform .2s; }
-  .home-paths__link:hover strong span { transform: translateX(4px); }
-  .home-paths__detail { color: var(--on-navy-2); font-size: .875rem; justify-self: end; }
-  .home-boundary { display: flex; align-items: center; justify-content: space-between; gap: .5rem 1rem; padding-top: .2rem; color: var(--ink-3); font-size: .6875rem; }
-  .home-boundary a { display: inline-flex; min-height: 44px; align-items: center; gap: .5rem; color: var(--ink-2); text-underline-offset: 4px; }
-  @media (width <= 1100px) { .home-paths__link { grid-template-columns: 1fr; gap: .1rem; } .home-paths__detail { justify-self: start; } }
+  .home-end { padding-top: .25rem; padding-bottom: .75rem; }
+  .home-paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: .75rem; color: var(--ink); }
+  .home-paths__link { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; min-height: 88px; padding: 1rem 1.25rem; background: #fff; border: 1px solid rgb(10 31 68 / 12%); border-radius: 16px; text-decoration: none; transition: border-color .25s, background-color .25s, box-shadow .25s; }
+  .home-paths__link:hover { background: #fbfdff; border-color: rgb(45 111 217 / 45%); box-shadow: 0 6px 24px rgb(10 31 68 / 5%); }
+  .home-paths__link:focus-visible { outline: 2px solid #2869cc; outline-offset: 3px; }
+  .home-paths__copy { min-width: 0; }
+  .home-paths__heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: .2rem .65rem; }
+  .home-paths__link strong { font-family: var(--f-sans); font-size: 1.5rem; font-weight: 600; line-height: 1.25; letter-spacing: -.035em; }
+  .home-paths__for { color: var(--ink-3); font-size: .875rem; line-height: 1.4; }
+  .home-paths__detail { display: block; margin-top: .25rem; color: var(--ink-2); font-size: .9375rem; line-height: 1.4; }
+  .home-paths__arrow { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: #2363bd; background: #edf4ff; transition: background-color .25s, transform .25s var(--ease); }
+  .home-paths__link:hover .home-paths__arrow { background: #e1edff; transform: translateX(3px); }
+  .home-boundary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 1rem; padding-top: .5rem; color: var(--ink-3); font-size: .875rem; line-height: 1.5; }
+  .home-boundary a { display: inline-flex; min-height: 48px; align-items: center; gap: .5rem; color: var(--ink); text-underline-offset: 4px; }
   @media (width <= 700px) {
-    .home-paths__link { padding: .7rem .85rem; gap: .15rem; }
-    .home-paths__link strong { font-size: 1.25rem; }
-    .home-paths__detail { font-size: .875rem; line-height: 1.4; }
-    .home-boundary { font-size: .625rem; }
+    .home-end { padding-top: .15rem; padding-bottom: .5rem; }
+    .home-paths { gap: .625rem; }
+    .home-paths__link { padding: .875rem 1rem; border-radius: 14px; }
+    .home-paths__link strong { font-size: 1.375rem; }
+    .home-paths__detail { font-size: .875rem; }
+    .home-boundary { padding-top: .625rem; gap: 0 .75rem; }
   }
-  @media (width <= 380px) { .home-paths__link strong { font-size: 1.125rem; } .home-paths__link strong span { margin-left: 0; } }
 </style>

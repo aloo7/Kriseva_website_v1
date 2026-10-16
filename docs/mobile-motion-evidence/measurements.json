@@ -1,0 +1,52 @@
+[
+  {
+    "name": "phone",
+    "width": 390,
+    "height": 664,
+    "screenWidth": 390,
+    "pageWidth": 390,
+    "pageHeight": 1381,
+    "rootFont": "16px",
+    "comfort": false
+  },
+  {
+    "name": "narrow",
+    "width": 320,
+    "height": 568,
+    "screenWidth": 320,
+    "pageWidth": 320,
+    "pageHeight": 1405,
+    "rootFont": "16px",
+    "comfort": false
+  },
+  {
+    "name": "landscape",
+    "width": 844,
+    "height": 390,
+    "screenWidth": 844,
+    "pageWidth": 844,
+    "pageHeight": 931,
+    "rootFont": "16px",
+    "comfort": false
+  },
+  {
+    "name": "desktop",
+    "width": 1440,
+    "height": 900,
+    "screenWidth": 1440,
+    "pageWidth": 1440,
+    "pageHeight": 1428,
+    "rootFont": "16px",
+    "comfort": false
+  },
+  {
+    "name": "phone-wide",
+    "width": 980,
+    "height": 2130,
+    "screenWidth": 393,
+    "pageWidth": 980,
+    "pageHeight": 3558,
+    "rootFont": "39.8982px",
+    "comfort": true
+  }
+]

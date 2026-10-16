@@ -14,11 +14,11 @@ const views = [
   { id: 'buyers', name: 'Buyers' },
 ];
 ---
-<section class="hero" data-bridge data-quick-home data-stage="2" aria-labelledby="hero-title">
+<section class="hero" data-bridge data-quick-home data-stage="2" data-camera="bridge" aria-labelledby="hero-title">
   <div class="hero__intro wrap">
     <div>
       <p class="eyebrow">Defence and space · India</p>
-      <h1 id="hero-title" class="display" data-quick-copy>From paperwork<br /> <em>to proof.</em></h1>
+      <h1 id="hero-title" data-quick-copy>From paperwork<br /> <em>to proof.</em></h1>
     </div>
     <div class="hero__side">
       <p data-quick-copy>Kriseva is the bridge between defence and space suppliers and government procurement.</p>
@@ -31,7 +31,7 @@ const views = [
   <div class="crossing wrap">
     <div class="crossing__frame">
       <div class="crossing__topline">
-        <p class="mono"><span class="crossing__dot" aria-hidden="true"></span> The Kriseva crossing</p>
+        <p class="mono"><span class="crossing__dot" aria-hidden="true"></span> The crossing</p>
       <div class="crossing__playback" data-bridge-controls hidden>
         <button type="button" class="crossing__play" data-play-story aria-controls="bridge-canvas">
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m9 5 11 7-11 7Z" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
@@ -42,14 +42,19 @@ const views = [
       </div>
       </div>
       <div class="crossing__canvas" id="bridge-canvas">
+        <div class="crossing__atmosphere" data-atmosphere aria-hidden="true"></div>
         <div class="crossing__grid" aria-hidden="true"></div>
         <BridgeScene />
         <span class="crossing__coordinate crossing__coordinate--l mono" aria-hidden="true">01 / SUPPLY</span>
         <span class="crossing__coordinate crossing__coordinate--r mono" aria-hidden="true">02 / PROCUREMENT</span>
+      <div class="crossing__labels" aria-hidden="true">
+          <span><span class="crossing__label-dot"></span><strong>TAS</strong><span>Suppliers</span></span>
+          <span><span class="crossing__label-dot crossing__label-dot--buyer"></span><strong>Evaluator</strong><span>Buyers</span></span>
+        </div>
       </div>
       <div class="crossing__toolbar" data-bridge-controls hidden>
         <div class="crossing__views" role="group" aria-label="Explore the illustration">
-          {views.map((view, i) => <button type="button" class="crossing__view" data-view={view.id} aria-pressed={i === 0 ? 'true' : 'false'} aria-controls="bridge-canvas">{view.name}</button>)}
+          {views.map((view) => <button type="button" class="crossing__view" data-view={view.id} aria-pressed={view.id === 'bridge' ? 'true' : 'false'} aria-controls="bridge-canvas">{view.name}</button>)}
         </div>
         <button class="crossing__motion" type="button" data-motion-toggle aria-pressed="false">
           <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="M5 3v10M11 3v10" fill="none" stroke="currentColor" stroke-width="2" /></svg>
@@ -79,166 +84,101 @@ const views = [
 
 <style>
   .hero { position: relative; background: var(--paper); padding-top: var(--header-h); }
-  .hero__intro { display: grid; grid-template-columns: minmax(0, 2.35fr) minmax(0, 1fr); gap: clamp(2rem, 6vw, 7rem); align-items: end; padding-block: clamp(2.5rem, 5vw, 5rem) clamp(2rem, 3.4vw, 3.6rem); }
-  .hero__intro .eyebrow { margin-bottom: 1.2rem; }
-  .hero__intro h1 { font-size: clamp(2.25rem, 3.9vw, 4.5rem); line-height: 1.06; letter-spacing: -.035em; max-width: 17ch; }
-  .hero__intro h1 em { color: var(--red); }
-  .hero__word { text-decoration: underline; text-decoration-color: var(--brass); text-decoration-thickness: .07em; text-underline-offset: .1em; }
-  .hero__side p { font-size: clamp(1rem, 1.15vw, 1.13rem); line-height: 1.65; color: var(--ink-2); }
-  .hero__side strong { color: var(--navy); font-weight: 600; }
-  .hero__ctas { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1.5rem; margin-top: 1.4rem; }
-  .hero__product-link { display: inline-flex; gap: .75rem; align-items: center; min-height: 44px; font-size: .9rem; text-underline-offset: 5px; }
-  .hero__product-link:hover { text-decoration: underline; }
-  .crossing { padding-bottom: 3.5rem; }
-  .crossing__frame { border: 1px solid var(--line); position: relative; background: #f8f5ee; scroll-margin-top: calc(var(--header-h) + 1rem); }
-  .crossing__topline { flex-wrap: wrap; position: relative; min-height: 52px; padding: .65rem 1.3rem; display: flex; justify-content: space-between; align-items: center; gap: .5rem 1rem; border-bottom: 1px solid var(--line); }
-  .crossing__topline > .mono { display: flex; align-items: center; gap: .65rem; font-size: .6875rem; color: var(--navy); }
-  .crossing__dot { width: 6px; height: 6px; background: var(--brass-ink); border-radius: 50%; }
-  .crossing__note { font-size: .75rem; color: var(--ink-3); }
-  .crossing__canvas { position: relative; height: clamp(360px, 44vw, 670px); overflow: hidden; isolation: isolate; }
+  .hero .wrap { padding-inline: var(--home-gutter, var(--gutter)); }
+  .hero__intro { display: grid; grid-template-columns: var(--home-columns, minmax(0, 1.2fr) minmax(0, .8fr)); align-items: end; gap: 2rem; padding-block: 2.5rem 2rem; }
+  .hero__intro .eyebrow { font-size: .6875rem; letter-spacing: .1em; color: #536681; margin-bottom: .9rem; }
+  .hero__intro h1 { font-family: var(--f-sans); font-size: clamp(3rem, 5.5vw, 5.25rem); font-weight: 500; line-height: .98; letter-spacing: -.065em; overflow-wrap: anywhere; }
+  .hero__intro h1 em { color: #2c61ac; font-style: normal; }
+  .hero__side { display: grid; justify-items: start; gap: 1.1rem; padding-bottom: .1rem; }
+  .hero__side p { max-width: 36ch; font-size: 1.0625rem; line-height: 1.5; color: var(--ink-2); }
+  .hero__ctas .btn { min-height: 48px; border-radius: 999px; font-family: var(--f-sans); font-size: .875rem; letter-spacing: 0; text-transform: none; padding: .75rem 1.25rem; }
+  .crossing__frame { position: relative; overflow: hidden; border: 1px solid #d5deeb; border-radius: 22px; background: #f0f5fb; box-shadow: 0 14px 40px -28px rgb(10 31 68 / 35%); scroll-margin-top: calc(var(--header-h) + .75rem); }
+  .crossing__topline { position: relative; display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; min-height: 56px; padding: .35rem 1.25rem; z-index: 3; }
+  .crossing__topline > .mono { display: flex; align-items: center; gap: .6rem; font-family: var(--f-sans); font-size: .8125rem; letter-spacing: 0; text-transform: none; font-weight: 500; }
+  .crossing__dot { width: 6px; height: 6px; border-radius: 50%; background: #2c61ac; box-shadow: 0 0 0 4px rgb(44 97 172 / 8%); }
+  .crossing__playback { display: flex; align-items: center; gap: .65rem; }
+  .crossing__play { display: inline-flex; align-items: center; gap: .5rem; min-height: 48px; font-size: .8125rem; padding: .25rem .15rem; color: #204d8a; }
+  .crossing__play:hover { color: var(--navy); }
+  .crossing__duration { font-size: .625rem; color: #586d8b; letter-spacing: 0; }
+  .crossing__progress { height: 2px; background: #d9e4f2; position: absolute; bottom: 0; inset-inline: 1.25rem; }
+  .crossing__progress span { display: block; height: 100%; background: #2c61ac; transform: scaleX(1); transform-origin: left; }
+  .crossing__canvas { position: relative; height: clamp(20rem, 39vw, 29rem); overflow: hidden; isolation: isolate; }
   .crossing__canvas :global(svg.bridge) { position: relative; z-index: 1; }
-  .crossing__grid { position: absolute; inset: 0; background-image: linear-gradient(rgb(10 31 68 / 3.5%) 1px, transparent 1px), linear-gradient(90deg, rgb(10 31 68 / 3.5%) 1px, transparent 1px); background-size: 32px 32px; mask-image: linear-gradient(transparent, #000 18%, #000 85%, transparent); }
-  .crossing__coordinate { position: absolute; top: 1.25rem; font-size: .5625rem; letter-spacing: .12em; color: var(--ink-3); z-index: 2; pointer-events: none; }
-  .crossing__coordinate--l { left: 1.3rem; }
-  .crossing__coordinate--r { right: 1.3rem; }
-  .crossing__toolbar { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .65rem 1rem; background: var(--paper); border-top: 1px solid var(--line); }
-  .crossing__views { display: flex; flex-wrap: wrap; gap: .25rem; }
-  .crossing__view { border: 1px solid transparent; padding: .55rem .9rem; min-height: 44px; background: transparent; font-size: .8125rem; color: var(--ink-2); cursor: pointer; transition: background .2s, color .2s; }
-  .crossing__view:hover { background: rgb(10 31 68 / 5%); color: var(--navy); }
-  .crossing__view[aria-pressed="true"] { color: var(--paper); background: var(--navy); border-color: var(--navy); }
-  .crossing__motion { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .5rem .6rem; min-height: 44px; border: 1px solid var(--line); background: transparent; color: var(--ink-2); font-size: .75rem; cursor: pointer; white-space: nowrap; }
-  .crossing__motion:hover { background: rgb(10 31 68 / 5%); }
-  .crossing__view-description { border-top: 1px solid var(--line); padding: .7rem 1.25rem; font-size: .8125rem; line-height: 1.5; color: var(--ink-2); }
-  .crossing__story { display: grid; grid-template-columns: minmax(190px, 1fr) minmax(0, 2.6fr); gap: clamp(1.5rem, 3vw, 3rem); padding-top: 1.8rem; align-items: center; }
-  .crossing__steps { display: grid; }
-  .crossing__step { display: flex; gap: .7rem; align-items: center; text-align: left; width: 100%; min-height: 44px; border: 0; border-bottom: 1px solid var(--line); color: var(--ink-3); background: none; font-size: .875rem; padding: .5rem 0; cursor: pointer; }
-  .crossing__step[aria-pressed="true"] { color: var(--navy); }
-  .crossing__step-num { font-size: .625rem; color: var(--brass-ink); }
-  .crossing__step-arrow { margin-left: auto; opacity: 0; }
-  .crossing__step[aria-pressed="true"] .crossing__step-arrow, .crossing__step:hover .crossing__step-arrow { opacity: 1; }
-  .crossing__explanation { min-height: 126px; }
-  .crossing__explanation h2 { font-family: var(--f-serif); font-weight: 400; font-size: clamp(1.35rem, 1.8vw, 1.85rem); letter-spacing: -.02em; line-height: 1.2; margin-bottom: .6rem; }
-  .crossing__explanation p { color: var(--ink-2); font-size: .9rem; line-height: 1.6; max-width: 57ch; }
-  .crossing__playback { display: flex; gap: .8rem; align-items: center; padding-left: 0; }
-  .crossing__play { display: flex; align-items: center; gap: .5rem; min-height: 44px; padding: .4rem 0; background: none; border: 0; color: var(--navy); font-size: .875rem; cursor: pointer; white-space: nowrap; }
-  .crossing__play:hover { color: var(--brass-ink); }
-  .crossing__progress { height: 2px; background: var(--line); position: absolute; bottom: 0; left: 0; right: 0; }
-  .crossing__progress span { display: block; height: 100%; background: var(--brass-ink); transform: scaleX(1); transform-origin: left; }
-  .crossing__duration { font-size: .5625rem; letter-spacing: .08em; color: var(--ink-3); }
-  [hidden] { display: none !important; }
-  .hero__scale { background: var(--navy); color: var(--on-navy); padding-block: 2.4rem; }
-  .hero__scale-grid { display: grid; grid-template-columns: 1.2fr .85fr .65fr 1.3fr; gap: 2.5rem; align-items: start; }
-  .hero__scale-intro > .mono { font-size: .625rem; color: var(--brass-light); }
-  .hero__scale-intro p { font-size: .875rem; line-height: 1.5; margin-top: .75rem; }
-  .hero__scale-intro a { display: inline-flex; min-height: 44px; align-items: center; gap: .5rem; font-size: .75rem; color: var(--brass-light); text-underline-offset: 4px; }
-  .hero__scale-intro a:hover { text-decoration: underline; }
-  .hero__stat-value { font-family: var(--f-serif); font-weight: 300; font-size: clamp(1.65rem, 2.65vw, 3rem); line-height: 1.1; letter-spacing: -.03em; }
-  .hero__stat-label { font-size: .8125rem; line-height: 1.5; color: var(--on-navy-2); margin-top: .6rem; }
-  .hero__stat-source { color: var(--brass-light); font-size: .5rem; line-height: 1.7; margin-top: .55rem; }
-  @media (width >= 1800px) { .crossing__canvas { height: 670px; } }
-  @media (width <= 1080px) {
-    .hero__intro { grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr); gap: 2rem; }
-    .hero__intro h1 { font-size: clamp(2rem, 4.7vw, 3.5rem); }
-    .crossing__story { grid-template-columns: 1fr 2fr; }
-
-
-    .hero__scale-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-  }
-  @media (width <= 700px) {
-    .hero__intro { grid-template-columns: 1fr; gap: 1.25rem; padding-top: 2rem; padding-bottom: 1.75rem; }
-    .hero__intro h1 { font-size: clamp(2.1rem, 7.8vw, 3.5rem); max-width: 19ch; }
-    .hero__intro .eyebrow { font-size: .5625rem; letter-spacing: .12em; margin-bottom: 1rem; }
-    .hero__side p { font-size: .9375rem; line-height: 1.5; }
-
-    .hero__ctas { margin-top: 1rem; }
-    .hero__ctas .btn { min-height: 48px; }
-    .hero__product-link { font-size: .8125rem; }
-    .crossing { padding-bottom: 2rem; }
-    .crossing__topline { padding: .6rem .75rem; min-height: 44px; gap: .5rem; }
-    .crossing__topline > .mono { font-size: .5625rem; letter-spacing: .08em; }
-    .crossing__note { display: none; }
-    .crossing__canvas { height: clamp(260px, 72vw, 400px); }
-    .crossing__coordinate { display: none; }
-    .crossing__toolbar { padding: .5rem; flex-wrap: wrap; }
-    .crossing__views { flex: 1; flex-wrap: nowrap; width: 100%; }
-    .crossing__view { flex: 1; padding: .5rem .45rem; font-size: .6875rem; white-space: nowrap; }
-    .crossing__motion { margin-left: auto; min-height: 44px; font-size: .6875rem; }
-    .crossing__view-description { padding: .65rem .75rem; font-size: .75rem; }
-    .crossing__story { grid-template-columns: 1fr; gap: 1.2rem; padding-top: 1rem; }
-    .crossing__steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
-    .crossing__step { flex-direction: column; gap: .3rem; align-items: flex-start; justify-content: flex-start; font-size: .75rem; padding-bottom: .7rem; }
-    .crossing__step[aria-pressed="true"] { border-bottom-color: var(--brass-ink); }
-    .crossing__step-arrow { display: none; }
-    .crossing__explanation { min-height: 146px; }
-    .crossing__explanation h2 { font-size: 1.5rem; }
-    .crossing__explanation p { font-size: .875rem; }
-    .crossing__playback { padding: 0; gap: .25rem; }
-    .crossing__play { font-size: .6875rem; gap: .25rem; }
-    .crossing__duration { display: none; }
-    .hero__scale-grid { gap: 1.8rem 1.25rem; }
-    .hero__scale-intro { grid-column: 1 / -1; }
-    .hero__scale-intro p br { display: none; }
-    .hero__stat:last-child { grid-column: 1 / -1; border-top: 1px solid rgb(245 240 230 / 15%); padding-top: 1.5rem; }
-    .hero__stat-value { font-size: 2rem; }
-  }
-  @media (height <= 500px) and (width >= 701px) {
-    .hero__intro { padding-top: 1.75rem; }
-    .hero__intro h1 { font-size: 2.5rem; }
-    .crossing__canvas { height: 400px; }
-  }
-  @media (prefers-reduced-motion: reduce) { .crossing__playback { display: none; } }
-
-  /* Compact first pass: the complete story fits a short visit. */
-  .hero__intro { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 2rem; padding-block: 1.6rem 1.4rem; }
-  .hero__intro .eyebrow { margin-bottom: .65rem; }
-  .hero__intro h1 { font-size: clamp(2.4rem, 4vw, 3.7rem); overflow-wrap: anywhere; line-height: .99; letter-spacing: -.035em; max-width: none; }
-  .hero__side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 1rem 1.4rem; }
-  .hero__side p { max-width: 30ch; font-size: .9375rem; line-height: 1.5; }
-  .hero__ctas { margin-top: 0; flex: none; }
-  .crossing { padding-bottom: 0; }
-  .crossing__topline { min-height: 46px; padding: .2rem 1rem; }
-  .crossing__canvas { height: clamp(280px, 39vw, 440px); }
+  .crossing__atmosphere { position: absolute; inset: 0; background: radial-gradient(ellipse at 40% 20%, #dbeaff, transparent 65%), linear-gradient(135deg, #f3f7fc, #e5edf8); opacity: .65; }
+  .crossing__atmosphere :global(canvas) { width: 100%; height: 100%; opacity: .75; }
+  .crossing__grid { position: absolute; inset: 0; background-image: radial-gradient(#87a0c3 0.65px, transparent 0.65px); background-size: 24px 24px; opacity: .15; mask-image: linear-gradient(transparent, #000 35%, transparent); }
   .crossing__coordinate { display: none; }
-  .crossing__toolbar { padding: .25rem .5rem; }
-  .crossing__view { padding: .4rem .8rem; font-size: .75rem; }
-  .crossing__motion { padding: .4rem .6rem; font-size: .6875rem; }
-  .crossing__story { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2rem; padding-block: .9rem; }
-  .crossing__steps { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
-  .crossing__step { gap: .5rem; font-size: .8125rem; padding: .4rem 0; }
-  .crossing__step[aria-pressed="true"] { border-bottom-color: var(--brass-ink); }
+  .crossing__labels { position: absolute; bottom: 1rem; inset-inline: 1rem; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; pointer-events: none; }
+  .crossing__labels > span { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .75rem; background: rgb(255 255 255 / 94%); border: 1px solid #d9e2ee; border-radius: 999px; color: #445c7c; font-size: .8125rem; box-shadow: 0 3px 12px rgb(10 31 68 / 4%); }
+  .crossing__labels strong { color: var(--navy); font-weight: 600; }
+  .crossing__label-dot { width: 5px; height: 5px; border-radius: 50%; background: #315f9e; }
+  .crossing__label-dot--buyer { background: #95722c; }
+  .crossing__toolbar { display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: .5rem .75rem; background: #fff; border-top: 1px solid #dbe3ef; }
+  .crossing__views { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr)); gap: .25rem; flex: 1; max-width: 32rem; }
+  .crossing__view { min-height: 48px; font-size: .875rem; line-height: 1.2; padding: .5rem .65rem; color: #526580; border-radius: 10px; transition: background .2s, color .2s; }
+  .crossing__view:hover { background: #f0f4fa; color: var(--navy); }
+  .crossing__view[aria-pressed="true"] { background: #e8effa; color: #1c4e90; font-weight: 600; }
+  .crossing__motion { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 48px; padding: .5rem .7rem; font-size: .8125rem; color: #526580; border-radius: 10px; }
+  .crossing__motion:hover { background: #f0f4fa; }
+  .crossing__view-description { padding: .75rem 1.25rem; border-top: 1px solid #dbe3ef; background: #fff; font-size: 1rem; line-height: 1.5; color: var(--ink-2); }
+  .crossing__story { display: grid; grid-template-columns: var(--home-columns, minmax(0, 1fr) minmax(0, 1.1fr)); align-items: center; gap: 2rem; padding-block: 1.4rem; }
+  .crossing__steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; }
+  .crossing__step { display: flex; align-items: center; gap: .45rem; min-height: 48px; padding: .5rem .7rem; font-size: .8125rem; line-height: 1.2; color: #5a6d87; border-radius: 12px; text-align: left; transition: background .2s, color .2s; }
+  .crossing__step-num { display: grid; place-items: center; width: 1.5rem; min-width: 1.5rem; height: 1.5rem; background: #e4eaf3; color: #4b6488; font-family: var(--f-sans); font-size: .6875rem; letter-spacing: 0; border-radius: 50%; }
+  .crossing__step[aria-pressed="true"] { background: #e7eef9; color: #173e76; }
+  .crossing__step[aria-pressed="true"] .crossing__step-num { background: #204e91; color: #fff; }
+  .crossing__step:hover { color: #173e76; }
   .crossing__step-arrow { display: none; }
-  .crossing__explanation { min-height: 68px; display: grid; align-items: center; }
-  .crossing__explanation h2 { font-size: 1.3rem; margin-bottom: .2rem; }
-  .crossing__explanation p { font-size: .8125rem; line-height: 1.5; }
-  .crossing__play { font-size: .75rem; }
-  @media (width <= 1100px) { .hero__side { display: grid; gap: .75rem; justify-content: start; } }
+  .crossing__explanation { min-height: 80px; display: grid; align-items: center; }
+  .crossing__explanation h2 { font-family: var(--f-sans); font-weight: 500; font-size: 1.4rem; line-height: 1.2; letter-spacing: -.035em; margin-bottom: .35rem; }
+  .crossing__explanation p { font-size: 1rem; line-height: 1.5; color: var(--ink-2); max-width: 48ch; }
+  [hidden] { display: none !important; }
+  :global([data-bridge][data-paused] *) { animation-play-state: paused !important; transition: none !important; }
   @media (width <= 700px) {
-    .hero__intro { grid-template-columns: 1fr; gap: .85rem; padding-block: 1.1rem; align-items: center; }
-    .hero__intro h1 { font-size: clamp(2rem, 6.5vw, 2.6rem); }
-    .hero__intro .eyebrow { font-size: .5rem; letter-spacing: .08em; margin-bottom: .6rem; }
-    .hero__side { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1rem; }
-    .hero__side p { font-size: 1rem; }
-    .hero__side .btn { padding: .65rem .8rem; }
-    .crossing__topline { padding-inline: .7rem; }
-    .crossing__topline > .mono { font-size: .5rem; letter-spacing: .08em; }
-    .crossing__play { font-size: .625rem; gap: .25rem; }
-    .crossing__canvas { height: clamp(200px, 55vw, 290px); }
-    .crossing__toolbar { flex-wrap: wrap; padding: .35rem; gap: .25rem; }
-    .crossing__views { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4.25rem), 1fr)); flex: 1; width: 100%; }
-    .crossing__view { padding: .4rem .35rem; font-size: .75rem; }
-    .crossing__motion { font-size: .625rem; }
-    .crossing__story { grid-template-columns: 1fr; gap: .65rem; padding-block: .6rem .85rem; }
-    .crossing__steps { gap: .5rem; }
-    .crossing__step { font-size: .75rem; gap: .2rem; justify-content: center; }
-    .crossing__explanation { min-height: 70px; }
-    .crossing__explanation h2 { font-size: 1.2rem; }
-    .crossing__explanation p { font-size: 1rem; }
+    .hero__intro { grid-template-columns: 1fr; gap: 1.2rem; padding-block: 1.8rem 1.5rem; }
+    .hero__intro h1 { font-size: clamp(2.8rem, 12.5vw, 4rem); }
+    .hero__intro .eyebrow { font-size: .625rem; }
+    .hero__side { gap: .9rem; }
+    .hero__side p { font-size: 1rem; max-width: 36ch; }
+    .hero__ctas .btn { min-height: 48px; }
+    .crossing__frame { border-radius: 18px; }
+    .crossing__canvas { height: 18.5rem; }
+    .crossing__topline { padding-inline: .85rem; min-height: 54px; }
+    .crossing__topline > .mono { font-size: .75rem; }
+    .crossing__play { font-size: .75rem; }
+    .crossing__duration { display: none; }
+    .crossing__labels { bottom: .75rem; inset-inline: .5rem; gap: .35rem; }
+    .crossing__labels > span { padding: .45rem .6rem; font-size: .875rem; }
+    .crossing__label-dot { display: none; }
+    .crossing__toolbar { flex-wrap: wrap; gap: .1rem; padding: .35rem; }
+    .crossing__views { flex-basis: 100%; width: 100%; max-width: none; min-width: 0; }
+    .crossing__view { padding: .5rem .2rem; font-size: .875rem; }
+    .crossing__motion { min-height: 48px; font-size: .75rem; margin-left: auto; padding: .4rem .6rem; }
+    .crossing__story { grid-template-columns: 1fr; gap: .9rem; padding-block: 1rem 1.2rem; }
+    .crossing__steps { gap: .25rem; }
+    .crossing__step { padding: .4rem .35rem; gap: .3rem; font-size: .75rem; }
+    .crossing__step-num { width: 1.3rem; min-width: 1.3rem; height: 1.3rem; font-size: .625rem; }
+    .crossing__explanation { min-height: 78px; }
+    .crossing__explanation h2 { font-size: 1.35rem; }
+  }
+  :global(html[data-phone-layout]) .hero__intro { grid-template-columns: 1fr; gap: 1.2rem; padding-block: 1.8rem 1.5rem; }
+  :global(html[data-phone-layout]) .hero__intro h1 { font-size: 3rem; }
+  :global(html[data-phone-layout]) .hero__side { justify-items: start; }
+  :global(html[data-phone-layout]) .crossing__canvas { height: 18.5rem; }
+  :global(html[data-phone-layout]) .crossing__story { grid-template-columns: 1fr; gap: .9rem; }
+  :global(html[data-phone-layout]) .crossing__toolbar { flex-wrap: wrap; }
+  :global(html[data-phone-layout]) .crossing__views { flex-basis: 100%; width: 100%; max-width: none; min-width: 0; }
+  :global(html[data-phone-layout]) .crossing__duration { display: none; }
+  @media (height <= 500px) and (width >= 701px) {
+    .hero__intro { padding-block: 1.4rem; }
+    .hero__intro h1 { font-size: 3rem; }
+    .crossing__canvas { height: 19rem; }
   }
   @media (width <= 380px) {
-    .hero__intro { grid-template-columns: 1fr; gap: .75rem; }
-    .hero__intro h1 { font-size: 2.15rem; }
-    .hero__intro h1 br { display: none; }
-    .hero__side { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: .5rem; }
-    .hero__side p { font-size: 1rem; }
+    .hero__intro { padding-block: 1.25rem 1rem; }
+    .hero__intro h1 { font-size: 2.45rem; }
+    .crossing__canvas { height: 16rem; }
+    .crossing__topline { padding-inline: .75rem; }
   }
+  @media (prefers-reduced-motion: reduce) { .crossing__playback { display: none; } :global([data-bridge] *) { transition: none !important; } }
 </style>

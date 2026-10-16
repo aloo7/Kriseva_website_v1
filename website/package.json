@@ -25,7 +25,9 @@
     "qa:reflow": "node scripts/check-experience.mjs"
   },
   "dependencies": {
-    "astro": "^4.16.18"
+    "@paper-design/shaders": "0.0.81",
+    "astro": "^4.16.18",
+    "motion": "14.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

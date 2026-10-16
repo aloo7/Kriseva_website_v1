@@ -5,7 +5,7 @@ import { dirname } from 'node:path';
 
 const baseURL = process.argv[2] || 'http://127.0.0.1:4322';
 const output = process.argv[3] || 'output/playwright/reflow-results.json';
-const routes = ['/', '/tas', '/evaluator', '/solutions', '/proof', '/security', '/plans', '/company', '/resources', '/contact', '/attest', '/404'];
+const routes = ['/', '/bridge', '/tas', '/evaluator', '/solutions', '/proof', '/security', '/plans', '/company', '/resources', '/contact', '/attest', '/404'];
 const sizes = [
   ['phone-small', 320, 568], ['phone-360', 360, 760], ['phone-390', 390, 844], ['phone-430', 430, 932],
   ['phone-landscape', 844, 390], ['tablet-portrait', 768, 1024], ['tablet-landscape', 1024, 768],
