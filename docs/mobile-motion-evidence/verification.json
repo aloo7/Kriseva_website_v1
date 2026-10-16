@@ -1,8 +1,8 @@
 {
   "date": "2026-10-16",
-  "status": "local-verification-complete-preview-pending",
+  "status": "local-and-hosted-verification-complete",
   "browser_tests": {
-    "passed": 268,
+    "passed": 271,
     "skipped": 5,
     "failed": 0,
     "engines": [
@@ -71,5 +71,17 @@
     "WebKit desktop-site switch tested with reload because mobile viewport override emits no resize event",
     "Local browser UI disabled in Work settings; project test and rendering workflows used",
     "Contact outcomes mocked; no real mail sent"
-  ]
+  ],
+  "film_delivery_tests": {
+    "passed": 15,
+    "failed": 0
+  },
+  "hosted": {
+    "runtime_head": "0421b435",
+    "preview": "https://314c67f4-kriseva.aloolifts.workers.dev",
+    "playback_tests_passed": 15,
+    "routes": 13,
+    "video_hashes_match": true,
+    "byte_range_status": 206
+  }
 }

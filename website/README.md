@@ -26,11 +26,20 @@ npm run lint:css
 npm run qa
 npx playwright install chromium firefox webkit
 npm run qa:experience
+npm run qa:film-delivery
 npm run qa:reflow
 node scripts/capture-mobile-motion.mjs
 ```
 
 The experience suite checks the production build in Chromium, Firefox and WebKit: film playback and seeking, rotation, video failures, mobile sizing, bridge controls, WebGL failure, reduced motion, keyboard navigation, enlarged text, JavaScript-free content, accessibility and mocked contact outcomes. Software-GPU integration runs once in Chromium. Unsupported Firefox mobile emulation cases are explicitly skipped. Tests do not send real contact messages.
+
+Check film playback against a hosted branch preview with:
+
+```sh
+PLAYWRIGHT_BASE_URL=https://YOUR-PREVIEW-HOST npx playwright test --config=playwright.experience.config.ts tests/home-film.spec.ts
+```
+
+The Cloudflare Worker adds byte-range delivery only for the two film files. This lets mobile browsers seek to chapters before the complete download finishes. `qa:film-delivery` checks range boundaries, suffixes, HEAD, cache validators and missing assets.
 
 The reflow check covers all 13 routes at 14 viewport configurations and internal links. Runtime artifacts live in ignored `output/playwright/`. Curated screenshots, measurements and the final report live in `../docs/mobile-motion-evidence/` and `../docs/MOBILE_MOTION_QA_2026-10-16.md`.
 

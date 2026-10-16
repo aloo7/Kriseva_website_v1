@@ -22,7 +22,8 @@
     "optimize:screenshots": "node scripts/optimize-screenshots.mjs",
     "optimize:screenshots:revert": "node scripts/optimize-screenshots.mjs --revert",
     "qa:experience": "playwright test --config=playwright.experience.config.ts",
-    "qa:reflow": "node scripts/check-experience.mjs"
+    "qa:reflow": "node scripts/check-experience.mjs",
+    "qa:film-delivery": "node --test ../worker/film-media.test.mjs"
   },
   "dependencies": {
     "@paper-design/shaders": "0.0.81",

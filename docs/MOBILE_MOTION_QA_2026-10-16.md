@@ -4,7 +4,7 @@ Date: 16 October 2026. Branch: `codex/mobile-motion-2026-10-16`.
 
 ## Result
 
-The homepage now uses a 24-second illustrated film, with separately composed 4:5 phone and 16:9 wider-screen files. The optional detailed bridge has its own `/bridge` route. The local production build passed verification. Production remains on the previous merged release until this revision is merged.
+The homepage now uses a 24-second illustrated film, with separately composed 4:5 phone and 16:9 wider-screen files. The optional detailed bridge has its own `/bridge` route. The local production build and hosted branch preview passed verification. Production remains on the previous merged release until this revision is merged.
 
 | Check | Result |
 | --- | --- |
@@ -12,8 +12,10 @@ The homepage now uses a 24-second illustrated film, with separately composed 4:5
 | Build and public-copy guard | Passed; 23 soft review hits inspected, no forbidden terms |
 | Public output guard | Passed, including only the two specifically allowed original MP4s |
 | CSS lint | Passed |
-| Browser experience | 268 passed, 5 explicitly skipped, zero failed |
+| Browser experience | 271 passed, 5 explicitly skipped, zero failed |
 | Engines | Chromium, WebKit and Firefox |
+| Hosted playback | 15 passed across all three engines |
+| Byte-range delivery | 15 Node tests passed; deployed partial responses verified |
 | Reflow | 182 of 182 route/viewport combinations passed |
 | Internal links | 72 checked, zero broken |
 | Portrait composition | Runtime/layout/contrast passed, 45 of 45 contrast checks |
@@ -36,7 +38,7 @@ The five browser skips are three unsupported Firefox mobile-emulation/screen-ove
 - The real Paper shader stays within its pixel cap, stops advancing when paused, resumes correctly and permanently falls back after a lost WebGL context.
 - Existing accessibility, keyboard navigation, route, contact-draft and mocked form-outcome checks continue to pass.
 
-After the full suite, a small CSS correction hid an offscreen skip link completely in the wide-layout simulation. CSS/build and all mobile-device cases were rerun on that final correction. This does not change the film or ordinary document flow.
+The final full suite includes the skip-link correction and playback-readiness changes. The deployed preview serves byte-range requests for the two film files, so browsers can seek before the complete download finishes. The player preserves a requested chapter until that position is seekable. Both complete hosted video files match local SHA256, and 1,024-byte range requests return 206 with the correct Content-Range. All 13 hosted route titles match the tested build.
 
 ## Visual evidence
 
@@ -64,4 +66,6 @@ The dependency audit reports inherited vulnerabilities in the existing tree; the
 
 Physical Android and iPhone checks remain outstanding, particularly real browser desktop-site mode, browser chrome, rotation, low-power devices and connection quality. No visitor-comprehension, engagement or conversion result is claimed. The 24-second duration is measured; the intended 15 to 30 second first-page understanding is a design target.
 
-Local browser UI was disabled by Work settings during this session. Project Playwright regression and Hyperframes rendering were used for development verification; no alternative UI automation was used to bypass that setting. Contact delivery was not tested with a real send.
+Local browser UI was disabled by Work settings during this session. Project Playwright regression against local and hosted builds and Hyperframes rendering were used for development verification; no alternative UI automation was used to bypass that setting. Contact delivery was not tested with a real send.
+
+Hosted runtime reviewed: [immutable preview](https://314c67f4-kriseva.aloolifts.workers.dev), runtime commit `0421b435`. [PR #9](https://github.com/aloo7/Kriseva_website_v1/pull/9) remains open. Final documentation and test-command changes do not alter the visitor runtime.
