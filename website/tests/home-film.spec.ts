@@ -28,7 +28,7 @@ test('chapters work before metadata is loaded and rotation preserves the positio
   await page.setViewportSize({ width: 844, height: 390 });
   await expect(video).toHaveAttribute('data-format', 'wide');
   await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.readyState)).toBeGreaterThan(0);
-  expect(await video.evaluate((element: HTMLVideoElement) => element.currentTime)).toBeCloseTo(time, 0);
+  await expect.poll(() => video.evaluate((element: HTMLVideoElement) => element.currentTime)).toBeCloseTo(time, 0);
   expect(await video.evaluate((element: HTMLVideoElement) => element.paused)).toBe(true);
 });
 
