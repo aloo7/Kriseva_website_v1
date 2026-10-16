@@ -8,7 +8,7 @@ const views = [
 ] as const;
 
 async function openBridge(page: Page) {
-  await page.goto('/');
+  await page.goto('/bridge');
   await expect(page.locator('[data-bridge]')).toHaveAttribute('data-ready', '');
 }
 
@@ -300,7 +300,7 @@ test('without JavaScript the illustration, explanation and demo CTA remain usabl
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL, viewport: { width: 390, height: 844 } });
   try {
     const page = await context.newPage();
-    await page.goto('/');
+    await page.goto('/bridge');
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(page.getByRole('img', { name: 'The Kriseva bridge' })).toBeVisible();
     await expect(page.locator('[data-story="2"]')).toBeVisible();

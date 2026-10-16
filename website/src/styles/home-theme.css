@@ -1,0 +1,25 @@
+/* The short homepage uses a contemporary technical surface. Detail pages
+   retain their document palette. All type and controls use local fonts. */
+body[data-home] {
+  --paper: #f6f8fc;
+  --paper-2: #edf2f9;
+  --paper-3: #dce6f3;
+  --card: #ffffff;
+  --red: #2c61ac;
+  --brass: #3467b0;
+  --brass-ink: #214e89;
+  --brass-light: #bfcee8;
+  --line: rgb(10 31 68 / 12%);
+}
+
+body[data-home] .hdr {
+  border-bottom-color: transparent;
+}
+
+body[data-home] .hdr__cta {
+  border-radius: 999px;
+  font-family: var(--f-sans);
+  font-size: .875rem;
+  text-transform: none;
+  letter-spacing: 0;
+}

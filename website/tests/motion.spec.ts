@@ -63,7 +63,7 @@ for (const { path, label } of routes) {
 }
 
 // ---------------------------------------------------------------------
-// v3: the bridge is built by a zero-dependency script; no page may request
+// The current pages must not request
 // the retired vendor motion libraries (gsap, ScrollTrigger, lenis).
 // ---------------------------------------------------------------------
 test('motion · reduced-motion · zero /vendor/* requests (/)', async ({ page }) => {
@@ -81,7 +81,7 @@ test('motion · reduced-motion · zero /vendor/* requests (/)', async ({ page })
 // Reduced motion: the hero is not pinned and the finished bridge renders as
 // drawn (no data-live), so every part of the drawing is visible.
 test('motion · reduced-motion · bridge renders finished and unpinned (/)', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/bridge');
   await page.waitForLoadState('networkidle');
   const state = await page.evaluate(() => {
     const hero = document.querySelector<HTMLElement>('[data-bridge]')!;
@@ -111,7 +111,7 @@ test.describe('motion · bridge build (motion allowed, desktop)', () => {
     });
     page.on('pageerror', (err) => consoleErrors.push(String(err)));
 
-    await page.goto('/');
+    await page.goto('/bridge');
     await page.waitForLoadState('networkidle');
     await page.waitForFunction(() => document.querySelector('[data-bridge][data-ready]') !== null, undefined, {
       timeout: 10_000,

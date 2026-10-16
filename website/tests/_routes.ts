@@ -3,6 +3,7 @@
 // imports this list too, so the two can no longer drift.
 export const routes: { path: string; label: string }[] = [
   { path: '/',            label: 'home' },
+  { path: '/bridge',      label: 'bridge' },
   { path: '/tas',         label: 'tas' },
   { path: '/evaluator',   label: 'evaluator' },
   { path: '/solutions',   label: 'solutions' },

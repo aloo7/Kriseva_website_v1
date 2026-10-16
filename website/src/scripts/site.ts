@@ -1,6 +1,5 @@
 // site.ts: shared behaviour for every v3 page. Each module wakes only when its
 // data hook is present, so pages pay for what they use.
-import { initBridge } from './bridge';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -290,4 +289,4 @@ initTabs();
 initZoom();
 initQuote();
 const bridge = document.querySelector<HTMLElement>('[data-bridge]');
-if (bridge) initBridge(bridge);
+if (bridge) void import('./bridge').then(({ initBridge }) => initBridge(bridge));

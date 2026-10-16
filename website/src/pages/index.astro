@@ -1,8 +1,9 @@
 ---
 // A short first pass: understand the gap, see the crossing, choose a side.
 import SiteLayout from '../layouts/SiteLayout.astro';
-import BridgeHero from '../components/site/home/BridgeHero.astro';
+import HomeStory from '../components/site/home/HomeStory.astro';
 import { SITE } from '../data/kriseva';
+import '../styles/home-theme.css';
 
 const website = {
   '@context': 'https://schema.org',
@@ -21,5 +22,5 @@ const website = {
   compactFooter
   schema={[website]}
 >
-  <BridgeHero />
+  <HomeStory />
 </SiteLayout>

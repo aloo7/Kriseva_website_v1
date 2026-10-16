@@ -1,0 +1,105 @@
+/* Limited to the homepage, where the early head helper is included.
+   The ratio corrects layout scaling; visualViewport and browser zoom stay
+   untouched. Normal mobile, landscape, tablet and desktop layouts opt out. */
+:root[data-phone-layout] {
+  --gutter: 1.25rem;
+  --home-gutter: 1.25rem;
+  --home-columns: 1fr;
+  --phone-target: max(2.75rem, calc(44px * var(--phone-layout-ratio)));
+
+  font-size: calc(100% * var(--phone-layout-scale));
+}
+
+:root[data-phone-layout] body :is(a[href], button, summary, input, textarea, select) {
+  min-width: var(--phone-target);
+  min-height: var(--phone-target);
+}
+
+:root[data-phone-layout] .skip-link {
+  top: 0;
+  transform: translateY(-200%);
+}
+
+:root[data-phone-layout] .skip-link:focus {
+  top: 1rem;
+  transform: none;
+}
+
+:root[data-phone-layout] .hdr__bar {
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+:root[data-phone-layout] :is(.hdr__nav, .hdr__mail, .hdr__cta) {
+  display: none;
+}
+
+:root[data-phone-layout] .hdr__burger {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+}
+
+:root[data-phone-layout] .hdr__brand svg {
+  width: 1.875rem;
+  height: 1.875rem;
+}
+
+:root[data-phone-layout] .hdr__burger-lines,
+:root[data-phone-layout] .hdr__burger-lines::before,
+:root[data-phone-layout] .hdr__burger-lines::after {
+  width: 1.25rem;
+  height: 0.0938rem;
+}
+
+:root[data-phone-layout] .hdr__burger-lines::before {
+  top: -0.375rem;
+}
+
+:root[data-phone-layout] .hdr__burger-lines::after {
+  top: 0.375rem;
+}
+
+:root[data-phone-layout] .hdr__burger[aria-expanded="true"] .hdr__burger-lines::before {
+  transform: translateY(0.375rem) rotate(45deg);
+}
+
+:root[data-phone-layout] .hdr__burger[aria-expanded="true"] .hdr__burger-lines::after {
+  transform: translateY(-0.375rem) rotate(-45deg);
+}
+
+:root[data-phone-layout] .home-paths {
+  grid-template-columns: 1fr;
+}
+
+:root[data-phone-layout] .home-paths__arrow {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+:root[data-phone-layout] .home-paths__arrow svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+:root[data-phone-layout] .home-footer__inner {
+  display: grid;
+  gap: 0;
+}
+
+:root[data-phone-layout] .home-footer__brand svg {
+  width: 1.3125rem;
+  height: 1.3125rem;
+}
+
+:root[data-phone-layout] .home-footer nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 4rem), 1fr));
+  gap: 0 0.5rem;
+  width: 100%;
+  margin-left: 0;
+}
+
+:root[data-phone-layout] .home-footer nav a {
+  overflow-wrap: anywhere;
+}

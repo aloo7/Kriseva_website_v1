@@ -1,14 +1,15 @@
 import { defineConfig } from 'playwright/test';
 import base from './playwright.config';
+const remoteURL = process.env.PLAYWRIGHT_BASE_URL;
 
 // Production-build checks for the bridge, accessibility, reflow and recovery.
 export default defineConfig({
   ...base,
-  testMatch: ['compact-home.spec.ts', 'bridge-experience.spec.ts', 'motion.spec.ts', 'site-usability.spec.ts', 'a11y.spec.ts', 'qa-static.spec.ts'],
+  testMatch: ['atmosphere.spec.ts', 'home-film.spec.ts', 'compact-home.spec.ts', 'bridge-experience.spec.ts', 'mobile-device.spec.ts', 'motion.spec.ts', 'site-usability.spec.ts', 'a11y.spec.ts', 'qa-static.spec.ts'],
   outputDir: './tests/.output/experience',
   workers: process.env.CI ? 2 : 3,
-  use: { ...base.use, baseURL: 'http://127.0.0.1:4322' },
-  webServer: {
+  use: { ...base.use, baseURL: remoteURL || 'http://127.0.0.1:4322' },
+  webServer: remoteURL ? undefined : {
     command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4322',
     url: 'http://127.0.0.1:4322', reuseExistingServer: !process.env.CI,
     timeout: 180000, stdout: 'ignore', stderr: 'pipe',

@@ -1,0 +1,10 @@
+GSAP 3.14.2
+Copyright 2025 GreenSock. All rights reserved.
+https://gsap.com
+
+This local copy is subject to the GreenSock Standard License:
+https://gsap.com/standard-license
+
+The original copyright and license header is retained in gsap.min.js.
+The bundle is used to author this original film and is not included in the
+public website's JavaScript runtime. The website distributes rendered MP4s.

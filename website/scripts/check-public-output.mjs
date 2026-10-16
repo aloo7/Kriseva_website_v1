@@ -32,10 +32,10 @@ const FORBIDDEN_PATH_FRAGMENTS = [
 // Forbidden file extensions in dist/.
 const FORBIDDEN_EXT = ['.docx', '.pdf', '.zip', '.tar', '.gz', '.7z', '.mp4', '.mov'];
 
-// Deliberate first-party exceptions (v7): the public dossier download and
-// the scanner-loop media plates are shipped artifacts. Everything else
-// with a forbidden extension still fails.
-const ALLOWED_EXACT = new Set([]);
+// The founder requested this original 24-second public explainer. Its two
+// generated delivery formats are the only new video exceptions. Other
+// uploads and recordings remain blocked by the extension guard.
+const ALLOWED_EXACT = new Set(['media/kriseva-portrait.mp4', 'media/kriseva-wide.mp4']);
 const ALLOWED_PREFIXES = ['assets/media/'];
 
 // Forbidden filenames specifically for Claude Design reference HTML.

@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-16",
+  "status": "local-and-hosted-verification-complete",
+  "browser_tests": {
+    "passed": 271,
+    "skipped": 5,
+    "failed": 0,
+    "engines": [
+      "Chromium",
+      "WebKit",
+      "Firefox"
+    ]
+  },
+  "reflow": {
+    "passed": 182,
+    "total": 182,
+    "internal_links": 72,
+    "broken": 0
+  },
+  "film": [
+    {
+      "file": "website/public/media/kriseva-portrait.mp4",
+      "bytes": 1401136,
+      "sha256": "77f567fd947dc2347f907c1b979f5baab16c19298baa99eaa6a808e239775a5f",
+      "duration": 24.0,
+      "width": 720,
+      "height": 900,
+      "fps": "30/1",
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "audio_streams": 0
+    },
+    {
+      "file": "website/public/media/kriseva-wide.mp4",
+      "bytes": 1491678,
+      "sha256": "4f7c7054296279a25a9448892b6c8abd2254ad4f956c8f21ccfbbb23d7ed7536",
+      "duration": 24.0,
+      "width": 1280,
+      "height": 720,
+      "fps": "30/1",
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "audio_streams": 0
+    }
+  ],
+  "composition_checks": [
+    {
+      "format": "portrait",
+      "ok": true,
+      "lint_errors": 0,
+      "lint_warnings": 7,
+      "runtime_errors": 0,
+      "layout_issues": 0,
+      "contrast_checked": 45,
+      "contrast_passed": 45
+    },
+    {
+      "format": "wide",
+      "ok": true,
+      "lint_errors": 0,
+      "lint_warnings": 7,
+      "runtime_errors": 0,
+      "layout_issues": 0,
+      "contrast_checked": 45,
+      "contrast_passed": 45
+    }
+  ],
+  "limits": [
+    "No physical phone tested",
+    "No engagement or comprehension study",
+    "WebKit desktop-site switch tested with reload because mobile viewport override emits no resize event",
+    "Local browser UI disabled in Work settings; project test and rendering workflows used",
+    "Contact outcomes mocked; no real mail sent"
+  ],
+  "film_delivery_tests": {
+    "passed": 15,
+    "failed": 0
+  },
+  "hosted": {
+    "runtime_head": "0421b435",
+    "preview": "https://314c67f4-kriseva.aloolifts.workers.dev",
+    "playback_tests_passed": 15,
+    "routes": 13,
+    "video_hashes_match": true,
+    "byte_range_status": 206
+  }
+}

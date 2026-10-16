@@ -1,4 +1,5 @@
 // The finished illustration works without JS. Controls enhance it at the visitor's pace.
+import { animate } from 'motion';
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p: number, s: number, e: number) => clamp((p - s) / (e - s));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -138,10 +139,35 @@ export function initBridge(root: HTMLElement): void {
   const motionLabel = root.querySelector<HTMLElement>('[data-motion-label]');
   const duration = 12000;
   let current = 1, target = 1, elapsed = duration, last = 0, raf = 0;
+  let storyPaused = false;
   let playing = false, hasPlayed = false, paused = false, inView = true;
   let stage = 2;
-  let box = [...viewData.overview.box];
+  let box = [...viewData.bridge.box];
   let targetBox = [...box];
+  let cameraAnimation: ReturnType<typeof animate> | undefined;
+
+  function applyCamera(next: number[]) {
+    box = next;
+    scene!.setAttribute('viewBox', box.map((value) => Number(value.toFixed(3))).join(' '));
+    const clip = root.querySelector<SVGRectElement>('[data-view-clip]');
+    ['x', 'y', 'width', 'height'].forEach((key, i) => clip?.setAttribute(key, String(box[i])));
+  }
+  function moveCamera(id: string, describe = false, immediate = false) {
+    const view = viewData[id];
+    if (!view) return;
+    cameraAnimation?.stop();
+    targetBox = [...view.box];
+    root.dataset.camera = id;
+    views.forEach((el) => el.setAttribute('aria-pressed', String(el.dataset.view === id)));
+    if (describe && description) { description.textContent = view.text; description.hidden = false; }
+    if (immediate || paused || preference.matches || !inView) { applyCamera([...targetBox]); return; }
+    const from = [...box], to = [...targetBox];
+    cameraAnimation = animate(0, 1, {
+      duration: .72, ease: [.22, 1, .36, 1],
+      onUpdate: (t) => applyCamera(from.map((value, i) => lerp(value, to[i], t))),
+      onComplete: () => applyCamera(to),
+    });
+  }
 
 
   function setStage(index: number) {
@@ -159,6 +185,8 @@ export function initBridge(root: HTMLElement): void {
     if (motionLabel) motionLabel.textContent = stopped ? 'Resume motion' : 'Pause motion';
     if (play) play.disabled = preference.matches;
     if (playLabel) playLabel.textContent = playing ? (paused ? 'Resume story' : 'Pause story') : hasPlayed ? (elapsed < duration ? 'Resume story' : 'Replay the story') : 'Play the story';
+    if (stopped) cameraAnimation?.pause();
+    else if (!storyPaused && cameraAnimation?.state === 'paused') cameraAnimation.play();
   }
   const canMove = () => inView && !document.hidden && !paused && !preference.matches;
   function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; last = 0; }
@@ -172,7 +200,7 @@ export function initBridge(root: HTMLElement): void {
       elapsed = Math.min(duration, elapsed + dt);
       current = target = elapsed / duration;
       const next = current < .27 ? 0 : current < .62 ? 1 : 2;
-      if (stage !== next) setStage(next);
+      if (stage !== next) { setStage(next); moveCamera(['suppliers', 'bridge', 'buyers'][next]); }
       if (elapsed === duration) { playing = false; syncControls(); }
     } else {
       current = lerp(current, target, 1 - Math.exp(-dt / 90));
@@ -189,26 +217,18 @@ export function initBridge(root: HTMLElement): void {
     syncControls(); kick();
   }));
   views.forEach((button) => button.addEventListener('click', () => {
-    const view = viewData[button.dataset.view || 'overview'];
-    if (!view) return;
-    targetBox = [...view.box];
-    views.forEach((el) => el.setAttribute('aria-pressed', String(el === button)));
-    if (description) { description.textContent = view.text; description.hidden = false; }
-    // View selection is immediate, including while paused or outside the frame.
-    box = [...targetBox];
-    scene!.setAttribute('viewBox', box.join(' '));
-    const clip = root.querySelector<SVGRectElement>('[data-view-clip]');
-    ['x', 'y', 'width', 'height'].forEach((key, i) => clip?.setAttribute(key, String(box[i])));
+    moveCamera(button.dataset.view || 'overview', true);
   }));
   play?.addEventListener('click', () => {
     if (preference.matches) return;
-    if (paused && playing) paused = false;
-    else if (playing) playing = false;
+    if (paused && playing) { paused = false; storyPaused = false; }
+    else if (playing) { playing = false; storyPaused = true; cameraAnimation?.pause(); }
     else {
       if (elapsed >= duration || !hasPlayed || Math.abs(elapsed / duration - current) > .01) {
         elapsed = current = target = 0; setStage(0); render(0);
+        moveCamera('suppliers');
       }
-      playing = hasPlayed = true; paused = false;
+      playing = hasPlayed = true; paused = false; storyPaused = false;
       root.querySelector<HTMLElement>('.crossing__frame')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
     syncControls(); last = 0; kick();
@@ -221,21 +241,26 @@ export function initBridge(root: HTMLElement): void {
     stop();
     if (preference.matches) {
       playing = false; current = target = 1; elapsed = duration; setStage(2);
-      box = [...targetBox]; scene!.setAttribute('viewBox', box.join(' ')); render(1);
+      cameraAnimation?.stop(); applyCamera([...targetBox]); render(1);
     }
     syncControls(); kick();
   });
   const observer = new IntersectionObserver(([entry]) => {
     inView = entry.isIntersecting;
     root.dataset.inView = String(inView && !document.hidden);
-    if (inView) kick(); else stop();
+    if (inView) { kick(); if (cameraAnimation?.state === 'paused' && !storyPaused && !paused && !preference.matches) cameraAnimation.play(); }
+    else { stop(); cameraAnimation?.pause(); }
   });
   observer.observe(scene);
   document.addEventListener('visibilitychange', () => {
     root.dataset.inView = String(inView && !document.hidden);
-    if (document.hidden) stop(); else kick();
+    if (document.hidden) { stop(); cameraAnimation?.pause(); }
+    else { kick(); if (cameraAnimation?.state === 'paused' && !storyPaused && !paused && !preference.matches) cameraAnimation.play(); }
   });
+  const initialView = matchMedia('(max-width: 700px)').matches || document.documentElement.hasAttribute('data-phone-layout') ? 'bridge' : 'overview';
+  moveCamera(initialView, false, true);
   render(1); syncControls();
   root.setAttribute('data-ready', '');
   root.querySelectorAll<HTMLElement>('[data-bridge-controls]').forEach((el) => { el.hidden = false; });
+  void import('./crossing-atmosphere').then(({ initCrossingAtmosphere }) => initCrossingAtmosphere(root)).catch(() => { root.dataset.atmosphere = 'fallback'; });
 }

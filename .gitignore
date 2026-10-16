@@ -36,3 +36,14 @@ pnpm-debug.log*
 # v2 program worker receipts: may contain sensitive internal references. Never commit.
 docs/v2-handoffs/
 website/docs/v2-handoffs/
+
+# Local film editor history, caches and duplicate render outputs.
+videos/**/.hyperframes/
+videos/**/.thumbnails/
+videos/**/renders/
+
+# Local CLI instruction scaffolding and superseded proof captures.
+/videos/kriseva-explainer/AGENTS.md
+/videos/kriseva-explainer/CLAUDE.md
+/videos/kriseva-explainer/snapshots/portrait/frame-*.png
+/videos/kriseva-explainer/snapshots/wide-contact-sheet.jpg

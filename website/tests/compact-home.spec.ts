@@ -25,11 +25,12 @@ for (const viewport of [
 
 test('the primary story is concise and every phase leads to a clear next step', async ({ page }) => {
   await page.goto('/');
-  const phases = page.locator('[data-stage-button]');
-  await expect(phases).toHaveCount(3);
+  const phases = page.locator('[data-film-time]');
+  await expect(phases).toHaveCount(4);
   await expect(phases.nth(0)).toContainText('The gap');
-  await expect(phases.nth(1)).toContainText('The bridge');
-  await expect(phases.nth(2)).toContainText('Your next step');
+  await expect(phases.nth(1)).toHaveText('TAS');
+  await expect(phases.nth(2)).toHaveText('Evidence');
+  await expect(phases.nth(3)).toHaveText('Evaluator');
   for (const phase of await phases.all()) {
     await phase.click();
     const words = await page.locator('[data-quick-copy]').evaluateAll((elements) => elements
@@ -38,7 +39,7 @@ test('the primary story is concise and every phase leads to a clear next step', 
     expect(words).toBeLessThanOrEqual(100);
     await expect(page.locator('#pillars a[href="/tas"]')).toBeVisible();
     await expect(page.locator('#pillars a[href="/evaluator"]')).toBeVisible();
-    await expect(page.locator('[data-bridge] a[href="/contact?intent=demo"]')).toBeVisible();
+    await expect(page.locator('[data-quick-home] a[href="/contact?intent=demo"]')).toBeVisible();
   }
   // Long-form answers have dedicated routes, without a second homepage essay.
   await expect(page.locator('main .span, main .exa, main .zoom, main .plans-teaser, main .faq')).toHaveCount(0);
@@ -63,7 +64,8 @@ test('without JavaScript the complete brief and product paths remain available',
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   await expect(page.locator('#pillars a[href="/tas"]')).toBeVisible();
   await expect(page.locator('#pillars a[href="/evaluator"]')).toBeVisible();
-  await expect(page.locator('[data-story="2"]')).toBeVisible();
+  await page.getByText('Read the story', {exact:true}).click();
+  await expect(page.locator('.story-home__transcript p')).toBeVisible();
   await expect(page.locator('footer')).toContainText('Proof');
   await context.close();
 });

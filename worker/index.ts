@@ -4,6 +4,7 @@
 // v3 route redirects below.
 
 import { handleLead, type LeadEnv } from '../website/functions/api/_lead-core';
+import { FILM_PATHS, serveFilm } from './film-media.mjs';
 
 interface Env extends LeadEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -28,6 +29,7 @@ const REDIRECTS: Record<string, string> = {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    if (FILM_PATHS.has(url.pathname)) return serveFilm(request, env.ASSETS);
     if (url.pathname === '/api/lead') {
       return handleLead(request, env);
     }
